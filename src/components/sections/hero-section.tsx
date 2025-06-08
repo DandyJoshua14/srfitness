@@ -34,7 +34,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section id="hero" className="relative h-[calc(100vh-4rem)] min-h-[600px] flex items-center justify-center text-center text-white overflow-hidden">
+    <section id="hero" className="relative h-[calc(100vh-4rem)] min-h-[500px] md:min-h-[600px] flex items-center justify-center text-center text-white overflow-hidden">
       {/* Image container */}
       <div className="absolute inset-0 z-0 w-full h-full">
         {heroImages.map((image, index) => (

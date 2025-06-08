@@ -2,9 +2,6 @@
 "use client";
 import Link from 'next/link';
 import Image from 'next/image';
-// Removed Menu, X from lucide-react
-import { Button } from '@/components/ui/button';
-// Removed Sheet, SheetContent, SheetTrigger, SheetClose from '@/components/ui/sheet';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -20,7 +17,6 @@ const navItems = [
 ];
 
 export default function Header() {
-  // Removed isMobileMenuOpen state
   const pathname = usePathname();
   const [activeLink, setActiveLink] = useState(pathname);
 
@@ -33,7 +29,6 @@ export default function Header() {
   }, [pathname]);
 
   const handleLinkClick = (href: string) => {
-    // Removed setIsMobileMenuOpen(false);
     if (href.startsWith('/#') && pathname === '/') {
       const elementId = href.substring(2);
       const element = document.getElementById(elementId);
@@ -54,21 +49,21 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
-        <Link href="/" className="flex items-center space-x-2" onClick={() => handleLinkClick('/')}>
+      <div className="container flex h-16 max-w-screen-2xl items-center justify-between gap-2 md:gap-4">
+        <Link href="/" className="flex items-center space-x-2 shrink-0" onClick={() => handleLinkClick('/')}> {/* Added shrink-0 to prevent logo block from shrinking too much */}
           <Image 
             src="/logo.png" 
             alt="SR Fitness Logo" 
             width={120} 
             height={40}
-            className="h-10 w-auto object-contain"
+            className="h-10 w-auto object-contain" // Ensures logo scales down correctly
             data-ai-hint="logo brand"
             priority
           />
           <span className="font-headline text-xl sm:text-2xl md:text-3xl font-bold text-primary">SR Fitness</span>
         </Link>
 
-        <nav className="flex items-center space-x-1 lg:space-x-2 overflow-x-auto whitespace-nowrap"> {/* Changed classes here */}
+        <nav className="flex items-center space-x-2 overflow-x-auto whitespace-nowrap">
           {navItems.map((item) => (
             <Link
               key={item.label}
@@ -83,10 +78,7 @@ export default function Header() {
             </Link>
           ))}
         </nav>
-
-        {/* Removed the mobile menu (Sheet) */}
       </div>
     </header>
   );
 }
-

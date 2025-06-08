@@ -57,7 +57,7 @@ export default function Header() {
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
         <Link href="/" className="flex items-center space-x-2" onClick={() => handleLinkClick('/')}>
           <Image 
-            src="/logo.png" 
+            src="/logo.jpeg" 
             alt="SR Fitness Logo" 
             width={120} 
             height={40}

@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 const heroImages = [
-  { src: "https://placehold.co/1920x1080.png", alt: "Fitness class in action", dataAiHint: "gym workout" },
+  { src: "/logo.jpeg", alt: "Fitness class in action", dataAiHint: "gym workout" },
   { src: "https://placehold.co/1920x1080.png", alt: "Focused athlete training", dataAiHint: "focused athlete" },
   { src: "https://placehold.co/1920x1080.png", alt: "Group workout session", dataAiHint: "group fitness" },
   { src: "https://placehold.co/1920x1080.png", alt: "Healthy lifestyle SR Fitness", dataAiHint: "healthy lifestyle" },
@@ -82,7 +82,7 @@ export default function HeroSection() {
           style={{ transitionDelay: textVisible ? '400ms' : '0ms' }}
         >
           <Button asChild size="lg" className="font-headline text-xl px-10 py-6 bg-primary hover:bg-primary/90 text-primary-foreground">
-            <Link href="/burn-off-bootcamp">Explore Bootcamps</Link> 
+            <Link href="/burn-off-bootcamp">Explore Bootcamps</Link>
           </Button>
           <Button asChild variant="outline" size="lg" className="font-headline text-xl px-10 py-6 border-primary text-primary hover:bg-primary hover:text-primary-foreground">
             <Link href="/personal-training">Explore Services</Link>

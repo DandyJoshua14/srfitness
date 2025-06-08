@@ -57,15 +57,15 @@ export default function Header() {
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
         <Link href="/" className="flex items-center space-x-2" onClick={() => handleLinkClick('/')}>
           <Image 
-            src="/logo.jpeg" 
+            src="/logo.png" 
             alt="SR Fitness Logo" 
             width={120} 
             height={40}
-            className="h-8 w-auto sm:h-10"
+            className="h-10 w-auto"
             data-ai-hint="logo brand"
             priority
           />
-          <span className="font-headline text-3xl font-bold text-primary hidden sm:inline">SR Fitness</span>
+          <span className="font-headline text-xl sm:text-2xl md:text-3xl font-bold text-primary">SR Fitness</span>
         </Link>
 
         <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">

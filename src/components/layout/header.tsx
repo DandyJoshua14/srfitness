@@ -1,7 +1,8 @@
 
 "use client";
 import Link from 'next/link';
-import { Dumbbell, Menu, X } from 'lucide-react';
+import Image from 'next/image';
+import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 import { useState, useEffect } from 'react';
@@ -12,7 +13,6 @@ const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Personal Training', href: '/personal-training' },
   { label: 'Bootcamp', href: '/burn-off-bootcamp' },
-  { label: 'Trainers', href: '/#trainers' },
   { label: 'Awards', href: '/awards' },
   { label: 'Magazine', href: '/lifestyle-magazine' },
   { label: 'Public Speaking', href: '/public-speaking' },
@@ -34,12 +34,10 @@ export default function Header() {
 
   const handleLinkClick = (href: string) => {
     setIsMobileMenuOpen(false);
-    // If it's an anchor link on the current page, let browser handle scroll
     if (href.startsWith('/#') && pathname === '/') {
       const elementId = href.substring(2);
       const element = document.getElementById(elementId);
       element?.scrollIntoView({ behavior: 'smooth' });
-      // Manually set active link for hash links on home
       setActiveLink(href);
     } else {
       setActiveLink(href);
@@ -47,26 +45,26 @@ export default function Header() {
   };
   
   const isLinkActive = (href: string) => {
-    // Exact match for home page or full page links
     if (href === '/' && activeLink === '/') return true;
     if (href !== '/' && activeLink === href) return true;
-
-    // Handle hash links on home page
     if (pathname === '/' && href.startsWith('/#') && activeLink === href) return true;
-    
-    // Handle base path match for non-home, non-hash links
     if (href !== '/' && !href.startsWith('/#') && activeLink.startsWith(href)) return true;
-
     return false;
   };
-
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
         <Link href="/" className="flex items-center space-x-2" onClick={() => handleLinkClick('/')}>
-          <Dumbbell className="h-8 w-8 text-primary" />
-          <span className="font-headline text-3xl font-bold text-primary">SR Fitness</span>
+          <Image 
+            src="https://placehold.co/120x40.png" 
+            alt="SR Fitness Logo" 
+            width={120} 
+            height={40}
+            className="h-8 w-auto sm:h-10" // Adjusted height for responsiveness
+            data-ai-hint="logo brand"
+          />
+          <span className="font-headline text-3xl font-bold text-primary hidden sm:inline">SR Fitness</span>
         </Link>
 
         <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
@@ -96,7 +94,14 @@ export default function Header() {
             <SheetContent side="right" className="w-[280px] bg-background p-6">
               <div className="mb-8 flex justify-between items-center">
                 <Link href="/" className="flex items-center space-x-2" onClick={() => handleLinkClick('/')}>
-                  <Dumbbell className="h-7 w-7 text-primary" />
+                   <Image 
+                    src="https://placehold.co/100x30.png" // Slightly smaller for mobile menu
+                    alt="SR Fitness Logo" 
+                    width={100} 
+                    height={30}
+                    className="h-7 w-auto"
+                    data-ai-hint="logo brand"
+                  />
                   <span className="font-headline text-2xl font-bold text-primary">SR Fitness</span>
                 </Link>
                 <SheetClose asChild>

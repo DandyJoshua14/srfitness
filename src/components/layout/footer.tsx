@@ -1,5 +1,6 @@
 
-import { Dumbbell, Facebook, Instagram, Twitter, Youtube, Linkedin } from 'lucide-react';
+import Image from 'next/image';
+import { Facebook, Instagram, Twitter, Youtube, Linkedin } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Footer() {
@@ -9,7 +10,6 @@ export default function Footer() {
     { label: 'Home', href: '/' },
     { label: 'Personal Training', href: '/personal-training' },
     { label: 'Bootcamp', href: '/burn-off-bootcamp' },
-    { label: 'Our Trainers', href: '/#trainers' },
     { label: 'Awards', href: '/awards' },
     { label: 'Magazine', href: '/lifestyle-magazine' },
     { label: 'Public Speaking', href: '/public-speaking' },
@@ -17,6 +17,9 @@ export default function Footer() {
     { label: 'Privacy Policy', href: '/privacy-policy' }, 
     { label: 'Terms of Service', href: '/terms-of-service' }, 
   ];
+
+  const quickLinks = footerNavItems.filter(item => ['Home', 'Personal Training', 'Bootcamp', 'Awards'].includes(item.label));
+  const exploreLinks = footerNavItems.filter(item => ['Magazine', 'Public Speaking', 'Contact Us'].includes(item.label));
 
 
   return (
@@ -26,7 +29,14 @@ export default function Footer() {
           {/* Column 1: Brand and Slogan */}
           <div className="md:col-span-2 lg:col-span-1">
             <Link href="/" className="flex items-center space-x-2 mb-4">
-              <Dumbbell className="h-10 w-10 text-primary" />
+              <Image 
+                src="https://placehold.co/120x40.png" 
+                alt="SR Fitness Logo" 
+                width={120} 
+                height={40}
+                className="h-10 w-auto"
+                data-ai-hint="logo brand"
+              />
               <span className="font-headline text-3xl font-bold text-primary">SR Fitness</span>
             </Link>
             <p className="text-sm text-secondary-foreground/80 mb-4">
@@ -55,7 +65,7 @@ export default function Footer() {
           <div>
             <h3 className="font-headline text-xl font-semibold text-primary mb-4">Navigate</h3>
             <ul className="space-y-2 text-sm">
-              {footerNavItems.slice(0, 4).map(item => (
+              {quickLinks.map(item => (
                  <li key={item.label}><Link href={item.href} className="text-secondary-foreground/80 hover:text-primary hover:underline transition-colors">{item.label}</Link></li>
               ))}
             </ul>
@@ -65,7 +75,7 @@ export default function Footer() {
           <div>
             <h3 className="font-headline text-xl font-semibold text-primary mb-4">Explore</h3>
             <ul className="space-y-2 text-sm">
-              {footerNavItems.slice(4, 8).map(item => ( 
+              {exploreLinks.map(item => ( 
                  <li key={item.label}><Link href={item.href} className="text-secondary-foreground/80 hover:text-primary hover:underline transition-colors">{item.label}</Link></li>
               ))}
             </ul>

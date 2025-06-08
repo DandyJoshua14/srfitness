@@ -61,7 +61,7 @@ export default function Header() {
             alt="SR Fitness Logo" 
             width={120} 
             height={40}
-            className="h-10 w-auto"
+            className="h-10 w-auto object-contain"
             data-ai-hint="logo brand"
             priority
           />
@@ -100,7 +100,7 @@ export default function Header() {
                     alt="SR Fitness Logo" 
                     width={100} 
                     height={30}
-                    className="h-7 w-auto"
+                    className="h-7 w-auto object-contain"
                     data-ai-hint="logo brand"
                   />
                   <span className="font-headline text-2xl font-bold text-primary">SR Fitness</span>

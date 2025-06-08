@@ -8,35 +8,35 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 
 export const metadata: Metadata = {
   title: 'Public Speaking & Workshops - SR Fitness',
-  description: 'Engage SR Fitness experts for inspiring talks, wellness workshops, and motivational seminars. Elevate your event or organization with our fitness knowledge.',
+  description: 'Engage SR Fitness experts for inspiring talks, wellness workshops, and motivational seminars, including live events. Elevate your event or organization with our fitness knowledge.',
 };
 
 export default function PublicSpeakingPage() {
   const speakingTopics = [
     {
       title: "Motivational Fitness Kickstarts",
-      description: "Inspiring talks to ignite passion for a healthier lifestyle and sustained workout habits.",
+      description: "Inspiring talks to ignite passion for a healthier lifestyle and sustained workout habits. Available as keynote speeches or interactive sessions.",
       icon: <Lightbulb className="h-8 w-8 text-primary" />,
       image: "https://placehold.co/600x400.png",
       dataAiHint: "motivational speaker stage"
     },
     {
       title: "Nutrition for Peak Performance",
-      description: "Evidence-based insights into fueling your body for optimal results, whether for sports or daily life.",
+      description: "Evidence-based insights into fueling your body for optimal results, whether for sports or daily life. Delivered as engaging seminars or Q&A sessions.",
       icon: <Users className="h-8 w-8 text-primary" />,
       image: "https://placehold.co/600x400.png",
       dataAiHint: "nutrition presentation chart"
     },
     {
-      title: "Corporate Wellness Workshops",
-      description: "Tailored programs to boost employee well-being, productivity, and create a healthier workplace culture.",
+      title: "Interactive Corporate Wellness Workshops",
+      description: "Tailored programs, available as live interactive workshops or comprehensive seminars, designed to boost employee well-being, productivity, and create a healthier workplace culture.",
       icon: <Presentation className="h-8 w-8 text-primary" />,
       image: "https://placehold.co/600x400.png",
       dataAiHint: "corporate workshop office"
     },
     {
-      title: "Mindset & Goal Achievement",
-      description: "Strategies to cultivate a resilient mindset, overcome obstacles, and achieve ambitious fitness goals.",
+      title: "Mindset & Goal Achievement Live",
+      description: "Strategies to cultivate a resilient mindset, overcome obstacles, and achieve ambitious fitness goals, often including live coaching elements.",
       icon: <Mic className="h-8 w-8 text-primary" />,
       image: "https://placehold.co/600x400.png",
       dataAiHint: "person speaking microphone"
@@ -52,7 +52,7 @@ export default function PublicSpeakingPage() {
             Inspiring Talks & Wellness Workshops
           </h1>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-            SR Fitness is passionate about sharing knowledge and motivating individuals and groups. Our experts deliver engaging presentations on a variety of health, fitness, and wellness topics.
+            SR Fitness is passionate about sharing knowledge and motivating individuals and groups. Our experts deliver engaging presentations, including <span className="text-primary font-semibold">live interactive sessions</span> and pre-recorded workshops, on a variety of health, fitness, and wellness topics.
           </p>
         </div>
 
@@ -95,7 +95,7 @@ export default function PublicSpeakingPage() {
             Book an SR Fitness Expert for Your Next Event
           </h2>
           <p className="text-lg text-secondary-foreground/80 max-w-2xl mx-auto mb-8">
-            Whether it's a corporate event, a community gathering, or an educational seminar, our speakers can provide valuable insights and inspiration. Let us help you make your event a memorable success.
+            Whether it's a corporate event, a community gathering, or an educational seminar (live or virtual), our speakers can provide valuable insights and inspiration. Let us help you make your event a memorable success.
           </p>
           <Button asChild size="lg" className="font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transition-shadow">
             <Link href="/#contact">Inquire About Speaking Engagements</Link>

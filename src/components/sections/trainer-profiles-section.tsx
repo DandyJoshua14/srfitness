@@ -17,9 +17,9 @@ export default function TrainerProfilesSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {trainers.map((trainer) => (
-            <Card 
-              key={trainer.id} 
-              className="bg-background text-foreground border-border shadow-lg overflow-hidden transition-all duration-300 ease-in-out transform hover:-translate-y-2 hover:scale-[1.02] hover:shadow-2xl group"
+            <Card
+              key={trainer.id}
+              className="bg-background text-foreground border-border shadow-lg overflow-hidden transition-all duration-500 ease-in-out transform hover:-translate-y-2 hover:scale-[1.02] hover:shadow-2xl group"
             >
               <div className="relative h-64 w-full overflow-hidden">
                 <Image

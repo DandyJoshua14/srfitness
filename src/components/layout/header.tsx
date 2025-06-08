@@ -2,9 +2,9 @@
 "use client";
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X } from 'lucide-react';
+// Removed Menu, X from lucide-react
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
+// Removed Sheet, SheetContent, SheetTrigger, SheetClose from '@/components/ui/sheet';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -20,7 +20,7 @@ const navItems = [
 ];
 
 export default function Header() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  // Removed isMobileMenuOpen state
   const pathname = usePathname();
   const [activeLink, setActiveLink] = useState(pathname);
 
@@ -33,7 +33,7 @@ export default function Header() {
   }, [pathname]);
 
   const handleLinkClick = (href: string) => {
-    setIsMobileMenuOpen(false);
+    // Removed setIsMobileMenuOpen(false);
     if (href.startsWith('/#') && pathname === '/') {
       const elementId = href.substring(2);
       const element = document.getElementById(elementId);
@@ -68,7 +68,7 @@ export default function Header() {
           <span className="font-headline text-xl sm:text-2xl md:text-3xl font-bold text-primary">SR Fitness</span>
         </Link>
 
-        <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
+        <nav className="flex items-center space-x-1 lg:space-x-2 overflow-x-auto whitespace-nowrap"> {/* Changed classes here */}
           {navItems.map((item) => (
             <Link
               key={item.label}
@@ -84,53 +84,9 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="md:hidden">
-          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Menu className="h-6 w-6 text-foreground" />
-                <span className="sr-only">Open menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[280px] bg-background p-6">
-              <div className="mb-8 flex justify-between items-center">
-                <Link href="/" className="flex items-center space-x-2" onClick={() => handleLinkClick('/')}>
-                   <Image 
-                    src="/logo.png" 
-                    alt="SR Fitness Logo" 
-                    width={100} 
-                    height={30}
-                    className="h-7 w-auto object-contain"
-                    data-ai-hint="logo brand"
-                  />
-                  <span className="font-headline text-2xl font-bold text-primary">SR Fitness</span>
-                </Link>
-                <SheetClose asChild>
-                   <Button variant="ghost" size="icon">
-                    <X className="h-6 w-6 text-foreground" />
-                    <span className="sr-only">Close menu</span>
-                  </Button>
-                </SheetClose>
-              </div>
-              <nav className="flex flex-col space-y-2">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    onClick={() => handleLinkClick(item.href)}
-                    className={cn(
-                      "block px-3 py-2 rounded-md text-base font-medium transition-colors hover:text-primary hover:bg-muted",
-                      isLinkActive(item.href) ? "text-primary bg-muted font-semibold" : "text-foreground"
-                    )}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </nav>
-            </SheetContent>
-          </Sheet>
-        </div>
+        {/* Removed the mobile menu (Sheet) */}
       </div>
     </header>
   );
 }
+

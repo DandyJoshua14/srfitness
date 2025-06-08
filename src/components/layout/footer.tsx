@@ -9,13 +9,13 @@ export default function Footer() {
     { label: 'Home', href: '/' },
     { label: 'Personal Training', href: '/personal-training' },
     { label: 'Bootcamp', href: '/burn-off-bootcamp' },
-    { label: 'Class Schedule', href: '/#schedule' },
+    { label: 'Class Schedule', href: '/class-schedule' }, // Updated link
     { label: 'Our Trainers', href: '/#trainers' },
     { label: 'Awards', href: '/awards' },
     { label: 'Magazine', href: '/lifestyle-magazine' },
     { label: 'Contact Us', href: '/#contact' },
-    { label: 'Privacy Policy', href: '/privacy-policy' }, // Example additional link
-    { label: 'Terms of Service', href: '/terms-of-service' }, // Example additional link
+    { label: 'Privacy Policy', href: '/privacy-policy' }, 
+    { label: 'Terms of Service', href: '/terms-of-service' }, 
   ];
 
 

@@ -1,6 +1,5 @@
 
 import HeroSection from '@/components/sections/hero-section';
-import ClassScheduleSection from '@/components/sections/class-schedule-section';
 import TrainerProfilesSection from '@/components/sections/trainer-profiles-section';
 import ContactLocationSection from '@/components/sections/contact-location-section';
 import type { Metadata } from 'next';
@@ -15,8 +14,7 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
-      {/* These sections remain part of the homepage, accessible via scrolling and nav links */}
-      <ClassScheduleSection />
+      {/* TrainerProfilesSection and ContactLocationSection remain part of the homepage */}
       <TrainerProfilesSection />
       <ContactLocationSection />
     </>

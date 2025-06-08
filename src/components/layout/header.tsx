@@ -12,7 +12,7 @@ const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Personal Training', href: '/personal-training' },
   { label: 'Bootcamp', href: '/burn-off-bootcamp' },
-  { label: 'Class Schedule', href: '/#schedule' },
+  { label: 'Class Schedule', href: '/class-schedule' }, // Updated link
   { label: 'Trainers', href: '/#trainers' },
   { label: 'Awards', href: '/awards' },
   { label: 'Magazine', href: '/lifestyle-magazine' },
@@ -25,31 +25,39 @@ export default function Header() {
   const [activeLink, setActiveLink] = useState(pathname);
 
   useEffect(() => {
-    // For homepage sections, highlight "Home" if on a section
-    if (pathname === '/' && window.location.hash) {
-      setActiveLink(`/${window.location.hash}`);
-    } else {
-      setActiveLink(pathname);
+    let currentPath = pathname;
+    if (typeof window !== 'undefined' && window.location.hash && pathname === '/') {
+      currentPath = `/${window.location.hash}`;
     }
+    setActiveLink(currentPath);
   }, [pathname]);
 
   const handleLinkClick = (href: string) => {
     setIsMobileMenuOpen(false);
     // If it's an anchor link on the current page, let browser handle scroll
     if (href.startsWith('/#') && pathname === '/') {
-      // No need to update activeLink here, scroll event will handle it for homepage sections
-      const element = document.getElementById(href.substring(2));
+      const elementId = href.substring(2);
+      const element = document.getElementById(elementId);
       element?.scrollIntoView({ behavior: 'smooth' });
+      // Manually set active link for hash links on home
+      setActiveLink(href);
     } else {
       setActiveLink(href);
     }
   };
   
-  // Function to determine if a link is active
   const isLinkActive = (href: string) => {
-    if (href === '/') return activeLink === '/'; // Home is active only if path is exactly '/'
-    if (href.startsWith('/#')) return activeLink === href && pathname === '/'; // Anchor links active only on homepage
-    return activeLink.startsWith(href) && href !== '/'; // Other pages active if path starts with href
+    // Exact match for home page or full page links
+    if (href === '/' && activeLink === '/') return true;
+    if (href !== '/' && activeLink === href) return true;
+
+    // Handle hash links on home page
+    if (pathname === '/' && href.startsWith('/#') && activeLink === href) return true;
+    
+    // Handle base path match for non-home, non-hash links
+    if (href !== '/' && !href.startsWith('/#') && activeLink.startsWith(href)) return true;
+
+    return false;
   };
 
 

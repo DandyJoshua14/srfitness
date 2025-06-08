@@ -1,6 +1,5 @@
 
 import HeroSection from '@/components/sections/hero-section';
-import MembershipPlansSection from '@/components/sections/membership-plans-section';
 import TrainerProfilesSection from '@/components/sections/trainer-profiles-section';
 import ContactLocationSection from '@/components/sections/contact-location-section';
 import type { Metadata } from 'next';
@@ -14,7 +13,6 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
-      <MembershipPlansSection />
       <TrainerProfilesSection />
       <ContactLocationSection />
     </>

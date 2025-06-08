@@ -45,7 +45,7 @@ export default function BurnOffBootcampPage() {
               </li>
             </ul>
             <Button asChild size="lg" className="font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transition-shadow">
-              <Link href="/#schedule">Join a Bootcamp Today</Link>
+              <Link href="/#contact">Inquire About Bootcamps</Link>
             </Button>
           </div>
           <div className="relative aspect-[4/3] rounded-lg shadow-xl overflow-hidden group md:order-2">

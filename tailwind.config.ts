@@ -10,8 +10,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Inter', 'sans-serif'],
-        headline: ['Inter', 'sans-serif'],
+        body: ['Open Sans', 'sans-serif'],
+        headline: ['Bebas Neue', 'cursive'], // Cursive is a generic fallback, sans-serif might be better
         code: ['monospace'],
       },
       colors: {

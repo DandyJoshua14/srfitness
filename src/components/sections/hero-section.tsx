@@ -82,10 +82,10 @@ export default function HeroSection() {
           style={{ transitionDelay: textVisible ? '400ms' : '0ms' }}
         >
           <Button asChild size="lg" className="font-headline text-xl px-10 py-6 bg-primary hover:bg-primary/90 text-primary-foreground">
-            <Link href="/class-schedule">Explore Classes</Link>
+            <Link href="/burn-off-bootcamp">Explore Bootcamps</Link> 
           </Button>
           <Button asChild variant="outline" size="lg" className="font-headline text-xl px-10 py-6 border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-            <Link href="#trainers">Meet Our Trainers</Link>
+            <Link href="/personal-training">Explore Services</Link>
           </Button>
         </div>
       </div>

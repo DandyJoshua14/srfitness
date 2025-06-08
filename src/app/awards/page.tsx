@@ -37,7 +37,10 @@ export default function AwardsPage() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-16">
           {awardsList.map((award, index) => (
-            <Card key={index} className="text-center bg-card border-border shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col">
+            <Card 
+              key={index} 
+              className="text-center bg-card border-border shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-2 hover:scale-[1.02] hover:shadow-2xl flex flex-col"
+            >
               <CardHeader className="pb-4">
                 <div className="flex justify-center mb-3">
                   {award.icon}
@@ -56,7 +59,10 @@ export default function AwardsPage() {
           <h2 className="font-headline text-3xl md:text-4xl text-foreground font-semibold mb-10">Client Success Stories</h2>
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {testimonials.map((testimonial, index) => (
-            <Card key={index} className="bg-card border-border p-6 shadow-lg text-left flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
+            <Card 
+              key={index} 
+              className="bg-card border-border p-6 shadow-lg text-left flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl"
+            >
                 <Image src={testimonial.image} alt={testimonial.name} width={100} height={100} className="rounded-full shadow-md shrink-0" data-ai-hint={testimonial.dataAiHint} />
                 <div className="flex-grow">
                   <h3 className="font-headline text-xl text-primary">{testimonial.name}</h3>

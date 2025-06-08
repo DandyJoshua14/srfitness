@@ -34,7 +34,10 @@ export default function LifestyleMagazinePage() {
 
         <div className="grid md:grid-cols-2 gap-8 md:gap-10">
           {articles.map((article) => (
-            <Card key={article.id} className="bg-background text-foreground border-border shadow-xl overflow-hidden flex flex-col group transform transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
+            <Card 
+              key={article.id} 
+              className="bg-background text-foreground border-border shadow-xl overflow-hidden flex flex-col group transition-all duration-300 ease-in-out transform hover:-translate-y-2 hover:scale-[1.02] hover:shadow-2xl"
+            >
               <div className="relative h-64 w-full overflow-hidden">
                 <Image
                   src={article.image}

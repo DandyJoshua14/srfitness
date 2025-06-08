@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import { trainers } from '@/lib/data';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -16,14 +17,17 @@ export default function TrainerProfilesSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {trainers.map((trainer) => (
-            <Card key={trainer.id} className="bg-background text-foreground border-border shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-              <div className="relative h-64 w-full">
+            <Card 
+              key={trainer.id} 
+              className="bg-background text-foreground border-border shadow-lg overflow-hidden transition-all duration-300 ease-in-out transform hover:-translate-y-2 hover:scale-[1.02] hover:shadow-2xl group"
+            >
+              <div className="relative h-64 w-full overflow-hidden">
                 <Image
                   src={trainer.imageUrl}
                   alt={trainer.name}
                   layout="fill"
                   objectFit="cover"
-                  className="transition-transform duration-300 group-hover:scale-105"
+                  className="transition-transform duration-500 ease-in-out group-hover:scale-110"
                   data-ai-hint="fitness trainer portrait"
                 />
               </div>

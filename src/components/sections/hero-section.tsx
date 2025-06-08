@@ -11,7 +11,7 @@ const heroImages = [
   { src: "/logo.jpeg", alt: "Fitness class in action", dataAiHint: "gym workout" },
   { src: "/suit.jpeg", alt: "Focused athlete training", dataAiHint: "focused athlete" },
   { src: "/join.jpeg", alt: "Group workout session", dataAiHint: "group fitness" },
-  { src: "https://placehold.co/1920x1080.png", alt: "Healthy lifestyle SR Fitness", dataAiHint: "healthy lifestyle" },
+  { src: "https://placehold.co/800x450.png", alt: "Healthy lifestyle SR Fitness", dataAiHint: "healthy lifestyle" },
 ];
 
 export default function HeroSection() {
@@ -34,7 +34,16 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section id="hero" className="relative h-[calc(100vh-4rem)] min-h-[500px] md:min-h-[600px] flex items-center justify-center text-center text-white overflow-hidden">
+    <section 
+      id="hero" 
+      className={cn(
+        "relative flex items-center justify-center text-center text-white overflow-hidden",
+        "h-[60vh] min-h-[320px]", // Mobile (xs)
+        "sm:h-[70vh] sm:min-h-[400px]", // Small screens
+        "md:h-[calc(100vh-4rem)] md:min-h-[500px]", // Medium screens
+        "lg:min-h-[600px]" // Large screens
+      )}
+    >
       {/* Image container */}
       <div className="absolute inset-0 z-0 w-full h-full">
         {heroImages.map((image, index) => (

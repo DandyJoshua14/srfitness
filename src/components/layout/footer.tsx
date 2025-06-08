@@ -30,7 +30,7 @@ export default function Footer() {
           <div className="md:col-span-2 lg:col-span-1">
             <Link href="/" className="flex items-center space-x-2 mb-4">
               <Image 
-                src="https://placehold.co/120x40.png" 
+                src="/logo.png" 
                 alt="SR Fitness Logo" 
                 width={120} 
                 height={40}

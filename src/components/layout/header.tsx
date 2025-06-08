@@ -57,12 +57,13 @@ export default function Header() {
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
         <Link href="/" className="flex items-center space-x-2" onClick={() => handleLinkClick('/')}>
           <Image 
-            src="https://placehold.co/120x40.png" 
+            src="/logo.png" 
             alt="SR Fitness Logo" 
             width={120} 
             height={40}
             className="h-8 w-auto sm:h-10" // Adjusted height for responsiveness
             data-ai-hint="logo brand"
+            priority
           />
           <span className="font-headline text-3xl font-bold text-primary hidden sm:inline">SR Fitness</span>
         </Link>
@@ -95,7 +96,7 @@ export default function Header() {
               <div className="mb-8 flex justify-between items-center">
                 <Link href="/" className="flex items-center space-x-2" onClick={() => handleLinkClick('/')}>
                    <Image 
-                    src="https://placehold.co/100x30.png" // Slightly smaller for mobile menu
+                    src="/logo.png" 
                     alt="SR Fitness Logo" 
                     width={100} 
                     height={30}

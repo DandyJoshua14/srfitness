@@ -9,7 +9,8 @@ export default function Footer() {
     { label: 'Home', href: '/' },
     { label: 'Personal Training', href: '/personal-training' },
     { label: 'Bootcamp', href: '/burn-off-bootcamp' },
-    { label: 'Class Schedule', href: '/class-schedule' }, // Updated link
+    { label: 'Memberships', href: '/#memberships' },
+    { label: 'Class Schedule', href: '/class-schedule' },
     { label: 'Our Trainers', href: '/#trainers' },
     { label: 'Awards', href: '/awards' },
     { label: 'Magazine', href: '/lifestyle-magazine' },

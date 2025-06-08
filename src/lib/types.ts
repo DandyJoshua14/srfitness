@@ -1,3 +1,4 @@
+
 export interface Trainer {
   id: string;
   name: string;
@@ -16,4 +17,16 @@ export interface FitnessClass {
   duration: string; // e.g., "60 minutes"
   spotsAvailable: number;
   type: 'Yoga' | 'HIIT' | 'Strength' | 'Cardio' | 'Pilates';
+}
+
+export interface MembershipPlan {
+  id: string;
+  name: string;
+  price: string; // e.g., "$29/mo"
+  priceFrequency: string; // e.g., "per month"
+  description: string;
+  features: string[];
+  ctaText: string;
+  isPopular?: boolean;
+  icon?: React.ElementType; // Lucide icon component
 }

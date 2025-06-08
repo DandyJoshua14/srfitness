@@ -1,4 +1,6 @@
-import type { Trainer, FitnessClass } from './types';
+
+import type { Trainer, FitnessClass, MembershipPlan } from './types';
+import { Zap, ShieldCheck, Star, Dumbbell, Users, Activity } from 'lucide-react';
 
 export const trainers: Trainer[] = [
   {
@@ -101,5 +103,55 @@ export const fitnessClasses: FitnessClass[] = [
     duration: '60 minutes',
     spotsAvailable: 10,
     type: 'HIIT',
+  },
+];
+
+export const membershipPlans: MembershipPlan[] = [
+  {
+    id: 'plan-basic',
+    name: 'Basic Fit',
+    price: '$29',
+    priceFrequency: 'per month',
+    description: 'Perfect for getting started and regular gym access.',
+    features: [
+      'Full Gym Access',
+      'Cardio & Strength Zones',
+      'Locker Rooms & Showers',
+      'Online Progress Tracking',
+    ],
+    ctaText: 'Get Started',
+    icon: Dumbbell,
+  },
+  {
+    id: 'plan-plus',
+    name: 'Plus Wellness',
+    price: '$49',
+    priceFrequency: 'per month',
+    description: 'Includes group classes and more flexibility.',
+    features: [
+      'All Basic Fit Features',
+      'Unlimited Group Classes (Yoga, HIIT, etc.)',
+      'Guest Passes (2/month)',
+      'Nutritional Guidance Basics',
+    ],
+    ctaText: 'Choose Plus',
+    isPopular: true,
+    icon: Users,
+  },
+  {
+    id: 'plan-pro',
+    name: 'Pro Athlete',
+    price: '$79',
+    priceFrequency: 'per month',
+    description: 'The ultimate package for dedicated fitness enthusiasts.',
+    features: [
+      'All Plus Wellness Features',
+      '2 Personal Training Sessions/Month',
+      'Advanced Workout Analytics',
+      'Exclusive Workshops Access',
+      'SR Fitness Merch Discount',
+    ],
+    ctaText: 'Go Pro',
+    icon: Activity,
   },
 ];

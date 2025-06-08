@@ -15,6 +15,7 @@ const navItems = [
   { label: 'Trainers', href: '/#trainers' },
   { label: 'Awards', href: '/awards' },
   { label: 'Magazine', href: '/lifestyle-magazine' },
+  { label: 'Public Speaking', href: '/public-speaking' },
   { label: 'Contact', href: '/#contact' },
 ];
 

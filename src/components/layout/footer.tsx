@@ -12,6 +12,7 @@ export default function Footer() {
     { label: 'Our Trainers', href: '/#trainers' },
     { label: 'Awards', href: '/awards' },
     { label: 'Magazine', href: '/lifestyle-magazine' },
+    { label: 'Public Speaking', href: '/public-speaking' },
     { label: 'Contact Us', href: '/#contact' },
     { label: 'Privacy Policy', href: '/privacy-policy' }, 
     { label: 'Terms of Service', href: '/terms-of-service' }, 
@@ -64,7 +65,7 @@ export default function Footer() {
           <div>
             <h3 className="font-headline text-xl font-semibold text-primary mb-4">Explore</h3>
             <ul className="space-y-2 text-sm">
-              {footerNavItems.slice(4, 7).map(item => ( // Adjusted slice to account for removed items
+              {footerNavItems.slice(4, 8).map(item => ( 
                  <li key={item.label}><Link href={item.href} className="text-secondary-foreground/80 hover:text-primary hover:underline transition-colors">{item.label}</Link></li>
               ))}
             </ul>

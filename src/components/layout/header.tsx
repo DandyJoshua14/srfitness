@@ -61,7 +61,7 @@ export default function Header() {
             alt="SR Fitness Logo" 
             width={120} 
             height={40}
-            className="h-8 w-auto sm:h-10" // Adjusted height for responsiveness
+            className="h-8 w-auto sm:h-10"
             data-ai-hint="logo brand"
             priority
           />

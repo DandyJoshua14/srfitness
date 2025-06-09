@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 const heroImages = [
-  { src: "/logo.jpeg", alt: "Fitness class in action", dataAiHint: "gym workout" },
+  { src: "https://placehold.co/800x450.png", alt: "Fitness class in action (placeholder)", dataAiHint: "gym workout" },
   { src: "/suit.jpeg", alt: "Focused athlete training", dataAiHint: "focused athlete" },
   { src: "/join.jpeg", alt: "Group workout session", dataAiHint: "group fitness" },
   { src: "https://placehold.co/800x450.png", alt: "Healthy lifestyle SR Fitness", dataAiHint: "healthy lifestyle" },
@@ -52,7 +52,7 @@ export default function HeroSection() {
             src={image.src}
             alt={image.alt}
             layout="fill"
-            objectFit="contain"
+            objectFit="contain" // Changed from "cover"
             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
             data-ai-hint={image.dataAiHint}
             priority={index === 0} // Prioritize the first image for LCP

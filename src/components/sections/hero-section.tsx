@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 
 const heroImages = [
   { src: "/logo.jpeg", alt: "Fitness class in action", dataAiHint: "gym workout" },
-  { src: "/suit.jpeg", alt: "Focused athlete training", dataAiHint: "focused athlete" },
+  { src: "https://placehold.co/800x450.png", alt: "Focused athlete training", dataAiHint: "focused athlete" },
   { src: "/join.jpeg", alt: "Group workout session", dataAiHint: "group fitness" },
   { src: "https://placehold.co/800x450.png", alt: "Healthy lifestyle SR Fitness", dataAiHint: "healthy lifestyle" },
 ];

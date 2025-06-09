@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 const heroImages = [
-  { src: "https://placehold.co/800x450.png", alt: "Fitness class in action (placeholder)", dataAiHint: "gym workout" },
+  { src: "https://placehold.co/800x600.png", alt: "Fitness class in action", dataAiHint: "gym workout" }, // Using placeholder for first image
   { src: "/suit.jpeg", alt: "Focused athlete training", dataAiHint: "focused athlete" },
   { src: "/join.jpeg", alt: "Group workout session", dataAiHint: "group fitness" },
   { src: "https://placehold.co/800x450.png", alt: "Healthy lifestyle SR Fitness", dataAiHint: "healthy lifestyle" },
@@ -38,8 +38,8 @@ export default function HeroSection() {
       id="hero"
       className={cn(
         "relative flex items-center justify-center text-center text-white overflow-hidden",
-        "h-[70vh] min-h-[350px]", // Mobile (xs) - Increased height
-        "sm:h-[80vh] sm:min-h-[450px]", // Small screens - Increased height
+        "h-[80vh] min-h-[400px]", // Mobile (xs) - Further Increased height
+        "sm:h-[90vh] sm:min-h-[500px]", // Small screens - Further Increased height
         "md:h-[calc(100vh-4rem)] md:min-h-[500px]", // Medium screens
         "lg:min-h-[600px]" // Large screens
       )}
@@ -52,7 +52,7 @@ export default function HeroSection() {
             src={image.src}
             alt={image.alt}
             layout="fill"
-            objectFit="contain" // Changed from "cover"
+            objectFit="contain" // Changed from cover to contain
             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
             data-ai-hint={image.dataAiHint}
             priority={index === 0} // Prioritize the first image for LCP

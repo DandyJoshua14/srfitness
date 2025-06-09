@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 
 const heroImages = [
   { src: "/logo.jpeg", alt: "Fitness class in action", dataAiHint: "gym workout" },
-  { src: "https://placehold.co/800x450.png", alt: "Focused athlete training", dataAiHint: "focused athlete" },
+  { src: "/suit.jpeg", alt: "Focused athlete training", dataAiHint: "focused athlete" },
   { src: "/join.jpeg", alt: "Group workout session", dataAiHint: "group fitness" },
   { src: "https://placehold.co/800x450.png", alt: "Healthy lifestyle SR Fitness", dataAiHint: "healthy lifestyle" },
 ];
@@ -34,8 +34,8 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section 
-      id="hero" 
+    <section
+      id="hero"
       className={cn(
         "relative flex items-center justify-center text-center text-white overflow-hidden",
         "h-[60vh] min-h-[320px]", // Mobile (xs)

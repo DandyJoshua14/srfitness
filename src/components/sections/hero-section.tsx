@@ -38,8 +38,8 @@ export default function HeroSection() {
       id="hero"
       className={cn(
         "relative flex items-center justify-center text-center text-white overflow-hidden",
-        "h-[60vh] min-h-[320px]", // Mobile (xs)
-        "sm:h-[70vh] sm:min-h-[400px]", // Small screens
+        "h-[70vh] min-h-[350px]", // Mobile (xs) - Increased height
+        "sm:h-[80vh] sm:min-h-[450px]", // Small screens - Increased height
         "md:h-[calc(100vh-4rem)] md:min-h-[500px]", // Medium screens
         "lg:min-h-[600px]" // Large screens
       )}
@@ -52,7 +52,7 @@ export default function HeroSection() {
             src={image.src}
             alt={image.alt}
             layout="fill"
-            objectFit="contain" // Changed from "cover" to "contain"
+            objectFit="contain"
             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
             data-ai-hint={image.dataAiHint}
             priority={index === 0} // Prioritize the first image for LCP

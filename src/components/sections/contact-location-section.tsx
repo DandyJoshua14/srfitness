@@ -10,7 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone, Send } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters.").max(50, "Name must be at most 50 characters."),
@@ -34,23 +34,24 @@ export default function ContactLocationSection() {
     toast({
       title: "Message Sent!",
       description: "Thanks for reaching out. We'll get back to you soon.",
+      variant: "default",
     });
     form.reset();
   }
 
   return (
-    <section id="contact" className="py-16 md:py-24 bg-background">
+    <section id="contact" className="py-16 md:py-24 bg-background text-foreground">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="font-headline text-4xl md:text-5xl font-bold text-primary mb-4">Get In Touch</h2>
+        <div className="text-center mb-12 md:mb-16 animate-in fade-in slide-in-from-bottom duration-700">
+          <h2 className="font-headline text-4xl md:text-5xl font-bold text-primary mb-4">Connect With Us</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Have questions or ready to start your fitness journey? Contact us or visit our gym.
+            Ready to start your fitness revolution or have a question? We're here to help.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          <CardWithShadow>
-            <h3 className="font-headline text-2xl text-foreground mb-6">Send Us a Message</h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start">
+          <div className="bg-card p-6 sm:p-8 md:p-10 rounded-xl border border-border shadow-xl animate-in fade-in slide-in-from-left duration-700 delay-100">
+            <h3 className="font-headline text-3xl text-foreground mb-8">Send Us a Message</h3>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
@@ -58,9 +59,9 @@ export default function ContactLocationSection() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-foreground">Full Name</FormLabel>
+                      <FormLabel className="text-foreground font-semibold">Full Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="John Doe" {...field} className="bg-input/30 focus:bg-background" />
+                        <Input placeholder="Your Name" {...field} className="bg-muted/30 border-border focus:bg-background focus:border-primary text-base py-3 px-4" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -71,9 +72,9 @@ export default function ContactLocationSection() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-foreground">Email Address</FormLabel>
+                      <FormLabel className="text-foreground font-semibold">Email Address</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="you@example.com" {...field} className="bg-input/30 focus:bg-background" />
+                        <Input type="email" placeholder="your.email@example.com" {...field} className="bg-muted/30 border-border focus:bg-background focus:border-primary text-base py-3 px-4" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -84,9 +85,9 @@ export default function ContactLocationSection() {
                   name="message"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-foreground">Message</FormLabel>
+                      <FormLabel className="text-foreground font-semibold">Your Message</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="Your message..." {...field} rows={5} className="bg-input/30 focus:bg-background" />
+                        <Textarea placeholder="Tell us how we can help..." {...field} rows={5} className="bg-muted/30 border-border focus:bg-background focus:border-primary text-base py-3 px-4" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -94,61 +95,55 @@ export default function ContactLocationSection() {
                 />
                 <Button 
                   type="submit" 
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-headline text-lg py-3 transform hover:scale-105 transition-transform duration-300"
+                  size="lg"
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-headline text-lg py-3.5 rounded-md shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 group"
                 >
-                  Send Message
+                  Send Message <Send className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Button>
               </form>
             </Form>
-          </CardWithShadow>
+          </div>
 
-          <CardWithShadow>
-            <h3 className="font-headline text-2xl text-foreground mb-6">Our Location &amp; Info</h3>
-            <div className="space-y-4 text-muted-foreground">
-              <div className="flex items-start gap-3">
-                <MapPin className="h-6 w-6 text-primary mt-1 shrink-0" />
-                <div>
-                  <p className="font-semibold text-foreground">SR Fitness Gym</p>
-                  <p>123 Fitness Avenue, Workout City, ST 90210</p>
+          <div className="space-y-8 animate-in fade-in slide-in-from-right duration-700 delay-200">
+            <div className="bg-card p-6 sm:p-8 rounded-xl border border-border shadow-xl">
+              <h3 className="font-headline text-3xl text-foreground mb-6">Visit Our Gym</h3>
+              <div className="space-y-4 text-muted-foreground">
+                <div className="flex items-start gap-4">
+                  <MapPin className="h-8 w-8 text-primary mt-1 shrink-0" />
+                  <div>
+                    <p className="font-semibold text-foreground text-lg">SR Fitness Gym</p>
+                    <p className="text-base">123 Fitness Avenue, Workout City, ST 90210</p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Mail className="h-6 w-6 text-primary mt-1 shrink-0" />
-                <div>
-                  <p className="font-semibold text-foreground">Email Us</p>
-                  <a href="mailto:contact@srfitness.com" className="hover:text-primary">contact@srfitness.com</a>
+                <div className="flex items-start gap-4">
+                  <Mail className="h-8 w-8 text-primary mt-1 shrink-0" />
+                  <div>
+                    <p className="font-semibold text-foreground text-lg">Email Us</p>
+                    <a href="mailto:contact@srfitness.com" className="hover:text-primary transition-colors text-base">contact@srfitness.com</a>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Phone className="h-6 w-6 text-primary mt-1 shrink-0" />
-                <div>
-                  <p className="font-semibold text-foreground">Call Us</p>
-                  <a href="tel:+1234567890" className="hover:text-primary">(123) 456-7890</a>
+                <div className="flex items-start gap-4">
+                  <Phone className="h-8 w-8 text-primary mt-1 shrink-0" />
+                  <div>
+                    <p className="font-semibold text-foreground text-lg">Call Us</p>
+                    <a href="tel:+1234567890" className="hover:text-primary transition-colors text-base">(123) 456-7890</a>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="mt-6 rounded-lg overflow-hidden shadow-md aspect-video">
+            <div className="rounded-xl overflow-hidden shadow-xl aspect-video border border-border">
               <Image
-                src="https://placehold.co/600x400.png"
+                src="https://placehold.co/600x338.png" // Adjusted aspect ratio slightly
                 alt="Map showing SR Fitness location"
                 width={600}
-                height={400}
-                className="w-full h-full object-cover"
-                data-ai-hint="city map"
+                height={338}
+                className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                data-ai-hint="city map location"
               />
             </div>
-          </CardWithShadow>
+          </div>
         </div>
       </div>
     </section>
-  );
-}
-
-// Helper component for consistent card styling
-function CardWithShadow({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="bg-card p-6 md:p-8 rounded-lg border border-border shadow-lg">
-      {children}
-    </div>
   );
 }

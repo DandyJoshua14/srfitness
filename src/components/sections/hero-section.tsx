@@ -52,8 +52,7 @@ export default function HeroSection() {
             src={image.src}
             alt={image.alt}
             layout="fill"
-            objectFit="cover"
-            quality={80}
+            objectFit="contain" // Changed from "cover" to "contain"
             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
             data-ai-hint={image.dataAiHint}
             priority={index === 0} // Prioritize the first image for LCP

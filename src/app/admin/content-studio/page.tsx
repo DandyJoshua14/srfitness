@@ -39,14 +39,14 @@ export default function AdminContentStudioPage() {
               </p>
               <p>
                 In a real-world application, this admin area would require robust backend integration for:
-                <ul className="list-disc list-inside pl-4 mt-1 text-xs">
-                    <li>Secure user authentication and role-based access control (RBAC).</li>
-                    <li>Frontend and backend routing guards to prevent unauthorized access.</li>
-                    <li>Secure file handling and storage for uploads.</li>
-                    <li>Integration with AI services via secure API calls.</li>
-                    <li>Database interactions for saving drafts, scheduling, and publishing.</li>
-                </ul>
               </p>
+              <ul className="list-disc list-inside pl-4 mt-1 text-xs">
+                  <li>Secure user authentication and role-based access control (RBAC).</li>
+                  <li>Frontend and backend routing guards to prevent unauthorized access.</li>
+                  <li>Secure file handling and storage for uploads.</li>
+                  <li>Integration with AI services via secure API calls.</li>
+                  <li>Database interactions for saving drafts, scheduling, and publishing.</li>
+              </ul>
                <p className="font-semibold mt-2">
                 Attempting to use this page as-is in a production environment would be a severe security risk.
               </p>

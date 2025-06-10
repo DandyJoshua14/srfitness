@@ -11,7 +11,7 @@ const services = [
     title: "Personal Training",
     icon: <Dumbbell className="h-10 w-10 text-primary mb-4" />,
     description: "Unlock your full potential with tailored one-on-one coaching. Our expert trainers create personalized workout and nutrition plans to fast-track your results safely and effectively.",
-    image: "https://placehold.co/600x400.png",
+    image: "/train.jpeg",
     dataAiHint: "personal trainer client",
     link: "/personal-training",
     cta: "Learn More"

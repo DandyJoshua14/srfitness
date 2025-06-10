@@ -20,7 +20,7 @@ export default function AboutSummarySection() {
           <div className="animate-in fade-in slide-in-from-left duration-700">
             <div className="relative aspect-video rounded-lg shadow-2xl overflow-hidden group">
               <Image
-                src="https://placehold.co/600x400.png"
+                src="/team1.jpeg"
                 alt="SR Fitness facility interior"
                 layout="fill"
                 objectFit="cover"

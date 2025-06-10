@@ -18,18 +18,30 @@ export default function HeroSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [textVisible, setTextVisible] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 768); // Tailwind's md breakpoint
+    };
+    handleResize(); // Set initial value on client mount
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const imageTimer = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
       setTextVisible(false);
-      setImageLoaded(false);
-      setTimeout(() => setTextVisible(true), 500);
-    }, 7000);
+      setImageLoaded(false); // Reset loaded state for the new image
+      // Delay text animation slightly after image starts to transition
+      setTimeout(() => setTextVisible(true), 500); // Start text fade-in after image starts changing
+    }, 7000); // Change image every 7 seconds
 
+    // Initial text visibility
     setTimeout(() => {
       setTextVisible(true);
-    }, 300);
+    }, 300); // Initial delay for text
 
     return () => {
       clearInterval(imageTimer);
@@ -37,6 +49,8 @@ export default function HeroSection() {
   }, []);
 
   useEffect(() => {
+    // Reset imageLoaded state whenever currentImageIndex changes,
+    // to ensure the scale-up animation runs for the new image.
     setImageLoaded(false);
   }, [currentImageIndex]);
 
@@ -47,9 +61,9 @@ export default function HeroSection() {
       id="hero"
       className={cn(
         "relative flex items-center justify-center text-center text-white overflow-hidden",
-        "h-[45vh] min-h-[220px]",
-        "sm:h-[55vh] sm:min-h-[280px]",
-        "md:h-screen md:min-h-[650px]"
+        "h-[45vh] min-h-[220px]", // Mobile height
+        "sm:h-[55vh] sm:min-h-[280px]", // Small screen height
+        "md:h-screen md:min-h-[650px]" // Desktop height
       )}
     >
       <div className="absolute inset-0 z-0 w-full h-full">
@@ -59,11 +73,11 @@ export default function HeroSection() {
             src={image.src}
             alt={image.alt}
             layout="fill"
-            objectFit="cover" // Changed from "contain" to "cover"
+            objectFit={isMobileView ? 'contain' : 'cover'}
             className={cn(
               "absolute inset-0 transition-opacity duration-1000 ease-in-out",
               index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0',
-              imageLoaded && index === currentImageIndex ? 'scale-100' : 'scale-110'
+              imageLoaded && index === currentImageIndex ? 'scale-100' : 'scale-110' // Apply scale-up only if image is loaded and current
             )}
             data-ai-hint={image.dataAiHint}
             priority={index === 0}

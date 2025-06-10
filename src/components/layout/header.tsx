@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet"; // Added Sheet components
 
 const topLevelNavItems = [
   { label: 'Home', href: '/' },
@@ -46,7 +47,7 @@ export default function Header() {
   const [activeLink, setActiveLink] = useState(pathname);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
+  const [expandedMobileCategories, setExpandedMobileCategories] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     let currentPath = pathname;
@@ -70,15 +71,14 @@ export default function Header() {
       element?.scrollIntoView({ behavior: 'smooth' });
       setActiveLink(href);
     }
-    if (isMobileMenuOpen) {
-      setIsMobileMenuOpen(false);
-      setExpandedCategories({}); // Reset expanded categories on menu close
-    }
+    // Close mobile menu when a link is clicked
+    setIsMobileMenuOpen(false);
+    setExpandedMobileCategories({}); // Reset expanded categories on menu close
   };
 
-  const toggleMobileCategory = (categoryLabel: string, event: React.MouseEvent) => {
-    event.stopPropagation(); // Prevent menu from closing
-    setExpandedCategories(prev => ({
+  const toggleMobileCategory = (categoryLabel: string, event?: React.MouseEvent) => {
+    event?.stopPropagation(); // Prevent sheet from closing if clicked on category header
+    setExpandedMobileCategories(prev => ({
       ...prev,
       [categoryLabel]: !prev[categoryLabel]
     }));
@@ -125,22 +125,10 @@ export default function Header() {
     "hover:text-primary focus-visible:ring-primary/70"
   );
 
-  const mobileMenuVariants = {
-    hidden: { opacity: 0, y: "-100%", transition: { duration: 0.3, ease: "easeInOut" } },
-    visible: { opacity: 1, y: "0%", transition: { duration: 0.4, ease: "easeInOut", staggerChildren: 0.05 } },
-    exit: { opacity: 0, y: "-100%", transition: { duration: 0.3, ease: "easeInOut", staggerChildren: 0.05, staggerDirection: -1 } },
-  };
-
-  const mobileLinkItemVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } },
-    exit: { opacity: 0, y: -20, transition: { type: "spring", stiffness: 100 } },
-  };
-  
   const mobileCategorySubItemVariants = {
-    hidden: { opacity: 0, y: -10 },
-    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 120, damping: 15 } },
-    exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
+    hidden: { opacity: 0, y: -10, height: 0 },
+    visible: { opacity: 1, y: 0, height: 'auto', transition: { type: "spring", stiffness: 120, damping: 15 } },
+    exit: { opacity: 0, y: -10, height: 0, transition: { duration: 0.2 } },
   };
 
   const allNavItemsForMobile = [
@@ -152,15 +140,19 @@ export default function Header() {
     contactNavItem
   ];
   
-  const mobileLinkClasses = (isActive: boolean, isCategoryButton = false) => cn(
-    "font-headline text-3xl sm:text-4xl py-3 transition-colors duration-300 w-full text-center",
-    isActive ? "text-primary" : "text-gray-100 hover:text-primary/80",
-    isCategoryButton && "flex items-center justify-center"
+  const mobileCategoryClasses = (isActive: boolean) => cn(
+    "font-headline text-lg py-3 px-4 w-full text-left flex justify-between items-center rounded-md",
+    isActive ? "text-primary bg-primary/10" : "text-foreground hover:bg-muted/50"
+  );
+  
+  const mobileLinkClasses = (isActive: boolean) => cn(
+    "font-medium text-base py-3 px-4 w-full text-left flex items-center rounded-md",
+     isActive ? "text-primary bg-primary/10" : "text-foreground hover:bg-muted/50"
   );
   
   const mobileSubLinkClasses = (isActive: boolean) => cn(
-    "font-body text-xl py-2.5 transition-colors duration-300 w-full text-center flex items-center justify-center hover:bg-gray-800/50 rounded-md",
-    isActive ? "text-primary font-medium" : "text-gray-300 hover:text-primary/70"
+    "font-normal text-base py-2.5 pl-10 pr-4 w-full text-left flex items-center rounded-md", // Indented
+    isActive ? "text-primary bg-primary/10" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
   );
 
 
@@ -271,120 +263,100 @@ export default function Header() {
 
           {/* Mobile Menu Trigger */}
           <div className="md:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsMobileMenuOpen(true)}
-              aria-label="Open menu"
-              className={mobileMenuTriggerButtonClasses}
-            >
-              <Menu className="h-7 w-7" />
-            </Button>
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Open menu"
+                  className={mobileMenuTriggerButtonClasses}
+                >
+                  <Menu className="h-7 w-7" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[300px] sm:w-[340px] p-0 flex flex-col bg-background text-foreground">
+                <SheetHeader className="p-4 border-b border-border">
+                  <SheetTitle className="flex items-center space-x-2">
+                     <Link href="/" className="flex items-center space-x-2" onClick={() => handleLinkClick('/')}>
+                        <Image
+                            src="/logo.png" // Make sure this logo is visible on sheet background
+                            alt="SR Fitness Logo"
+                            width={32}
+                            height={32}
+                            className="h-8 w-8 rounded-full object-cover"
+                            data-ai-hint="logo brand"
+                        />
+                        <span className="font-headline text-2xl font-bold text-primary">SR Fitness</span>
+                    </Link>
+                  </SheetTitle>
+                  <SheetClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 data-[state=open]:bg-secondary">
+                    <X className="h-5 w-5" />
+                    <span className="sr-only">Close</span>
+                  </SheetClose>
+                </SheetHeader>
+                
+                <nav className="flex-grow overflow-y-auto p-4 space-y-1">
+                  {allNavItemsForMobile.map((item) => (
+                    <div key={item.label} className="w-full">
+                      {item.isCategory && item.subItems ? (
+                        <>
+                          <button
+                            onClick={(e) => toggleMobileCategory(item.label, e)}
+                            className={mobileCategoryClasses(item.subItems.some(sub => isLinkActive(sub.href)))}
+                            aria-expanded={!!expandedMobileCategories[item.label]}
+                          >
+                            <span className="flex items-center">
+                                {item.icon && React.cloneElement(item.icon, { className: "mr-3 h-5 w-5 shrink-0" })}
+                                {item.label}
+                            </span>
+                            <ChevronDown
+                              className={cn("ml-2 h-5 w-5 shrink-0 transition-transform duration-300", expandedMobileCategories[item.label] ? "rotate-180" : "")}
+                            />
+                          </button>
+                          <AnimatePresence>
+                            {expandedMobileCategories[item.label] && (
+                              <motion.div
+                                initial="hidden"
+                                animate="visible"
+                                exit="exit"
+                                variants={mobileCategorySubItemVariants}
+                                className="flex flex-col space-y-0.5 mt-1 overflow-hidden"
+                              >
+                                {item.subItems.map(subItem => (
+                                   <Link
+                                      key={subItem.label}
+                                      href={subItem.href}
+                                      onClick={() => handleLinkClick(subItem.href)} 
+                                      className={mobileSubLinkClasses(isLinkActive(subItem.href))}
+                                    >
+                                      {subItem.icon && React.cloneElement(subItem.icon, { className: "mr-3 h-5 w-5 shrink-0 opacity-80" })}
+                                      <span className="truncate">{subItem.label}</span>
+                                    </Link>
+                                ))}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </>
+                      ) : (
+                        <Link
+                          href={item.href}
+                          onClick={() => handleLinkClick(item.href)} 
+                          className={mobileLinkClasses(isLinkActive(item.href))}
+                        >
+                           {item.icon && React.cloneElement(item.icon, { className: "mr-3 h-5 w-5 shrink-0" })}
+                          {item.label}
+                        </Link>
+                      )}
+                    </div>
+                  ))}
+                </nav>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </header>
-
-      {/* Mobile Full-Screen Overlay Menu */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            variants={mobileMenuVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-lg p-6 flex flex-col items-center justify-start md:hidden overflow-y-auto pt-20" // Adjusted padding-top
-            onClick={() => { setIsMobileMenuOpen(false); setExpandedCategories({}); }}
-          >
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={(e) => { e.stopPropagation(); setIsMobileMenuOpen(false); setExpandedCategories({}); }} 
-              aria-label="Close menu"
-              className="absolute top-6 right-6 text-gray-100 hover:bg-gray-700/50 hover:text-primary rounded-full p-2"
-            >
-              <X className="h-8 w-8" />
-            </Button>
-
-            <motion.nav
-              className="flex flex-col items-center space-y-1 text-center w-full max-w-md" // Constrain width for better readability
-              variants={mobileMenuVariants} 
-            >
-              {allNavItemsForMobile.map((item) => (
-                <motion.div key={item.label} variants={mobileLinkItemVariants} className="w-full">
-                  {item.isCategory && item.subItems ? (
-                    <>
-                      <button
-                        onClick={(e) => toggleMobileCategory(item.label, e)}
-                        className={mobileLinkClasses(item.subItems.some(sub => isLinkActive(sub.href)), true)}
-                        aria-expanded={!!expandedCategories[item.label]}
-                      >
-                        {item.label}
-                        <ChevronDown
-                          className={cn("ml-2 h-6 w-6 shrink-0 transition-transform duration-300", expandedCategories[item.label] ? "rotate-180" : "")}
-                        />
-                      </button>
-                      <AnimatePresence>
-                        {expandedCategories[item.label] && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: 'auto', opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.3, ease: "easeInOut" }}
-                            className="flex flex-col items-center space-y-0.5 mt-1 mb-2 overflow-hidden w-[90%] mx-auto" // Sub-items slightly narrower
-                          >
-                            {item.subItems.map(subItem => (
-                               <motion.div 
-                                 key={subItem.label} 
-                                 variants={mobileCategorySubItemVariants}
-                                 className="w-full"
-                               >
-                                <Link
-                                  href={subItem.href}
-                                  onClick={(e) => { e.stopPropagation(); handleLinkClick(subItem.href); }} 
-                                  className={mobileSubLinkClasses(isLinkActive(subItem.href))}
-                                >
-                                  {subItem.icon && React.cloneElement(subItem.icon, { className: "mr-2.5 h-5 w-5 shrink-0" })}
-                                  <span className="truncate">{subItem.label}</span>
-                                </Link>
-                               </motion.div>
-                            ))}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </>
-                  ) : (
-                    <Link
-                      href={item.href}
-                      onClick={(e) => { e.stopPropagation(); handleLinkClick(item.href); }} 
-                      className={mobileLinkClasses(isLinkActive(item.href))}
-                    >
-                       {item.icon && React.cloneElement(item.icon, { className: "inline-block mr-2 h-7 w-7 align-middle shrink-0" })}
-                      {item.label}
-                    </Link>
-                  )}
-                </motion.div>
-              ))}
-            </motion.nav>
-            <motion.div
-              variants={mobileLinkItemVariants}
-              className="mt-auto pb-6 flex items-center space-x-2" // Push logo to bottom
-            >
-                 <Link href="/" className="flex items-center space-x-2" onClick={(e) => { e.stopPropagation(); handleLinkClick('/'); }}>
-                    <Image
-                        src="/logo.png"
-                        alt="SR Fitness Logo"
-                        width={40}
-                        height={40}
-                        className="h-8 w-8 rounded-full object-cover"
-                        data-ai-hint="logo brand"
-                    />
-                    <span className="font-headline text-xl font-bold text-primary">SR Fitness</span>
-                </Link>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 }
 
+    

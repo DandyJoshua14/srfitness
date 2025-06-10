@@ -47,8 +47,8 @@ export default function HeroSection() {
       id="hero"
       className={cn(
         "relative flex items-center justify-center text-center text-white overflow-hidden",
-        "h-[80vh] min-h-[400px]", 
-        "sm:h-[90vh] sm:min-h-[500px]", 
+        "h-[60vh] min-h-[300px]", 
+        "sm:h-[70vh] sm:min-h-[350px]", 
         "md:h-screen md:min-h-[650px]" 
       )}
     >
@@ -59,7 +59,7 @@ export default function HeroSection() {
             src={image.src}
             alt={image.alt}
             layout="fill"
-            objectFit="cover" 
+            objectFit="contain" 
             className={cn(
               "absolute inset-0 transition-opacity duration-1000 ease-in-out",
               index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0',

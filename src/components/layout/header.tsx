@@ -117,12 +117,10 @@ export default function Header() {
     exit: { opacity: 0, y: -20, transition: { type: "spring", stiffness: 100 } },
   };
 
-  // Simplified mobile navigation structure for the full-screen overlay
   const allNavItemsForMobile = [
     ...topLevelNavItems,
-    // Direct links for main categories in mobile overlay
-    { label: 'Services', href: '/personal-training', isCategory: true }, // Example: link to main personal training page
-    { label: 'Explore', href: '/lifestyle-magazine', isCategory: true }, // Example: link to main magazine page
+    { label: 'Services', href: '/personal-training', isCategory: true },
+    { label: 'Explore', href: '/lifestyle-magazine', isCategory: true },
     contactNavItem
   ];
   
@@ -138,14 +136,14 @@ export default function Header() {
         "sticky top-0 z-50 w-full border-b transition-all duration-300",
         isScrolled ? "border-white/10 bg-black/80 backdrop-blur-xl shadow-lg" : "border-transparent bg-black/30"
       )}>
-        <div className="container flex h-20 md:h-24 max-w-screen-xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <div className="container flex h-16 md:h-20 max-w-screen-xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center space-x-3 shrink-0" onClick={() => handleLinkClick('/')}>
             <Image
-              src="/SR.jpg"
+              src="/logo.png"
               alt="SR Fitness Logo"
-              width={48}
-              height={48}
-              className="h-10 w-10 md:h-12 md:w-12 rounded-full object-cover"
+              width={40}
+              height={40}
+              className="h-8 w-8 md:h-10 md:w-10 rounded-full object-cover"
               data-ai-hint="logo brand"
               priority
             />

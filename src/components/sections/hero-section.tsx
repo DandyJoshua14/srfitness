@@ -18,16 +18,6 @@ export default function HeroSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [textVisible, setTextVisible] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [isMobileView, setIsMobileView] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobileView(window.innerWidth < 768); // Tailwind's md breakpoint
-    };
-    handleResize(); // Set initial value on client mount
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   useEffect(() => {
     const imageTimer = setInterval(() => {
@@ -61,8 +51,8 @@ export default function HeroSection() {
       id="hero"
       className={cn(
         "relative flex items-center justify-center text-center text-white overflow-hidden",
-        "h-[45vh] min-h-[220px]", // Mobile height
-        "sm:h-[55vh] sm:min-h-[280px]", // Small screen height
+        "h-[40vh] min-h-[200px]", // Mobile height
+        "sm:h-[50vh] sm:min-h-[250px]", // Small screen height
         "md:h-screen md:min-h-[650px]" // Desktop height
       )}
     >
@@ -73,7 +63,7 @@ export default function HeroSection() {
             src={image.src}
             alt={image.alt}
             layout="fill"
-            objectFit={isMobileView ? 'contain' : 'cover'}
+            objectFit="cover" // Static objectFit="cover"
             className={cn(
               "absolute inset-0 transition-opacity duration-1000 ease-in-out",
               index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0',

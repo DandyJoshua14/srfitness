@@ -2,8 +2,9 @@
 "use client";
 import Link from 'next/link';
 import Image from 'next/image';
-import React, { useState, useEffect } from 'react'; // Added React import
+import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X } from 'lucide-react';
 import {
@@ -12,19 +13,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTrigger,
-  SheetClose,
-} from "@/components/ui/sheet";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Button } from '@/components/ui/button';
 
 const topLevelNavItems = [
@@ -58,10 +46,10 @@ export default function Header() {
     setActiveLink(currentPath);
 
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 50); // Increased scroll threshold
     };
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Call on mount to set initial state
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, [pathname]);
 
@@ -70,18 +58,16 @@ export default function Header() {
       const elementId = href.substring(2);
       const element = document.getElementById(elementId);
       element?.scrollIntoView({ behavior: 'smooth' });
-      setActiveLink(href); // Set active link for hash links on the same page
+      setActiveLink(href);
     }
-    // For page navigations, the pathname useEffect will handle setting activeLink
+    if (isMobileMenuOpen) {
+      setIsMobileMenuOpen(false);
+    }
   };
   
   const isLinkActive = (href: string) => {
-    // Exact match for homepage
     if (href === '/' && activeLink === '/') return true;
-    // For other pages, check if activeLink starts with the href (accounts for sub-routes)
-    // Exclude hash links from this logic if not on homepage
     if (href !== '/' && !href.startsWith('/#') && activeLink.startsWith(href)) return true;
-    // For hash links on the homepage
     if (pathname === '/' && href.startsWith('/#') && activeLink === href) return true;
     return false;
   };
@@ -89,200 +75,182 @@ export default function Header() {
   const isServicesActive = servicesDropdownItems.some(item => isLinkActive(item.href));
   const isExploreActive = exploreDropdownItems.some(item => isLinkActive(item.href));
 
-  // Common classes for navigation links
+  const navLinkBaseClasses = "px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70";
+  
   const navLinkClasses = (isActive: boolean) => cn(
-    "px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70",
+    navLinkBaseClasses,
     isScrolled
       ? isActive
-        ? "text-primary bg-primary/10 font-semibold" // Scrolled & Active
-        : "text-foreground/80 hover:text-primary hover:bg-muted/50" // Scrolled & Inactive
+        ? "text-primary font-semibold" // Scrolled & Active
+        : "text-foreground/80 hover:text-primary" // Scrolled & Inactive
       : isActive
         ? "text-primary font-semibold" // Transparent & Active
-        : "text-white hover:text-primary" // Transparent & Inactive
+        : "text-white hover:text-primary/80" // Transparent & Inactive
   );
 
   const dropdownTriggerClasses = (isDropdownActive: boolean) => cn(
-    "px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 flex items-center gap-1",
+    navLinkBaseClasses, "flex items-center gap-1",
      isScrolled
       ? isDropdownActive
-        ? "text-primary bg-primary/10 font-semibold" // Scrolled & Active
-        : "text-foreground/80 hover:text-primary hover:bg-muted/50" // Scrolled & Inactive
+        ? "text-primary font-semibold" 
+        : "text-foreground/80 hover:text-primary"
       : isDropdownActive
-        ? "text-primary font-semibold" // Transparent & Active
-        : "text-white hover:text-primary" // Transparent & Inactive
-  );
-  
-  // Mobile navigation link classes
-  const mobileNavLinkClasses = (isActive: boolean) => cn(
-    "block px-3 py-3 rounded-md text-base font-medium transition-colors",
-    isActive ? "text-primary bg-primary/10" : "text-foreground hover:bg-muted hover:text-primary"
+        ? "text-primary font-semibold" 
+        : "text-white hover:text-primary/80"
   );
 
-  const mobileAccordionTriggerClasses = (isSectionActive: boolean) => cn(
-    "px-3 py-3 text-base font-medium hover:no-underline flex justify-between w-full items-center rounded-md transition-colors",
-    isSectionActive ? "text-primary bg-primary/10" : "text-foreground hover:bg-muted hover:text-primary"
-  );
+  const mobileMenuVariants = {
+    hidden: { opacity: 0, y: "-100%" },
+    visible: { opacity: 1, y: "0%", transition: { duration: 0.4, ease: "easeInOut" } },
+    exit: { opacity: 0, y: "-100%", transition: { duration: 0.3, ease: "easeInOut" } },
+  };
 
+  const mobileLinkClasses = (isActive: boolean) => cn(
+    "font-headline text-3xl py-3 transition-colors duration-300",
+    isActive ? "text-primary" : "text-foreground hover:text-primary/80"
+  );
 
   return (
-    <header className={cn(
-      "sticky top-0 z-50 w-full border-b transition-all duration-300",
-      isScrolled ? "border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 shadow-md" : "border-transparent bg-transparent"
-    )}>
-      <div className="container flex h-16 md:h-20 max-w-screen-xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        {/* Logo and Brand Name */}
-        <Link href="/" className="flex items-center space-x-2 shrink-0" onClick={() => { handleLinkClick('/'); if (isMobileMenuOpen) setIsMobileMenuOpen(false); }}>
-          <Image 
-            src="/logo.png" 
-            alt="SR Fitness Logo" 
-            width={100} 
-            height={35}
-            className="h-8 md:h-10 w-auto object-contain" // Responsive height
-            data-ai-hint="logo brand"
-            priority // Prioritize loading for LCP
-          />
-          <span className={cn(
-            "font-headline text-2xl sm:text-3xl font-bold hidden sm:inline-block transition-colors duration-200 ease-in-out",
-            "text-primary" // Always orange for better visibility
-          )}>SR Fitness</span>
-        </Link>
-
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
-          {topLevelNavItems.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              onClick={() => handleLinkClick(item.href)}
-              className={navLinkClasses(isLinkActive(item.href))}
-            >
-              {item.label}
-            </Link>
-          ))}
-
-          <DropdownMenu>
-            <DropdownMenuTrigger 
-              className={dropdownTriggerClasses(isServicesActive)}
-            >
-              Services <ChevronDown className="h-4 w-4 opacity-70" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="bg-background border-border shadow-lg mt-1 w-56">
-              {servicesDropdownItems.map((item) => (
-                <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer", isLinkActive(item.href) ? "bg-muted text-primary" : "hover:bg-muted")}>
-                  <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full px-3 py-2">
-                    {item.icon} {item.label}
-                  </Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger 
-              className={dropdownTriggerClasses(isExploreActive)}
-            >
-              Explore <ChevronDown className="h-4 w-4 opacity-70" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="bg-background border-border shadow-lg mt-1 w-56">
-              {exploreDropdownItems.map((item) => (
-                <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer", isLinkActive(item.href) ? "bg-muted text-primary" : "hover:bg-muted")}>
-                  <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full px-3 py-2">
-                    {item.icon} {item.label}
-                  </Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <Link
-            href={contactNavItem.href}
-            onClick={() => handleLinkClick(contactNavItem.href)}
-            className={navLinkClasses(isLinkActive(contactNavItem.href))}
-          >
-            {contactNavItem.label}
+    <>
+      <header className={cn(
+        "sticky top-0 z-50 w-full border-b transition-all duration-300",
+        isScrolled ? "border-border/40 bg-background/90 backdrop-blur-lg shadow-lg" : "border-transparent bg-transparent"
+      )}>
+        <div className="container flex h-20 max-w-screen-xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+          <Link href="/" className="flex items-center space-x-2 shrink-0" onClick={() => handleLinkClick('/')}>
+            <Image 
+              src="/logo.png" 
+              alt="SR Fitness Logo" 
+              width={120} 
+              height={40}
+              className="h-10 md:h-12 w-auto object-contain"
+              data-ai-hint="logo brand"
+              priority
+            />
+            <span className={cn(
+              "font-headline text-2xl sm:text-3xl font-bold hidden sm:inline-block transition-colors duration-200 ease-in-out",
+              "text-primary"
+            )}>SR Fitness</span>
           </Link>
-        </nav>
 
-        {/* Mobile Menu Trigger */}
-        <div className="md:hidden">
-          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className={cn(
-                  "transition-colors",
-                  isScrolled ? "text-foreground hover:bg-muted" : "text-white hover:bg-white/10",
-                  "hover:text-primary focus-visible:ring-primary/70" // Ensure focus state is prominent
-                )}
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
+            {topLevelNavItems.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                onClick={() => handleLinkClick(item.href)}
+                className={navLinkClasses(isLinkActive(item.href))}
               >
-                <Menu className="h-6 w-6" />
-                <span className="sr-only">Open menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] sm:w-[320px] bg-background p-0 flex flex-col">
-              <SheetHeader className="p-4 border-b border-border flex flex-row justify-between items-center">
-                <Link href="/" className="flex items-center space-x-2" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Image src="/logo.png" alt="SR Fitness Logo" width={80} height={28} className="h-7 w-auto object-contain" data-ai-hint="logo brand" />
-                  <span className="font-headline text-xl font-bold text-primary">SR Fitness</span>
-                </Link>
-                <SheetClose asChild>
-                  <Button variant="ghost" size="icon" className="text-foreground hover:bg-muted">
-                    <X className="h-5 w-5" />
-                    <span className="sr-only">Close</span>
-                  </Button>
-                </SheetClose>
-              </SheetHeader>
-              <div className="p-4 space-y-1 overflow-y-auto flex-grow">
-                {topLevelNavItems.map((item) => (
-                  <Link key={item.label} href={item.href} onClick={() => { handleLinkClick(item.href); setIsMobileMenuOpen(false); }}
-                    className={mobileNavLinkClasses(isLinkActive(item.href))}>
-                    {item.label}
-                  </Link>
+                {item.label}
+              </Link>
+            ))}
+
+            <DropdownMenu>
+              <DropdownMenuTrigger 
+                className={dropdownTriggerClasses(isServicesActive)}
+              >
+                Services <ChevronDown className="h-4 w-4 opacity-70" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="bg-background border-border shadow-lg mt-2 w-56">
+                {servicesDropdownItems.map((item) => (
+                  <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm", isLinkActive(item.href) ? "bg-muted text-primary" : "hover:bg-muted focus:bg-muted")}>
+                    <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full px-3 py-2.5">
+                      {item.icon} {item.label}
+                    </Link>
+                  </DropdownMenuItem>
                 ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-                <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="services" className="border-none">
-                    <AccordionTrigger className={mobileAccordionTriggerClasses(isServicesActive)}>
-                      Services
-                    </AccordionTrigger>
-                    <AccordionContent className="pt-1 pl-4 space-y-1">
-                      {servicesDropdownItems.map((item) => (
-                        <Link key={item.label} href={item.href} onClick={() => { handleLinkClick(item.href); setIsMobileMenuOpen(false); }}
-                          className={cn(mobileNavLinkClasses(isLinkActive(item.href)), "flex items-center gap-2")}>
-                          {/* Ensure React is in scope for cloneElement */}
-                          {React.cloneElement(item.icon, { className: "h-5 w-5" })} {item.label}
-                        </Link>
-                      ))}
-                    </AccordionContent>
-                  </AccordionItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger 
+                className={dropdownTriggerClasses(isExploreActive)}
+              >
+                Explore <ChevronDown className="h-4 w-4 opacity-70" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="bg-background border-border shadow-lg mt-2 w-56">
+                {exploreDropdownItems.map((item) => (
+                  <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm", isLinkActive(item.href) ? "bg-muted text-primary" : "hover:bg-muted focus:bg-muted")}>
+                    <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full px-3 py-2.5">
+                      {item.icon} {item.label}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-                  <AccordionItem value="explore" className="border-none">
-                    <AccordionTrigger className={mobileAccordionTriggerClasses(isExploreActive)}>
-                      Explore
-                    </AccordionTrigger>
-                    <AccordionContent className="pt-1 pl-4 space-y-1">
-                      {exploreDropdownItems.map((item) => (
-                        <Link key={item.label} href={item.href} onClick={() => { handleLinkClick(item.href); setIsMobileMenuOpen(false); }}
-                          className={cn(mobileNavLinkClasses(isLinkActive(item.href)), "flex items-center gap-2")}>
-                           {/* Ensure React is in scope for cloneElement */}
-                           {React.cloneElement(item.icon, { className: "h-5 w-5" })} {item.label}
-                        </Link>
-                      ))}
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
+            <Link
+              href={contactNavItem.href}
+              onClick={() => handleLinkClick(contactNavItem.href)}
+              className={navLinkClasses(isLinkActive(contactNavItem.href))}
+            >
+              {contactNavItem.label}
+            </Link>
+          </nav>
 
-                <Link href={contactNavItem.href} onClick={() => { handleLinkClick(contactNavItem.href); setIsMobileMenuOpen(false); }}
-                  className={mobileNavLinkClasses(isLinkActive(contactNavItem.href))}>
-                  {contactNavItem.label}
-                </Link>
-              </div>
-            </SheetContent>
-          </Sheet>
+          {/* Mobile Menu Trigger */}
+          <div className="md:hidden">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setIsMobileMenuOpen(true)}
+              aria-label="Open menu"
+              className={cn(
+                "transition-colors rounded-full p-2",
+                isScrolled ? "text-foreground hover:bg-muted" : "text-white hover:bg-white/10",
+                "hover:text-primary focus-visible:ring-primary/70"
+              )}
+            >
+              <Menu className="h-6 w-6" />
+            </Button>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Mobile Full-Screen Overlay Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            variants={mobileMenuVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="fixed inset-0 z-[100] bg-background p-6 flex flex-col items-center justify-center md:hidden"
+          >
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsMobileMenuOpen(false)}
+              aria-label="Close menu"
+              className="absolute top-6 right-6 text-foreground hover:bg-muted hover:text-primary rounded-full p-2"
+            >
+              <X className="h-7 w-7" />
+            </Button>
+            
+            <nav className="flex flex-col items-center space-y-6 text-center mt-8">
+              {[...topLevelNavItems, 
+               { label: 'Services', href: '/personal-training' }, // Link to main service page or first service
+               { label: 'Explore', href: '/lifestyle-magazine' }, // Link to main explore page or first explore item
+               contactNavItem
+              ].map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => handleLinkClick(item.href)}
+                  className={mobileLinkClasses(isLinkActive(item.href))}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+             <Link href="/" className="absolute bottom-8 flex items-center space-x-2" onClick={() => handleLinkClick('/')}>
+                <Image src="/logo.png" alt="SR Fitness Logo" width={100} height={33} className="h-8 w-auto object-contain" data-ai-hint="logo brand" />
+                <span className="font-headline text-xl font-bold text-primary">SR Fitness</span>
+            </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
-

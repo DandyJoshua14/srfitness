@@ -9,8 +9,8 @@ import { cn } from '@/lib/utils';
 import { ArrowRight } from 'lucide-react';
 
 const heroImages = [
-  { src: "https://placehold.co/600x900.png", alt: "Tall promotional banner for SR Fitness", dataAiHint: "tall banner", title: "Transform Your Body", subtitle: "Achieve Peak Fitness with SR Fitness" },
-  { src: "https://placehold.co/800x600.png", alt: "Athlete training at SR Fitness", dataAiHint: "fitness training", title: "Expert Personal Training", subtitle: "Personalized Plans for Maximum Results" },
+  { src: "/logo.png", alt: "Modern fitness center", dataAiHint: "gym interior", title: "Transform Your Body", subtitle: "Achieve Peak Fitness with SR Fitness" },
+  { src: "/suit.jpeg", alt: "Athlete performing exercise", dataAiHint: "fitness training", title: "Expert Personal Training", subtitle: "Personalized Plans for Maximum Results" },
   { src: "https://placehold.co/640x400.png", alt: "Energetic group workout class", dataAiHint: "group exercise", title: "Dynamic Group Classes", subtitle: "Motivation, Energy, and Community" },
 ];
 

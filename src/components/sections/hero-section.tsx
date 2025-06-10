@@ -63,7 +63,7 @@ export default function HeroSection() {
             src={image.src}
             alt={image.alt}
             layout="fill"
-            objectFit="cover" // Static objectFit="cover"
+            objectFit="cover"
             className={cn(
               "absolute inset-0 transition-opacity duration-1000 ease-in-out",
               index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0',
@@ -80,7 +80,7 @@ export default function HeroSection() {
       <div className="relative z-20 w-full px-4 sm:px-6 lg:px-8 flex flex-col items-center">
         <h1
           className={cn(
-            "font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-3 sm:mb-4 leading-tight transition-all ease-out duration-1000 transform",
+            "font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-3 sm:mb-4 leading-tight transition-all ease-out duration-1000 transform",
             textVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           )}
           style={{ transitionDelay: textVisible ? '0ms' : '0ms' }}
@@ -90,7 +90,7 @@ export default function HeroSection() {
         </h1>
         <p
           className={cn(
-            "max-w-xl lg:max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-slate-100 mb-6 sm:mb-8 transition-all ease-out duration-1000 transform",
+            "max-w-xl lg:max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-slate-100 mb-6 sm:mb-8 transition-all ease-out duration-1000 transform",
             textVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           )}
           style={{ transitionDelay: textVisible ? '300ms' : '0ms' }}
@@ -104,12 +104,12 @@ export default function HeroSection() {
           )}
           style={{ transitionDelay: textVisible ? '600ms' : '0ms' }}
         >
-          <Button asChild className="font-headline text-base sm:text-lg px-6 sm:px-8 py-2.5 sm:py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group">
+          <Button asChild className="font-headline text-sm sm:text-base px-4 py-2 sm:px-6 sm:py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group">
             <Link href="/#services">
               Our Services <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </Button>
-          <Button asChild variant="outline" className="font-headline text-base sm:text-lg px-6 sm:px-8 py-2.5 sm:py-3 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group">
+          <Button asChild variant="outline" className="font-headline text-sm sm:text-base px-4 py-2 sm:px-6 sm:py-2.5 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group">
             <Link href="/#contact">
               Join Today
             </Link>

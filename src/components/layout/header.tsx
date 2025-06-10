@@ -139,7 +139,7 @@ export default function Header() {
         <div className="container flex h-16 md:h-20 max-w-screen-xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center space-x-3 shrink-0" onClick={() => handleLinkClick('/')}>
             <Image
-              src="/logo.png"
+              src="/SR.jpg"
               alt="SR Fitness Logo"
               width={40}
               height={40}

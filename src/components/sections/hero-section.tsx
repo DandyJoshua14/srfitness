@@ -9,8 +9,8 @@ import { cn } from '@/lib/utils';
 import { ArrowRight } from 'lucide-react';
 
 const heroImages = [
-  { src: "/logo.png", alt: "Modern fitness center", dataAiHint: "gym interior", title: "Transform Your Body", subtitle: "Achieve Peak Fitness with SR Fitness" },
-  { src: "/suit.jpeg", alt: "Athlete performing exercise", dataAiHint: "fitness training", title: "Expert Personal Training", subtitle: "Personalized Plans for Maximum Results" },
+  { src: "/logo.png", alt: "SR Fitness logo branding", dataAiHint: "logo brand", title: "Transform Your Body", subtitle: "Achieve Peak Fitness with SR Fitness" },
+  { src: "/suit.jpeg", alt: "Athlete in a suit, symbolizing transformation", dataAiHint: "fitness lifestyle", title: "Expert Personal Training", subtitle: "Personalized Plans for Maximum Results" },
   { src: "https://placehold.co/640x400.png", alt: "Energetic group workout class", dataAiHint: "group exercise", title: "Dynamic Group Classes", subtitle: "Motivation, Energy, and Community" },
 ];
 
@@ -59,7 +59,7 @@ export default function HeroSection() {
             src={image.src}
             alt={image.alt}
             layout="fill"
-            objectFit="contain" // Ensures the full image is shown, scaled to fit
+            objectFit="contain"
             className={cn(
               "absolute inset-0 transition-opacity duration-1000 ease-in-out",
               index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0',
@@ -73,7 +73,7 @@ export default function HeroSection() {
       </div>
       <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/70 z-10"></div>
 
-      <div className="relative z-20 container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
+      <div className="relative z-20 w-full px-4 sm:px-6 lg:px-8 flex flex-col items-center">
         <h1
           className={cn(
             "font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-3 sm:mb-4 leading-tight transition-all ease-out duration-1000 transform",

@@ -41,7 +41,7 @@ export default function Footer() {
           <div className="md:col-span-2 lg:col-span-1">
             <Link href="/" className="flex items-center space-x-3 mb-4">
               <Image 
-                src="/logo.png" // Assuming /logo.png is in public folder
+                src="/SR.jpg" // Assuming /SR.jpg is in public folder
                 alt="SR Fitness Logo" 
                 width={40} 
                 height={40}

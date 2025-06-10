@@ -17,7 +17,7 @@ export default function EquipmentServicesPage() {
       title: "Home or Commercial Gym Space Design",
       description: "We conceptualize and design functional and inspiring gym spaces tailored to your specific needs, whether for private home use or a commercial facility.",
       icon: <Ruler className="h-8 w-8 text-primary" />,
-      image: "https://placehold.co/600x400.png",
+      image: "/gym.jpeg", // Corrected from 'src' to 'image'
       dataAiHint: "gym layout blueprint"
     },
     {

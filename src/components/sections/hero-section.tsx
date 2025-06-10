@@ -47,8 +47,8 @@ export default function HeroSection() {
       id="hero"
       className={cn(
         "relative flex items-center justify-center text-center text-white overflow-hidden",
-        "h-[60vh] min-h-[300px]", 
-        "sm:h-[70vh] sm:min-h-[350px]", 
+        "h-[50vh] min-h-[250px]", 
+        "sm:h-[60vh] sm:min-h-[300px]", 
         "md:h-screen md:min-h-[650px]" 
       )}
     >

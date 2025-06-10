@@ -4,6 +4,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
+import AnnouncementBar from '@/components/layout/announcement-bar'; // Import the new component
 
 export const metadata: Metadata = {
   title: 'SR Fitness',
@@ -24,9 +25,10 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased flex flex-col min-h-screen">
+        <AnnouncementBar /> {/* Add AnnouncementBar before Header */}
         {/* The header height is set via CSS variable in header.tsx for use in other components like chat page */}
         <Header />
-        <main className="flex-grow pt-[var(--header-height,80px)]"> {/* Add padding top to account for sticky header */}
+        <main className="flex-grow pt-[var(--header-height,80px)]"> {/* Padding top accounts for sticky header */}
           {children}
         </main>
         <Footer />
@@ -35,4 +37,3 @@ export default function RootLayout({
     </html>
   );
 }
-

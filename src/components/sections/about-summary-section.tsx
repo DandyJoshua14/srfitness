@@ -40,7 +40,19 @@ export default function AboutSummarySection() {
             <p className="text-lg text-muted-foreground leading-relaxed">
               We believe in a holistic approach to wellness, combining effective workouts with nutritional guidance and unwavering support to foster lasting change.
             </p>
-            <Button asChild size="lg" className="font-headline text-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transform hover:scale-105 transition-transform">
+
+            <div className="mt-10">
+              <h3 className="font-headline text-2xl md:text-3xl text-primary font-semibold mb-3">
+                Our compelling reason Why we do what we do!
+              </h3>
+              <blockquote className="text-lg text-muted-foreground italic border-l-4 border-primary pl-4 py-2 my-4">
+                “We strongly believe that if we can inspire millions of people stay fit and
+                preventable illness free, we have played our part in making the world a better
+                place”
+              </blockquote>
+            </div>
+
+            <Button asChild size="lg" className="font-headline text-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transform hover:scale-105 transition-transform !mt-8">
               <Link href="/awards">Discover Our Story</Link>
             </Button>
           </div>

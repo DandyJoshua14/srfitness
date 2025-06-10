@@ -6,13 +6,12 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, UserCircle2 } from 'lucide-react'; // Added new icons
+import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, UserCircle2 } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Button } from '@/components/ui/button';
 
@@ -47,6 +46,7 @@ export default function Header() {
   const [activeLink, setActiveLink] = useState(pathname);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     let currentPath = pathname;
@@ -72,7 +72,16 @@ export default function Header() {
     }
     if (isMobileMenuOpen) {
       setIsMobileMenuOpen(false);
+      setExpandedCategories({}); // Reset expanded categories on menu close
     }
+  };
+
+  const toggleMobileCategory = (categoryLabel: string, event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent menu from closing
+    setExpandedCategories(prev => ({
+      ...prev,
+      [categoryLabel]: !prev[categoryLabel]
+    }));
   };
 
   const isLinkActive = (href: string) => {
@@ -127,6 +136,12 @@ export default function Header() {
     visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } },
     exit: { opacity: 0, y: -20, transition: { type: "spring", stiffness: 100 } },
   };
+  
+  const mobileCategorySubItemVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 120, damping: 15 } },
+    exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
+  };
 
   const allNavItemsForMobile = [
     ...topLevelNavItems,
@@ -137,14 +152,15 @@ export default function Header() {
     contactNavItem
   ];
   
-  const mobileLinkClasses = (isActive: boolean) => cn(
+  const mobileLinkClasses = (isActive: boolean, isCategoryButton = false) => cn(
     "font-headline text-3xl sm:text-4xl py-3 transition-colors duration-300 w-full text-center",
-    isActive ? "text-primary" : "text-gray-100 hover:text-primary/80"
+    isActive ? "text-primary" : "text-gray-100 hover:text-primary/80",
+    isCategoryButton && "flex items-center justify-center"
   );
   
   const mobileSubLinkClasses = (isActive: boolean) => cn(
-    "font-body text-xl py-2 transition-colors duration-300 w-full text-center flex items-center justify-center",
-    isActive ? "text-primary/90" : "text-gray-300 hover:text-primary/70"
+    "font-body text-xl py-2.5 transition-colors duration-300 w-full text-center flex items-center justify-center hover:bg-gray-800/50 rounded-md",
+    isActive ? "text-primary font-medium" : "text-gray-300 hover:text-primary/70"
   );
 
 
@@ -157,7 +173,7 @@ export default function Header() {
         <div className="container flex h-16 md:h-20 max-w-screen-xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8" style={{'--header-height': '80px'} as React.CSSProperties}>
           <Link href="/" className="flex items-center space-x-3 shrink-0" onClick={() => handleLinkClick('/')}>
             <Image
-              src="/SR.jpg" // Assuming SR.jpg is in public folder
+              src="/SR.jpg"
               alt="SR Fitness Logo"
               width={40}
               height={40}
@@ -276,13 +292,13 @@ export default function Header() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-lg p-6 flex flex-col items-center justify-center md:hidden overflow-y-auto"
-            onClick={() => setIsMobileMenuOpen(false)} 
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-lg p-6 flex flex-col items-center justify-start md:hidden overflow-y-auto pt-20" // Adjusted padding-top
+            onClick={() => { setIsMobileMenuOpen(false); setExpandedCategories({}); }}
           >
             <Button
               variant="ghost"
               size="icon"
-              onClick={(e) => { e.stopPropagation(); setIsMobileMenuOpen(false); }} 
+              onClick={(e) => { e.stopPropagation(); setIsMobileMenuOpen(false); setExpandedCategories({}); }} 
               aria-label="Close menu"
               className="absolute top-6 right-6 text-gray-100 hover:bg-gray-700/50 hover:text-primary rounded-full p-2"
             >
@@ -290,28 +306,51 @@ export default function Header() {
             </Button>
 
             <motion.nav
-              className="flex flex-col items-center space-y-2 text-center mt-8 w-full"
+              className="flex flex-col items-center space-y-1 text-center w-full max-w-md" // Constrain width for better readability
               variants={mobileMenuVariants} 
             >
               {allNavItemsForMobile.map((item) => (
                 <motion.div key={item.label} variants={mobileLinkItemVariants} className="w-full">
                   {item.isCategory && item.subItems ? (
                     <>
-                      <span className={mobileLinkClasses(item.subItems.some(sub => isLinkActive(sub.href)))}>{item.label}</span>
-                      <motion.div className="flex flex-col items-center space-y-1 mt-1 mb-2">
-                        {item.subItems.map(subItem => (
-                           <motion.div key={subItem.label} variants={mobileLinkItemVariants} className="w-full">
-                            <Link
-                              href={subItem.href}
-                              onClick={(e) => { e.stopPropagation(); handleLinkClick(subItem.href); }} 
-                              className={mobileSubLinkClasses(isLinkActive(subItem.href))}
-                            >
-                              {subItem.icon && React.cloneElement(subItem.icon, { className: "mr-2 h-5 w-5" })}
-                              {subItem.label}
-                            </Link>
-                           </motion.div>
-                        ))}
-                      </motion.div>
+                      <button
+                        onClick={(e) => toggleMobileCategory(item.label, e)}
+                        className={mobileLinkClasses(item.subItems.some(sub => isLinkActive(sub.href)), true)}
+                        aria-expanded={!!expandedCategories[item.label]}
+                      >
+                        {item.label}
+                        <ChevronDown
+                          className={cn("ml-2 h-6 w-6 shrink-0 transition-transform duration-300", expandedCategories[item.label] ? "rotate-180" : "")}
+                        />
+                      </button>
+                      <AnimatePresence>
+                        {expandedCategories[item.label] && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="flex flex-col items-center space-y-0.5 mt-1 mb-2 overflow-hidden w-[90%] mx-auto" // Sub-items slightly narrower
+                          >
+                            {item.subItems.map(subItem => (
+                               <motion.div 
+                                 key={subItem.label} 
+                                 variants={mobileCategorySubItemVariants}
+                                 className="w-full"
+                               >
+                                <Link
+                                  href={subItem.href}
+                                  onClick={(e) => { e.stopPropagation(); handleLinkClick(subItem.href); }} 
+                                  className={mobileSubLinkClasses(isLinkActive(subItem.href))}
+                                >
+                                  {subItem.icon && React.cloneElement(subItem.icon, { className: "mr-2.5 h-5 w-5 shrink-0" })}
+                                  <span className="truncate">{subItem.label}</span>
+                                </Link>
+                               </motion.div>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </>
                   ) : (
                     <Link
@@ -319,7 +358,7 @@ export default function Header() {
                       onClick={(e) => { e.stopPropagation(); handleLinkClick(item.href); }} 
                       className={mobileLinkClasses(isLinkActive(item.href))}
                     >
-                       {item.icon && React.cloneElement(item.icon, { className: "inline-block mr-2 h-7 w-7 align-middle" })}
+                       {item.icon && React.cloneElement(item.icon, { className: "inline-block mr-2 h-7 w-7 align-middle shrink-0" })}
                       {item.label}
                     </Link>
                   )}
@@ -328,7 +367,7 @@ export default function Header() {
             </motion.nav>
             <motion.div
               variants={mobileLinkItemVariants}
-              className="absolute bottom-10 flex items-center space-x-2"
+              className="mt-auto pb-6 flex items-center space-x-2" // Push logo to bottom
             >
                  <Link href="/" className="flex items-center space-x-2" onClick={(e) => { e.stopPropagation(); handleLinkClick('/'); }}>
                     <Image

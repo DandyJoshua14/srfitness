@@ -4,14 +4,14 @@
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { ArrowRight } from 'lucide-react';
 
 const heroImages = [
   { src: "/logo.png", alt: "Modern fitness center", dataAiHint: "gym interior", title: "Transform Your Body", subtitle: "Achieve Peak Fitness with SR Fitness" },
   { src: "/suit.jpeg", alt: "Athlete performing exercise", dataAiHint: "fitness training", title: "Expert Personal Training", subtitle: "Personalized Plans for Maximum Results" },
-  { src: "https://placehold.co/1920x1080.png", alt: "Energetic group workout", dataAiHint: "group exercise class", title: "Dynamic Group Classes", subtitle: "Motivation, Energy, and Community" },
+  { src: "https://placehold.co/640x400.png", alt: "Energetic group workout", dataAiHint: "group exercise class", title: "Dynamic Group Classes", subtitle: "Motivation, Energy, and Community" },
 ];
 
 export default function HeroSection() {
@@ -37,6 +37,11 @@ export default function HeroSection() {
     };
   }, []);
 
+  useEffect(() => {
+    // Reset imageLoaded to false when currentImageIndex changes to re-trigger onLoad
+    setImageLoaded(false);
+  }, [currentImageIndex]);
+
   const currentSlide = heroImages[currentImageIndex];
 
   return (
@@ -57,11 +62,11 @@ export default function HeroSection() {
             src={image.src}
             alt={image.alt}
             layout="fill"
-            objectFit="cover"
+            objectFit="cover" // Changed from "contain" to "cover" for better fill
             className={cn(
               "absolute inset-0 transition-opacity duration-1000 ease-in-out",
               index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0',
-              imageLoaded ? 'scale-100' : 'scale-110' // Subtle zoom effect
+              imageLoaded && index === currentImageIndex ? 'scale-100' : 'scale-110' // Subtle zoom effect, apply only to current loaded image
             )}
             data-ai-hint={image.dataAiHint}
             priority={index === 0}

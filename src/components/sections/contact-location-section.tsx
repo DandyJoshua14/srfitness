@@ -107,22 +107,22 @@ export default function ContactLocationSection() {
           <div className="space-y-8 animate-in fade-in slide-in-from-right duration-700 delay-200">
             <div className="bg-card p-6 sm:p-8 rounded-xl border border-border shadow-xl">
               <h3 className="font-headline text-3xl text-foreground mb-6">Visit Our Gym</h3>
-              <div className="space-y-4 text-muted-foreground">
-                <div className="flex items-start gap-4">
+              <div className="space-y-2 text-muted-foreground">
+                <div className="flex items-start gap-4 p-3 rounded-md transition-colors hover:bg-muted/30">
                   <MapPin className="h-8 w-8 text-primary mt-1 shrink-0" />
                   <div>
                     <p className="font-semibold text-foreground text-lg">SR Fitness Gym</p>
                     <p className="text-base">123 Fitness Avenue, Workout City, ST 90210</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-4 p-3 rounded-md transition-colors hover:bg-muted/30">
                   <Mail className="h-8 w-8 text-primary mt-1 shrink-0" />
                   <div>
                     <p className="font-semibold text-foreground text-lg">Email Us</p>
                     <a href="mailto:contact@srfitness.com" className="hover:text-primary transition-colors text-base">contact@srfitness.com</a>
                   </div>
                 </div>
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-4 p-3 rounded-md transition-colors hover:bg-muted/30">
                   <Phone className="h-8 w-8 text-primary mt-1 shrink-0" />
                   <div>
                     <p className="font-semibold text-foreground text-lg">Call Us</p>

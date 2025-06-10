@@ -65,7 +65,7 @@ export default function ServicesHighlightSection() {
                   <CardDescription className="text-muted-foreground mb-6 leading-relaxed flex-grow">
                     {service.description}
                   </CardDescription>
-                  <Button asChild variant="default" className="mt-auto bg-primary hover:bg-primary/90 text-primary-foreground font-semibold group-hover:animate-pulse">
+                  <Button asChild variant="default" className="mt-auto bg-primary hover:bg-primary/90 text-primary-foreground font-semibold transform group-hover:scale-105 transition-transform duration-200">
                     <Link href={service.link}>
                       {service.cta} <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                     </Link>

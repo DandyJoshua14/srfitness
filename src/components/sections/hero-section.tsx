@@ -9,8 +9,8 @@ import { cn } from '@/lib/utils';
 import { ArrowRight } from 'lucide-react';
 
 const heroImages = [
-  { src: "https://placehold.co/1920x1080.png", alt: "Modern fitness center", dataAiHint: "gym interior", title: "Transform Your Body", subtitle: "Achieve Peak Fitness with SR Fitness" },
-  { src: "https://placehold.co/1920x1080.png", alt: "Athlete performing exercise", dataAiHint: "fitness training", title: "Expert Personal Training", subtitle: "Personalized Plans for Maximum Results" },
+  { src: "/logo.png", alt: "Modern fitness center", dataAiHint: "gym interior", title: "Transform Your Body", subtitle: "Achieve Peak Fitness with SR Fitness" },
+  { src: "/suit.jpeg", alt: "Athlete performing exercise", dataAiHint: "fitness training", title: "Expert Personal Training", subtitle: "Personalized Plans for Maximum Results" },
   { src: "https://placehold.co/1920x1080.png", alt: "Energetic group workout", dataAiHint: "group exercise class", title: "Dynamic Group Classes", subtitle: "Motivation, Energy, and Community" },
 ];
 
@@ -44,8 +44,8 @@ export default function HeroSection() {
       id="hero"
       className={cn(
         "relative flex items-center justify-center text-center text-white overflow-hidden",
-        "h-[85vh] min-h-[500px]", // Mobile
-        "sm:h-[90vh] sm:min-h-[550px]", // Small screens
+        "h-[80vh] min-h-[400px]", // Mobile
+        "sm:h-[90vh] sm:min-h-[500px]", // Small screens
         "md:h-screen md:min-h-[650px]" // Medium screens and up (full screen height minus header potential)
       )}
     >

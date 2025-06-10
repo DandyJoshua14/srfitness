@@ -46,7 +46,7 @@ export default function Header() {
     setActiveLink(currentPath);
 
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50); // Increased scroll threshold
+      setIsScrolled(window.scrollY > 20); 
     };
     window.addEventListener('scroll', handleScroll);
     handleScroll();
@@ -75,61 +75,75 @@ export default function Header() {
   const isServicesActive = servicesDropdownItems.some(item => isLinkActive(item.href));
   const isExploreActive = exploreDropdownItems.some(item => isLinkActive(item.href));
 
-  const navLinkBaseClasses = "px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70";
+  const navLinkBaseClasses = "px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 relative";
   
   const navLinkClasses = (isActive: boolean) => cn(
     navLinkBaseClasses,
     isScrolled
       ? isActive
-        ? "text-primary font-semibold" // Scrolled & Active
-        : "text-foreground/80 hover:text-primary" // Scrolled & Inactive
+        ? "text-primary font-semibold after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-4/5 after:h-[2px] after:bg-primary after:rounded-t-full"
+        : "text-foreground/80 hover:text-primary" 
       : isActive
-        ? "text-primary font-semibold" // Transparent & Active
-        : "text-white hover:text-primary/80" // Transparent & Inactive
+        ? "text-primary font-semibold after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-4/5 after:h-[2px] after:bg-primary after:rounded-t-full"
+        : "text-white hover:text-primary/80"
   );
 
   const dropdownTriggerClasses = (isDropdownActive: boolean) => cn(
     navLinkBaseClasses, "flex items-center gap-1",
      isScrolled
       ? isDropdownActive
-        ? "text-primary font-semibold" 
+        ? "text-primary font-semibold after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-4/5 after:h-[2px] after:bg-primary after:rounded-t-full"
         : "text-foreground/80 hover:text-primary"
       : isDropdownActive
-        ? "text-primary font-semibold" 
+        ? "text-primary font-semibold after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-4/5 after:h-[2px] after:bg-primary after:rounded-t-full"
         : "text-white hover:text-primary/80"
   );
 
   const mobileMenuVariants = {
-    hidden: { opacity: 0, y: "-100%" },
-    visible: { opacity: 1, y: "0%", transition: { duration: 0.4, ease: "easeInOut" } },
-    exit: { opacity: 0, y: "-100%", transition: { duration: 0.3, ease: "easeInOut" } },
+    hidden: { opacity: 0, y: "-100%", transition: { duration: 0.3, ease: "easeInOut" } },
+    visible: { opacity: 1, y: "0%", transition: { duration: 0.4, ease: "easeInOut", staggerChildren: 0.05 } },
+    exit: { opacity: 0, y: "-100%", transition: { duration: 0.3, ease: "easeInOut", staggerChildren: 0.05, staggerDirection: -1 } },
+  };
+
+  const mobileLinkItemVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } },
+    exit: { opacity: 0, y: -20, transition: { type: "spring", stiffness: 100 } },
   };
 
   const mobileLinkClasses = (isActive: boolean) => cn(
-    "font-headline text-3xl py-3 transition-colors duration-300",
+    "font-headline text-3xl sm:text-4xl py-3 transition-colors duration-300 w-full text-center",
     isActive ? "text-primary" : "text-foreground hover:text-primary/80"
   );
+  
+  const allNavItemsForMobile = [
+    ...topLevelNavItems,
+    { label: 'Services', href: '/personal-training' }, // Main services page
+    { label: 'Explore', href: '/lifestyle-magazine' }, // Main explore page
+    contactNavItem
+  ];
+
 
   return (
     <>
       <header className={cn(
         "sticky top-0 z-50 w-full border-b transition-all duration-300",
-        isScrolled ? "border-border/40 bg-background/90 backdrop-blur-lg shadow-lg" : "border-transparent bg-transparent"
+        isScrolled ? "border-border/40 bg-background/95 backdrop-blur-xl shadow-lg" : "border-transparent bg-transparent"
       )}>
-        <div className="container flex h-20 max-w-screen-xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center space-x-2 shrink-0" onClick={() => handleLinkClick('/')}>
-            <Image 
-              src="/logo.png" 
-              alt="SR Fitness Logo" 
-              width={120} 
-              height={40}
-              className="h-10 md:h-12 w-auto object-contain"
+        <div className="container flex h-20 md:h-24 max-w-screen-xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+          <Link href="/" className="flex items-center space-x-3 shrink-0" onClick={() => handleLinkClick('/')}>
+            <Image
+              src="/logo.png"
+              alt="SR Fitness Logo"
+              width={48}
+              height={48}
+              className="h-10 w-10 md:h-12 md:w-12 rounded-full object-cover"
               data-ai-hint="logo brand"
               priority
             />
             <span className={cn(
-              "font-headline text-2xl sm:text-3xl font-bold hidden sm:inline-block transition-colors duration-200 ease-in-out",
-              "text-primary"
+              "font-headline text-2xl sm:text-3xl font-bold transition-colors duration-200 ease-in-out",
+              isScrolled ? "text-primary" : "text-white"
             )}>SR Fitness</span>
           </Link>
 
@@ -152,10 +166,10 @@ export default function Header() {
               >
                 Services <ChevronDown className="h-4 w-4 opacity-70" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="bg-background border-border shadow-lg mt-2 w-56">
+              <DropdownMenuContent align="start" className="bg-background border-border shadow-xl mt-3 w-56 rounded-lg">
                 {servicesDropdownItems.map((item) => (
-                  <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm", isLinkActive(item.href) ? "bg-muted text-primary" : "hover:bg-muted focus:bg-muted")}>
-                    <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full px-3 py-2.5">
+                  <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted")}>
+                    <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">
                       {item.icon} {item.label}
                     </Link>
                   </DropdownMenuItem>
@@ -169,10 +183,10 @@ export default function Header() {
               >
                 Explore <ChevronDown className="h-4 w-4 opacity-70" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="bg-background border-border shadow-lg mt-2 w-56">
+              <DropdownMenuContent align="start" className="bg-background border-border shadow-xl mt-3 w-56 rounded-lg">
                 {exploreDropdownItems.map((item) => (
-                  <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm", isLinkActive(item.href) ? "bg-muted text-primary" : "hover:bg-muted focus:bg-muted")}>
-                    <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full px-3 py-2.5">
+                  <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted")}>
+                    <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">
                       {item.icon} {item.label}
                     </Link>
                   </DropdownMenuItem>
@@ -197,12 +211,12 @@ export default function Header() {
               onClick={() => setIsMobileMenuOpen(true)}
               aria-label="Open menu"
               className={cn(
-                "transition-colors rounded-full p-2",
+                "transition-colors rounded-full p-2 text-2xl", 
                 isScrolled ? "text-foreground hover:bg-muted" : "text-white hover:bg-white/10",
                 "hover:text-primary focus-visible:ring-primary/70"
               )}
             >
-              <Menu className="h-6 w-6" />
+              <Menu className="h-7 w-7" />
             </Button>
           </div>
         </div>
@@ -216,38 +230,51 @@ export default function Header() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed inset-0 z-[100] bg-background p-6 flex flex-col items-center justify-center md:hidden"
+            className="fixed inset-0 z-[100] bg-background/95 backdrop-blur-lg p-6 flex flex-col items-center justify-center md:hidden"
+            onClick={() => setIsMobileMenuOpen(false)} // Close on overlay click
           >
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={(e) => { e.stopPropagation(); setIsMobileMenuOpen(false); }} // Prevent overlay click from closing
               aria-label="Close menu"
               className="absolute top-6 right-6 text-foreground hover:bg-muted hover:text-primary rounded-full p-2"
             >
-              <X className="h-7 w-7" />
+              <X className="h-8 w-8" />
             </Button>
             
-            <nav className="flex flex-col items-center space-y-6 text-center mt-8">
-              {[...topLevelNavItems, 
-               { label: 'Services', href: '/personal-training' }, // Link to main service page or first service
-               { label: 'Explore', href: '/lifestyle-magazine' }, // Link to main explore page or first explore item
-               contactNavItem
-              ].map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  onClick={() => handleLinkClick(item.href)}
-                  className={mobileLinkClasses(isLinkActive(item.href))}
-                >
-                  {item.label}
-                </Link>
+            <motion.nav 
+              className="flex flex-col items-center space-y-4 text-center mt-8 w-full"
+              variants={mobileMenuVariants} // Apply stagger to parent
+            >
+              {allNavItemsForMobile.map((item) => (
+                <motion.div key={item.label} variants={mobileLinkItemVariants} className="w-full">
+                  <Link
+                    href={item.href}
+                    onClick={(e) => { e.stopPropagation(); handleLinkClick(item.href); }} // Prevent overlay click from closing
+                    className={mobileLinkClasses(isLinkActive(item.href))}
+                  >
+                    {item.label}
+                  </Link>
+                </motion.div>
               ))}
-            </nav>
-             <Link href="/" className="absolute bottom-8 flex items-center space-x-2" onClick={() => handleLinkClick('/')}>
-                <Image src="/logo.png" alt="SR Fitness Logo" width={100} height={33} className="h-8 w-auto object-contain" data-ai-hint="logo brand" />
-                <span className="font-headline text-xl font-bold text-primary">SR Fitness</span>
-            </Link>
+            </motion.nav>
+            <motion.div 
+              variants={mobileLinkItemVariants} 
+              className="absolute bottom-10 flex items-center space-x-2"
+            >
+                 <Link href="/" className="flex items-center space-x-2" onClick={(e) => { e.stopPropagation(); handleLinkClick('/'); }}>
+                    <Image 
+                        src="/logo.png" 
+                        alt="SR Fitness Logo" 
+                        width={40} 
+                        height={40} 
+                        className="h-8 w-8 rounded-full object-cover" 
+                        data-ai-hint="logo brand" 
+                    />
+                    <span className="font-headline text-xl font-bold text-primary">SR Fitness</span>
+                </Link>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

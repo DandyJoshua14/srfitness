@@ -28,13 +28,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           {/* Column 1: Brand and Slogan */}
           <div className="md:col-span-2 lg:col-span-1">
-            <Link href="/" className="flex items-center space-x-2 mb-4">
+            <Link href="/" className="flex items-center space-x-3 mb-4">
               <Image 
                 src="/logo.png" 
                 alt="SR Fitness Logo" 
-                width={120} 
+                width={40} 
                 height={40}
-                className="h-10 w-auto object-contain"
+                className="h-10 w-10 rounded-full object-cover"
                 data-ai-hint="logo brand"
               />
               <span className="font-headline text-3xl font-bold text-primary">SR Fitness</span>

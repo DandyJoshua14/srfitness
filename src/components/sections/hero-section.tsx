@@ -47,8 +47,8 @@ export default function HeroSection() {
       id="hero"
       className={cn(
         "relative flex items-center justify-center text-center text-white overflow-hidden",
-        "h-[50vh] min-h-[250px]", 
-        "sm:h-[60vh] sm:min-h-[300px]", 
+        "h-[45vh] min-h-[220px]", 
+        "sm:h-[55vh] sm:min-h-[280px]", 
         "md:h-screen md:min-h-[650px]" 
       )}
     >
@@ -76,7 +76,7 @@ export default function HeroSection() {
       <div className="relative z-20 container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
         <h1
           className={cn(
-            "font-headline text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight mb-4 sm:mb-6 leading-tight transition-all ease-out duration-1000 transform",
+            "font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-3 sm:mb-4 leading-tight transition-all ease-out duration-1000 transform",
             textVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           )}
           style={{ transitionDelay: textVisible ? '0ms' : '0ms' }}
@@ -86,7 +86,7 @@ export default function HeroSection() {
         </h1>
         <p
           className={cn(
-            "max-w-xl lg:max-w-2xl mx-auto text-lg sm:text-xl md:text-2xl text-slate-100 mb-8 sm:mb-10 transition-all ease-out duration-1000 transform",
+            "max-w-xl lg:max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-slate-100 mb-6 sm:mb-8 transition-all ease-out duration-1000 transform",
             textVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           )}
           style={{ transitionDelay: textVisible ? '300ms' : '0ms' }}
@@ -100,12 +100,12 @@ export default function HeroSection() {
           )}
           style={{ transitionDelay: textVisible ? '600ms' : '0ms' }}
         >
-          <Button asChild size="lg" className="font-headline text-lg sm:text-xl px-8 sm:px-10 py-3 sm:py-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group">
+          <Button asChild size="lg" className="font-headline text-base sm:text-lg px-6 sm:px-8 py-2.5 sm:py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group">
             <Link href="/#services">
               Our Services <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </Button>
-          <Button asChild variant="outline" size="lg" className="font-headline text-lg sm:text-xl px-8 sm:px-10 py-3 sm:py-4 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group">
+          <Button asChild variant="outline" size="lg" className="font-headline text-base sm:text-lg px-6 sm:px-8 py-2.5 sm:py-3 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group">
             <Link href="/#contact">
               Join Today
             </Link>

@@ -14,12 +14,23 @@ export default function Footer() {
     { label: 'Magazine', href: '/lifestyle-magazine' },
     { label: 'Public Speaking', href: '/public-speaking' },
     { label: 'Contact Us', href: '/#contact' },
+    // New Feature Links
+    { label: 'Meal Planner', href: '/meal-planner' },
+    { label: 'Smart Mirror', href: '/smart-mirror' },
+    { label: 'Global Connect', href: '/global-connect' },
+    { label: 'Community Hub', href: '/community' },
+    { label: 'Profile', href: '/profile' },
+    // Legal Links
     { label: 'Privacy Policy', href: '/privacy-policy' }, 
     { label: 'Terms of Service', href: '/terms-of-service' }, 
   ];
 
-  const quickLinks = footerNavItems.filter(item => ['Home', 'Personal Training', 'Bootcamp', 'Awards'].includes(item.label));
-  const exploreLinks = footerNavItems.filter(item => ['Magazine', 'Public Speaking', 'Contact Us'].includes(item.label));
+  const mainLinks = footerNavItems.filter(item => 
+    ['Home', 'Personal Training', 'Bootcamp', 'Awards', 'Meal Planner', 'Smart Mirror'].includes(item.label)
+  );
+  const exploreLinks = footerNavItems.filter(item => 
+    ['Magazine', 'Public Speaking', 'Global Connect', 'Community Hub', 'Profile', 'Contact Us'].includes(item.label)
+  );
 
 
   return (
@@ -30,7 +41,7 @@ export default function Footer() {
           <div className="md:col-span-2 lg:col-span-1">
             <Link href="/" className="flex items-center space-x-3 mb-4">
               <Image 
-                src="/logo.png" 
+                src="/logo.png" // Assuming /logo.png is in public folder
                 alt="SR Fitness Logo" 
                 width={40} 
                 height={40}
@@ -61,19 +72,19 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Column 2: Quick Links */}
+          {/* Column 2: Main Links */}
           <div>
             <h3 className="font-headline text-xl font-semibold text-primary mb-4">Navigate</h3>
             <ul className="space-y-2 text-sm">
-              {quickLinks.map(item => (
+              {mainLinks.map(item => (
                  <li key={item.label}><Link href={item.href} className="text-secondary-foreground/80 hover:text-primary hover:underline transition-colors">{item.label}</Link></li>
               ))}
             </ul>
           </div>
 
-          {/* Column 3: More Links */}
+          {/* Column 3: Explore Links */}
           <div>
-            <h3 className="font-headline text-xl font-semibold text-primary mb-4">Explore</h3>
+            <h3 className="font-headline text-xl font-semibold text-primary mb-4">Discover</h3>
             <ul className="space-y-2 text-sm">
               {exploreLinks.map(item => ( 
                  <li key={item.label}><Link href={item.href} className="text-secondary-foreground/80 hover:text-primary hover:underline transition-colors">{item.label}</Link></li>
@@ -104,3 +115,4 @@ export default function Footer() {
     </footer>
   );
 }
+

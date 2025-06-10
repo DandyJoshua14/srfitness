@@ -6,12 +6,13 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X } from 'lucide-react';
+import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, UserCircle2 } from 'lucide-react'; // Added new icons
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Button } from '@/components/ui/button';
 
@@ -25,12 +26,21 @@ const servicesDropdownItems = [
   { label: 'Burn Off Bootcamp', href: '/burn-off-bootcamp', icon: <Sparkles className="mr-2 h-4 w-4" /> },
 ];
 
+const featuresDropdownItems = [
+  { label: 'Meal Planner', href: '/meal-planner', icon: <NotebookText className="mr-2 h-4 w-4" /> },
+  { label: 'Smart Mirror', href: '/smart-mirror', icon: <ScanLine className="mr-2 h-4 w-4" /> },
+  { label: 'Global Connect', href: '/global-connect', icon: <Globe className="mr-2 h-4 w-4" /> },
+  { label: 'Community Hub', href: '/community', icon: <CommunityIcon className="mr-2 h-4 w-4" /> },
+];
+
 const exploreDropdownItems = [
   { label: 'Lifestyle Magazine', href: '/lifestyle-magazine', icon: <Newspaper className="mr-2 h-4 w-4" /> },
   { label: 'Public Speaking', href: '/public-speaking', icon: <Mic className="mr-2 h-4 w-4" /> },
 ];
 
+const profileNavItem = { label: 'Profile', href: '/profile', icon: <UserCircle2 className="mr-2 h-4 w-4" /> };
 const contactNavItem = { label: 'Contact', href: '/#contact' };
+
 
 export default function Header() {
   const pathname = usePathname();
@@ -74,6 +84,7 @@ export default function Header() {
 
   const isServicesActive = servicesDropdownItems.some(item => isLinkActive(item.href));
   const isExploreActive = exploreDropdownItems.some(item => isLinkActive(item.href));
+  const isFeaturesActive = featuresDropdownItems.some(item => isLinkActive(item.href));
 
   const navLinkBaseClasses = "px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 relative";
 
@@ -119,14 +130,21 @@ export default function Header() {
 
   const allNavItemsForMobile = [
     ...topLevelNavItems,
-    { label: 'Services', href: '/personal-training', isCategory: true },
-    { label: 'Explore', href: '/lifestyle-magazine', isCategory: true },
+    { label: 'Services', href: '#', isCategory: true, subItems: servicesDropdownItems },
+    { label: 'Features', href: '#', isCategory: true, subItems: featuresDropdownItems },
+    { label: 'Explore', href: '#', isCategory: true, subItems: exploreDropdownItems },
+    profileNavItem,
     contactNavItem
   ];
   
   const mobileLinkClasses = (isActive: boolean) => cn(
     "font-headline text-3xl sm:text-4xl py-3 transition-colors duration-300 w-full text-center",
     isActive ? "text-primary" : "text-gray-100 hover:text-primary/80"
+  );
+  
+  const mobileSubLinkClasses = (isActive: boolean) => cn(
+    "font-body text-xl py-2 transition-colors duration-300 w-full text-center flex items-center justify-center",
+    isActive ? "text-primary/90" : "text-gray-300 hover:text-primary/70"
   );
 
 
@@ -136,10 +154,10 @@ export default function Header() {
         "sticky top-0 z-50 w-full border-b transition-all duration-300",
         isScrolled ? "border-white/10 bg-black/80 backdrop-blur-xl shadow-lg" : "border-transparent bg-black/30"
       )}>
-        <div className="container flex h-16 md:h-20 max-w-screen-xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <div className="container flex h-16 md:h-20 max-w-screen-xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8" style={{'--header-height': '80px'} as React.CSSProperties}>
           <Link href="/" className="flex items-center space-x-3 shrink-0" onClick={() => handleLinkClick('/')}>
             <Image
-              src="/SR.jpg"
+              src="/SR.jpg" // Assuming SR.jpg is in public folder
               alt="SR Fitness Logo"
               width={40}
               height={40}
@@ -182,6 +200,23 @@ export default function Header() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className={dropdownTriggerClasses(isFeaturesActive)}
+              >
+                Features <ChevronDown className="h-4 w-4 opacity-70" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-56 rounded-lg">
+                {featuresDropdownItems.map((item) => (
+                  <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground")}>
+                    <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">
+                      {item.icon} {item.label}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             <DropdownMenu>
               <DropdownMenuTrigger
@@ -199,6 +234,15 @@ export default function Header() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+            
+            <Link
+                key={profileNavItem.label}
+                href={profileNavItem.href}
+                onClick={() => handleLinkClick(profileNavItem.href)}
+                className={navLinkClasses(isLinkActive(profileNavItem.href))}
+              >
+                {profileNavItem.label}
+            </Link>
 
             <Link
               href={contactNavItem.href}
@@ -232,7 +276,7 @@ export default function Header() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-lg p-6 flex flex-col items-center justify-center md:hidden"
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-lg p-6 flex flex-col items-center justify-center md:hidden overflow-y-auto"
             onClick={() => setIsMobileMenuOpen(false)} 
           >
             <Button
@@ -246,18 +290,39 @@ export default function Header() {
             </Button>
 
             <motion.nav
-              className="flex flex-col items-center space-y-4 text-center mt-8 w-full"
+              className="flex flex-col items-center space-y-2 text-center mt-8 w-full"
               variants={mobileMenuVariants} 
             >
               {allNavItemsForMobile.map((item) => (
                 <motion.div key={item.label} variants={mobileLinkItemVariants} className="w-full">
-                  <Link
-                    href={item.href}
-                    onClick={(e) => { e.stopPropagation(); handleLinkClick(item.href); }} 
-                    className={mobileLinkClasses(isLinkActive(item.href))}
-                  >
-                    {item.label}
-                  </Link>
+                  {item.isCategory && item.subItems ? (
+                    <>
+                      <span className={mobileLinkClasses(item.subItems.some(sub => isLinkActive(sub.href)))}>{item.label}</span>
+                      <motion.div className="flex flex-col items-center space-y-1 mt-1 mb-2">
+                        {item.subItems.map(subItem => (
+                           <motion.div key={subItem.label} variants={mobileLinkItemVariants} className="w-full">
+                            <Link
+                              href={subItem.href}
+                              onClick={(e) => { e.stopPropagation(); handleLinkClick(subItem.href); }} 
+                              className={mobileSubLinkClasses(isLinkActive(subItem.href))}
+                            >
+                              {subItem.icon && React.cloneElement(subItem.icon, { className: "mr-2 h-5 w-5" })}
+                              {subItem.label}
+                            </Link>
+                           </motion.div>
+                        ))}
+                      </motion.div>
+                    </>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      onClick={(e) => { e.stopPropagation(); handleLinkClick(item.href); }} 
+                      className={mobileLinkClasses(isLinkActive(item.href))}
+                    >
+                       {item.icon && React.cloneElement(item.icon, { className: "inline-block mr-2 h-7 w-7 align-middle" })}
+                      {item.label}
+                    </Link>
+                  )}
                 </motion.div>
               ))}
             </motion.nav>
@@ -283,3 +348,4 @@ export default function Header() {
     </>
   );
 }
+

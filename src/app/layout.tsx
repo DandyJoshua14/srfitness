@@ -4,7 +4,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
-import HeaderTransitionSpace from '@/components/layout/header-transition-space'; // Import the new component
+// Removed import for HeaderTransitionSpace
 
 export const metadata: Metadata = {
   title: 'SR Fitness',
@@ -27,8 +27,8 @@ export default function RootLayout({
       <body className="font-body antialiased flex flex-col min-h-screen">
         {/* The header height is set via CSS variable in header.tsx */}
         <Header />
-        <HeaderTransitionSpace /> {/* Add HeaderTransitionSpace after Header */}
-        <main className="flex-grow"> {/* Removed pt-[var(--header-height,80px)] */}
+        {/* Removed HeaderTransitionSpace component */}
+        <main className="flex-grow"> {/* main content will now start right under the header */}
           {children}
         </main>
         <Footer />

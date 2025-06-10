@@ -9,9 +9,9 @@ import { cn } from '@/lib/utils';
 import { ArrowRight } from 'lucide-react';
 
 const heroImages = [
-  { src: "/logo.png", alt: "Modern fitness center", dataAiHint: "gym interior", title: "Transform Your Body", subtitle: "Achieve Peak Fitness with SR Fitness" },
-  { src: "/suit.jpeg", alt: "Athlete performing exercise", dataAiHint: "fitness training", title: "Expert Personal Training", subtitle: "Personalized Plans for Maximum Results" },
-  { src: "https://placehold.co/640x400.png", alt: "Energetic group workout", dataAiHint: "group exercise class", title: "Dynamic Group Classes", subtitle: "Motivation, Energy, and Community" },
+  { src: "https://placehold.co/600x900.png", alt: "Tall promotional banner for SR Fitness", dataAiHint: "tall banner", title: "Transform Your Body", subtitle: "Achieve Peak Fitness with SR Fitness" },
+  { src: "https://placehold.co/800x600.png", alt: "Athlete training at SR Fitness", dataAiHint: "fitness training", title: "Expert Personal Training", subtitle: "Personalized Plans for Maximum Results" },
+  { src: "https://placehold.co/640x400.png", alt: "Energetic group workout class", dataAiHint: "group exercise", title: "Dynamic Group Classes", subtitle: "Motivation, Energy, and Community" },
 ];
 
 export default function HeroSection() {
@@ -22,10 +22,10 @@ export default function HeroSection() {
   useEffect(() => {
     const imageTimer = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
-      setTextVisible(false); 
-      setImageLoaded(false); 
-      setTimeout(() => setTextVisible(true), 500); 
-    }, 7000); 
+      setTextVisible(false);
+      setImageLoaded(false);
+      setTimeout(() => setTextVisible(true), 500);
+    }, 7000);
 
     setTimeout(() => {
       setTextVisible(true);
@@ -47,23 +47,23 @@ export default function HeroSection() {
       id="hero"
       className={cn(
         "relative flex items-center justify-center text-center text-white overflow-hidden",
-        "h-[45vh] min-h-[220px]", 
-        "sm:h-[55vh] sm:min-h-[280px]", 
-        "md:h-screen md:min-h-[650px]" 
+        "h-[45vh] min-h-[220px]",
+        "sm:h-[55vh] sm:min-h-[280px]",
+        "md:h-screen md:min-h-[650px]"
       )}
     >
       <div className="absolute inset-0 z-0 w-full h-full">
         {heroImages.map((image, index) => (
           <Image
-            key={`${image.dataAiHint}-${index}`}
+            key={`${image.dataAiHint}-${index}-${image.src}`}
             src={image.src}
             alt={image.alt}
             layout="fill"
-            objectFit="contain" 
+            objectFit="contain" // Ensures the full image is shown, scaled to fit
             className={cn(
               "absolute inset-0 transition-opacity duration-1000 ease-in-out",
               index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0',
-              imageLoaded && index === currentImageIndex ? 'scale-100' : 'scale-110' 
+              imageLoaded && index === currentImageIndex ? 'scale-100' : 'scale-110'
             )}
             data-ai-hint={image.dataAiHint}
             priority={index === 0}
@@ -100,12 +100,12 @@ export default function HeroSection() {
           )}
           style={{ transitionDelay: textVisible ? '600ms' : '0ms' }}
         >
-          <Button asChild size="lg" className="font-headline text-base sm:text-lg px-6 sm:px-8 py-2.5 sm:py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group">
+          <Button asChild className="font-headline text-base sm:text-lg px-6 sm:px-8 py-2.5 sm:py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group">
             <Link href="/#services">
               Our Services <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </Button>
-          <Button asChild variant="outline" size="lg" className="font-headline text-base sm:text-lg px-6 sm:px-8 py-2.5 sm:py-3 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group">
+          <Button asChild variant="outline" className="font-headline text-base sm:text-lg px-6 sm:px-8 py-2.5 sm:py-3 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group">
             <Link href="/#contact">
               Join Today
             </Link>

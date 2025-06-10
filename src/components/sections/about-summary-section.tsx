@@ -7,9 +7,9 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
 export default function AboutSummarySection() {
-  const variants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+  const blockquoteVariants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.5, delay: 0.4 } }
   };
 
   return (
@@ -44,11 +44,17 @@ export default function AboutSummarySection() {
               <h3 className="font-headline text-2xl md:text-3xl text-primary font-semibold mb-3">
                 Our compelling reason Why we do what we do!
               </h3>
-              <blockquote className="text-lg text-muted-foreground italic border-l-4 border-primary pl-4 py-2 my-4">
+              <motion.blockquote 
+                variants={blockquoteVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.5 }}
+                className="text-lg text-muted-foreground italic border-l-4 border-primary pl-4 py-2 my-4"
+              >
                 “We strongly believe that if we can inspire millions of people stay fit and
                 preventable illness free, we have played our part in making the world a better
                 place”
-              </blockquote>
+              </motion.blockquote>
             </div>
 
             <Button asChild size="lg" className="group font-headline text-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transform hover:scale-105 transition-transform !mt-8">

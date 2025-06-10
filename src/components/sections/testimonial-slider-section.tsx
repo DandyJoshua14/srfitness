@@ -2,8 +2,8 @@
 "use client";
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
-import { Star } from 'lucide-react'; // Using Star for rating/highlight
-import { useState, useEffect } from 'react'; // For potential auto-slide, though keeping it simple for now
+import { Star } from 'lucide-react'; 
+import { motion } from 'framer-motion';
 
 const testimonials = [
   {
@@ -30,8 +30,6 @@ const testimonials = [
 ];
 
 export default function TestimonialSliderSection() {
-  // For a real slider, you'd use a library like Swiper.js or build more complex state logic.
-  // This is a static representation for now but styled to look like it could be part of a slider.
   return (
     <section className="py-16 md:py-24 bg-secondary text-secondary-foreground">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -47,9 +45,13 @@ export default function TestimonialSliderSection() {
         <div className="grid md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
             <div key={index} className={`animate-in fade-in slide-in-from-bottom duration-700 delay-${200 + index * 150}`}>
-              <Card className="bg-background text-foreground border-border shadow-xl h-full flex flex-col overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+              <Card className="bg-background text-foreground border-border shadow-xl h-full flex flex-col overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl group">
                 <CardContent className="p-6 md:p-8 flex flex-col flex-grow items-center text-center">
-                  <div className="relative w-24 h-24 rounded-full overflow-hidden mb-6 shadow-lg border-2 border-primary">
+                  <motion.div 
+                    className="relative w-24 h-24 rounded-full overflow-hidden mb-6 shadow-lg border-2 border-primary transition-all duration-300 group-hover:shadow-primary/50 group-hover:scale-110"
+                    whileHover={{ scale: 1.15 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
                     <Image
                       src={testimonial.image}
                       alt={testimonial.name}
@@ -57,18 +59,29 @@ export default function TestimonialSliderSection() {
                       objectFit="cover"
                       data-ai-hint={testimonial.dataAiHint}
                     />
-                  </div>
+                  </motion.div>
                   <p className="text-muted-foreground italic text-lg leading-relaxed mb-6 flex-grow">
                     "{testimonial.quote}"
                   </p>
                   <div className="mt-auto">
                     <h3 className="font-headline text-xl text-primary">{testimonial.name}</h3>
                     <p className="text-sm text-foreground/80">{testimonial.role}</p>
-                    <div className="flex justify-center mt-2">
+                    <motion.div
+                      className="flex justify-center mt-2"
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      whileInView={{ opacity: 1, scale: 1, transition: { delay: 0.2 + (index * 0.1), duration: 0.4 } }}
+                      viewport={{ once: true, amount: 0.6 }}
+                    >
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-5 w-5 text-yellow-400 fill-yellow-400" />
+                        <motion.div
+                          key={i}
+                          initial={{ y:10, opacity:0 }}
+                          animate={{ y:0, opacity:1, transition: {delay: (i*0.05) + 0.3 + (index * 0.1), type: "spring", stiffness:200} }}
+                        >
+                           <Star className="h-5 w-5 text-yellow-400 fill-yellow-400" />
+                        </motion.div>
                       ))}
-                    </div>
+                    </motion.div>
                   </div>
                 </CardContent>
               </Card>

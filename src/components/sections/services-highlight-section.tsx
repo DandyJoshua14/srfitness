@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dumbbell, Zap, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const services = [
   {
@@ -55,9 +56,13 @@ export default function ServicesHighlightSection() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
                   <div className="absolute bottom-0 left-0 p-6">
-                    <div className="p-3 bg-primary/80 backdrop-blur-sm rounded-full mb-2 inline-block group-hover:bg-primary transition-colors duration-300">
+                    <motion.div 
+                      className="p-3 bg-primary/80 backdrop-blur-sm rounded-full mb-2 inline-block group-hover:bg-primary transition-all duration-300 group-hover:scale-110"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 10 }}
+                    >
                        {service.icon}
-                    </div>
+                    </motion.div>
                     <CardTitle className="font-headline text-3xl md:text-4xl text-white group-hover:text-primary transition-colors duration-300">{service.title}</CardTitle>
                   </div>
                 </div>

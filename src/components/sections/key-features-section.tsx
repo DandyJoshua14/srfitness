@@ -2,6 +2,9 @@
 "use client";
 import { Award, Users, Zap, MapPin, Smile, ShieldCheck } from 'lucide-react'; 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { motion } from 'framer-motion';
+import React from 'react'; // Import React
+import { cn } from '@/lib/utils'; // Import cn
 
 const features = [
   {
@@ -54,8 +57,19 @@ export default function KeyFeaturesSection() {
             <div key={feature.title} className={`animate-in fade-in slide-in-from-bottom duration-700 delay-${100 + index * 100}`}>
               <Card className="group text-center bg-card border-border shadow-lg h-full transition-all duration-300 ease-in-out transform hover:-translate-y-2 hover:shadow-2xl hover:border-primary">
                 <CardHeader className="pb-4">
-                  <div className="flex justify-center items-center mb-4 bg-primary/10 rounded-full h-20 w-20 mx-auto transition-colors duration-300 group-hover:bg-primary/20">
-                    {feature.icon}
+                  <div className="flex justify-center items-center mb-4 bg-primary/10 rounded-full h-20 w-20 mx-auto transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-105">
+                    {/* Wrap icon for individual hover animation */}
+                    <motion.div
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    >
+                       {React.cloneElement(feature.icon, { 
+                        className: cn(
+                          (feature.icon.props as any).className, 
+                          "transition-transform duration-300 group-hover:scale-110"
+                        ) 
+                      })}
+                    </motion.div>
                   </div>
                   <CardTitle className="font-headline text-2xl text-foreground">{feature.title}</CardTitle>
                 </CardHeader>

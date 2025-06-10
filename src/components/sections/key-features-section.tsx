@@ -1,6 +1,6 @@
 
 "use client";
-import { Award, Users, Zap, MapPin, Smile, ShieldCheck } from 'lucide-react'; // Added MapPin, Smile, ShieldCheck
+import { Award, Users, Zap, MapPin, Smile, ShieldCheck } from 'lucide-react'; 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const features = [
@@ -52,9 +52,9 @@ export default function KeyFeaturesSection() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {features.map((feature, index) => (
             <div key={feature.title} className={`animate-in fade-in slide-in-from-bottom duration-700 delay-${100 + index * 100}`}>
-              <Card className="text-center bg-card border-border shadow-lg h-full transition-all duration-300 ease-in-out transform hover:-translate-y-2 hover:shadow-2xl hover:border-primary">
+              <Card className="group text-center bg-card border-border shadow-lg h-full transition-all duration-300 ease-in-out transform hover:-translate-y-2 hover:shadow-2xl hover:border-primary">
                 <CardHeader className="pb-4">
-                  <div className="flex justify-center items-center mb-4 bg-primary/10 rounded-full h-20 w-20 mx-auto">
+                  <div className="flex justify-center items-center mb-4 bg-primary/10 rounded-full h-20 w-20 mx-auto transition-colors duration-300 group-hover:bg-primary/20">
                     {feature.icon}
                   </div>
                   <CardTitle className="font-headline text-2xl text-foreground">{feature.title}</CardTitle>

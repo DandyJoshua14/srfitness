@@ -3,10 +3,10 @@
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { motion } from 'framer-motion'; // Assuming framer-motion will be added or this is conceptual for "cutting-edge"
+import { motion } from 'framer-motion'; 
+import { ArrowRight } from 'lucide-react';
 
 export default function AboutSummarySection() {
-  // Animation variants for Framer Motion (conceptual)
   const variants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
@@ -16,7 +16,6 @@ export default function AboutSummarySection() {
     <section className="py-16 md:py-24 bg-background text-foreground">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-2 gap-12 items-center">
-          {/* Use motion.div for animations if framer-motion is integrated */}
           <div className="animate-in fade-in slide-in-from-left duration-700">
             <div className="relative aspect-video rounded-lg shadow-2xl overflow-hidden group">
               <Image
@@ -52,8 +51,8 @@ export default function AboutSummarySection() {
               </blockquote>
             </div>
 
-            <Button asChild size="lg" className="font-headline text-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transform hover:scale-105 transition-transform !mt-8">
-              <Link href="/awards">Discover Our Story</Link>
+            <Button asChild size="lg" className="group font-headline text-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transform hover:scale-105 transition-transform !mt-8">
+              <Link href="/awards">Discover Our Story <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" /></Link>
             </Button>
           </div>
         </div>

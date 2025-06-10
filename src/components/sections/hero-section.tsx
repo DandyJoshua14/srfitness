@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { ArrowRight } from 'lucide-react';
 
 const heroImages = [
-  { src: "/logo.png", alt: "SR Fitness logo branding", dataAiHint: "logo brand", title: "Transform Your Body", subtitle: "Achieve Peak Fitness with SR Fitness" },
+  { src: "/SR.jpg", alt: "SR Fitness logo branding", dataAiHint: "logo brand", title: "Transform Your Body", subtitle: "Achieve Peak Fitness with SR Fitness" },
   { src: "/suit.jpeg", alt: "Athlete in a suit, symbolizing transformation", dataAiHint: "fitness lifestyle", title: "Expert Personal Training", subtitle: "Personalized Plans for Maximum Results" },
   { src: "/Frame 1.png", alt: "Energetic group workout class", dataAiHint: "group exercise", title: "Dynamic Group Classes", subtitle: "Motivation, Energy, and Community" },
 ];
@@ -23,15 +23,13 @@ export default function HeroSection() {
     const imageTimer = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
       setTextVisible(false);
-      setImageLoaded(false); // Reset loaded state for the new image
-      // Delay text animation slightly after image starts to transition
-      setTimeout(() => setTextVisible(true), 500); // Start text fade-in after image starts changing
-    }, 7000); // Change image every 7 seconds
+      setImageLoaded(false); 
+      setTimeout(() => setTextVisible(true), 500); 
+    }, 7000); 
 
-    // Initial text visibility
     setTimeout(() => {
       setTextVisible(true);
-    }, 300); // Initial delay for text
+    }, 300); 
 
     return () => {
       clearInterval(imageTimer);
@@ -39,8 +37,6 @@ export default function HeroSection() {
   }, []);
 
   useEffect(() => {
-    // Reset imageLoaded state whenever currentImageIndex changes,
-    // to ensure the scale-up animation runs for the new image.
     setImageLoaded(false);
   }, [currentImageIndex]);
 
@@ -51,9 +47,9 @@ export default function HeroSection() {
       id="hero"
       className={cn(
         "relative flex items-center justify-center text-center text-white overflow-hidden",
-        "h-[40vh] min-h-[200px]", // Mobile height
-        "sm:h-[50vh] sm:min-h-[250px]", // Small screen height
-        "md:h-screen md:min-h-[650px]" // Desktop height
+        "h-[40vh] min-h-[200px]",
+        "sm:h-[50vh] sm:min-h-[250px]", 
+        "md:h-screen md:min-h-[650px]" 
       )}
     >
       <div className="absolute inset-0 z-0 w-full h-full">
@@ -67,7 +63,7 @@ export default function HeroSection() {
             className={cn(
               "absolute inset-0 transition-opacity duration-1000 ease-in-out",
               index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0',
-              imageLoaded && index === currentImageIndex ? 'scale-100' : 'scale-110' // Apply scale-up only if image is loaded and current
+              imageLoaded && index === currentImageIndex ? 'scale-100' : 'scale-110'
             )}
             data-ai-hint={image.dataAiHint}
             priority={index === 0}
@@ -104,7 +100,7 @@ export default function HeroSection() {
           )}
           style={{ transitionDelay: textVisible ? '600ms' : '0ms' }}
         >
-          <Button asChild className="font-headline text-sm sm:text-base px-4 py-2 sm:px-6 sm:py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group">
+          <Button asChild className="group font-headline text-sm sm:text-base px-4 py-2 sm:px-6 sm:py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
             <Link href="/#services">
               Our Services <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>

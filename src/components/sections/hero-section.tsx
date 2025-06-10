@@ -59,7 +59,7 @@ export default function HeroSection() {
             src={image.src}
             alt={image.alt}
             layout="fill"
-            objectFit="contain"
+            objectFit="cover" // Changed from "contain" to "cover"
             className={cn(
               "absolute inset-0 transition-opacity duration-1000 ease-in-out",
               index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0',

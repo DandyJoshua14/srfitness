@@ -22,12 +22,11 @@ export default function HeroSection() {
   useEffect(() => {
     const imageTimer = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
-      setTextVisible(false); // Reset text animation for new slide
-      setImageLoaded(false); // Reset image loaded state
-      setTimeout(() => setTextVisible(true), 500); // Delay text animation
-    }, 7000); // Change image every 7 seconds
+      setTextVisible(false); 
+      setImageLoaded(false); 
+      setTimeout(() => setTextVisible(true), 500); 
+    }, 7000); 
 
-    // Initial text animation
     setTimeout(() => {
       setTextVisible(true);
     }, 300);
@@ -38,7 +37,6 @@ export default function HeroSection() {
   }, []);
 
   useEffect(() => {
-    // Reset imageLoaded to false when currentImageIndex changes to re-trigger onLoad
     setImageLoaded(false);
   }, [currentImageIndex]);
 
@@ -49,12 +47,11 @@ export default function HeroSection() {
       id="hero"
       className={cn(
         "relative flex items-center justify-center text-center text-white overflow-hidden",
-        "h-[80vh] min-h-[400px]", // Mobile
-        "sm:h-[90vh] sm:min-h-[500px]", // Small screens
-        "md:h-screen md:min-h-[650px]" // Medium screens and up (full screen height minus header potential)
+        "h-[80vh] min-h-[400px]", 
+        "sm:h-[90vh] sm:min-h-[500px]", 
+        "md:h-screen md:min-h-[650px]" 
       )}
     >
-      {/* Image container */}
       <div className="absolute inset-0 z-0 w-full h-full">
         {heroImages.map((image, index) => (
           <Image
@@ -62,11 +59,11 @@ export default function HeroSection() {
             src={image.src}
             alt={image.alt}
             layout="fill"
-            objectFit="cover" // Changed from "contain" to "cover" for better fill
+            objectFit="contain" 
             className={cn(
               "absolute inset-0 transition-opacity duration-1000 ease-in-out",
               index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0',
-              imageLoaded && index === currentImageIndex ? 'scale-100' : 'scale-110' // Subtle zoom effect, apply only to current loaded image
+              imageLoaded && index === currentImageIndex ? 'scale-100' : 'scale-110' 
             )}
             data-ai-hint={image.dataAiHint}
             priority={index === 0}
@@ -74,10 +71,8 @@ export default function HeroSection() {
           />
         ))}
       </div>
-      {/* Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/70 z-10"></div>
 
-      {/* Content */}
       <div className="relative z-20 container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
         <h1
           className={cn(

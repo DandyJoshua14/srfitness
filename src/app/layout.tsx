@@ -4,7 +4,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
-import AnnouncementBar from '@/components/layout/announcement-bar'; // Import the new component
+import HeaderTransitionSpace from '@/components/layout/header-transition-space'; // Import the new component
 
 export const metadata: Metadata = {
   title: 'SR Fitness',
@@ -25,10 +25,10 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased flex flex-col min-h-screen">
-        <AnnouncementBar /> {/* Add AnnouncementBar before Header */}
-        {/* The header height is set via CSS variable in header.tsx for use in other components like chat page */}
+        {/* The header height is set via CSS variable in header.tsx */}
         <Header />
-        <main className="flex-grow pt-[var(--header-height,80px)]"> {/* Padding top accounts for sticky header */}
+        <HeaderTransitionSpace /> {/* Add HeaderTransitionSpace after Header */}
+        <main className="flex-grow"> {/* Removed pt-[var(--header-height,80px)] */}
           {children}
         </main>
         <Footer />

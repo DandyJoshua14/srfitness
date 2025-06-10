@@ -1,8 +1,8 @@
 
 "use client";
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -46,7 +46,7 @@ export default function Header() {
     setActiveLink(currentPath);
 
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20); 
+      setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
     handleScroll();
@@ -64,7 +64,7 @@ export default function Header() {
       setIsMobileMenuOpen(false);
     }
   };
-  
+
   const isLinkActive = (href: string) => {
     if (href === '/' && activeLink === '/') return true;
     if (href !== '/' && !href.startsWith('/#') && activeLink.startsWith(href)) return true;
@@ -76,13 +76,13 @@ export default function Header() {
   const isExploreActive = exploreDropdownItems.some(item => isLinkActive(item.href));
 
   const navLinkBaseClasses = "px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 relative";
-  
+
   const navLinkClasses = (isActive: boolean) => cn(
     navLinkBaseClasses,
     isScrolled
       ? isActive
         ? "text-primary font-semibold after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-4/5 after:h-[2px] after:bg-primary after:rounded-t-full"
-        : "text-foreground/80 hover:text-primary" 
+        : "text-gray-200 hover:text-primary"
       : isActive
         ? "text-primary font-semibold after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-4/5 after:h-[2px] after:bg-primary after:rounded-t-full"
         : "text-white hover:text-primary/80"
@@ -90,13 +90,19 @@ export default function Header() {
 
   const dropdownTriggerClasses = (isDropdownActive: boolean) => cn(
     navLinkBaseClasses, "flex items-center gap-1",
-     isScrolled
+    isScrolled
       ? isDropdownActive
         ? "text-primary font-semibold after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-4/5 after:h-[2px] after:bg-primary after:rounded-t-full"
-        : "text-foreground/80 hover:text-primary"
+        : "text-gray-200 hover:text-primary"
       : isDropdownActive
         ? "text-primary font-semibold after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-4/5 after:h-[2px] after:bg-primary after:rounded-t-full"
         : "text-white hover:text-primary/80"
+  );
+  
+  const mobileMenuTriggerButtonClasses = cn(
+    "transition-colors rounded-full p-2 text-2xl",
+    isScrolled ? "text-gray-200 hover:bg-gray-700/50" : "text-white hover:bg-white/10",
+    "hover:text-primary focus-visible:ring-primary/70"
   );
 
   const mobileMenuVariants = {
@@ -111,29 +117,31 @@ export default function Header() {
     exit: { opacity: 0, y: -20, transition: { type: "spring", stiffness: 100 } },
   };
 
-  const mobileLinkClasses = (isActive: boolean) => cn(
-    "font-headline text-3xl sm:text-4xl py-3 transition-colors duration-300 w-full text-center",
-    isActive ? "text-primary" : "text-foreground hover:text-primary/80"
-  );
-  
+  // Simplified mobile navigation structure for the full-screen overlay
   const allNavItemsForMobile = [
     ...topLevelNavItems,
-    { label: 'Services', href: '/personal-training' }, // Main services page
-    { label: 'Explore', href: '/lifestyle-magazine' }, // Main explore page
+    // Direct links for main categories in mobile overlay
+    { label: 'Services', href: '/personal-training', isCategory: true }, // Example: link to main personal training page
+    { label: 'Explore', href: '/lifestyle-magazine', isCategory: true }, // Example: link to main magazine page
     contactNavItem
   ];
+  
+  const mobileLinkClasses = (isActive: boolean) => cn(
+    "font-headline text-3xl sm:text-4xl py-3 transition-colors duration-300 w-full text-center",
+    isActive ? "text-primary" : "text-gray-100 hover:text-primary/80"
+  );
 
 
   return (
     <>
       <header className={cn(
         "sticky top-0 z-50 w-full border-b transition-all duration-300",
-        isScrolled ? "border-border/40 bg-background/95 backdrop-blur-xl shadow-lg" : "border-transparent bg-transparent"
+        isScrolled ? "border-white/10 bg-black/80 backdrop-blur-xl shadow-lg" : "border-transparent bg-black/30"
       )}>
         <div className="container flex h-20 md:h-24 max-w-screen-xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center space-x-3 shrink-0" onClick={() => handleLinkClick('/')}>
             <Image
-              src="/SR.jpg"
+              src="/logo.png"
               alt="SR Fitness Logo"
               width={48}
               height={48}
@@ -161,14 +169,14 @@ export default function Header() {
             ))}
 
             <DropdownMenu>
-              <DropdownMenuTrigger 
+              <DropdownMenuTrigger
                 className={dropdownTriggerClasses(isServicesActive)}
               >
                 Services <ChevronDown className="h-4 w-4 opacity-70" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="bg-background border-border shadow-xl mt-3 w-56 rounded-lg">
+              <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-56 rounded-lg">
                 {servicesDropdownItems.map((item) => (
-                  <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted")}>
+                  <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground")}>
                     <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">
                       {item.icon} {item.label}
                     </Link>
@@ -178,14 +186,14 @@ export default function Header() {
             </DropdownMenu>
 
             <DropdownMenu>
-              <DropdownMenuTrigger 
+              <DropdownMenuTrigger
                 className={dropdownTriggerClasses(isExploreActive)}
               >
                 Explore <ChevronDown className="h-4 w-4 opacity-70" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="bg-background border-border shadow-xl mt-3 w-56 rounded-lg">
+              <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-56 rounded-lg">
                 {exploreDropdownItems.map((item) => (
-                  <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted")}>
+                  <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground")}>
                     <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">
                       {item.icon} {item.label}
                     </Link>
@@ -205,16 +213,12 @@ export default function Header() {
 
           {/* Mobile Menu Trigger */}
           <div className="md:hidden">
-            <Button 
-              variant="ghost" 
-              size="icon" 
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => setIsMobileMenuOpen(true)}
               aria-label="Open menu"
-              className={cn(
-                "transition-colors rounded-full p-2 text-2xl", 
-                isScrolled ? "text-foreground hover:bg-muted" : "text-white hover:bg-white/10",
-                "hover:text-primary focus-visible:ring-primary/70"
-              )}
+              className={mobileMenuTriggerButtonClasses}
             >
               <Menu className="h-7 w-7" />
             </Button>
@@ -230,28 +234,28 @@ export default function Header() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed inset-0 z-[100] bg-background/95 backdrop-blur-lg p-6 flex flex-col items-center justify-center md:hidden"
-            onClick={() => setIsMobileMenuOpen(false)} // Close on overlay click
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-lg p-6 flex flex-col items-center justify-center md:hidden"
+            onClick={() => setIsMobileMenuOpen(false)} 
           >
             <Button
               variant="ghost"
               size="icon"
-              onClick={(e) => { e.stopPropagation(); setIsMobileMenuOpen(false); }} // Prevent overlay click from closing
+              onClick={(e) => { e.stopPropagation(); setIsMobileMenuOpen(false); }} 
               aria-label="Close menu"
-              className="absolute top-6 right-6 text-foreground hover:bg-muted hover:text-primary rounded-full p-2"
+              className="absolute top-6 right-6 text-gray-100 hover:bg-gray-700/50 hover:text-primary rounded-full p-2"
             >
               <X className="h-8 w-8" />
             </Button>
-            
-            <motion.nav 
+
+            <motion.nav
               className="flex flex-col items-center space-y-4 text-center mt-8 w-full"
-              variants={mobileMenuVariants} // Apply stagger to parent
+              variants={mobileMenuVariants} 
             >
               {allNavItemsForMobile.map((item) => (
                 <motion.div key={item.label} variants={mobileLinkItemVariants} className="w-full">
                   <Link
                     href={item.href}
-                    onClick={(e) => { e.stopPropagation(); handleLinkClick(item.href); }} // Prevent overlay click from closing
+                    onClick={(e) => { e.stopPropagation(); handleLinkClick(item.href); }} 
                     className={mobileLinkClasses(isLinkActive(item.href))}
                   >
                     {item.label}
@@ -259,18 +263,18 @@ export default function Header() {
                 </motion.div>
               ))}
             </motion.nav>
-            <motion.div 
-              variants={mobileLinkItemVariants} 
+            <motion.div
+              variants={mobileLinkItemVariants}
               className="absolute bottom-10 flex items-center space-x-2"
             >
                  <Link href="/" className="flex items-center space-x-2" onClick={(e) => { e.stopPropagation(); handleLinkClick('/'); }}>
-                    <Image 
-                        src="/logo.png" 
-                        alt="SR Fitness Logo" 
-                        width={40} 
-                        height={40} 
-                        className="h-8 w-8 rounded-full object-cover" 
-                        data-ai-hint="logo brand" 
+                    <Image
+                        src="/logo.png"
+                        alt="SR Fitness Logo"
+                        width={40}
+                        height={40}
+                        className="h-8 w-8 rounded-full object-cover"
+                        data-ai-hint="logo brand"
                     />
                     <span className="font-headline text-xl font-bold text-primary">SR Fitness</span>
                 </Link>

@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet"; // Added Sheet components
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 
 const topLevelNavItems = [
   { label: 'Home', href: '/' },
@@ -133,9 +133,9 @@ export default function Header() {
 
   const allNavItemsForMobile = [
     ...topLevelNavItems,
-    { label: 'Services', href: '#', isCategory: true, subItems: servicesDropdownItems },
-    { label: 'Features', href: '#', isCategory: true, subItems: featuresDropdownItems },
-    { label: 'Explore', href: '#', isCategory: true, subItems: exploreDropdownItems },
+    { label: 'Services', href: '#', isCategory: true, subItems: servicesDropdownItems, icon: <Dumbbell /> },
+    { label: 'Features', href: '#', isCategory: true, subItems: featuresDropdownItems, icon: <Sparkles /> },
+    { label: 'Explore', href: '#', isCategory: true, subItems: exploreDropdownItems, icon: <Newspaper /> },
     profileNavItem,
     contactNavItem
   ];
@@ -165,7 +165,7 @@ export default function Header() {
         <div className="container flex h-16 md:h-20 max-w-screen-xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8" style={{'--header-height': '80px'} as React.CSSProperties}>
           <Link href="/" className="flex items-center space-x-3 shrink-0" onClick={() => handleLinkClick('/')}>
             <Image
-              src="/SR.jpg"
+              src="/logo.png" 
               alt="SR Fitness Logo"
               width={40}
               height={40}
@@ -275,24 +275,21 @@ export default function Header() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-[300px] sm:w-[340px] p-0 flex flex-col bg-background text-foreground">
-                <SheetHeader className="p-4 border-b border-border">
-                  <SheetTitle className="flex items-center space-x-2">
-                     <Link href="/" className="flex items-center space-x-2" onClick={() => handleLinkClick('/')}>
+                <SheetHeader className="pl-4 pr-12 py-3 border-b border-border text-left">
+                  <SheetTitle asChild>
+                    <Link href="/" className="flex items-center space-x-2" onClick={() => handleLinkClick('/')}>
                         <Image
-                            src="/logo.png" // Make sure this logo is visible on sheet background
+                            src="/logo.png" 
                             alt="SR Fitness Logo"
                             width={32}
                             height={32}
                             className="h-8 w-8 rounded-full object-cover"
                             data-ai-hint="logo brand"
                         />
-                        <span className="font-headline text-2xl font-bold text-primary">SR Fitness</span>
+                        <span className="font-headline text-xl font-bold text-primary">SR Fitness</span>
                     </Link>
                   </SheetTitle>
-                  <SheetClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 data-[state=open]:bg-secondary">
-                    <X className="h-5 w-5" />
-                    <span className="sr-only">Close</span>
-                  </SheetClose>
+                  {/* Default SheetClose is absolutely positioned by SheetContent; pr-12 on SheetHeader makes space for it */}
                 </SheetHeader>
                 
                 <nav className="flex-grow overflow-y-auto p-4 space-y-1">
@@ -306,7 +303,7 @@ export default function Header() {
                             aria-expanded={!!expandedMobileCategories[item.label]}
                           >
                             <span className="flex items-center">
-                                {item.icon && React.cloneElement(item.icon, { className: "mr-3 h-5 w-5 shrink-0" })}
+                                {item.icon && React.cloneElement(item.icon as React.ReactElement, { className: "mr-3 h-5 w-5 shrink-0" })}
                                 {item.label}
                             </span>
                             <ChevronDown
@@ -343,7 +340,7 @@ export default function Header() {
                           onClick={() => handleLinkClick(item.href)} 
                           className={mobileLinkClasses(isLinkActive(item.href))}
                         >
-                           {item.icon && React.cloneElement(item.icon, { className: "mr-3 h-5 w-5 shrink-0" })}
+                           {item.icon && React.cloneElement(item.icon as React.ReactElement, { className: "mr-3 h-5 w-5 shrink-0" })}
                           {item.label}
                         </Link>
                       )}
@@ -358,5 +355,3 @@ export default function Header() {
     </>
   );
 }
-
-    

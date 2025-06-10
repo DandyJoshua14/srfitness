@@ -13,6 +13,7 @@ export default function Footer() {
     { label: 'Awards', href: '/awards' },
     { label: 'Magazine', href: '/lifestyle-magazine' },
     { label: 'Public Speaking', href: '/public-speaking' },
+    { label: 'Equipment Solutions', href: '/equipment-services' },
     { label: 'Contact Us', href: '/#contact' },
     // New Feature Links
     { label: 'Meal Planner', href: '/meal-planner' },
@@ -29,7 +30,7 @@ export default function Footer() {
     ['Home', 'Personal Training', 'Bootcamp', 'Awards', 'Meal Planner', 'Smart Mirror'].includes(item.label)
   );
   const exploreLinks = footerNavItems.filter(item => 
-    ['Magazine', 'Public Speaking', 'Global Connect', 'Community Hub', 'Profile', 'Contact Us'].includes(item.label)
+    ['Magazine', 'Public Speaking', 'Equipment Solutions', 'Global Connect', 'Community Hub', 'Profile', 'Contact Us'].includes(item.label)
   );
 
 
@@ -115,4 +116,3 @@ export default function Footer() {
     </footer>
   );
 }
-

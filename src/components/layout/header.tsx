@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, UserCircle2 } from 'lucide-react';
+import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, UserCircle2, Wrench } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,6 +36,7 @@ const featuresDropdownItems = [
 const exploreDropdownItems = [
   { label: 'Lifestyle Magazine', href: '/lifestyle-magazine', icon: <Newspaper className="mr-2 h-4 w-4" /> },
   { label: 'Public Speaking', href: '/public-speaking', icon: <Mic className="mr-2 h-4 w-4" /> },
+  { label: 'Equipment Solutions', href: '/equipment-services', icon: <Wrench className="mr-2 h-4 w-4" /> },
 ];
 
 const profileNavItem = { label: 'Profile', href: '/profile', icon: <UserCircle2 className="mr-2 h-4 w-4" /> };
@@ -232,7 +233,7 @@ export default function Header() {
               >
                 Explore <ChevronDown className="h-4 w-4 opacity-70" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-56 rounded-lg">
+              <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-max rounded-lg"> {/* Adjusted w-max for potentially longer item */}
                 {exploreDropdownItems.map((item) => (
                   <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground")}>
                     <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">

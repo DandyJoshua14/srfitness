@@ -3,7 +3,7 @@ import HeroSection from '@/components/sections/hero-section';
 import AboutSummarySection from '@/components/sections/about-summary-section';
 import ServicesHighlightSection from '@/components/sections/services-highlight-section';
 import KeyFeaturesSection from '@/components/sections/key-features-section';
-import TestimonialSliderSection from '@/components/sections/testimonial-slider-section';
+import OurImpactSection from '@/components/sections/our-impact-section';
 import ContactLocationSection from '@/components/sections/contact-location-section';
 import type { Metadata } from 'next';
 
@@ -19,7 +19,7 @@ export default function HomePage() {
       <AboutSummarySection />
       <ServicesHighlightSection />
       <KeyFeaturesSection />
-      <TestimonialSliderSection />
+      <OurImpactSection />
       <ContactLocationSection />
     </>
   );

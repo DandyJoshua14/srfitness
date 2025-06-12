@@ -60,17 +60,19 @@ export default function UserProfileClient({
 
   const handlePrivacyChange = (key: keyof PrivacySettings) => {
     setPrivacySettings(prev => ({ ...prev, [key]: !prev[key] }));
+    // In a real app, this might auto-save or require a "Save" button click
+    toast({ title: "Privacy Setting Toggled (Conceptual)", description: `Setting ${key} is now ${!privacySettings[key]}. Real save needed.` });
   };
 
   const saveProfile = () => {
-    console.log("Saving profile (placeholder):", user);
+    console.log("Saving profile (conceptual):", user);
     setIsEditingProfile(false);
-    toast({ title: "Profile Updated (Placeholder)", description: "In a real app, your profile information would be saved." });
+    toast({ title: "Profile Updated (Conceptual)", description: "In a real app, your profile information would be saved." });
   };
   
   const savePrivacySettings = () => {
-    console.log("Saving privacy settings (placeholder):", privacySettings);
-    toast({ title: "Privacy Settings Updated (Placeholder)", description: "In a real app, your privacy preferences would be saved." });
+    console.log("Saving privacy settings (conceptual):", privacySettings);
+    toast({ title: "Privacy Settings Updated (Conceptual)", description: "In a real app, your privacy preferences would be saved." });
   };
 
 
@@ -120,7 +122,6 @@ export default function UserProfileClient({
                   value={user.name} 
                   onChange={handleProfileChange} 
                   className="text-2xl font-bold" 
-                  disabled={!isEditingProfile}
                 />
               ) : (
                 <h2 className="text-3xl font-bold text-primary">{user.name}</h2>
@@ -132,7 +133,6 @@ export default function UserProfileClient({
                   type="email" 
                   value={user.email} 
                   onChange={handleProfileChange}
-                  disabled={!isEditingProfile}
                 />
               ) : (
                 <p className="text-muted-foreground">{user.email}</p>
@@ -142,7 +142,7 @@ export default function UserProfileClient({
           </div>
           {isEditingProfile && (
             <div className="text-center mt-2">
-                <Button variant="link" size="sm" disabled>Change Profile Picture (Placeholder)</Button>
+                <Button variant="link" size="sm" onClick={() => toast({title: "Conceptual Action", description: "Profile picture change UI would open."})}>Change Profile Picture (Conceptual)</Button>
             </div>
           )}
         </CardContent>
@@ -155,7 +155,7 @@ export default function UserProfileClient({
             <Target className="mr-3 h-7 w-7 text-primary" />
             Fitness Goals
           </CardTitle>
-          <CardDescription>Your current fitness objectives. (Placeholder)</CardDescription>
+          <CardDescription>Your current fitness objectives. (Conceptual)</CardDescription>
         </CardHeader>
         <CardContent>
           {fitnessData.currentGoals.length > 0 ? (
@@ -167,7 +167,7 @@ export default function UserProfileClient({
           )}
         </CardContent>
         <CardFooter>
-            <Button variant="outline" disabled>Manage Goals (Placeholder)</Button>
+            <Button variant="outline" onClick={() => toast({title: "Conceptual Action", description: "Goal management UI would open."})}>Manage Goals (Conceptual)</Button>
         </CardFooter>
       </Card>
       
@@ -178,7 +178,7 @@ export default function UserProfileClient({
             <Activity className="mr-3 h-7 w-7 text-primary" />
             Recent Activity
           </CardTitle>
-          <CardDescription>Your latest workouts and activities. (Placeholder)</CardDescription>
+          <CardDescription>Your latest workouts and activities. (Conceptual)</CardDescription>
         </CardHeader>
         <CardContent>
           {fitnessData.recentActivities.length > 0 ? (
@@ -195,7 +195,7 @@ export default function UserProfileClient({
           )}
         </CardContent>
         <CardFooter>
-            <Button variant="outline" disabled>View Full Activity Log (Placeholder)</Button>
+            <Button variant="outline" onClick={() => toast({title: "Conceptual Action", description: "Full activity log would be shown."})}>View Full Activity Log (Conceptual)</Button>
         </CardFooter>
       </Card>
 
@@ -219,7 +219,6 @@ export default function UserProfileClient({
               id="showActivityOnMap"
               checked={privacySettings.showActivityOnMap}
               onCheckedChange={() => handlePrivacyChange('showActivityOnMap')}
-              disabled 
             />
           </div>
           <div className="flex items-center justify-between p-4 bg-muted/20 rounded-lg">
@@ -231,7 +230,6 @@ export default function UserProfileClient({
               id="shareWorkoutData"
               checked={privacySettings.shareWorkoutData}
               onCheckedChange={() => handlePrivacyChange('shareWorkoutData')}
-              disabled
             />
           </div>
           <div className="flex items-center justify-between p-4 bg-muted/20 rounded-lg">
@@ -243,17 +241,16 @@ export default function UserProfileClient({
               id="receiveNewsletter"
               checked={privacySettings.receiveNewsletter}
               onCheckedChange={() => handlePrivacyChange('receiveNewsletter')}
-              disabled
             />
           </div>
            <div className="pt-4">
-            <Button onClick={savePrivacySettings} className="w-full sm:w-auto bg-primary hover:bg-primary/90" disabled>
-              <Save className="mr-2 h-4 w-4" /> Save Privacy Settings (Placeholder)
+            <Button onClick={savePrivacySettings} className="w-full sm:w-auto bg-primary hover:bg-primary/90">
+              <Save className="mr-2 h-4 w-4" /> Save Privacy Settings (Conceptual)
             </Button>
           </div>
         </CardContent>
       </Card>
-       {/* Placeholder for other settings like Notifications, Account Deletion etc. */}
+       {/* Conceptual for other settings like Notifications, Account Deletion etc. */}
         <Card className="shadow-xl">
             <CardHeader>
                 <CardTitle className="font-headline text-3xl text-foreground flex items-center">
@@ -263,14 +260,12 @@ export default function UserProfileClient({
                 <CardDescription>Choose what alerts you receive.</CardDescription>
             </CardHeader>
             <CardContent>
-                <p className="text-muted-foreground">Notification settings placeholder. (e.g., Email, Push for new messages, class reminders etc.)</p>
+                <p className="text-muted-foreground">Notification settings conceptual. (e.g., Email, Push for new messages, class reminders etc.)</p>
             </CardContent>
             <CardFooter>
-                 <Button variant="outline" disabled>Manage Notifications (Placeholder)</Button>
+                 <Button variant="outline" onClick={() => toast({title: "Conceptual Action", description: "Notification management UI would open."})}>Manage Notifications (Conceptual)</Button>
             </CardFooter>
         </Card>
     </div>
   );
 }
-
-    

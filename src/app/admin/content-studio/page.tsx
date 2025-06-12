@@ -34,7 +34,7 @@ export default function AdminContentStudioPage() {
             <AlertTitle className="text-red-700 font-semibold">Critical Security & Functionality Notice</AlertTitle>
             <AlertDescription className="text-red-600 space-y-1">
               <p>
-                This page is currently a **visual placeholder** and is publicly accessible via its URL.
+                This page is currently a **visual placeholder** and publicly accessible via its URL.
                 It **DOES NOT** have any real functionality, security, authentication, or authorization implemented.
               </p>
               <p>
@@ -56,8 +56,7 @@ export default function AdminContentStudioPage() {
             <ServerCrash className="h-5 w-5 !text-blue-600" />
             <AlertTitle className="text-blue-700 font-semibold">Backend Integration Required</AlertTitle>
             <AlertDescription className="text-blue-600">
-              All interactive elements (buttons, inputs, selects) are non-functional placeholders.
-              A complete backend system is necessary to enable features like content generation, saving, publishing, and user management.
+              Interactive elements are for demonstration. Actual functionality (content generation, saving, publishing) requires backend systems.
             </AlertDescription>
           </Alert>
         </CardContent>
@@ -72,17 +71,17 @@ export default function AdminContentStudioPage() {
             <CardContent className="space-y-4">
               <div>
                 <Label htmlFor="content-text" className="font-semibold">Paste Text</Label>
-                <Textarea id="content-text" placeholder="Paste your article text, script, or notes here..." rows={10} className="mt-1" disabled />
+                <Textarea id="content-text" placeholder="Paste your article text, script, or notes here..." rows={10} className="mt-1" />
               </div>
               <div>
                 <Label htmlFor="content-upload" className="font-semibold">Upload Document (Word, PDF)</Label>
-                <Input id="content-upload" type="file" className="mt-1" disabled />
-                <p className="text-xs text-muted-foreground mt-1">Placeholder: File upload is not functional.</p>
+                <Input id="content-upload" type="file" className="mt-1" />
+                <p className="text-xs text-muted-foreground mt-1">File upload is conceptual.</p>
               </div>
               <div>
                 <Label htmlFor="media-upload" className="font-semibold">Upload Audio/Video (for transcription/podcast)</Label>
-                <Input id="media-upload" type="file" accept="audio/*,video/*" className="mt-1" disabled />
-                <p className="text-xs text-muted-foreground mt-1">Placeholder: File upload is not functional.</p>
+                <Input id="media-upload" type="file" accept="audio/*,video/*" className="mt-1" />
+                <p className="text-xs text-muted-foreground mt-1">File upload is conceptual.</p>
               </div>
             </CardContent>
           </Card>
@@ -94,7 +93,7 @@ export default function AdminContentStudioPage() {
             <CardContent className="space-y-4">
               <div>
                 <Label htmlFor="ai-tone" className="font-semibold">Tone</Label>
-                <Select disabled>
+                <Select>
                   <SelectTrigger id="ai-tone" className="mt-1"><SelectValue placeholder="Select Tone" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="formal">Formal</SelectItem>
@@ -107,7 +106,7 @@ export default function AdminContentStudioPage() {
               </div>
               <div>
                 <Label htmlFor="ai-length" className="font-semibold">Desired Length</Label>
-                 <Select disabled>
+                 <Select>
                   <SelectTrigger id="ai-length" className="mt-1"><SelectValue placeholder="Select Length" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="short">Short (e.g., summary, social media post)</SelectItem>
@@ -118,15 +117,15 @@ export default function AdminContentStudioPage() {
               </div>
                <div>
                 <Label htmlFor="ai-audience" className="font-semibold">Target Audience</Label>
-                <Input id="ai-audience" placeholder="e.g., Fitness Beginners, Pro Athletes" className="mt-1" disabled />
+                <Input id="ai-audience" placeholder="e.g., Fitness Beginners, Pro Athletes" className="mt-1" />
               </div>
               <div>
                 <Label htmlFor="ai-keywords" className="font-semibold">Keywords (comma-separated)</Label>
-                <Input id="ai-keywords" placeholder="e.g., HIIT, nutrition, wellness, marathon training" className="mt-1" disabled />
+                <Input id="ai-keywords" placeholder="e.g., HIIT, nutrition, wellness, marathon training" className="mt-1" />
               </div>
               <div>
-                <Label htmlFor="ai-voice" className="font-semibold">Podcast Voice (Placeholder)</Label>
-                <Select disabled>
+                <Label htmlFor="ai-voice" className="font-semibold">Podcast Voice (Conceptual)</Label>
+                <Select>
                   <SelectTrigger id="ai-voice" className="mt-1"><SelectValue placeholder="Select Voice Profile" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="male_energetic">Energetic Male</SelectItem>
@@ -136,8 +135,8 @@ export default function AdminContentStudioPage() {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="ai-music" className="font-semibold">Podcast Background Music (Placeholder)</Label>
-                <Select disabled>
+                <Label htmlFor="ai-music" className="font-semibold">Podcast Background Music (Conceptual)</Label>
+                <Select>
                   <SelectTrigger id="ai-music" className="mt-1"><SelectValue placeholder="Select Music Style" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="upbeat_electronic">Upbeat Electronic</SelectItem>
@@ -149,8 +148,8 @@ export default function AdminContentStudioPage() {
               </div>
             </CardContent>
             <CardFooter>
-                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold" disabled>
-                  Generate Content (Placeholder)
+                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
+                  Generate Content (Conceptual)
                 </Button>
             </CardFooter>
           </Card>
@@ -167,38 +166,38 @@ export default function AdminContentStudioPage() {
                 <div className="flex flex-col">
                   <h3 className="text-sm font-semibold mb-1 text-muted-foreground">YOUR INPUT (HIGHLIGHTS)</h3>
                   <div className="p-4 border rounded-md bg-muted/50 min-h-[150px] text-sm text-foreground flex-grow overflow-auto">
-                    <p className="italic">Content from your input (e.g., pasted text, document summary, or transcription) would be summarized or displayed here. This area is non-functional.</p>
+                    <p className="italic">Content from your input (e.g., pasted text, document summary, or transcription) would be summarized or displayed here. This area is conceptual.</p>
                   </div>
                 </div>
                 <div className="flex flex-col">
                   <h3 className="text-sm font-semibold mb-1 text-muted-foreground">AI GENERATED DRAFT</h3>
-                   <Textarea placeholder="The AI-generated blog post or podcast script will appear here. You would be able to edit this text directly. This area is non-functional." rows={15} className="border-primary/30 focus:border-primary flex-grow" disabled />
+                   <Textarea placeholder="The AI-generated blog post or podcast script will appear here. You would be able to edit this text directly. This area is conceptual." rows={15} className="border-primary/30 focus:border-primary flex-grow" />
                 </div>
               </div>
             </CardContent>
              <CardFooter>
-                <p className="text-xs text-muted-foreground">Placeholder: Editing and AI generation are not functional without backend integration.</p>
+                <p className="text-xs text-muted-foreground">Editing and AI generation are conceptual and require backend integration.</p>
             </CardFooter>
           </Card>
 
           <Card className="shadow-md">
             <CardHeader>
               <CardTitle className="flex items-center"><SendHorizonal className="mr-2 h-5 w-5 text-primary" />Publishing & Scheduling</CardTitle>
-              <CardDescription>Controls to manage the content's release. (Non-functional)</CardDescription>
+              <CardDescription>Controls to manage the content's release. (Conceptual)</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col sm:flex-row flex-wrap gap-3 items-center">
-              <Button variant="default" className="bg-green-600 hover:bg-green-700 text-white" disabled>
+              <Button variant="default" className="bg-green-600 hover:bg-green-700 text-white">
                 <SendHorizonal className="mr-2 h-4 w-4" /> Publish Now
               </Button>
-              <Button variant="outline" disabled>
+              <Button variant="outline">
                 <CalendarClock className="mr-2 h-4 w-4" /> Schedule Post
               </Button>
-              <Button variant="secondary" disabled>
+              <Button variant="secondary">
                 <Save className="mr-2 h-4 w-4" /> Save as Draft
               </Button>
             </CardContent>
              <CardFooter>
-                <p className="text-xs text-muted-foreground">Placeholder: Publishing and scheduling controls are not functional without backend integration.</p>
+                <p className="text-xs text-muted-foreground">Publishing and scheduling controls are conceptual and require backend integration.</p>
             </CardFooter>
           </Card>
         </div>

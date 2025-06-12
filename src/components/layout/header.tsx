@@ -6,19 +6,19 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, UserCircle2, Wrench, ShieldAlert } from 'lucide-react';
+import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, UserCircle2, Wrench, ShieldAlert, LogIn, UserPlus } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 // MOCK: In a real app, this would come from an authentication context/state
 const MOCK_IS_ADMIN = true; // Set to true to show admin links, false to hide
+const MOCK_IS_LOGGED_IN = false; // Set to true to simulate a logged-in user
 
 const topLevelNavItems = [
   { label: 'Home', href: '/' },
@@ -46,6 +46,8 @@ const exploreDropdownItemsBase = [
 const adminStudioItem = { label: 'Admin Studio', href: '/admin/content-studio', icon: <ShieldAlert className="mr-2 h-4 w-4" />, isAdminOnly: true };
 
 const profileNavItem = { label: 'Profile', href: '/profile', icon: <UserCircle2 className="mr-2 h-4 w-4" /> };
+const loginNavItem = { label: 'Login', href: '#', icon: <LogIn className="mr-2 h-4 w-4" /> }; // Placeholder href
+const signupNavItem = { label: 'Sign Up', href: '#', icon: <UserPlus className="mr-2 h-4 w-4" /> }; // Placeholder href
 const contactNavItem = { label: 'Contact', href: '/#contact' };
 
 
@@ -79,6 +81,9 @@ export default function Header() {
       const element = document.getElementById(elementId);
       element?.scrollIntoView({ behavior: 'smooth' });
       setActiveLink(href);
+    } else if (href === '#') {
+      // Placeholder action for Login/Sign Up
+      console.log(`${href === loginNavItem.href ? "Login" : "Sign Up"} button clicked (placeholder)`);
     }
     setIsMobileMenuOpen(false);
     setExpandedMobileCategories({});
@@ -139,12 +144,16 @@ export default function Header() {
     exit: { opacity: 0, y: -10, height: 0, transition: { duration: 0.2 } },
   };
 
+  const authNavItemsForMobile = MOCK_IS_LOGGED_IN 
+    ? [profileNavItem] 
+    : [loginNavItem, signupNavItem];
+
   const allNavItemsForMobile = [
     ...topLevelNavItems,
     { label: 'Services', href: '#', isCategory: true, subItems: servicesDropdownItems, icon: <Dumbbell /> },
     { label: 'Features', href: '#', isCategory: true, subItems: featuresDropdownItems, icon: <Sparkles /> },
     { label: 'Explore', href: '#', isCategory: true, subItems: exploreDropdownItems.filter(item => MOCK_IS_ADMIN || !item.isAdminOnly), icon: <Newspaper /> },
-    profileNavItem,
+    ...authNavItemsForMobile,
     contactNavItem
   ];
   
@@ -254,14 +263,37 @@ export default function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
             
-            <Link
+            {MOCK_IS_LOGGED_IN ? (
+              <Link
                 key={profileNavItem.label}
                 href={profileNavItem.href}
                 onClick={() => handleLinkClick(profileNavItem.href)}
                 className={navLinkClasses(isLinkActive(profileNavItem.href))}
               >
                 {profileNavItem.label}
-            </Link>
+              </Link>
+            ) : (
+              <>
+                <Button 
+                  variant={isScrolled ? "outline" : "ghost"} 
+                  size="sm" 
+                  onClick={() => handleLinkClick(loginNavItem.href)} 
+                  className={cn(
+                    "font-medium",
+                    isScrolled ? "border-primary text-primary hover:bg-primary hover:text-primary-foreground" : "text-white hover:bg-white/10 hover:text-primary"
+                  )}
+                >
+                  <LogIn className="mr-2 h-4 w-4" /> {loginNavItem.label}
+                </Button>
+                <Button 
+                  size="sm" 
+                  onClick={() => handleLinkClick(signupNavItem.href)}
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
+                >
+                   <UserPlus className="mr-2 h-4 w-4" /> {signupNavItem.label}
+                </Button>
+              </>
+            )}
 
             <Link
               href={contactNavItem.href}
@@ -359,6 +391,35 @@ export default function Header() {
                     </div>
                   ))}
                 </nav>
+                 {/* Mobile Footer with Login/Signup or Profile */}
+                <div className="border-t border-border p-4">
+                  {MOCK_IS_LOGGED_IN ? (
+                     <Link
+                      href={profileNavItem.href}
+                      onClick={() => handleLinkClick(profileNavItem.href)} 
+                      className={mobileLinkClasses(isLinkActive(profileNavItem.href))}
+                    >
+                       {profileNavItem.icon && React.cloneElement(profileNavItem.icon as React.ReactElement, { className: "mr-3 h-5 w-5 shrink-0" })}
+                      {profileNavItem.label}
+                    </Link>
+                  ) : (
+                    <div className="space-y-2">
+                       <Button 
+                        variant="outline" 
+                        className="w-full justify-start" 
+                        onClick={() => handleLinkClick(loginNavItem.href)}
+                      >
+                        <LogIn className="mr-2 h-4 w-4" /> {loginNavItem.label}
+                      </Button>
+                      <Button 
+                        className="w-full justify-start bg-primary hover:bg-primary/90 text-primary-foreground" 
+                        onClick={() => handleLinkClick(signupNavItem.href)}
+                      >
+                        <UserPlus className="mr-2 h-4 w-4" /> {signupNavItem.label}
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </SheetContent>
             </Sheet>
           </div>
@@ -367,3 +428,5 @@ export default function Header() {
     </>
   );
 }
+
+    

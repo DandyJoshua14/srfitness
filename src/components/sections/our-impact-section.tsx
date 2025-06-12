@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { motion, useAnimation, useInView } from 'framer-motion';
+import { motion, useAnimation, useInView, animate } from 'framer-motion'; // Added 'animate' to imports
 import { Users, Award, Zap, Smile } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import React from 'react'; // Ensure React is imported for JSX
@@ -33,7 +33,7 @@ const AnimatedNumber = ({ value, suffix }: { value: number, suffix?: string }) =
         opacity: 1,
         transition: { duration: 0.5 }
       });
-      const animation = motion.animate(0, value, {
+      const animation = animate(0, value, { // Changed from motion.animate to animate
         duration: 2,
         ease: "easeOut",
         onUpdate: (latest) => {

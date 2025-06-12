@@ -14,19 +14,21 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useRouter } from 'next/navigation';
-// import { generateMealPlan, GenerateMealPlanInput } from '@/ai/flows/generate-meal-plan-flow'; // Placeholder
+import { generateMealPlan, GenerateMealPlanInput } from '@/ai/flows/generate-meal-plan-flow'; 
+import { Loader2 } from 'lucide-react';
 
-const dietaryPreferences = ["Vegetarian", "Vegan", "Pescatarian", "Gluten-Free", "Dairy-Free", "Keto", "Paleo"];
-const activityLevels = ["Sedentary", "Lightly Active", "Moderately Active", "Very Active", "Extra Active"];
-const fitnessGoals = ["Weight Loss", "Muscle Gain", "Maintenance", "Improve Endurance", "General Health"];
+const dietaryPreferences = ["Vegetarian", "Vegan", "Pescatarian", "Gluten-Free", "Dairy-Free", "Keto", "Paleo", "None"];
+const activityLevels = ["Sedentary (little or no exercise)", "Lightly Active (light exercise/sports 1-3 days/week)", "Moderately Active (moderate exercise/sports 3-5 days/week)", "Very Active (hard exercise/sports 6-7 days a week)", "Extra Active (very hard exercise/sports & physical job)"];
+const fitnessGoals = ["Weight Loss", "Muscle Gain", "Maintenance", "Improve Endurance", "General Health & Wellness"];
 
 const formSchema = z.object({
-  age: z.coerce.number().min(1, "Age is required").max(120),
+  age: z.coerce.number().min(16, "Must be at least 16 years old").max(100, "Age seems high, please verify."),
   gender: z.enum(["Male", "Female", "Other"], { required_error: "Gender is required" }),
-  height: z.coerce.number().min(50, "Height in cm").max(300),
-  weight: z.coerce.number().min(20, "Weight in kg").max(500),
+  height: z.coerce.number().min(100, "Height in cm (e.g., 175)").max(250, "Height seems unusual, please verify."),
+  weight: z.coerce.number().min(30, "Weight in kg (e.g., 70)").max(300, "Weight seems unusual, please verify."),
   activityLevel: z.enum(activityLevels as [string, ...string[]], { required_error: "Activity level is required" }),
   fitnessGoal: z.enum(fitnessGoals as [string, ...string[]], { required_error: "Fitness goal is required" }),
+  numberOfDays: z.coerce.number().min(1).max(7).default(3),
   dietaryPreferences: z.array(z.string()).optional(),
   allergies: z.string().optional(),
   dislikedFoods: z.string().optional(),
@@ -46,8 +48,9 @@ export default function QuestionnaireForm() {
       gender: undefined,
       height: undefined,
       weight: undefined,
-      activityLevel: undefined,
-      fitnessGoal: undefined,
+      activityLevel: activityLevels[2], // Default to Moderately Active
+      fitnessGoal: fitnessGoals[0], // Default to Weight Loss
+      numberOfDays: 3,
       dietaryPreferences: [],
       allergies: "",
       dislikedFoods: "",
@@ -58,38 +61,45 @@ export default function QuestionnaireForm() {
     setIsLoading(true);
     console.log("Questionnaire submitted:", values);
 
-    // Placeholder for AI call
-    // const aiInput: GenerateMealPlanInput = {
-    //   age: values.age,
-    //   gender: values.gender,
-    //   height: values.height,
-    //   weight: values.weight,
-    //   activityLevel: values.activityLevel,
-    //   fitnessGoal: values.fitnessGoal,
-    //   preferences: values.dietaryPreferences?.join(', ') || 'None',
-    //   allergies: values.allergies || 'None',
-    //   dislikedFoods: values.dislikedFoods || 'None',
-    // };
+    const aiInput: GenerateMealPlanInput = {
+      age: values.age,
+      gender: values.gender,
+      height: values.height,
+      weight: values.weight,
+      activityLevel: values.activityLevel,
+      fitnessGoal: values.fitnessGoal,
+      numberOfDays: values.numberOfDays,
+      preferences: values.dietaryPreferences?.includes("None") ? undefined : values.dietaryPreferences?.join(', ') || undefined,
+      allergies: values.allergies || undefined,
+      dislikedFoods: values.dislikedFoods || undefined,
+    };
 
     try {
-      // const mealPlan = await generateMealPlan(aiInput); // Call Genkit flow
-      // console.log("Generated Meal Plan:", mealPlan);
-      // For now, simulate success and redirect
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
+      const mealPlan = await generateMealPlan(aiInput); // Call Genkit flow
+      console.log("Generated Meal Plan:", mealPlan);
+      
+      // Store the generated plan in localStorage to pass to the plan display page
+      localStorage.setItem('srFitnessMealPlan', JSON.stringify(mealPlan));
 
       toast({
-        title: "Preferences Saved!",
-        description: "Generating your personalized meal plan...",
+        title: "Meal Plan Generated!",
+        description: "Your personalized meal plan is ready. Redirecting...",
+        duration: 3000,
       });
-      // Store preferences or pass to plan page (e.g. via state management or query params for simple demo)
-      // For demo, we'll just redirect. The plan page will show placeholder data.
+      
       router.push('/meal-planner/plan');
+
     } catch (error) {
       console.error("Error generating meal plan:", error);
+      let errorMessage = "Could not generate meal plan. Please try again.";
+      if (error instanceof Error) {
+        errorMessage = error.message.includes("blocked") ? "Content generation was blocked due to safety settings. Please adjust your input." : error.message;
+      }
       toast({
-        title: "Error",
-        description: "Could not generate meal plan. Please try again.",
+        title: "Error Generating Plan",
+        description: errorMessage,
         variant: "destructive",
+        duration: 7000,
       });
     } finally {
       setIsLoading(false);
@@ -97,24 +107,24 @@ export default function QuestionnaireForm() {
   }
 
   return (
-    <Card className="max-w-2xl mx-auto shadow-xl">
+    <Card className="max-w-2xl mx-auto shadow-xl border-primary/20">
       <CardHeader>
-        <CardTitle className="font-headline text-2xl text-foreground">Tell Us About Yourself</CardTitle>
+        <CardTitle className="font-headline text-2xl text-primary">Tell Us About Yourself</CardTitle>
         <CardDescription>
-          This information will help us create a meal plan tailored to your needs.
+          This information will help our AI create a meal plan tailored to your needs.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-x-6 gap-y-8">
               <FormField
                 control={form.control}
                 name="age"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Age</FormLabel>
-                    <FormControl><Input type="number" placeholder="Your Age" {...field} /></FormControl>
+                    <FormControl><Input type="number" placeholder="Your Age (e.g., 30)" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -130,7 +140,7 @@ export default function QuestionnaireForm() {
                       <SelectContent>
                         <SelectItem value="Male">Male</SelectItem>
                         <SelectItem value="Female">Female</SelectItem>
-                        <SelectItem value="Other">Other</SelectItem>
+                        <SelectItem value="Other">Prefer not to say / Other</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -194,14 +204,31 @@ export default function QuestionnaireForm() {
                 </FormItem>
               )}
             />
+             <FormField
+                control={form.control}
+                name="numberOfDays"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Meal Plan Duration (Days)</FormLabel>
+                    <Select onValueChange={(value) => field.onChange(parseInt(value))} defaultValue={String(field.value)}>
+                      <FormControl><SelectTrigger><SelectValue placeholder="Select number of days" /></SelectTrigger></FormControl>
+                      <SelectContent>
+                        {[1,2,3,4,5,6,7].map(day => <SelectItem key={day} value={String(day)}>{day} Day{day > 1 ? 's' : ''}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
 
             <FormField
               control={form.control}
               name="dietaryPreferences"
               render={() => (
                 <FormItem>
-                  <FormLabel>Dietary Preferences (select all that apply)</FormLabel>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  <FormLabel>Dietary Preferences (select all that apply, or 'None')</FormLabel>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-3">
                     {dietaryPreferences.map((item) => (
                       <FormField
                         key={item}
@@ -209,22 +236,30 @@ export default function QuestionnaireForm() {
                         name="dietaryPreferences"
                         render={({ field }) => {
                           return (
-                            <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+                            <FormItem className="flex flex-row items-center space-x-2.5 space-y-0">
                               <FormControl>
                                 <Checkbox
                                   checked={field.value?.includes(item)}
                                   onCheckedChange={(checked) => {
-                                    return checked
-                                      ? field.onChange([...(field.value || []), item])
-                                      : field.onChange(
-                                          (field.value || []).filter(
-                                            (value) => value !== item
-                                          )
-                                        );
+                                    let newValue = field.value ? [...field.value] : [];
+                                    if (checked) {
+                                      if (item === "None") { // If "None" is checked, uncheck others and set only "None"
+                                        newValue = ["None"];
+                                      } else { // If other item is checked, uncheck "None" and add item
+                                        newValue = newValue.filter(v => v !== "None");
+                                        newValue.push(item);
+                                      }
+                                    } else { // Unchecking an item
+                                      newValue = newValue.filter((value) => value !== item);
+                                      if (newValue.length === 0) { // If unchecking last item, default to "None" or empty as preferred
+                                        // newValue = ["None"]; // Option: default to None
+                                      }
+                                    }
+                                    field.onChange(newValue);
                                   }}
                                 />
                               </FormControl>
-                              <FormLabel className="font-normal">{item}</FormLabel>
+                              <FormLabel className="font-normal text-sm">{item}</FormLabel>
                             </FormItem>
                           );
                         }}
@@ -241,8 +276,8 @@ export default function QuestionnaireForm() {
               name="allergies"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Allergies (comma-separated)</FormLabel>
-                  <FormControl><Input placeholder="e.g., Peanuts, Shellfish" {...field} /></FormControl>
+                  <FormLabel>Food Allergies (comma-separated, e.g., Peanuts, Shellfish)</FormLabel>
+                  <FormControl><Input placeholder="Leave blank if none" {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -252,14 +287,14 @@ export default function QuestionnaireForm() {
               name="dislikedFoods"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Disliked Foods (comma-separated)</FormLabel>
-                  <FormControl><Textarea placeholder="e.g., Mushrooms, Olives" {...field} /></FormControl>
+                  <FormLabel>Disliked Foods (comma-separated, e.g., Mushrooms, Olives)</FormLabel>
+                  <FormControl><Textarea placeholder="Leave blank if none" {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit" size="lg" className="w-full font-headline" disabled={isLoading}>
-              {isLoading ? 'Generating Plan...' : 'Get My Meal Plan'}
+            <Button type="submit" size="lg" className="w-full font-headline text-lg py-3.5" disabled={isLoading}>
+              {isLoading ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Generating Your Plan...</> : 'Get My Meal Plan'}
             </Button>
           </form>
         </Form>
@@ -267,3 +302,5 @@ export default function QuestionnaireForm() {
     </Card>
   );
 }
+
+    

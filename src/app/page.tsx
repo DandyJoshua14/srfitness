@@ -4,7 +4,8 @@ import AboutSummarySection from '@/components/sections/about-summary-section';
 import ServicesHighlightSection from '@/components/sections/services-highlight-section';
 import KeyFeaturesSection from '@/components/sections/key-features-section';
 import OurImpactSection from '@/components/sections/our-impact-section';
-import InnovationsSection from '@/components/sections/innovations-section'; // Added import
+import InnovationsSection from '@/components/sections/innovations-section';
+import DailyTipSection from '@/components/sections/daily-tip-section'; // Added import
 import ContactLocationSection from '@/components/sections/contact-location-section';
 import type { Metadata } from 'next';
 
@@ -21,8 +22,11 @@ export default function HomePage() {
       <ServicesHighlightSection />
       <KeyFeaturesSection />
       <OurImpactSection />
-      <InnovationsSection /> {/* Added new section */}
+      <InnovationsSection />
+      <DailyTipSection /> {/* Added new section */}
       <ContactLocationSection />
     </>
   );
 }
+
+    

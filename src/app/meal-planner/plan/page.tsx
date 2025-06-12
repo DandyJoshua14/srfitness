@@ -1,41 +1,78 @@
 
-import type { Metadata } from 'next';
-import MealPlanDisplay from '@/components/features/meal-planner/meal-plan-display';
-import { UtensilsCrossed } from 'lucide-react';
+"use client"; // Required for useEffect and localStorage
 
+import { useEffect, useState } from 'react';
+import type { Metadata } from 'next'; // Keep for static metadata if needed, or remove if fully dynamic
+import MealPlanDisplay from '@/components/features/meal-planner/meal-plan-display';
+import { UtensilsCrossed, Info, Loader2 } from 'lucide-react';
+import { GenerateMealPlanOutput } from '@/ai/flows/generate-meal-plan-flow';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+
+// Static metadata can be a fallback
 export const metadata: Metadata = {
   title: 'Your Meal Plan - SR Fitness',
   description: 'View your personalized meal plan, recipes, and shopping list.',
 };
 
-export default function MealPlanPage() {
-  // In a real app, you'd fetch or pass the user's specific plan data here
-  const placeholderPlan = {
-    dailyPlans: [
-      {
-        day: "Monday",
-        meals: [
-          { name: "Breakfast", recipe: "Oatmeal with Berries", calories: 350, protein: 15, carbs: 50, fat: 10, ingredients: ["Oats", "Mixed Berries", "Almond Milk", "Chia Seeds"] },
-          { name: "Lunch", recipe: "Chicken Salad Sandwich", calories: 500, protein: 30, carbs: 40, fat: 25, ingredients: ["Chicken Breast", "Whole Wheat Bread", "Lettuce", "Tomato", "Light Mayo"] },
-          { name: "Dinner", recipe: "Salmon with Roasted Vegetables", calories: 600, protein: 40, carbs: 45, fat: 30, ingredients: ["Salmon Fillet", "Broccoli", "Carrots", "Olive Oil", "Herbs"] },
-          { name: "Snack", recipe: "Greek Yogurt with Nuts", calories: 200, protein: 20, carbs: 15, fat: 8, ingredients: ["Greek Yogurt", "Almonds", "Walnuts"] },
-        ],
-        dailyTotals: { calories: 1650, protein: 105, carbs: 150, fat: 73 }
-      },
-      {
-        day: "Tuesday",
-        meals: [
-          { name: "Breakfast", recipe: "Scrambled Eggs with Spinach", calories: 300, protein: 25, carbs: 10, fat: 20, ingredients: ["Eggs", "Spinach", "Whole Wheat Toast"] },
-          { name: "Lunch", recipe: "Quinoa Salad with Chickpeas", calories: 450, protein: 20, carbs: 60, fat: 15, ingredients: ["Quinoa", "Chickpeas", "Cucumber", "Bell Peppers", "Lemon Vinaigrette"] },
-          { name: "Dinner", recipe: "Lean Beef Stir-fry", calories: 550, protein: 35, carbs: 50, fat: 20, ingredients: ["Lean Beef Strips", "Mixed Vegetables", "Brown Rice", "Soy Sauce"] },
-          { name: "Snack", recipe: "Apple with Peanut Butter", calories: 220, protein: 8, carbs: 30, fat: 10, ingredients: ["Apple", "Peanut Butter"] },
-        ],
-        dailyTotals: { calories: 1520, protein: 88, carbs: 150, fat: 65 }
-      },
-      // Add more days as needed for a full week
-    ]
-  };
+// Placeholder data for when no plan is found or for initial render
+const placeholderPlan: GenerateMealPlanOutput = {
+  dailyPlans: [
+    {
+      day: "Sample Day",
+      meals: [
+        { name: "Breakfast", recipe: "Balanced Oatmeal", calories: 350, protein: 15, carbs: 50, fat: 10, ingredients: ["Rolled Oats", "Berries", "Nuts", "Milk"] },
+        { name: "Lunch", recipe: "Grilled Chicken Salad", calories: 500, protein: 40, carbs: 30, fat: 25, ingredients: ["Chicken Breast", "Mixed Greens", "Vegetables", "Olive Oil Dressing"] },
+        { name: "Dinner", recipe: "Baked Salmon with Quinoa", calories: 600, protein: 45, carbs: 50, fat: 28, ingredients: ["Salmon Fillet", "Quinoa", "Steamed Asparagus"] },
+      ],
+      dailyTotals: { calories: 1450, protein: 100, carbs: 130, fat: 63 }
+    }
+  ],
+  summary: "This is a sample meal plan. Generate your own for a personalized experience!"
+};
 
+
+export default function MealPlanPage() {
+  const [mealPlan, setMealPlan] = useState<GenerateMealPlanOutput | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const storedPlan = localStorage.getItem('srFitnessMealPlan');
+      if (storedPlan) {
+        const parsedPlan = JSON.parse(storedPlan);
+        // Basic validation of the parsed plan structure
+        if (parsedPlan && parsedPlan.dailyPlans && Array.isArray(parsedPlan.dailyPlans)) {
+           setMealPlan(parsedPlan);
+        } else {
+          console.warn("Stored meal plan has invalid structure.");
+          setError("The stored meal plan data appears to be corrupted. Please try generating a new one.");
+          setMealPlan(placeholderPlan); // Fallback to placeholder
+        }
+      } else {
+        setError("No meal plan found. Please generate one first.");
+        setMealPlan(placeholderPlan); // Fallback to placeholder
+      }
+    } catch (e) {
+      console.error("Error loading meal plan from localStorage:", e);
+      setError("Could not load your meal plan. Please try generating a new one.");
+      setMealPlan(placeholderPlan); // Fallback to placeholder in case of any error
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 flex flex-col items-center justify-center min-h-[60vh]">
+        <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
+        <p className="text-lg text-muted-foreground">Loading your meal plan...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
@@ -45,10 +82,37 @@ export default function MealPlanPage() {
           Your Personalized Meal Plan
         </h1>
         <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-          Here is your tailored meal plan. Remember to adjust portions based on your specific needs and consult with a nutritionist if needed.
+          {mealPlan && mealPlan !== placeholderPlan 
+            ? "Here is your tailored meal plan. Remember to adjust portions and consult a professional if needed." 
+            : "View your sample plan below, or generate a new one."}
         </p>
       </div>
-      <MealPlanDisplay plan={placeholderPlan} />
+
+      {error && mealPlan === placeholderPlan && (
+         <Alert variant="destructive" className="mb-8 max-w-2xl mx-auto">
+          <Info className="h-4 w-4" />
+          <AlertTitle>Plan Not Available</AlertTitle>
+          <AlertDescription>
+            {error}
+            <Button asChild variant="link" className="p-0 h-auto ml-1 text-destructive hover:underline">
+              <Link href="/meal-planner">Generate a New Plan</Link>
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
+      
+      {/* Render MealPlanDisplay with either the fetched plan or the placeholder */}
+      <MealPlanDisplay plan={mealPlan || placeholderPlan} />
+
+      <div className="mt-12 text-center">
+        <Button asChild size="lg" className="font-headline">
+          <Link href="/meal-planner">
+            {mealPlan && mealPlan !== placeholderPlan ? "Generate a New Plan" : "Create Your Personalized Plan"}
+          </Link>
+        </Button>
+      </div>
     </div>
   );
 }
+
+    

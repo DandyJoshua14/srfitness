@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, UserCircle2, Wrench, ShieldAlert, LogIn, UserPlus } from 'lucide-react';
+import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, UserCircle2, Wrench, ShieldAlert, LogIn, UserPlus, Lightbulb } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -85,12 +85,15 @@ export default function Header() {
       // Placeholder action for Login/Sign Up
       console.log(`${href === loginNavItem.href ? "Login" : "Sign Up"} button clicked (placeholder)`);
     }
-    setIsMobileMenuOpen(false);
-    setExpandedMobileCategories({});
+    // Only close mobile menu if it's not a category toggle
+    if (!href.startsWith('#category-toggle-')) {
+        setIsMobileMenuOpen(false);
+        setExpandedMobileCategories({});
+    }
   };
 
   const toggleMobileCategory = (categoryLabel: string, event?: React.MouseEvent) => {
-    event?.stopPropagation();
+    event?.stopPropagation(); // Prevent sheet from closing if propagation is an issue
     setExpandedMobileCategories(prev => ({
       ...prev,
       [categoryLabel]: !prev[categoryLabel]
@@ -103,6 +106,11 @@ export default function Header() {
     if (pathname === '/' && href.startsWith('/#') && activeLink === href) return true;
     return false;
   };
+  
+  const isCategoryActiveForMobile = (subItems: any[]) => {
+    return subItems.some(item => isLinkActive(item.href) && (MOCK_IS_ADMIN || !item.isAdminOnly));
+  };
+
 
   const isServicesActive = servicesDropdownItems.some(item => isLinkActive(item.href));
   const isExploreActive = exploreDropdownItems.some(item => isLinkActive(item.href));
@@ -150,26 +158,27 @@ export default function Header() {
 
   const allNavItemsForMobile = [
     ...topLevelNavItems,
-    { label: 'Services', href: '#', isCategory: true, subItems: servicesDropdownItems, icon: <Dumbbell /> },
-    { label: 'Features', href: '#', isCategory: true, subItems: featuresDropdownItems, icon: <Sparkles /> },
-    { label: 'Explore', href: '#', isCategory: true, subItems: exploreDropdownItems.filter(item => MOCK_IS_ADMIN || !item.isAdminOnly), icon: <Newspaper /> },
-    ...authNavItemsForMobile,
-    contactNavItem
+    { label: 'Services', href: '#category-toggle-services', isCategory: true, subItems: servicesDropdownItems, icon: <Dumbbell /> },
+    { label: 'Features', href: '#category-toggle-features', isCategory: true, subItems: featuresDropdownItems, icon: <Lightbulb /> }, // Using Lightbulb for features for variety
+    { label: 'Explore', href: '#category-toggle-explore', isCategory: true, subItems: exploreDropdownItems.filter(item => MOCK_IS_ADMIN || !item.isAdminOnly), icon: <Newspaper /> },
+    contactNavItem,
+    // Auth links will be handled in the footer of the sheet
   ];
   
-  const mobileCategoryClasses = (isActive: boolean) => cn(
-    "font-headline text-lg py-3 px-4 w-full text-left flex justify-between items-center rounded-md",
-    isActive ? "text-primary bg-primary/10" : "text-foreground hover:bg-muted/50"
+  const mobileCategoryClasses = (isActive: boolean, isExpanded: boolean) => cn(
+    "font-headline text-lg py-3.5 px-4 w-full text-left flex justify-between items-center rounded-lg transition-colors duration-150",
+    isActive && !isExpanded ? "text-primary bg-primary/10 font-semibold" : "text-foreground hover:bg-muted/60",
+    isExpanded ? "bg-muted/80" : ""
   );
   
   const mobileLinkClasses = (isActive: boolean) => cn(
-    "font-medium text-base py-3 px-4 w-full text-left flex items-center rounded-md",
-     isActive ? "text-primary bg-primary/10" : "text-foreground hover:bg-muted/50"
+    "font-medium text-base py-3.5 px-4 w-full text-left flex items-center rounded-lg transition-colors duration-150",
+     isActive ? "text-primary bg-primary/10 font-semibold" : "text-foreground hover:bg-muted/60"
   );
   
   const mobileSubLinkClasses = (isActive: boolean, isAdminLink?: boolean) => cn(
-    "font-normal text-base py-2.5 pl-10 pr-4 w-full text-left flex items-center rounded-md", 
-    isActive ? "text-primary bg-primary/10" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
+    "font-normal text-base py-3 pl-12 pr-4 w-full text-left flex items-center rounded-lg transition-colors duration-150", 
+    isActive ? "text-primary bg-primary/10 font-medium" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
     isAdminLink && "font-semibold text-primary/90"
   );
 
@@ -317,38 +326,38 @@ export default function Header() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-[300px] sm:w-[340px] p-0 flex flex-col bg-background text-foreground">
-                <SheetHeader className="pl-4 pr-12 py-3 border-b border-border text-left">
+                <SheetHeader className="pl-6 pr-4 py-4 border-b border-border text-left">
                   <SheetTitle asChild>
-                    <Link href="/" className="flex items-center space-x-2" onClick={() => handleLinkClick('/')}>
+                    <Link href="/" className="flex items-center space-x-2.5" onClick={() => handleLinkClick('/')}>
                         <Image
                             src="/SR.jpg" 
                             alt="SR Fitness Logo"
-                            width={32}
-                            height={32}
-                            className="h-8 w-8 rounded-full object-cover"
+                            width={36}
+                            height={36}
+                            className="h-9 w-9 rounded-full object-cover"
                             data-ai-hint="logo brand"
                         />
-                        <span className="font-headline text-xl font-bold text-primary">SR Fitness</span>
+                        <span className="font-headline text-2xl font-bold text-primary">SR Fitness</span>
                     </Link>
                   </SheetTitle>
                 </SheetHeader>
                 
-                <nav className="flex-grow overflow-y-auto p-4 space-y-1">
+                <nav className="flex-grow overflow-y-auto p-4 space-y-1.5">
                   {allNavItemsForMobile.map((item) => (
                     <div key={item.label} className="w-full">
                       {item.isCategory && item.subItems ? (
                         <>
                           <button
                             onClick={(e) => toggleMobileCategory(item.label, e)}
-                            className={mobileCategoryClasses(item.subItems.some(sub => isLinkActive(sub.href) && (MOCK_IS_ADMIN || !sub.isAdminOnly)))}
+                            className={mobileCategoryClasses(isCategoryActiveForMobile(item.subItems), !!expandedMobileCategories[item.label])}
                             aria-expanded={!!expandedMobileCategories[item.label]}
                           >
                             <span className="flex items-center">
-                                {item.icon && React.cloneElement(item.icon as React.ReactElement, { className: "mr-3 h-5 w-5 shrink-0" })}
+                                {item.icon && React.cloneElement(item.icon as React.ReactElement, { className: "mr-3.5 h-5 w-5 shrink-0 opacity-90" })}
                                 {item.label}
                             </span>
                             <ChevronDown
-                              className={cn("ml-2 h-5 w-5 shrink-0 transition-transform duration-300", expandedMobileCategories[item.label] ? "rotate-180" : "")}
+                              className={cn("ml-2 h-5 w-5 shrink-0 transition-transform duration-300", expandedMobileCategories[item.label] ? "rotate-180 text-primary" : "text-muted-foreground")}
                             />
                           </button>
                           <AnimatePresence>
@@ -358,7 +367,7 @@ export default function Header() {
                                 animate="visible"
                                 exit="exit"
                                 variants={mobileCategorySubItemVariants}
-                                className="flex flex-col space-y-0.5 mt-1 overflow-hidden"
+                                className="flex flex-col space-y-0.5 mt-1.5 overflow-hidden"
                               >
                                 {item.subItems.map(subItem => {
                                    if (subItem.isAdminOnly && !MOCK_IS_ADMIN) return null;
@@ -369,7 +378,7 @@ export default function Header() {
                                         onClick={() => handleLinkClick(subItem.href)} 
                                         className={mobileSubLinkClasses(isLinkActive(subItem.href), subItem.isAdminOnly)}
                                       >
-                                        {subItem.icon && React.cloneElement(subItem.icon, { className: "mr-3 h-5 w-5 shrink-0 opacity-80" })}
+                                        {subItem.icon && React.cloneElement(subItem.icon, { className: "mr-3.5 h-5 w-5 shrink-0 opacity-80" })}
                                         <span className="truncate">{subItem.label}</span>
                                       </Link>
                                    );
@@ -384,7 +393,7 @@ export default function Header() {
                           onClick={() => handleLinkClick(item.href)} 
                           className={mobileLinkClasses(isLinkActive(item.href))}
                         >
-                           {item.icon && React.cloneElement(item.icon as React.ReactElement, { className: "mr-3 h-5 w-5 shrink-0" })}
+                           {item.icon && React.cloneElement(item.icon as React.ReactElement, { className: "mr-3.5 h-5 w-5 shrink-0 opacity-90" })}
                           {item.label}
                         </Link>
                       )}
@@ -392,32 +401,32 @@ export default function Header() {
                   ))}
                 </nav>
                  {/* Mobile Footer with Login/Signup or Profile */}
-                <div className="border-t border-border p-4">
+                <div className="border-t border-border p-4 space-y-3">
                   {MOCK_IS_LOGGED_IN ? (
                      <Link
                       href={profileNavItem.href}
                       onClick={() => handleLinkClick(profileNavItem.href)} 
                       className={mobileLinkClasses(isLinkActive(profileNavItem.href))}
                     >
-                       {profileNavItem.icon && React.cloneElement(profileNavItem.icon as React.ReactElement, { className: "mr-3 h-5 w-5 shrink-0" })}
+                       {profileNavItem.icon && React.cloneElement(profileNavItem.icon as React.ReactElement, { className: "mr-3.5 h-5 w-5 shrink-0 opacity-90" })}
                       {profileNavItem.label}
                     </Link>
                   ) : (
-                    <div className="space-y-2">
+                    <>
                        <Button 
                         variant="outline" 
-                        className="w-full justify-start" 
+                        className="w-full justify-center py-3 text-base" 
                         onClick={() => handleLinkClick(loginNavItem.href)}
                       >
-                        <LogIn className="mr-2 h-4 w-4" /> {loginNavItem.label}
+                        <LogIn className="mr-2 h-5 w-5" /> {loginNavItem.label}
                       </Button>
                       <Button 
-                        className="w-full justify-start bg-primary hover:bg-primary/90 text-primary-foreground" 
+                        className="w-full justify-center py-3 text-base bg-primary hover:bg-primary/90 text-primary-foreground" 
                         onClick={() => handleLinkClick(signupNavItem.href)}
                       >
-                        <UserPlus className="mr-2 h-4 w-4" /> {signupNavItem.label}
+                        <UserPlus className="mr-2 h-5 w-5" /> {signupNavItem.label}
                       </Button>
-                    </div>
+                    </>
                   )}
                 </div>
               </SheetContent>

@@ -1,5 +1,8 @@
 
+"use client";
+
 import type { Metadata } from 'next';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -7,14 +10,35 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { ShieldAlert, Settings, Edit, UploadCloud, SendHorizonal, CalendarClock, Save, ServerCrash } from 'lucide-react';
+import { ShieldAlert, Settings, Edit, UploadCloud, SendHorizonal, CalendarClock, Save, ServerCrash, Loader2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
-export const metadata: Metadata = {
-  title: 'Admin - AI Content Studio',
-  robots: 'noindex, nofollow', // Discourage search engine indexing
-};
+// export const metadata: Metadata = { // Metadata needs to be handled differently for client components or in layout
+//   title: 'Admin - AI Content Studio',
+//   robots: 'noindex, nofollow', 
+// };
+// For client components, page title can be set in a useEffect hook or in the parent layout if static.
+// Or, if you need dynamic metadata based on client-side state, consider Next.js dynamic metadata functions if applicable.
+
 
 export default function AdminContentStudioPage() {
+  const [isGenerating, setIsGenerating] = useState(false);
+  const { toast } = useToast();
+
+  const handleGenerateContent = async () => {
+    setIsGenerating(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 2500));
+    setIsGenerating(false);
+    toast({ title: "Content Generation (Conceptual)", description: "Conceptual content generation finished. This is a placeholder." });
+  };
+  
+  // To set title for a client component, you might use:
+  // React.useEffect(() => {
+  // document.title = 'Admin - AI Content Studio';
+  // }, []);
+
+
   return (
     <div className="container mx-auto px-4 py-16 md:py-24 bg-muted/20 min-h-screen">
       <Card className="mb-8 shadow-lg border-primary/20">
@@ -33,20 +57,20 @@ export default function AdminContentStudioPage() {
             <ShieldAlert className="h-5 w-5 !text-red-600" />
             <AlertTitle className="text-red-700 font-semibold">Critical Security & Functionality Notice</AlertTitle>
             <AlertDescription className="text-red-600 space-y-1">
-              <p>
-                This page is currently a **visual placeholder** and publicly accessible via its URL.
-                It **DOES NOT** have any real functionality, security, authentication, or authorization implemented.
-              </p>
-              <p>
-                In a real-world application, this admin area would require robust backend integration for:
-              </p>
-              <ul className="list-disc list-inside pl-4 mt-1 text-xs">
-                  <li>Secure user authentication and role-based access control (RBAC).</li>
-                  <li>Frontend and backend routing guards to prevent unauthorized access.</li>
-                  <li>Secure file handling and storage for uploads.</li>
-                  <li>Integration with AI services via secure API calls.</li>
-                  <li>Database interactions for saving drafts, scheduling, and publishing.</li>
-              </ul>
+                <p>
+                    This page is currently a **visual placeholder** and publicly accessible via its URL.
+                    It **DOES NOT** have any real functionality, security, authentication, or authorization implemented.
+                </p>
+                <p>
+                    In a real-world application, this admin area would require robust backend integration for:
+                </p>
+                <ul className="list-disc list-inside pl-4 mt-1 text-xs">
+                    <li>Secure user authentication and role-based access control (RBAC).</li>
+                    <li>Frontend and backend routing guards to prevent unauthorized access.</li>
+                    <li>Secure file handling and storage for uploads.</li>
+                    <li>Integration with AI services via secure API calls.</li>
+                    <li>Database interactions for saving drafts, scheduling, and publishing.</li>
+                </ul>
                <p className="font-semibold mt-2">
                 Attempting to use this page as-is in a production environment would be a severe security risk.
               </p>
@@ -148,8 +172,19 @@ export default function AdminContentStudioPage() {
               </div>
             </CardContent>
             <CardFooter>
-                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
-                  Generate Content (Conceptual)
+                <Button 
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
+                  onClick={handleGenerateContent}
+                  disabled={isGenerating}
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    'Generate Content (Conceptual)'
+                  )}
                 </Button>
             </CardFooter>
           </Card>
@@ -186,13 +221,13 @@ export default function AdminContentStudioPage() {
               <CardDescription>Controls to manage the content's release. (Conceptual)</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col sm:flex-row flex-wrap gap-3 items-center">
-              <Button variant="default" className="bg-green-600 hover:bg-green-700 text-white">
+              <Button variant="default" className="bg-green-600 hover:bg-green-700 text-white" onClick={() => toast({title: "Conceptual Action", description: "Publishing action clicked (conceptual)."})}>
                 <SendHorizonal className="mr-2 h-4 w-4" /> Publish Now
               </Button>
-              <Button variant="outline">
+              <Button variant="outline" onClick={() => toast({title: "Conceptual Action", description: "Scheduling UI would open (conceptual)."})}>
                 <CalendarClock className="mr-2 h-4 w-4" /> Schedule Post
               </Button>
-              <Button variant="secondary">
+              <Button variant="secondary" onClick={() => toast({title: "Conceptual Action", description: "Content saved as draft (conceptual)."})}>
                 <Save className="mr-2 h-4 w-4" /> Save as Draft
               </Button>
             </CardContent>
@@ -205,3 +240,11 @@ export default function AdminContentStudioPage() {
     </div>
   );
 }
+
+// Note: Static metadata export is removed because this is now a client component.
+// If you need to set the title for a client component, you can do it via:
+// 1. Parent Layout (if the title is static for this route)
+// 2. `useEffect` hook within the component: `React.useEffect(() => { document.title = 'Admin - AI Content Studio'; }, []);`
+// 3. Using Next.js dynamic metadata generation functions if your metadata depends on async data fetched on the server before rendering the client component.
+// For simplicity, and since this is a conceptual page, direct title setting isn't critical here.
+

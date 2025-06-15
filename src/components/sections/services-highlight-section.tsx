@@ -21,7 +21,7 @@ const services = [
     title: "Burn Off Bootcamp",
     icon: <Zap className="h-10 w-10 text-primary mb-4" />,
     description: "Ignite your metabolism in our high-energy group sessions! Burn Off Bootcamp combines HIIT, strength, and cardio for a fun, challenging, and results-driven full-body workout.",
-    image: "https://placehold.co/600x400.png",
+    image: "/burn.png",
     dataAiHint: "group fitness energetic",
     link: "/burn-off-bootcamp",
     cta: "Explore Bootcamps"

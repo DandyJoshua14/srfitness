@@ -113,7 +113,7 @@ export default function BurnOffBootcampPage() {
           </div>
           <div className="relative aspect-[4/3] rounded-lg shadow-xl overflow-hidden group md:order-2 md:sticky md:top-24"> {/* Made image sticky */}
             <Image
-              src="https://placehold.co/600x450.png"
+              src="/burn.png"
               alt="Bootcamp Class in action"
               layout="fill"
               objectFit="cover"

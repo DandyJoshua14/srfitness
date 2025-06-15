@@ -1,3 +1,4 @@
+
 import type {Config} from 'tailwindcss';
 
 export default {
@@ -88,10 +89,21 @@ export default {
             height: '0',
           },
         },
+        'gradient-xy': {
+          '0%, 100%': {
+            'background-size': '200% 200%', /* Start with a larger size for smoother animation */
+            'background-position': '0% 50%', /* Left center */
+          },
+          '50%': {
+            'background-size': '250% 250%', /* Slightly larger at midpoint */
+            'background-position': '100% 50%', /* Right center */
+          },
+        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'gradient-xy': 'gradient-xy 20s ease infinite alternate', /* slower, smoother, alternates direction */
       },
     },
   },

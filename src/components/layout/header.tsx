@@ -17,8 +17,8 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 // MOCK: In a real app, this would come from an authentication context/state
-const MOCK_IS_ADMIN = true; // Set to true to show admin links, false to hide
-const MOCK_IS_LOGGED_IN = false; // Set to true to simulate a logged-in user
+const MOCK_IS_ADMIN = true; 
+const MOCK_IS_LOGGED_IN = false; 
 
 const topLevelNavItems = [
   { label: 'Home', href: '/' },
@@ -46,8 +46,8 @@ const exploreDropdownItemsBase = [
 const adminStudioItem = { label: 'Admin Studio', href: '/admin/content-studio', icon: <ShieldAlert className="mr-2 h-4 w-4" />, isAdminOnly: true };
 
 const profileNavItem = { label: 'Profile', href: '/profile', icon: <UserCircle2 className="mr-2 h-4 w-4" /> };
-const loginNavItem = { label: 'Login', href: '#', icon: <LogIn className="mr-2 h-4 w-4" /> }; // Placeholder href
-const signupNavItem = { label: 'Sign Up', href: '#', icon: <UserPlus className="mr-2 h-4 w-4" /> }; // Placeholder href
+const loginNavItem = { label: 'Login', href: '#', icon: <LogIn className="mr-2 h-4 w-4" /> }; 
+const signupNavItem = { label: 'Sign Up', href: '#', icon: <UserPlus className="mr-2 h-4 w-4" /> }; 
 const contactNavItem = { label: 'Contact', href: '/#contact' };
 
 
@@ -82,10 +82,8 @@ export default function Header() {
       element?.scrollIntoView({ behavior: 'smooth' });
       setActiveLink(href);
     } else if (href === '#') {
-      // Placeholder action for Login/Sign Up
       console.log(`${href === loginNavItem.href ? "Login" : "Sign Up"} button clicked (placeholder)`);
     }
-    // Only close mobile menu if it's not a category toggle
     if (!href.startsWith('#category-toggle-')) {
         setIsMobileMenuOpen(false);
         setExpandedMobileCategories({});
@@ -93,7 +91,7 @@ export default function Header() {
   };
 
   const toggleMobileCategory = (categoryLabel: string, event?: React.MouseEvent) => {
-    event?.stopPropagation(); // Prevent sheet from closing if propagation is an issue
+    event?.stopPropagation(); 
     setExpandedMobileCategories(prev => ({
       ...prev,
       [categoryLabel]: !prev[categoryLabel]
@@ -159,10 +157,9 @@ export default function Header() {
   const allNavItemsForMobile = [
     ...topLevelNavItems,
     { label: 'Services', href: '#category-toggle-services', isCategory: true, subItems: servicesDropdownItems, icon: <Dumbbell /> },
-    { label: 'Features', href: '#category-toggle-features', isCategory: true, subItems: featuresDropdownItems, icon: <Lightbulb /> }, // Using Lightbulb for features for variety
+    { label: 'Features', href: '#category-toggle-features', isCategory: true, subItems: featuresDropdownItems, icon: <Lightbulb /> },
     { label: 'Explore', href: '#category-toggle-explore', isCategory: true, subItems: exploreDropdownItems.filter(item => MOCK_IS_ADMIN || !item.isAdminOnly), icon: <Newspaper /> },
     contactNavItem,
-    // Auth links will be handled in the footer of the sheet
   ];
   
   const mobileCategoryClasses = (isActive: boolean, isExpanded: boolean) => cn(
@@ -206,114 +203,144 @@ export default function Header() {
             )}>SR Fitness</span>
           </Link>
 
-          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
-            {topLevelNavItems.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                onClick={() => handleLinkClick(item.href)}
-                className={navLinkClasses(isLinkActive(item.href))}
-              >
-                {item.label}
-              </Link>
-            ))}
+          <div className="flex items-center space-x-1 lg:space-x-2"> {/* Container for nav and voice icon */}
+            <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
+              {topLevelNavItems.map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => handleLinkClick(item.href)}
+                  className={navLinkClasses(isLinkActive(item.href))}
+                >
+                  {item.label}
+                </Link>
+              ))}
 
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                className={dropdownTriggerClasses(isServicesActive)}
-              >
-                Services <ChevronDown className="h-4 w-4 opacity-70" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-56 rounded-lg">
-                {servicesDropdownItems.map((item) => (
-                  <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground")}>
-                    <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">
-                      {item.icon} {item.label}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                className={dropdownTriggerClasses(isFeaturesActive)}
-              >
-                Features <ChevronDown className="h-4 w-4 opacity-70" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-56 rounded-lg">
-                {featuresDropdownItems.map((item) => (
-                  <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground")}>
-                    <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">
-                      {item.icon} {item.label}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                className={dropdownTriggerClasses(isExploreActive)}
-              >
-                Explore <ChevronDown className="h-4 w-4 opacity-70" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-max rounded-lg">
-                {exploreDropdownItems.map((item) => {
-                  if (item.isAdminOnly && !MOCK_IS_ADMIN) return null;
-                  return (
-                    <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground", item.isAdminOnly && "font-semibold text-primary/90")}>
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  className={dropdownTriggerClasses(isServicesActive)}
+                >
+                  Services <ChevronDown className="h-4 w-4 opacity-70" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-56 rounded-lg">
+                  {servicesDropdownItems.map((item) => (
+                    <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground")}>
                       <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">
                         {item.icon} {item.label}
                       </Link>
                     </DropdownMenuItem>
-                  );
-                })}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            
-            {MOCK_IS_LOGGED_IN ? (
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  className={dropdownTriggerClasses(isFeaturesActive)}
+                >
+                  Features <ChevronDown className="h-4 w-4 opacity-70" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-56 rounded-lg">
+                  {featuresDropdownItems.map((item) => (
+                    <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground")}>
+                      <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">
+                        {item.icon} {item.label}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  className={dropdownTriggerClasses(isExploreActive)}
+                >
+                  Explore <ChevronDown className="h-4 w-4 opacity-70" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-max rounded-lg">
+                  {exploreDropdownItems.map((item) => {
+                    if (item.isAdminOnly && !MOCK_IS_ADMIN) return null;
+                    return (
+                      <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground", item.isAdminOnly && "font-semibold text-primary/90")}>
+                        <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">
+                          {item.icon} {item.label}
+                        </Link>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              
+              {MOCK_IS_LOGGED_IN ? (
+                <Link
+                  key={profileNavItem.label}
+                  href={profileNavItem.href}
+                  onClick={() => handleLinkClick(profileNavItem.href)}
+                  className={navLinkClasses(isLinkActive(profileNavItem.href))}
+                >
+                  {profileNavItem.label}
+                </Link>
+              ) : (
+                <>
+                  <Button 
+                    variant={isScrolled ? "outline" : "ghost"} 
+                    size="sm" 
+                    onClick={() => handleLinkClick(loginNavItem.href)} 
+                    className={cn(
+                      "font-medium",
+                      isScrolled ? "border-primary text-primary hover:bg-primary hover:text-primary-foreground" : "text-white hover:bg-white/10 hover:text-primary"
+                    )}
+                  >
+                    <LogIn className="mr-2 h-4 w-4" /> {loginNavItem.label}
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    onClick={() => handleLinkClick(signupNavItem.href)}
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
+                  >
+                    <UserPlus className="mr-2 h-4 w-4" /> {signupNavItem.label}
+                  </Button>
+                </>
+              )}
+
               <Link
-                key={profileNavItem.label}
-                href={profileNavItem.href}
-                onClick={() => handleLinkClick(profileNavItem.href)}
-                className={navLinkClasses(isLinkActive(profileNavItem.href))}
+                href={contactNavItem.href}
+                onClick={() => handleLinkClick(contactNavItem.href)}
+                className={navLinkClasses(isLinkActive(contactNavItem.href))}
               >
-                {profileNavItem.label}
+                {contactNavItem.label}
               </Link>
-            ) : (
-              <>
-                <Button 
-                  variant={isScrolled ? "outline" : "ghost"} 
-                  size="sm" 
-                  onClick={() => handleLinkClick(loginNavItem.href)} 
-                  className={cn(
-                    "font-medium",
-                    isScrolled ? "border-primary text-primary hover:bg-primary hover:text-primary-foreground" : "text-white hover:bg-white/10 hover:text-primary"
-                  )}
-                >
-                  <LogIn className="mr-2 h-4 w-4" /> {loginNavItem.label}
-                </Button>
-                <Button 
-                  size="sm" 
-                  onClick={() => handleLinkClick(signupNavItem.href)}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
-                >
-                   <UserPlus className="mr-2 h-4 w-4" /> {signupNavItem.label}
-                </Button>
-              </>
-            )}
+            </nav>
 
-            <Link
-              href={contactNavItem.href}
-              onClick={() => handleLinkClick(contactNavItem.href)}
-              className={navLinkClasses(isLinkActive(contactNavItem.href))}
+            {/* Voice Search UI - Desktop */}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className={cn(
+                "hidden md:inline-flex ml-2 text-white animate-pulse-microphone focus-visible:ring-primary/70",
+                isScrolled ? "text-gray-200 hover:text-primary" : "hover:text-primary/80"
+              )}
+              aria-label="Voice Search (Conceptual)"
+              onClick={() => console.log("Voice search icon clicked (conceptual)")} // Placeholder action
             >
-              {contactNavItem.label}
-            </Link>
-          </nav>
+              <Mic className="h-5 w-5" />
+            </Button>
+          </div>
 
-          <div className="md:hidden">
+
+          {/* Mobile Menu Trigger and Voice Icon */}
+          <div className="md:hidden flex items-center">
+             <Button 
+              variant="ghost" 
+              size="icon" 
+              className={cn(
+                "animate-pulse-microphone focus-visible:ring-primary/70 mr-1",
+                isScrolled ? "text-gray-200 hover:text-primary" : "text-white hover:text-primary/80"
+              )}
+              aria-label="Voice Search (Conceptual)"
+              onClick={() => console.log("Voice search icon clicked (conceptual)")} // Placeholder action
+            >
+              <Mic className="h-6 w-6" />
+            </Button>
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button
@@ -400,7 +427,6 @@ export default function Header() {
                     </div>
                   ))}
                 </nav>
-                 {/* Mobile Footer with Login/Signup or Profile */}
                 <div className="border-t border-border p-4 space-y-3">
                   {MOCK_IS_LOGGED_IN ? (
                      <Link
@@ -437,5 +463,3 @@ export default function Header() {
     </>
   );
 }
-
-    

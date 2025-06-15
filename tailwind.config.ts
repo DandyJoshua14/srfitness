@@ -12,7 +12,7 @@ export default {
     extend: {
       fontFamily: {
         body: ['Open Sans', 'sans-serif'],
-        headline: ['Bebas Neue', 'cursive'], // Cursive is a generic fallback, sans-serif might be better
+        headline: ['Bebas Neue', 'cursive'], 
         code: ['monospace'],
       },
       colors: {
@@ -91,19 +91,24 @@ export default {
         },
         'gradient-xy': {
           '0%, 100%': {
-            'background-size': '200% 200%', /* Start with a larger size for smoother animation */
-            'background-position': '0% 50%', /* Left center */
+            'background-size': '200% 200%', 
+            'background-position': '0% 50%', 
           },
           '50%': {
-            'background-size': '250% 250%', /* Slightly larger at midpoint */
-            'background-position': '100% 50%', /* Right center */
+            'background-size': '250% 250%', 
+            'background-position': '100% 50%', 
           },
+        },
+        'pulse-microphone': {
+          '0%, 100%': { transform: 'scale(1)', opacity: '0.7' },
+          '50%': { transform: 'scale(1.15)', opacity: '1' },
         }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'gradient-xy': 'gradient-xy 20s ease infinite alternate', /* slower, smoother, alternates direction */
+        'gradient-xy': 'gradient-xy 20s ease infinite alternate', 
+        'pulse-microphone': 'pulse-microphone 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
     },
   },

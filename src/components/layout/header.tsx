@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, Wrench, ShieldAlert, Lightbulb, Award, CalendarDays } from 'lucide-react';
+import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, Wrench, ShieldAlert, Lightbulb, Award, CalendarDays, Users } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +25,9 @@ const topLevelNavItems = [
 
 const servicesDropdownItems = [
   { label: 'Personal Training', href: '/personal-training', icon: <Dumbbell className="mr-2 h-4 w-4" /> },
+  { label: 'Corporate Wellness', href: '/public-speaking', icon: <Users className="mr-2 h-4 w-4" /> },
+  { label: 'Public Speaking', href: '/public-speaking', icon: <Mic className="mr-2 h-4 w-4" /> },
+  { label: 'Consultancy', href: '/equipment-services', icon: <Wrench className="mr-2 h-4 w-4" /> },
 ];
 
 const eventsDropdownItems = [
@@ -32,7 +35,7 @@ const eventsDropdownItems = [
   { label: 'Burn Off Bootcamp', href: '/burn-off-bootcamp', icon: <Sparkles className="mr-2 h-4 w-4" /> },
 ];
 
-const digitalWellnessDropdownItems = [ // Renamed from featuresDropdownItems for clarity internally
+const digitalWellnessDropdownItems = [
   { label: 'Meal Planner', href: '/meal-planner', icon: <NotebookText className="mr-2 h-4 w-4" /> },
   { label: 'Smart Mirror', href: '/smart-mirror', icon: <ScanLine className="mr-2 h-4 w-4" /> },
   { label: 'Global Connect', href: '/global-connect', icon: <Globe className="mr-2 h-4 w-4" /> },
@@ -41,8 +44,6 @@ const digitalWellnessDropdownItems = [ // Renamed from featuresDropdownItems for
 
 const exploreDropdownItemsBase = [
   { label: 'Lifestyle Magazine', href: '/lifestyle-magazine', icon: <Newspaper className="mr-2 h-4 w-4" /> },
-  { label: 'Public Speaking', href: '/public-speaking', icon: <Mic className="mr-2 h-4 w-4" /> },
-  { label: 'Equipment Solutions', href: '/equipment-services', icon: <Wrench className="mr-2 h-4 w-4" /> },
 ];
 
 const adminStudioItem = { label: 'Admin Studio', href: '/admin/content-studio', icon: <ShieldAlert className="mr-2 h-4 w-4" />, isAdminOnly: true };
@@ -109,8 +110,8 @@ export default function Header() {
 
   const isServicesActive = servicesDropdownItems.some(item => isLinkActive(item.href));
   const isEventsActive = eventsDropdownItems.some(item => isLinkActive(item.href));
-  const isExploreActive = exploreDropdownItems.some(item => isLinkActive(item.href));
-  const isDigitalWellnessActive = digitalWellnessDropdownItems.some(item => isLinkActive(item.href)); // Renamed for clarity
+  const isExploreActive = exploreDropdownItems.some(item => isLinkActive(item.href) && (MOCK_IS_ADMIN || !item.isAdminOnly));
+  const isDigitalWellnessActive = digitalWellnessDropdownItems.some(item => isLinkActive(item.href));
 
   const navLinkBaseClasses = "px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 relative";
 
@@ -152,7 +153,7 @@ export default function Header() {
     ...topLevelNavItems,
     { label: 'Services', href: '#category-toggle-services', isCategory: true, subItems: servicesDropdownItems, icon: <Dumbbell /> },
     { label: 'Events', href: '#category-toggle-events', isCategory: true, subItems: eventsDropdownItems, icon: <CalendarDays /> },
-    { label: 'Digital Wellness', href: '#category-toggle-digital-wellness', isCategory: true, subItems: digitalWellnessDropdownItems, icon: <Lightbulb /> }, // Renamed label
+    { label: 'Digital Wellness', href: '#category-toggle-digital-wellness', isCategory: true, subItems: digitalWellnessDropdownItems, icon: <Lightbulb /> },
     { label: 'Explore', href: '#category-toggle-explore', isCategory: true, subItems: exploreDropdownItems.filter(item => MOCK_IS_ADMIN || !item.isAdminOnly), icon: <Newspaper /> },
     contactNavItem,
   ];
@@ -217,7 +218,7 @@ export default function Header() {
                 >
                   Services <ChevronDown className="h-4 w-4 opacity-70" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-56 rounded-lg">
+                <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-max rounded-lg">
                   {servicesDropdownItems.map((item) => (
                     <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground")}>
                       <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">

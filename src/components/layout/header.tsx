@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, UserCircle2, Wrench, ShieldAlert, Lightbulb } from 'lucide-react';
+import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, Wrench, ShieldAlert, Lightbulb, Award, CalendarDays } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,11 +21,14 @@ const MOCK_IS_ADMIN = true;
 
 const topLevelNavItems = [
   { label: 'Home', href: '/' },
-  { label: 'Awards', href: '/awards' },
 ];
 
 const servicesDropdownItems = [
   { label: 'Personal Training', href: '/personal-training', icon: <Dumbbell className="mr-2 h-4 w-4" /> },
+];
+
+const eventsDropdownItems = [
+  { label: 'Awards & Recognition', href: '/awards', icon: <Award className="mr-2 h-4 w-4" /> },
   { label: 'Burn Off Bootcamp', href: '/burn-off-bootcamp', icon: <Sparkles className="mr-2 h-4 w-4" /> },
 ];
 
@@ -105,6 +108,7 @@ export default function Header() {
 
 
   const isServicesActive = servicesDropdownItems.some(item => isLinkActive(item.href));
+  const isEventsActive = eventsDropdownItems.some(item => isLinkActive(item.href));
   const isExploreActive = exploreDropdownItems.some(item => isLinkActive(item.href));
   const isFeaturesActive = featuresDropdownItems.some(item => isLinkActive(item.href));
 
@@ -147,6 +151,7 @@ export default function Header() {
   const allNavItemsForMobile = [
     ...topLevelNavItems,
     { label: 'Services', href: '#category-toggle-services', isCategory: true, subItems: servicesDropdownItems, icon: <Dumbbell /> },
+    { label: 'Events', href: '#category-toggle-events', isCategory: true, subItems: eventsDropdownItems, icon: <CalendarDays /> },
     { label: 'Features', href: '#category-toggle-features', isCategory: true, subItems: featuresDropdownItems, icon: <Lightbulb /> },
     { label: 'Explore', href: '#category-toggle-explore', isCategory: true, subItems: exploreDropdownItems.filter(item => MOCK_IS_ADMIN || !item.isAdminOnly), icon: <Newspaper /> },
     contactNavItem,
@@ -193,7 +198,7 @@ export default function Header() {
             )}>SR Fitness</span>
           </Link>
 
-          <div className="flex items-center space-x-1 lg:space-x-2"> {/* Container for nav and voice icon */}
+          <div className="flex items-center space-x-1 lg:space-x-2"> 
             <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
               {topLevelNavItems.map((item) => (
                 <Link
@@ -223,6 +228,23 @@ export default function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
               
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  className={dropdownTriggerClasses(isEventsActive)}
+                >
+                  Events <ChevronDown className="h-4 w-4 opacity-70" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-max rounded-lg">
+                  {eventsDropdownItems.map((item) => (
+                    <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground")}>
+                      <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">
+                        {item.icon} {item.label}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
               <DropdownMenu>
                 <DropdownMenuTrigger
                   className={dropdownTriggerClasses(isFeaturesActive)}
@@ -269,7 +291,6 @@ export default function Header() {
               </Link>
             </nav>
 
-            {/* Voice Search UI - Desktop */}
             <Button 
               variant="ghost" 
               size="icon" 
@@ -278,14 +299,12 @@ export default function Header() {
                 isScrolled ? "text-gray-200 hover:text-primary" : "hover:text-primary/80"
               )}
               aria-label="Voice Search (Conceptual)"
-              onClick={() => console.log("Voice search icon clicked (conceptual)")} // Placeholder action
+              onClick={() => console.log("Voice search icon clicked (conceptual)")} 
             >
               <Mic className="h-5 w-5" />
             </Button>
           </div>
 
-
-          {/* Mobile Menu Trigger and Voice Icon */}
           <div className="md:hidden flex items-center">
              <Button 
               variant="ghost" 
@@ -295,7 +314,7 @@ export default function Header() {
                 isScrolled ? "text-gray-200 hover:text-primary" : "text-white hover:text-primary/80"
               )}
               aria-label="Voice Search (Conceptual)"
-              onClick={() => console.log("Voice search icon clicked (conceptual)")} // Placeholder action
+              onClick={() => console.log("Voice search icon clicked (conceptual)")} 
             >
               <Mic className="h-6 w-6" />
             </Button>
@@ -386,7 +405,6 @@ export default function Header() {
                   ))}
                 </nav>
                 <div className="border-t border-border p-4 space-y-3">
-                   {/* Placeholder for any footer items in mobile menu if needed in future */}
                 </div>
               </SheetContent>
             </Sheet>

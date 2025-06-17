@@ -32,7 +32,7 @@ const eventsDropdownItems = [
   { label: 'Burn Off Bootcamp', href: '/burn-off-bootcamp', icon: <Sparkles className="mr-2 h-4 w-4" /> },
 ];
 
-const featuresDropdownItems = [
+const digitalWellnessDropdownItems = [ // Renamed from featuresDropdownItems for clarity internally
   { label: 'Meal Planner', href: '/meal-planner', icon: <NotebookText className="mr-2 h-4 w-4" /> },
   { label: 'Smart Mirror', href: '/smart-mirror', icon: <ScanLine className="mr-2 h-4 w-4" /> },
   { label: 'Global Connect', href: '/global-connect', icon: <Globe className="mr-2 h-4 w-4" /> },
@@ -110,7 +110,7 @@ export default function Header() {
   const isServicesActive = servicesDropdownItems.some(item => isLinkActive(item.href));
   const isEventsActive = eventsDropdownItems.some(item => isLinkActive(item.href));
   const isExploreActive = exploreDropdownItems.some(item => isLinkActive(item.href));
-  const isFeaturesActive = featuresDropdownItems.some(item => isLinkActive(item.href));
+  const isDigitalWellnessActive = digitalWellnessDropdownItems.some(item => isLinkActive(item.href)); // Renamed for clarity
 
   const navLinkBaseClasses = "px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 relative";
 
@@ -152,7 +152,7 @@ export default function Header() {
     ...topLevelNavItems,
     { label: 'Services', href: '#category-toggle-services', isCategory: true, subItems: servicesDropdownItems, icon: <Dumbbell /> },
     { label: 'Events', href: '#category-toggle-events', isCategory: true, subItems: eventsDropdownItems, icon: <CalendarDays /> },
-    { label: 'Features', href: '#category-toggle-features', isCategory: true, subItems: featuresDropdownItems, icon: <Lightbulb /> },
+    { label: 'Digital Wellness', href: '#category-toggle-digital-wellness', isCategory: true, subItems: digitalWellnessDropdownItems, icon: <Lightbulb /> }, // Renamed label
     { label: 'Explore', href: '#category-toggle-explore', isCategory: true, subItems: exploreDropdownItems.filter(item => MOCK_IS_ADMIN || !item.isAdminOnly), icon: <Newspaper /> },
     contactNavItem,
   ];
@@ -247,12 +247,12 @@ export default function Header() {
 
               <DropdownMenu>
                 <DropdownMenuTrigger
-                  className={dropdownTriggerClasses(isFeaturesActive)}
+                  className={dropdownTriggerClasses(isDigitalWellnessActive)}
                 >
-                  Features <ChevronDown className="h-4 w-4 opacity-70" />
+                  Digital Wellness <ChevronDown className="h-4 w-4 opacity-70" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-56 rounded-lg">
-                  {featuresDropdownItems.map((item) => (
+                  {digitalWellnessDropdownItems.map((item) => (
                     <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground")}>
                       <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">
                         {item.icon} {item.label}

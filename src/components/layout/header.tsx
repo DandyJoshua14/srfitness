@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, UserCircle2, Wrench, ShieldAlert, LogIn, UserPlus, Lightbulb } from 'lucide-react';
+import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, UserCircle2, Wrench, ShieldAlert, Lightbulb } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +18,6 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 
 // MOCK: In a real app, this would come from an authentication context/state
 const MOCK_IS_ADMIN = true; 
-const MOCK_IS_LOGGED_IN = false; 
 
 const topLevelNavItems = [
   { label: 'Home', href: '/' },
@@ -45,9 +44,6 @@ const exploreDropdownItemsBase = [
 
 const adminStudioItem = { label: 'Admin Studio', href: '/admin/content-studio', icon: <ShieldAlert className="mr-2 h-4 w-4" />, isAdminOnly: true };
 
-const profileNavItem = { label: 'Profile', href: '/profile', icon: <UserCircle2 className="mr-2 h-4 w-4" /> };
-const loginNavItem = { label: 'Login', href: '#', icon: <LogIn className="mr-2 h-4 w-4" /> }; 
-const signupNavItem = { label: 'Sign Up', href: '#', icon: <UserPlus className="mr-2 h-4 w-4" /> }; 
 const contactNavItem = { label: 'Contact', href: '/#contact' };
 
 
@@ -81,8 +77,6 @@ export default function Header() {
       const element = document.getElementById(elementId);
       element?.scrollIntoView({ behavior: 'smooth' });
       setActiveLink(href);
-    } else if (href === '#') {
-      console.log(`${href === loginNavItem.href ? "Login" : "Sign Up"} button clicked (placeholder)`);
     }
     if (!href.startsWith('#category-toggle-')) {
         setIsMobileMenuOpen(false);
@@ -149,10 +143,6 @@ export default function Header() {
     visible: { opacity: 1, y: 0, height: 'auto', transition: { type: "spring", stiffness: 120, damping: 15 } },
     exit: { opacity: 0, y: -10, height: 0, transition: { duration: 0.2 } },
   };
-
-  const authNavItemsForMobile = MOCK_IS_LOGGED_IN 
-    ? [profileNavItem] 
-    : [loginNavItem, signupNavItem];
 
   const allNavItemsForMobile = [
     ...topLevelNavItems,
@@ -270,38 +260,6 @@ export default function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
               
-              {MOCK_IS_LOGGED_IN ? (
-                <Link
-                  key={profileNavItem.label}
-                  href={profileNavItem.href}
-                  onClick={() => handleLinkClick(profileNavItem.href)}
-                  className={navLinkClasses(isLinkActive(profileNavItem.href))}
-                >
-                  {profileNavItem.label}
-                </Link>
-              ) : (
-                <>
-                  <Button 
-                    variant={isScrolled ? "outline" : "ghost"} 
-                    size="sm" 
-                    onClick={() => handleLinkClick(loginNavItem.href)} 
-                    className={cn(
-                      "font-medium",
-                      isScrolled ? "border-primary text-primary hover:bg-primary hover:text-primary-foreground" : "text-white hover:bg-white/10 hover:text-primary"
-                    )}
-                  >
-                    <LogIn className="mr-2 h-4 w-4" /> {loginNavItem.label}
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    onClick={() => handleLinkClick(signupNavItem.href)}
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
-                  >
-                    <UserPlus className="mr-2 h-4 w-4" /> {signupNavItem.label}
-                  </Button>
-                </>
-              )}
-
               <Link
                 href={contactNavItem.href}
                 onClick={() => handleLinkClick(contactNavItem.href)}
@@ -428,32 +386,7 @@ export default function Header() {
                   ))}
                 </nav>
                 <div className="border-t border-border p-4 space-y-3">
-                  {MOCK_IS_LOGGED_IN ? (
-                     <Link
-                      href={profileNavItem.href}
-                      onClick={() => handleLinkClick(profileNavItem.href)} 
-                      className={mobileLinkClasses(isLinkActive(profileNavItem.href))}
-                    >
-                       {profileNavItem.icon && React.cloneElement(profileNavItem.icon as React.ReactElement, { className: "mr-3.5 h-5 w-5 shrink-0 opacity-90" })}
-                      {profileNavItem.label}
-                    </Link>
-                  ) : (
-                    <>
-                       <Button 
-                        variant="outline" 
-                        className="w-full justify-center py-3 text-base" 
-                        onClick={() => handleLinkClick(loginNavItem.href)}
-                      >
-                        <LogIn className="mr-2 h-5 w-5" /> {loginNavItem.label}
-                      </Button>
-                      <Button 
-                        className="w-full justify-center py-3 text-base bg-primary hover:bg-primary/90 text-primary-foreground" 
-                        onClick={() => handleLinkClick(signupNavItem.href)}
-                      >
-                        <UserPlus className="mr-2 h-5 w-5" /> {signupNavItem.label}
-                      </Button>
-                    </>
-                  )}
+                   {/* Placeholder for any footer items in mobile menu if needed in future */}
                 </div>
               </SheetContent>
             </Sheet>

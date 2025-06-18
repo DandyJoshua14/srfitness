@@ -50,13 +50,6 @@ if (
   typeof firebaseConfig.apiKey !== 'string' ||
   firebaseConfig.apiKey.length < 10 // API keys are typically much longer
 ) {
-  console.error(
-    "\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-  );
-  console.error(
-    "CRITICAL FIREBASE SETUP ISSUE: NEXT_PUBLIC_FIREBASE_API_KEY is MISSING, a PLACEHOLDER, or INVALID."
-  );
-  console.error("Current API Key value loaded by the app: '", firebaseConfig.apiKey, "' (length: ", firebaseConfig.apiKey?.length, ")");
   hasConfigError = true;
 }
 
@@ -66,14 +59,7 @@ if (
   typeof firebaseConfig.projectId !== 'string' ||
   firebaseConfig.projectId.length < 4 // Project IDs are typically at least 4 characters
 ) {
-   console.error(
-    "\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-  );
-  console.error(
-    "CRITICAL FIREBASE SETUP ISSUE: NEXT_PUBLIC_FIREBASE_PROJECT_ID is MISSING, a PLACEHOLDER, or INVALID."
-  );
-  console.error("Current Project ID value loaded by the app: '", firebaseConfig.projectId, "'");
-  hasConfigError = true;
+   hasConfigError = true;
 }
 
 if (hasConfigError) {
@@ -103,9 +89,13 @@ Current problematic configuration loaded by the app:
 The application will NOT work correctly until this Firebase configuration is fixed.
 ===================================================================================
 `;
-  console.error(errorMessage);
-  // Throw an error to halt further execution with this bad config
-  throw new Error("FATAL: Firebase configuration is invalid. Check server console for detailed instructions. You MUST fix your .env file and RESTART the server.");
+  console.error(errorMessage); // Log the detailed message to the server console
+  // Throw an error that will be displayed by Next.js in the browser overlay
+  throw new Error(
+    "FATAL FIREBASE CONFIGURATION ERROR: Your Firebase environment variables (NEXT_PUBLIC_FIREBASE_API_KEY, NEXT_PUBLIC_FIREBASE_PROJECT_ID, etc.) are missing, incorrect, or still placeholders in your .env file. " +
+    "Please check your project's root .env file, ensure it contains the ACTUAL credentials from your Firebase project settings (Web app config), and then YOU MUST RESTART your Next.js development server. " +
+    "See the server console for more detailed logs and instructions."
+  );
 }
 
 

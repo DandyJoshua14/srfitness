@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { useLoading } from '@/contexts/loading-context';
+
 
 // MOCK: In a real app, this would come from an authentication context/state
 const MOCK_IS_ADMIN = true; 
@@ -53,6 +55,7 @@ const contactNavItem = { label: 'Contact', href: '/#contact' };
 
 export default function Header() {
   const pathname = usePathname();
+  const { showLoading } = useLoading();
   const [activeLink, setActiveLink] = useState(pathname);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -75,7 +78,10 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [pathname]);
 
-  const handleLinkClick = (href: string) => {
+  const handleLinkClick = (href: string, isExternalOrSamePageHash: boolean = false) => {
+    if (!isExternalOrSamePageHash && !href.startsWith('#category-toggle-')) {
+        showLoading();
+    }
     if (href.startsWith('/#') && pathname === '/') {
       const elementId = href.substring(2);
       const element = document.getElementById(elementId);
@@ -285,7 +291,7 @@ export default function Header() {
               
               <Link
                 href={contactNavItem.href}
-                onClick={() => handleLinkClick(contactNavItem.href)}
+                onClick={() => handleLinkClick(contactNavItem.href, contactNavItem.href.startsWith('/#'))}
                 className={navLinkClasses(isLinkActive(contactNavItem.href))}
               >
                 {contactNavItem.label}
@@ -383,7 +389,7 @@ export default function Header() {
                                         onClick={() => handleLinkClick(subItem.href)} 
                                         className={mobileSubLinkClasses(isLinkActive(subItem.href), subItem.isAdminOnly)}
                                       >
-                                        {subItem.icon && React.cloneElement(subItem.icon, { className: "mr-3.5 h-5 w-5 shrink-0 opacity-80" })}
+                                        {subItem.icon && React.cloneElement(subItem.icon as React.ReactElement, { className: "mr-3.5 h-5 w-5 shrink-0 opacity-80" })}
                                         <span className="truncate">{subItem.label}</span>
                                       </Link>
                                    );
@@ -395,7 +401,7 @@ export default function Header() {
                       ) : (
                         <Link
                           href={item.href}
-                          onClick={() => handleLinkClick(item.href)} 
+                          onClick={() => handleLinkClick(item.href, item.href.startsWith('/#'))} 
                           className={mobileLinkClasses(isLinkActive(item.href))}
                         >
                            {item.icon && React.cloneElement(item.icon as React.ReactElement, { className: "mr-3.5 h-5 w-5 shrink-0 opacity-90" })}

@@ -4,7 +4,10 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
-// Removed import for HeaderTransitionSpace
+import { LoadingProvider } from '@/contexts/loading-context';
+import LoadingOverlay from '@/components/common/loading-overlay';
+import NavigationLoadingManager from '@/components/common/navigation-loading-manager';
+
 
 export const metadata: Metadata = {
   title: 'SR Fitness',
@@ -25,14 +28,16 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased flex flex-col min-h-screen">
-        {/* The header height is set via CSS variable in header.tsx */}
-        <Header />
-        {/* Removed HeaderTransitionSpace component */}
-        <main className="flex-grow"> {/* main content will now start right under the header */}
-          {children}
-        </main>
-        <Footer />
-        <Toaster />
+        <LoadingProvider>
+          <NavigationLoadingManager />
+          <LoadingOverlay />
+          <Header />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
+          <Toaster />
+        </LoadingProvider>
       </body>
     </html>
   );

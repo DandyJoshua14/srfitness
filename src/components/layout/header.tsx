@@ -6,19 +6,23 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, Wrench, ShieldAlert, Lightbulb, Award, CalendarDays, Users } from 'lucide-react';
+import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, Wrench, ShieldAlert, Lightbulb, Award, CalendarDays, Users, UserCircle2, LogOut, LogIn } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useLoading } from '@/contexts/loading-context';
+import { useAuth } from '@/contexts/auth-context';
+import AuthForm from '@/components/auth/auth-form';
+import { logoutUser } from '@/lib/firebase/authService';
+import { useToast } from '@/hooks/use-toast';
 
-
-// MOCK: In a real app, this would come from an authentication context/state
 const MOCK_IS_ADMIN = true; 
 
 const topLevelNavItems = [
@@ -56,10 +60,16 @@ const contactNavItem = { label: 'Contact', href: '/#contact' };
 export default function Header() {
   const pathname = usePathname();
   const { showLoading } = useLoading();
+  const { currentUser, isAuthReady } = useAuth();
+  const { toast } = useToast();
+
   const [activeLink, setActiveLink] = useState(pathname);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [expandedMobileCategories, setExpandedMobileCategories] = useState<Record<string, boolean>>({});
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
+
 
   const exploreDropdownItems = MOCK_IS_ADMIN ? [...exploreDropdownItemsBase, adminStudioItem] : exploreDropdownItemsBase;
 
@@ -79,7 +89,7 @@ export default function Header() {
   }, [pathname]);
 
   const handleLinkClick = (href: string, isExternalOrSamePageHash: boolean = false) => {
-    if (!isExternalOrSamePageHash && !href.startsWith('#category-toggle-')) {
+    if (!isExternalOrSamePageHash && !href.startsWith('#category-toggle-') && !href.startsWith('#auth-action-')) {
         showLoading();
     }
     if (href.startsWith('/#') && pathname === '/') {
@@ -88,11 +98,26 @@ export default function Header() {
       element?.scrollIntoView({ behavior: 'smooth' });
       setActiveLink(href);
     }
-    if (!href.startsWith('#category-toggle-')) {
+    if (!href.startsWith('#category-toggle-') && !href.startsWith('#auth-action-')) {
         setIsMobileMenuOpen(false);
         setExpandedMobileCategories({});
     }
   };
+
+  const handleLogout = async () => {
+    showLoading();
+    const { error } = await logoutUser();
+    if (error) {
+      toast({ title: "Logout Failed", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Logged Out", description: "You have been successfully logged out." });
+      // Auth context will update currentUser, and UI will re-render
+    }
+    setIsMobileMenuOpen(false); // Close mobile menu on logout
+    setExpandedMobileCategories({});
+    handleLinkClick('/', true); // Navigate to home and hide loader quickly
+  };
+
 
   const toggleMobileCategory = (categoryLabel: string, event?: React.MouseEvent) => {
     event?.stopPropagation(); 
@@ -181,6 +206,12 @@ export default function Header() {
     isAdminLink && "font-semibold text-primary/90"
   );
 
+  const authButtonClasses = cn(
+      navLinkBaseClasses,
+      isScrolled ? "text-gray-200 hover:text-primary" : "text-white hover:text-primary/80",
+      "border border-transparent hover:border-primary/50"
+  );
+
 
   return (
     <>
@@ -207,21 +238,14 @@ export default function Header() {
 
           <div className="flex items-center space-x-1 lg:space-x-2"> 
             <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
+              {/* Regular Nav Items */}
               {topLevelNavItems.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  onClick={() => handleLinkClick(item.href)}
-                  className={navLinkClasses(isLinkActive(item.href))}
-                >
+                <Link key={item.label} href={item.href} onClick={() => handleLinkClick(item.href)} className={navLinkClasses(isLinkActive(item.href))}>
                   {item.label}
                 </Link>
               ))}
-
               <DropdownMenu>
-                <DropdownMenuTrigger
-                  className={dropdownTriggerClasses(isServicesActive)}
-                >
+                <DropdownMenuTrigger className={dropdownTriggerClasses(isServicesActive)}>
                   Services <ChevronDown className="h-4 w-4 opacity-70" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-max rounded-lg">
@@ -234,11 +258,8 @@ export default function Header() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              
               <DropdownMenu>
-                <DropdownMenuTrigger
-                  className={dropdownTriggerClasses(isEventsActive)}
-                >
+                <DropdownMenuTrigger className={dropdownTriggerClasses(isEventsActive)}>
                   Events <ChevronDown className="h-4 w-4 opacity-70" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-max rounded-lg">
@@ -251,11 +272,8 @@ export default function Header() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-
               <DropdownMenu>
-                <DropdownMenuTrigger
-                  className={dropdownTriggerClasses(isDigitalWellnessActive)}
-                >
+                <DropdownMenuTrigger className={dropdownTriggerClasses(isDigitalWellnessActive)}>
                   Digital Wellness <ChevronDown className="h-4 w-4 opacity-70" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-56 rounded-lg">
@@ -268,11 +286,8 @@ export default function Header() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-
               <DropdownMenu>
-                <DropdownMenuTrigger
-                  className={dropdownTriggerClasses(isExploreActive)}
-                >
+                <DropdownMenuTrigger className={dropdownTriggerClasses(isExploreActive)}>
                   Explore <ChevronDown className="h-4 w-4 opacity-70" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-max rounded-lg">
@@ -288,14 +303,54 @@ export default function Header() {
                   })}
                 </DropdownMenuContent>
               </DropdownMenu>
-              
-              <Link
-                href={contactNavItem.href}
-                onClick={() => handleLinkClick(contactNavItem.href, contactNavItem.href.startsWith('/#'))}
-                className={navLinkClasses(isLinkActive(contactNavItem.href))}
-              >
+              <Link href={contactNavItem.href} onClick={() => handleLinkClick(contactNavItem.href, contactNavItem.href.startsWith('/#'))} className={navLinkClasses(isLinkActive(contactNavItem.href))}>
                 {contactNavItem.label}
               </Link>
+
+              {/* Auth Buttons Desktop */}
+              {isAuthReady && (
+                <>
+                  {!currentUser ? (
+                    <>
+                      <Dialog open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen}>
+                        <DialogTrigger asChild>
+                           <Button variant="ghost" className={authButtonClasses}>Login</Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                          <DialogHeader><DialogTitle>Login to SR Fitness</DialogTitle></DialogHeader>
+                          <AuthForm mode="login" onSuccess={() => setIsLoginModalOpen(false)} />
+                        </DialogContent>
+                      </Dialog>
+                      <Dialog open={isSignupModalOpen} onOpenChange={setIsSignupModalOpen}>
+                        <DialogTrigger asChild>
+                          <Button className={cn(authButtonClasses, "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground")}>Sign Up</Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                          <DialogHeader><DialogTitle>Create SR Fitness Account</DialogTitle></DialogHeader>
+                          <AuthForm mode="signup" onSuccess={() => setIsSignupModalOpen(false)} />
+                        </DialogContent>
+                      </Dialog>
+                    </>
+                  ) : (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className={cn(dropdownTriggerClasses(isLinkActive('/profile')), "ml-2")}>
+                        <UserCircle2 className="h-5 w-5 mr-1 opacity-80" /> Profile <ChevronDown className="h-4 w-4 opacity-70" />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="bg-popover border-border shadow-xl mt-3 w-48 rounded-lg">
+                        <DropdownMenuItem asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive("/profile") ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground")}>
+                          <Link href="/profile" onClick={() => handleLinkClick("/profile")} className="flex items-center w-full">
+                            <UserCircle2 className="mr-2 h-4 w-4" /> My Account
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-sm py-2.5 px-3 text-destructive hover:bg-destructive/10 focus:bg-destructive/10 flex items-center w-full">
+                          <LogOut className="mr-2 h-4 w-4" /> Logout
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
+                </>
+              )}
             </nav>
 
             <Button 
@@ -312,6 +367,7 @@ export default function Header() {
             </Button>
           </div>
 
+          {/* Mobile Menu Area */}
           <div className="md:hidden flex items-center">
              <Button 
               variant="ghost" 
@@ -340,14 +396,7 @@ export default function Header() {
                 <SheetHeader className="pl-6 pr-4 py-4 border-b border-border text-left">
                   <SheetTitle asChild>
                     <Link href="/" className="flex items-center space-x-2.5" onClick={() => handleLinkClick('/')}>
-                        <Image
-                            src="/SR.jpg" 
-                            alt="SR Fitness Logo"
-                            width={36}
-                            height={36}
-                            className="h-9 w-9 rounded-full object-cover"
-                            data-ai-hint="logo brand"
-                        />
+                        <Image src="/SR.jpg" alt="SR Fitness Logo" width={36} height={36} className="h-9 w-9 rounded-full object-cover" data-ai-hint="logo brand" />
                         <span className="font-headline text-2xl font-bold text-primary">SR Fitness</span>
                     </Link>
                   </SheetTitle>
@@ -356,39 +405,22 @@ export default function Header() {
                 <nav className="flex-grow overflow-y-auto p-4 space-y-1.5">
                   {allNavItemsForMobile.map((item) => (
                     <div key={item.label} className="w-full">
-                      {item.isCategory && item.subItems ? (
+                      {item.isCategory && item.subItems ? ( /* Categories with SubItems */
                         <>
-                          <button
-                            onClick={(e) => toggleMobileCategory(item.label, e)}
-                            className={mobileCategoryClasses(isCategoryActiveForMobile(item.subItems), !!expandedMobileCategories[item.label])}
-                            aria-expanded={!!expandedMobileCategories[item.label]}
-                          >
+                          <button onClick={(e) => toggleMobileCategory(item.label, e)} className={mobileCategoryClasses(isCategoryActiveForMobile(item.subItems), !!expandedMobileCategories[item.label])} aria-expanded={!!expandedMobileCategories[item.label]}>
                             <span className="flex items-center">
                                 {item.icon && React.cloneElement(item.icon as React.ReactElement, { className: "mr-3.5 h-5 w-5 shrink-0 opacity-90" })}
                                 {item.label}
                             </span>
-                            <ChevronDown
-                              className={cn("ml-2 h-5 w-5 shrink-0 transition-transform duration-300", expandedMobileCategories[item.label] ? "rotate-180 text-primary" : "text-muted-foreground")}
-                            />
+                            <ChevronDown className={cn("ml-2 h-5 w-5 shrink-0 transition-transform duration-300", expandedMobileCategories[item.label] ? "rotate-180 text-primary" : "text-muted-foreground")} />
                           </button>
                           <AnimatePresence>
                             {expandedMobileCategories[item.label] && (
-                              <motion.div
-                                initial="hidden"
-                                animate="visible"
-                                exit="exit"
-                                variants={mobileCategorySubItemVariants}
-                                className="flex flex-col space-y-0.5 mt-1.5 overflow-hidden"
-                              >
+                              <motion.div initial="hidden" animate="visible" exit="exit" variants={mobileCategorySubItemVariants} className="flex flex-col space-y-0.5 mt-1.5 overflow-hidden pl-4 border-l border-border ml-2">
                                 {item.subItems.map(subItem => {
                                    if (subItem.isAdminOnly && !MOCK_IS_ADMIN) return null;
                                    return (
-                                     <Link
-                                        key={subItem.label}
-                                        href={subItem.href}
-                                        onClick={() => handleLinkClick(subItem.href)} 
-                                        className={mobileSubLinkClasses(isLinkActive(subItem.href), subItem.isAdminOnly)}
-                                      >
+                                     <Link key={subItem.label} href={subItem.href} onClick={() => handleLinkClick(subItem.href)} className={mobileSubLinkClasses(isLinkActive(subItem.href), subItem.isAdminOnly)}>
                                         {subItem.icon && React.cloneElement(subItem.icon as React.ReactElement, { className: "mr-3.5 h-5 w-5 shrink-0 opacity-80" })}
                                         <span className="truncate">{subItem.label}</span>
                                       </Link>
@@ -398,12 +430,8 @@ export default function Header() {
                             )}
                           </AnimatePresence>
                         </>
-                      ) : (
-                        <Link
-                          href={item.href}
-                          onClick={() => handleLinkClick(item.href, item.href.startsWith('/#'))} 
-                          className={mobileLinkClasses(isLinkActive(item.href))}
-                        >
+                      ) : ( /* Regular Links */
+                        <Link href={item.href} onClick={() => handleLinkClick(item.href, item.href.startsWith('/#'))} className={mobileLinkClasses(isLinkActive(item.href))}>
                            {item.icon && React.cloneElement(item.icon as React.ReactElement, { className: "mr-3.5 h-5 w-5 shrink-0 opacity-90" })}
                           {item.label}
                         </Link>
@@ -411,13 +439,56 @@ export default function Header() {
                     </div>
                   ))}
                 </nav>
+                 {/* Mobile Auth Section */}
                 <div className="border-t border-border p-4 space-y-3">
+                  {isAuthReady && (
+                    <>
+                      {!currentUser ? (
+                        <>
+                          <Dialog open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen}>
+                            <DialogTrigger asChild>
+                                <Button variant="outline" className="w-full justify-start px-4 py-3.5 text-base" onClick={() => setIsMobileMenuOpen(false)}><LogIn className="mr-3 h-5 w-5"/>Login</Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-[425px]"><DialogHeader><DialogTitle>Login</DialogTitle></DialogHeader><AuthForm mode="login" onSuccess={() => setIsLoginModalOpen(false)}/></DialogContent>
+                          </Dialog>
+                           <Dialog open={isSignupModalOpen} onOpenChange={setIsSignupModalOpen}>
+                            <DialogTrigger asChild>
+                                <Button className="w-full justify-start px-4 py-3.5 text-base bg-primary text-primary-foreground hover:bg-primary/90" onClick={() => setIsMobileMenuOpen(false)}><UserCircle2 className="mr-3 h-5 w-5"/>Sign Up</Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-[425px]"><DialogHeader><DialogTitle>Create Account</DialogTitle></DialogHeader><AuthForm mode="signup" onSuccess={() => setIsSignupModalOpen(false)}/></DialogContent>
+                          </Dialog>
+                        </>
+                      ) : (
+                        <>
+                          <Link href="/profile" onClick={() => handleLinkClick("/profile")} className={mobileLinkClasses(isLinkActive("/profile"))}>
+                            <UserCircle2 className="mr-3.5 h-5 w-5 shrink-0 opacity-90" /> My Account
+                          </Link>
+                          <Button variant="ghost" onClick={handleLogout} className="w-full justify-start text-base py-3.5 px-4 text-destructive hover:bg-destructive/10 hover:text-destructive">
+                            <LogOut className="mr-3.5 h-5 w-5 shrink-0" /> Logout
+                          </Button>
+                        </>
+                      )}
+                    </>
+                  )}
                 </div>
               </SheetContent>
             </Sheet>
           </div>
         </div>
       </header>
+      {/* Dialogs for Login/Signup, managed by state, triggered from desktop nav */}
+      <Dialog open={isLoginModalOpen && !isMobileMenuOpen} onOpenChange={setIsLoginModalOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader><DialogTitle>Login to SR Fitness</DialogTitle></DialogHeader>
+          <AuthForm mode="login" onSuccess={() => setIsLoginModalOpen(false)} />
+        </DialogContent>
+      </Dialog>
+      <Dialog open={isSignupModalOpen && !isMobileMenuOpen} onOpenChange={setIsSignupModalOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader><DialogTitle>Create SR Fitness Account</DialogTitle></DialogHeader>
+          <AuthForm mode="signup" onSuccess={() => setIsSignupModalOpen(false)} />
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { LoadingProvider } from '@/contexts/loading-context';
+import { AuthProvider } from '@/contexts/auth-context'; // Added AuthProvider
 import LoadingOverlay from '@/components/common/loading-overlay';
 import NavigationLoadingManager from '@/components/common/navigation-loading-manager';
 
@@ -29,14 +30,16 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased flex flex-col min-h-screen">
         <LoadingProvider>
-          <NavigationLoadingManager />
-          <LoadingOverlay />
-          <Header />
-          <main className="flex-grow">
-            {children}
-          </main>
-          <Footer />
-          <Toaster />
+          <AuthProvider> {/* AuthProvider wraps content */}
+            <NavigationLoadingManager />
+            <LoadingOverlay />
+            <Header />
+            <main className="flex-grow">
+              {children}
+            </main>
+            <Footer />
+            <Toaster />
+          </AuthProvider>
         </LoadingProvider>
       </body>
     </html>

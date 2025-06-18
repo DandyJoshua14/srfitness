@@ -7,42 +7,53 @@ import { getFirestore, type Firestore } from "firebase/firestore";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 console.log("\n\n--- Firebase Environment Variable Loading Check ---");
-const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
-const authDomain = process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN;
-const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
-const storageBucket = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
-const messagingSenderId = process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID;
-const appId = process.env.NEXT_PUBLIC_FIREBASE_APP_ID;
-const measurementId = process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID; // Optional
+const apiKeyEnv = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+const authDomainEnv = process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN;
+const projectIdEnv = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
+const storageBucketEnv = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
+const messagingSenderIdEnv = process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID;
+const appIdEnv = process.env.NEXT_PUBLIC_FIREBASE_APP_ID;
+const measurementIdEnv = process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID; // Optional
 
-console.log("Loaded NEXT_PUBLIC_FIREBASE_API_KEY:", apiKey, `(Type: ${typeof apiKey}, Length: ${apiKey?.length})`);
-console.log("Loaded NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN:", authDomain, `(Type: ${typeof authDomain})`);
-console.log("Loaded NEXT_PUBLIC_FIREBASE_PROJECT_ID:", projectId, `(Type: ${typeof projectId})`);
-console.log("Loaded NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET:", storageBucket, `(Type: ${typeof storageBucket})`);
-console.log("Loaded NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID:", messagingSenderId, `(Type: ${typeof messagingSenderId})`);
-console.log("Loaded NEXT_PUBLIC_FIREBASE_APP_ID:", appId, `(Type: ${typeof appId})`);
-console.log("Loaded NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID:", measurementId, `(Type: ${typeof measurementId})`); // Optional, might be undefined
+console.log("Loaded NEXT_PUBLIC_FIREBASE_API_KEY:", apiKeyEnv, `(Type: ${typeof apiKeyEnv}, Length: ${apiKeyEnv?.length})`);
+console.log("Loaded NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN:", authDomainEnv, `(Type: ${typeof authDomainEnv})`);
+console.log("Loaded NEXT_PUBLIC_FIREBASE_PROJECT_ID:", projectIdEnv, `(Type: ${typeof projectIdEnv})`);
+console.log("Loaded NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET:", storageBucketEnv, `(Type: ${typeof storageBucketEnv})`);
+console.log("Loaded NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID:", messagingSenderIdEnv, `(Type: ${typeof messagingSenderIdEnv})`);
+console.log("Loaded NEXT_PUBLIC_FIREBASE_APP_ID:", appIdEnv, `(Type: ${typeof appIdEnv})`);
+console.log("Loaded NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID:", measurementIdEnv, `(Type: ${typeof measurementIdEnv})`); // Optional, might be undefined
 console.log("----------------------------------------------------\n");
 
 
 // Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: apiKey,
-  authDomain: authDomain,
-  projectId: projectId,
-  storageBucket: storageBucket,
-  messagingSenderId: messagingSenderId,
-  appId: appId,
-  measurementId: measurementId, // Optional
+  apiKey: apiKeyEnv,
+  authDomain: authDomainEnv,
+  projectId: projectIdEnv,
+  storageBucket: storageBucketEnv,
+  messagingSenderId: messagingSenderIdEnv,
+  appId: appIdEnv,
+  measurementId: measurementIdEnv // Optional
 };
 
 // Log the configuration object that will be used for initialization
-console.log("Firebase configuration object being used by the app:", firebaseConfig, "\n");
+// Ensure all values are strings before logging length to avoid errors if undefined
+console.log("Firebase configuration object being used by the app (FROM ENV VARS):", {
+  apiKey: firebaseConfig.apiKey,
+  authDomain: firebaseConfig.authDomain,
+  projectId: firebaseConfig.projectId,
+  storageBucket: firebaseConfig.storageBucket,
+  messagingSenderId: firebaseConfig.messagingSenderId,
+  appId: firebaseConfig.appId,
+  measurementId: firebaseConfig.measurementId,
+}, "\n");
 
 
 // Developer-facing check to help with setup
 let hasConfigError = false;
 const placeholderValues = ["your_api_key", "YOUR_API_KEY", "your_actual_api_key_here", "your-project-id", "YOUR_PROJECT_ID", "your_actual_project_id"];
+const criticalErrorMessages: string[] = [];
 
 if (
   !firebaseConfig.apiKey ||
@@ -50,6 +61,7 @@ if (
   typeof firebaseConfig.apiKey !== 'string' ||
   firebaseConfig.apiKey.length < 10 // API keys are typically much longer
 ) {
+  criticalErrorMessages.push("NEXT_PUBLIC_FIREBASE_API_KEY is missing, a placeholder, or too short.");
   hasConfigError = true;
 }
 
@@ -59,8 +71,10 @@ if (
   typeof firebaseConfig.projectId !== 'string' ||
   firebaseConfig.projectId.length < 4 // Project IDs are typically at least 4 characters
 ) {
-   hasConfigError = true;
+  criticalErrorMessages.push("NEXT_PUBLIC_FIREBASE_PROJECT_ID is missing or a placeholder.");
+  hasConfigError = true;
 }
+// Add more checks for other critical fields if necessary (authDomain, appId etc.)
 
 if (hasConfigError) {
   const errorMessage = `
@@ -71,6 +85,8 @@ This is an ENVIRONMENT SETUP issue that YOU NEED TO FIX on your side.
 Current problematic configuration loaded by the app:
   NEXT_PUBLIC_FIREBASE_API_KEY:     '${firebaseConfig.apiKey}' (length: ${firebaseConfig.apiKey?.length})
   NEXT_PUBLIC_FIREBASE_PROJECT_ID:  '${firebaseConfig.projectId}'
+Detected Issues:
+${criticalErrorMessages.map(msg => `  - ${msg}`).join('\n')}
 
 >>> ACTION REQUIRED TO FIX FIREBASE <<<
 1.  **VERIFY YOUR \`.env\` FILE:** 
@@ -99,11 +115,12 @@ The application will NOT work correctly until this Firebase configuration is fix
 }
 
 
-// Initialize Firebase
+// Declare Firebase app, auth, and db instances
 let app: FirebaseApp;
 let auth: Auth;
 let db: Firestore;
 
+// Initialize Firebase and services
 // This try-catch is a secondary safety net. 
 // The `hasConfigError` check above should ideally catch issues before this.
 try {
@@ -127,7 +144,7 @@ try {
   if (e.code === 'auth/invalid-api-key' || e.message?.toLowerCase().includes('api key')) {
     console.error("This 'auth/invalid-api-key' or similar error strongly indicates that your NEXT_PUBLIC_FIREBASE_API_KEY is incorrect or not being loaded properly by Next.js, despite initial checks.");
   }
-  console.error("Firebase could not be initialized. Please review the 'Firebase configuration object being used by the app' log and any 'CRITICAL FIREBASE SETUP ISSUE' messages above.");
+  console.error("Firebase could not be initialized. Please review the 'Firebase configuration object being used by the app' log and any 'CRITICAL FIREBASE CONFIGURATION ERROR' messages above.");
   console.error("Ensure all required values in your .env file are correct and that you have RESTARTED YOUR SERVER after any .env changes.");
   
   // Re-throw to make it clear initialization failed.

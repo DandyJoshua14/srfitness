@@ -120,7 +120,7 @@ export default function HeroSection() {
               objectFit="contain" // Changed to contain to ensure full image visibility
               className="rounded-lg shadow-2xl" 
               data-ai-hint={heroContent.dataAiHint}
-              priority
+              priority // Added priority prop
             />
           </div>
         </motion.div>
@@ -128,3 +128,4 @@ export default function HeroSection() {
     </section>
   );
 }
+

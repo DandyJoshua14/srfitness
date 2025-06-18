@@ -28,13 +28,12 @@ console.log("----------------------------------------------------\n");
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: apiKeyEnv,
-  authDomain: authDomainEnv,
-  projectId: projectIdEnv,
-  storageBucket: storageBucketEnv,
-  messagingSenderId: messagingSenderIdEnv,
-  appId: appIdEnv,
-  measurementId: measurementIdEnv // Optional
+  apiKey: "AIzaSyBtNrQdRpSWVBeQSwZGszZoaX-HaQm9ne4",
+  authDomain: "sr-fitness-idcxl.firebaseapp.com",
+  projectId: "sr-fitness-idcxl",
+  storageBucket: "sr-fitness-idcxl.firebasestorage.app",
+  messagingSenderId: "208349550507",
+  appId: "1:208349550507:web:a5c7f9f9268b90fe81a4ee"
 };
 
 // Log the configuration object that will be used for initialization

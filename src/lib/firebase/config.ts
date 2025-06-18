@@ -1,8 +1,7 @@
-
 // Import the functions you need from the SDKs you need
-import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
-import { getAuth, Auth } from "firebase/auth";
-import { getFirestore, Firestore } from "firebase/firestore";
+import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
+import { getAuth, type Auth } from "firebase/auth";
+import { getFirestore, type Firestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -25,4 +24,13 @@ let db: Firestore;
 
 if (getApps().length === 0) {
   app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
 } else {
+  app = getApp();
+  // Ensure auth and db are initialized if the app already exists
+  auth = getAuth(app);
+  db = getFirestore(app);
+}
+
+export { app, auth, db };

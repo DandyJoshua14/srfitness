@@ -6,6 +6,19 @@ import { Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLoading } from '@/contexts/loading-context';
 
+const logoVariants = {
+  animate: {
+    scale: [1, 1.1, 1],
+    rotate: [0, 10, -10, 0],
+    transition: {
+      duration: 2,
+      ease: "easeInOut",
+      repeat: Infinity,
+      repeatDelay: 0.5,
+    },
+  },
+};
+
 export default function LoadingOverlay() {
   const { isLoading } = useLoading();
 
@@ -23,14 +36,20 @@ export default function LoadingOverlay() {
           aria-labelledby="loading-message"
         >
           <div className="flex flex-col items-center">
-            <Image
-              src="/SR.jpg" // Ensure SR.jpg is in your /public folder
-              alt="SR Fitness Logo"
-              width={80}
-              height={80}
-              className="rounded-full mb-6 object-cover shadow-lg"
-              data-ai-hint="logo brand"
-            />
+            <motion.div
+              variants={logoVariants}
+              animate="animate"
+              className="mb-6" // Added margin bottom here for spacing
+            >
+              <Image
+                src="/SR.jpg" // Ensure SR.jpg is in your /public folder
+                alt="SR Fitness Logo"
+                width={80}
+                height={80}
+                className="rounded-full object-cover shadow-lg"
+                data-ai-hint="logo brand"
+              />
+            </motion.div>
             <Loader2 className="h-10 w-10 animate-spin text-primary" />
             <p id="loading-message" className="mt-4 text-lg font-medium text-foreground">
               Loading...

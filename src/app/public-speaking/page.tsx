@@ -17,7 +17,7 @@ export default function PublicSpeakingPage() {
       title: "Motivational Fitness Kickstarts",
       description: "Inspiring talks to ignite passion for a healthier lifestyle and sustained workout habits. Available as keynote speeches or interactive sessions.",
       icon: <Lightbulb className="h-8 w-8 text-primary" />,
-      image: "https://placehold.co/600x400.png",
+      image: "/public speak.jpg",
       dataAiHint: "motivational speaker stage"
     },
     {

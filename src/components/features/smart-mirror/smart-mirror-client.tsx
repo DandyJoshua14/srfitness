@@ -6,14 +6,20 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Camera, AlertTriangle, Info, CheckCircle } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Camera, AlertTriangle, Info, CheckCircle, Loader2, Sparkles, ListChecks } from 'lucide-react';
+import { analyzeExerciseForm, type AnalyzeExerciseFormInput, type AnalyzeExerciseFormOutput } from '@/ai/flows/analyze-exercise-form-flow';
 
 export default function SmartMirrorClient() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const [isCameraOn, setIsCameraOn] = useState(false);
-  const [feedback, setFeedback] = useState<string[]>([]);
-  const [currentExercise, setCurrentExercise] = useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<AnalyzeExerciseFormOutput | null>(null);
+  const [exerciseNameInput, setExerciseNameInput] = useState('');
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -38,7 +44,7 @@ export default function SmartMirrorClient() {
     }
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 1280 }, height: { ideal: 720 } } });
       setHasCameraPermission(true);
       setIsCameraOn(true);
       if (videoRef.current) {
@@ -48,10 +54,8 @@ export default function SmartMirrorClient() {
         title: 'Camera Access Granted',
         description: 'You can now start your form analysis.',
       });
-      // Simulate AI feedback after a delay
-      setTimeout(() => setFeedback(["Keep your back straight.", "Ensure your knees don't go past your toes."]), 3000);
-      setCurrentExercise("Squats");
-
+      setAnalysisResult(null); // Clear previous results
+      setAnalysisError(null);
     } catch (error) {
       console.error('Error accessing camera:', error);
       setHasCameraPermission(false);
@@ -71,11 +75,61 @@ export default function SmartMirrorClient() {
       videoRef.current.srcObject = null;
     }
     setIsCameraOn(false);
-    setFeedback([]);
-    setCurrentExercise(null);
+    setAnalysisResult(null);
+    setAnalysisError(null);
+    setExerciseNameInput(''); // Clear exercise name
     toast({
       title: 'Camera Turned Off',
     });
+  };
+
+  const handleAnalyzeForm = async () => {
+    if (!isCameraOn || !videoRef.current || !canvasRef.current) {
+      toast({ variant: "destructive", title: "Camera Off", description: "Please turn on the camera first." });
+      return;
+    }
+
+    setIsAnalyzing(true);
+    setAnalysisResult(null);
+    setAnalysisError(null);
+
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const context = canvas.getContext('2d');
+    if (!context) {
+      toast({ variant: "destructive", title: "Error", description: "Could not get canvas context." });
+      setIsAnalyzing(false);
+      return;
+    }
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const imageDataUri = canvas.toDataURL('image/jpeg');
+
+    try {
+      const input: AnalyzeExerciseFormInput = { 
+        imageDataUri, 
+        exerciseName: exerciseNameInput.trim() || undefined 
+      };
+      const result = await analyzeExerciseForm(input);
+      setAnalysisResult(result);
+      if (result.feedbackItems.length === 0 && !result.overallAssessment) {
+         toast({ title: "Analysis Complete", description: "AI couldn't provide specific feedback. Image might be unclear or exercise not recognized."})
+      } else {
+         toast({ title: "Form Analysis Complete!", description: "Check the feedback panel for details." });
+      }
+    } catch (err) {
+      console.error("Error analyzing form:", err);
+      const errorMessage = err instanceof Error ? err.message : "An unknown error occurred during analysis.";
+      setAnalysisError(errorMessage);
+      toast({
+        variant: "destructive",
+        title: "Analysis Failed",
+        description: errorMessage,
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   return (
@@ -84,22 +138,17 @@ export default function SmartMirrorClient() {
         <CardHeader>
           <CardTitle className="font-headline text-2xl text-foreground">Live Camera Feed</CardTitle>
           <CardDescription>
-            {isCameraOn ? `Analyzing: ${currentExercise || "Ready to analyze..."}` : "Your camera feed will appear here once access is granted."}
+            {isCameraOn ? `Point your camera. Ready to analyze.` : "Your camera feed will appear here once access is granted."}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="aspect-video bg-muted rounded-md relative flex items-center justify-center overflow-hidden">
-            <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
+          <div className="aspect-video bg-muted rounded-md relative flex items-center justify-center overflow-hidden border border-border">
+            <video ref={videoRef} className="w-full h-full object-cover transform scale-x-[-1]" autoPlay muted playsInline />
+            <canvas ref={canvasRef} style={{ display: 'none' }} /> {/* Hidden canvas for image capture */}
             {!isCameraOn && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground">
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground bg-background/50">
                 <Camera className="h-16 w-16 mb-4" />
                 <p>Camera is off or permission not granted.</p>
-              </div>
-            )}
-            {/* Placeholder for live overlay. In a real app, this would be a canvas or SVG overlay. */}
-            {isCameraOn && feedback.length > 0 && (
-              <div className="absolute top-4 left-4 p-2 bg-black/50 text-white rounded text-xs">
-                Visual Cues Overlay (Placeholder)
               </div>
             )}
           </div>
@@ -112,15 +161,41 @@ export default function SmartMirrorClient() {
               </AlertDescription>
             </Alert>
           )}
-          <div className="mt-6 flex flex-col sm:flex-row gap-4">
-            {!isCameraOn ? (
-              <Button onClick={requestCameraPermission} size="lg" className="w-full sm:w-auto">
-                <Camera className="mr-2 h-5 w-5" /> Start Smart Mirror
-              </Button>
-            ) : (
-              <Button onClick={stopCamera} variant="destructive" size="lg" className="w-full sm:w-auto">
-                Stop Camera
-              </Button>
+          <div className="mt-6 space-y-4">
+            <div className="flex flex-col sm:flex-row gap-4">
+              {!isCameraOn ? (
+                <Button onClick={requestCameraPermission} size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90">
+                  <Camera className="mr-2 h-5 w-5" /> Start Smart Mirror
+                </Button>
+              ) : (
+                <Button onClick={stopCamera} variant="outline" size="lg" className="w-full sm:w-auto">
+                  Stop Camera
+                </Button>
+              )}
+            </div>
+            {isCameraOn && (
+              <div className="space-y-3 p-4 border border-border rounded-lg bg-card">
+                <div>
+                  <Label htmlFor="exerciseName" className="font-semibold text-foreground">Exercise Name (Optional)</Label>
+                  <Input 
+                    id="exerciseName"
+                    type="text"
+                    value={exerciseNameInput}
+                    onChange={(e) => setExerciseNameInput(e.target.value)}
+                    placeholder="e.g., Squat, Push-up, Lunge"
+                    className="mt-1"
+                    disabled={isAnalyzing}
+                  />
+                   <p className="text-xs text-muted-foreground mt-1">Helps AI give more specific feedback.</p>
+                </div>
+                <Button onClick={handleAnalyzeForm} size="lg" className="w-full bg-green-600 hover:bg-green-700 text-white" disabled={isAnalyzing}>
+                  {isAnalyzing ? (
+                    <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Analyzing...</>
+                  ) : (
+                    <><Sparkles className="mr-2 h-5 w-5" /> Analyze Form</>
+                  )}
+                </Button>
+              </div>
             )}
           </div>
         </CardContent>
@@ -128,45 +203,76 @@ export default function SmartMirrorClient() {
 
       <Card className="md:col-span-1 shadow-xl">
         <CardHeader>
-          <CardTitle className="font-headline text-2xl text-foreground">AI Feedback</CardTitle>
+          <CardTitle className="font-headline text-2xl text-foreground flex items-center"><ListChecks className="mr-2 h-6 w-6 text-primary"/>AI Feedback</CardTitle>
           <CardDescription>Real-time suggestions to improve your form.</CardDescription>
         </CardHeader>
-        <CardContent>
-          {isCameraOn && feedback.length === 0 && !currentExercise && (
+        <CardContent className="min-h-[200px]">
+          {isAnalyzing && (
+            <div className="flex flex-col items-center justify-center text-muted-foreground py-8">
+              <Loader2 className="h-10 w-10 animate-spin text-primary mb-3" />
+              <p className="font-semibold">AI is analyzing your form...</p>
+              <p className="text-sm">Please hold still.</p>
+            </div>
+          )}
+          {!isAnalyzing && analysisError && (
+            <Alert variant="destructive">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>Analysis Error</AlertTitle>
+              <AlertDescription>{analysisError}</AlertDescription>
+            </Alert>
+          )}
+          {!isAnalyzing && !analysisError && analysisResult && (
+            <div className="space-y-4">
+              {analysisResult.overallAssessment && (
+                <Alert variant={analysisResult.isFormCorrect === false ? "destructive" : (analysisResult.isFormCorrect === true ? "default" : "default")} 
+                       className={analysisResult.isFormCorrect === true ? "border-green-500/50 bg-green-50 text-green-700" : ""}>
+                   {analysisResult.isFormCorrect === true ? <CheckCircle className="h-4 w-4 !text-green-600" /> : (analysisResult.isFormCorrect === false ? <AlertTriangle className="h-4 w-4"/> : <Info className="h-4 w-4"/>) }
+                  <AlertTitle className={analysisResult.isFormCorrect === true ? "!text-green-700 font-semibold" : (analysisResult.isFormCorrect === false ? "" : "font-semibold")}>
+                    Overall Assessment
+                  </AlertTitle>
+                  <AlertDescription className={analysisResult.isFormCorrect === true ? "!text-green-600" : (analysisResult.isFormCorrect === false ? "" : "")}>
+                    {analysisResult.overallAssessment}
+                  </AlertDescription>
+                </Alert>
+              )}
+              {analysisResult.feedbackItems && analysisResult.feedbackItems.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-foreground mb-2">Suggestions:</h4>
+                  <ul className="space-y-2">
+                    {analysisResult.feedbackItems.map((item, index) => (
+                      <li key={index} className="flex items-start text-sm p-2 bg-muted/50 rounded-md">
+                        <CheckCircle className="h-4 w-4 text-primary mr-2 mt-0.5 shrink-0" />
+                        <span className="text-foreground">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {analysisResult.feedbackItems.length === 0 && !analysisResult.overallAssessment && (
+                 <Alert>
+                    <Info className="h-4 w-4" />
+                    <AlertTitle>No Specific Feedback</AlertTitle>
+                    <AlertDescription>
+                        The AI couldn't provide detailed suggestions for this image. Try a different angle or ensure the exercise is clear.
+                    </AlertDescription>
+                </Alert>
+              )}
+            </div>
+          )}
+          {!isAnalyzing && !analysisError && !analysisResult && (
             <Alert>
               <Info className="h-4 w-4" />
-              <AlertTitle>Ready to Analyze</AlertTitle>
-              <AlertDescription>Start an exercise, and feedback will appear here.</AlertDescription>
+              <AlertTitle>{isCameraOn ? "Ready to Analyze" : "Turn on Camera"}</AlertTitle>
+              <AlertDescription>
+                {isCameraOn 
+                  ? "Specify an exercise (optional) and click 'Analyze Form'." 
+                  : "Click 'Start Smart Mirror' to begin."}
+              </AlertDescription>
             </Alert>
           )}
-           {isCameraOn && feedback.length === 0 && currentExercise && (
-            <Alert>
-              <Info className="h-4 w-4" />
-              <AlertTitle>Analyzing...</AlertTitle>
-              <AlertDescription>Performing {currentExercise.toLowerCase()}. Hold your form.</AlertDescription>
-            </Alert>
-          )}
-          {feedback.length > 0 && (
-            <ul className="space-y-3">
-              {feedback.map((item, index) => (
-                <li key={index} className="flex items-start text-sm">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 shrink-0" />
-                  <span className="text-foreground">{item}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-           {!isCameraOn && hasCameraPermission !== false &&(
-             <Alert variant="default" className="mt-4">
-                <Info className="h-4 w-4" />
-                <AlertTitle>Turn On Camera</AlertTitle>
-                <AlertDescription>
-                    Click "Start Smart Mirror" to begin form analysis.
-                </AlertDescription>
-            </Alert>
-           )}
         </CardContent>
       </Card>
     </div>
   );
-}
+
+    

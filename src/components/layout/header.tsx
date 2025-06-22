@@ -16,6 +16,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useLoading } from '@/contexts/loading-context';
+import VoiceAgentDialog from '@/components/features/voice-agent/voice-agent-dialog';
 // Removed useAuth, AuthForm, logoutUser, UserCircle2, LogOut, LogIn, Dialog-related imports
 
 const MOCK_IS_ADMIN = true; 
@@ -285,34 +286,18 @@ export default function Header() {
               {/* Auth Buttons Desktop REMOVED */}
             </nav>
 
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className={cn(
-                "hidden md:inline-flex ml-2 text-white animate-pulse-microphone focus-visible:ring-primary/70",
-                isScrolled ? "text-gray-200 hover:text-primary" : "hover:text-primary/80"
-              )}
-              aria-label="Voice Search (Conceptual)"
-              onClick={() => console.log("Voice search icon clicked (conceptual)")} 
-            >
-              <Mic className="h-5 w-5" />
-            </Button>
+            <VoiceAgentDialog className={cn(
+              "hidden md:inline-flex ml-2",
+              isScrolled ? "text-gray-200 hover:text-primary" : "text-white hover:text-primary/80"
+            )} />
           </div>
 
           {/* Mobile Menu Area */}
           <div className="md:hidden flex items-center">
-             <Button 
-              variant="ghost" 
-              size="icon" 
-              className={cn(
-                "animate-pulse-microphone focus-visible:ring-primary/70 mr-1",
-                isScrolled ? "text-gray-200 hover:text-primary" : "text-white hover:text-primary/80"
-              )}
-              aria-label="Voice Search (Conceptual)"
-              onClick={() => console.log("Voice search icon clicked (conceptual)")} 
-            >
-              <Mic className="h-6 w-6" />
-            </Button>
+             <VoiceAgentDialog className={cn(
+                "h-auto p-2 text-2xl",
+                isScrolled ? "text-gray-200 hover:bg-gray-700/50 hover:text-primary" : "text-white hover:bg-white/10 hover:text-primary"
+             )} />
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button

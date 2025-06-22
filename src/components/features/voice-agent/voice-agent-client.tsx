@@ -34,6 +34,13 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
         setConversation([{ speaker: 'user', text: initialQuery }]);
         handleAiResponse(initialQuery);
     }
+    
+    // Cleanup function to cancel any speech on unmount
+    return () => {
+        if (window.speechSynthesis) {
+            window.speechSynthesis.cancel();
+        }
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialQuery]);
 
@@ -57,7 +64,8 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
   };
   
   const speak = (text: string) => {
-    if (!isSupported || !text) {
+    // Add more robust check for empty/whitespace-only strings
+    if (!isSupported || !text || text.trim() === '') {
         onConversationEnd();
         return;
     };

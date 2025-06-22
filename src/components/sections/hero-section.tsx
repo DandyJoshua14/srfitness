@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from 'next/image';
@@ -10,11 +9,10 @@ import { cn } from '@/lib/utils';
 import { ArrowRight } from 'lucide-react';
 
 const heroContent = {
-  imageSrc: "/cover.png", // Using this as the focused image
+  imageSrc: "/cover.png",
   altText: "Fitness model posing",
   dataAiHint: "fitness model action",
-  headline: "Elevate Your Fitness",
-  subtitle: "Experience a new dimension of strength, wellness, and personalized training.",
+  headline: "Unleash Your Potential",
 };
 
 export default function HeroSection() {
@@ -80,13 +78,17 @@ export default function HeroSection() {
           >
             {heroContent.headline}
           </motion.h1>
-          <motion.p
+          <motion.div
             variants={textVariants}
             custom={0.2}
-            className="max-w-xl mx-auto lg:mx-0 text-md sm:text-lg md:text-xl text-slate-200/90"
+            className="flex justify-center lg:justify-start items-baseline space-x-3 md:space-x-4 max-w-xl mx-auto lg:mx-0"
           >
-            {heroContent.subtitle}
-          </motion.p>
+            <span className="text-xl md:text-2xl font-semibold text-primary">Fitter</span>
+            <span className="text-xl md:text-2xl font-semibold text-primary/70">·</span>
+            <span className="text-xl md:text-2xl font-semibold text-primary">Stronger</span>
+            <span className="text-xl md:text-2xl font-semibold text-primary/70">·</span>
+            <span className="text-xl md:text-2xl font-semibold text-primary">Healthier</span>
+          </motion.div>
           <motion.div
             variants={textVariants}
             custom={0.4}
@@ -128,4 +130,3 @@ export default function HeroSection() {
     </section>
   );
 }
-

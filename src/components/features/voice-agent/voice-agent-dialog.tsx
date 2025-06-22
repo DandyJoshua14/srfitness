@@ -4,17 +4,15 @@
 import { useState, useEffect, useRef } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Mic, MicOff, BrainCircuit } from "lucide-react";
+import { Mic, MicOff, BrainCircuit, Loader2 } from "lucide-react";
 import VoiceAgentClient from "./voice-agent-client";
 import { cn } from "@/lib/utils";
 import { useToast } from '@/hooks/use-toast';
 
-const SpeechRecognition =
-  typeof window !== 'undefined' ? (window.SpeechRecognition || window.webkitSpeechRecognition) : undefined;
-
 const WAKE_WORDS = ["hey ninna", "hey nina"];
 
 export default function VoiceAgentDialog({ className }: { className?: string }) {
+  const [isMounted, setIsMounted] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [currentQuery, setCurrentQuery] = useState("");
@@ -23,10 +21,14 @@ export default function VoiceAgentDialog({ className }: { className?: string }) 
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const { toast } = useToast();
 
-  const isSupported = !!SpeechRecognition;
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const isSupported = isMounted && !!(window.SpeechRecognition || window.webkitSpeechRecognition);
 
   const startListening = () => {
-    if (isListening) return;
+    if (isListening || !isSupported) return;
 
     if (permissionStatus === 'denied') {
         toast({ variant: 'destructive', title: "Microphone Access Required", description: "Please enable microphone permissions in your browser's site settings." });
@@ -36,7 +38,7 @@ export default function VoiceAgentDialog({ className }: { className?: string }) 
       try {
         recognitionRef.current.start();
       } catch (e) {
-        console.error("Could not start recognition:", e);
+        console.log("Could not start recognition (might be already active):", e);
       }
     }
   };
@@ -49,11 +51,11 @@ export default function VoiceAgentDialog({ className }: { className?: string }) 
   
   useEffect(() => {
     if (!isSupported) {
-      console.error("Voice agent not supported by this browser.");
       return;
     }
     
     if(!recognitionRef.current) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new SpeechRecognition();
         recognition.continuous = true;
         recognition.interimResults = false;
@@ -80,7 +82,7 @@ export default function VoiceAgentDialog({ className }: { className?: string }) 
           console.error("Speech recognition error:", event.error);
           if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
             setPermissionStatus('denied');
-            if(isListening) { // Only toast if it was actively listening
+            if(isListening) {
                  toast({ variant: 'destructive', title: "Microphone Access Denied", description: "Please enable microphone permissions in your browser settings." });
             }
           }
@@ -104,7 +106,9 @@ export default function VoiceAgentDialog({ className }: { className?: string }) 
     startListening();
 
     return () => {
-      recognitionRef.current?.abort();
+      if (recognitionRef.current) {
+        recognitionRef.current.abort();
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSupported, toast]);
@@ -116,6 +120,14 @@ export default function VoiceAgentDialog({ className }: { className?: string }) 
        setTimeout(startListening, 500);
     }
   };
+
+  if (!isMounted) {
+    return (
+      <Button variant="ghost" size="icon" className={cn(className)} disabled aria-label="Loading Voice Agent">
+        <Loader2 className="h-5 w-5 animate-spin" />
+      </Button>
+    );
+  }
 
   if (!isSupported) {
     return (

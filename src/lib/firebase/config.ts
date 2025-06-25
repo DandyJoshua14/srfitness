@@ -31,7 +31,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyBtNrQdRpSWVBeQSwZGszZoaX-HaQm9ne4",
   authDomain: "sr-fitness-idcxl.firebaseapp.com",
   projectId: "sr-fitness-idcxl",
-  storageBucket: "sr-fitness-idcxl.firebasestorage.app",
+  storageBucket: "sr-fitness-idcxl.appspot.com",
   messagingSenderId: "208349550507",
   appId: "1:208349550507:web:a5c7f9f9268b90fe81a4ee"
 };

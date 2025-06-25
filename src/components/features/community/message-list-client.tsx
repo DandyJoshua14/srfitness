@@ -59,7 +59,7 @@ export default function MessageListClient() {
           <ul className="space-y-1">
             {mockConversations.map(convo => (
               <li key={convo.id}>
-                <Link href={`/community/messages/${convo.id}?type=${convo.type}`} legacyBehavior>
+                <Link href={`/community/messages/${convo.id}?type=${convo.type}&name=${encodeURIComponent(convo.name)}`} legacyBehavior>
                   <a className="block p-3 hover:bg-muted/50 rounded-lg transition-colors">
                     <div className="flex items-center space-x-3">
                       <Avatar className="h-10 w-10">

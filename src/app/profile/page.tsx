@@ -13,6 +13,7 @@ import { useState } from 'react'; // For conceptual editing state
 import { Input } from '@/components/ui/input'; // For conceptual editing
 import { Switch } from '@/components/ui/switch'; // For conceptual privacy settings
 import { useToast } from '@/hooks/use-toast'; // For conceptual save actions
+import { Label } from '@/components/ui/label';
 
 // Metadata can be defined, but title might be dynamic based on user
 // export const metadata: Metadata = {

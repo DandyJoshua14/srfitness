@@ -12,6 +12,7 @@ import { Heart, MessageCircle, Share2, Send, ImagePlus, Video, Info, ArrowRight,
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from '@/components/ui/badge'; // Added Badge
 import { Separator } from '@/components/ui/separator'; // Added Separator
+import { Input } from '@/components/ui/input';
 
 // Mock Data Updated for a more blog-like structure
 const mockUser = { name: "Current User", avatar: "https://placehold.co/40x40.png?text=CU" };

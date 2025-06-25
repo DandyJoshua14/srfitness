@@ -366,6 +366,3 @@ export default function Header() {
     </>
   );
 }
-
-
-    

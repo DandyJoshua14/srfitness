@@ -3,9 +3,10 @@
 
 import { useState, useEffect } from 'react';
 import { Bot, User, BrainCircuit } from 'lucide-react';
-import { generateVoiceResponse } from '@/ai/flows/generate-voice-response-flow';
+import { generateVoiceResponse, VoiceAgentOutput } from '@/ai/flows/generate-voice-response-flow';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 const SpeechRecognition =
   typeof window !== 'undefined' ? (window.SpeechRecognition || window.webkitSpeechRecognition) : undefined;
@@ -25,6 +26,7 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [conversation, setConversation] = useState<ConversationTurn[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
   
   const isSupported = !!SpeechRecognition && typeof window !== 'undefined' && !!window.speechSynthesis;
 
@@ -49,37 +51,41 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
       setIsThinking(true);
       setError(null);
       try {
-        const { response } = await generateVoiceResponse({ query });
-        setConversation(prev => [...prev, { speaker: 'ai', text: response }]);
-        speak(response);
+        const result: VoiceAgentOutput = await generateVoiceResponse({ query });
+        setConversation(prev => [...prev, { speaker: 'ai', text: result.response }]);
+        speak(result.response, () => {
+           if (result.navigationPath) {
+             router.push(result.navigationPath);
+           }
+           onConversationEnd();
+        });
       } catch (err) {
           console.error("AI response error:", err);
           const errorMessage = "I'm having trouble connecting right now. Please try again later.";
           setError(errorMessage);
           setConversation(prev => [...prev, { speaker: 'ai', text: errorMessage }]);
-          onConversationEnd();
+          speak(errorMessage, onConversationEnd); // Speak error then end
       } finally {
           setIsThinking(false);
       }
   };
   
-  const speak = (text: string) => {
-    // Add more robust check for empty/whitespace-only strings
+  const speak = (text: string, onEndCallback: () => void) => {
     if (!isSupported || !text || text.trim() === '') {
-        onConversationEnd();
+        onEndCallback(); // Execute callback even if speech is not supported or text is empty
         return;
     };
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => {
         setIsSpeaking(false);
-        onConversationEnd(); // Signal that the conversation turn is complete
+        onEndCallback(); // Signal that the turn is complete
     };
     utterance.onerror = (e) => {
       console.error("Speech synthesis error", e);
       setError("Sorry, I couldn't speak the response.");
       setIsSpeaking(false);
-      onConversationEnd();
+      onEndCallback(); // Also call onEnd on error
     }
     window.speechSynthesis.cancel(); // Cancel any ongoing speech
     window.speechSynthesis.speak(utterance);

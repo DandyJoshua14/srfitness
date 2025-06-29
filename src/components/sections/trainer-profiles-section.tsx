@@ -11,7 +11,7 @@ export default function TrainerProfilesSection() {
         <div className="text-center mb-12 md:mb-16 animate-in fade-in slide-in-from-bottom duration-700">
           <h2 className="font-headline text-4xl md:text-5xl font-bold text-primary mb-4">Meet our expert award judges</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Our esteemed panel of judges brings years of experience and expertise to recognize excellence in fitness.
+            Our esteemed panel of judges brings years of experience and expertise to recognize excellence in the fitness industry.
           </p>
         </div>
 

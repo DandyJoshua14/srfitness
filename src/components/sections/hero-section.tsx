@@ -1,12 +1,9 @@
 "use client";
 
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ArrowRight } from 'lucide-react';
 
 
 export default function HeroSection() {
@@ -14,6 +11,8 @@ export default function HeroSection() {
 
   const heroContent = {
     headline: 'Unleash Your Potential',
+    image: 'https://placehold.co/1600x900.png',
+    dataAiHint: 'fitness athlete silhouette'
   };
 
   useEffect(() => {
@@ -37,10 +36,20 @@ export default function HeroSection() {
       id="hero"
       className={cn(
         "relative flex flex-col items-center justify-center text-center text-white overflow-hidden",
-        "min-h-[80vh] md:min-h-screen py-16 md:py-24", // Ensure enough height
-        "bg-gradient-to-br from-secondary via-background to-primary/30 animate-gradient-xy" // Animated gradient
+        "min-h-[80vh] md:min-h-screen py-16 md:py-24",
+        "bg-gradient-to-br from-secondary via-background to-primary/30 animate-gradient-xy"
       )}
     >
+      {/* Full-screen, blended background image */}
+      <Image
+        src={heroContent.image}
+        alt="Hero background"
+        layout="fill"
+        objectFit="cover"
+        className="absolute inset-0 z-0 opacity-10 mix-blend-luminosity"
+        data-ai-hint={heroContent.dataAiHint}
+        priority
+      />
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center gap-8 md:gap-12 w-full">
 
         {/* Text Content Area */}
@@ -68,8 +77,6 @@ export default function HeroSection() {
             <span className="text-xl md:text-2xl font-semibold text-primary">Healthier</span>
           </motion.div>
         </motion.div>
-
-        {/* Image Area has been removed to make it blend with the background */}
       </div>
     </section>
   );

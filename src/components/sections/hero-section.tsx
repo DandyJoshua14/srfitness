@@ -1,6 +1,5 @@
 "use client";
 
-import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -11,8 +10,6 @@ export default function HeroSection() {
 
   const heroContent = {
     headline: 'Unleash Your Potential',
-    image: 'https://placehold.co/1600x900.png',
-    dataAiHint: 'fitness athlete silhouette'
   };
 
   useEffect(() => {
@@ -40,16 +37,6 @@ export default function HeroSection() {
         "bg-gradient-to-br from-secondary via-background to-primary/30 animate-gradient-xy"
       )}
     >
-      {/* Full-screen, blended background image */}
-      <Image
-        src={heroContent.image}
-        alt="Hero background"
-        layout="fill"
-        objectFit="cover"
-        className="absolute inset-0 z-0 opacity-10 mix-blend-luminosity"
-        data-ai-hint={heroContent.dataAiHint}
-        priority
-      />
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center gap-8 md:gap-12 w-full">
 
         {/* Text Content Area */}

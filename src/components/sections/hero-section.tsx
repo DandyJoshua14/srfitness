@@ -14,9 +14,6 @@ export default function HeroSection() {
 
   const heroContent = {
     headline: 'Unleash Your Potential',
-    imageSrc: 'https://placehold.co/420x580.png',
-    altText: 'Female athlete in a powerful pose',
-    dataAiHint: 'athlete fitness pose',
   };
 
   useEffect(() => {
@@ -35,26 +32,6 @@ export default function HeroSection() {
     }),
   };
 
-  const imageVariants = {
-    initial: { opacity: 0, scale: 0.8, y: 50 },
-    animate: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: { type: 'spring', stiffness: 50, damping: 20, delay: 0.2 }
-    },
-    float: {
-      y: ["-8px", "8px"],
-      transition: {
-        duration: 4,
-        repeat: Infinity,
-        repeatType: "reverse" as const,
-        ease: "easeInOut"
-      }
-    }
-  };
-
-
   return (
     <section
       id="hero"
@@ -64,11 +41,11 @@ export default function HeroSection() {
         "bg-gradient-to-br from-secondary via-background to-primary/30 animate-gradient-xy" // Animated gradient
       )}
     >
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center justify-around gap-8 md:gap-12 w-full">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center gap-8 md:gap-12 w-full">
 
         {/* Text Content Area */}
         <motion.div
-          className="lg:w-1/2 lg:text-left text-center space-y-6"
+          className="w-full text-center space-y-6"
           initial="hidden"
           animate={textVisible ? "visible" : "hidden"}
         >
@@ -82,7 +59,7 @@ export default function HeroSection() {
           <motion.div
             variants={textVariants}
             custom={0.2}
-            className="flex justify-center lg:justify-start items-baseline space-x-3 md:space-x-4 max-w-xl mx-auto lg:mx-0"
+            className="flex justify-center items-baseline space-x-3 md:space-x-4 max-w-xl mx-auto"
           >
             <span className="text-xl md:text-2xl font-semibold text-primary">Fitter</span>
             <span className="text-xl md:text-2xl font-semibold text-primary/70">·</span>
@@ -92,25 +69,7 @@ export default function HeroSection() {
           </motion.div>
         </motion.div>
 
-        {/* Image Area */}
-        <motion.div
-          className="lg:w-1/2 mt-8 lg:mt-0 flex justify-center items-center"
-          variants={imageVariants}
-          initial="initial"
-          animate={textVisible ? ["animate", "float"] : "initial"}
-        >
-          <div className="relative w-[280px] h-[380px] sm:w-[320px] sm:h-[420px] md:w-[380px] md:h-[520px] lg:w-[420px] lg:h-[580px] group">
-            <Image
-              src={heroContent.imageSrc}
-              alt={heroContent.altText}
-              layout="fill"
-              objectFit="cover"
-              className="rounded-lg shadow-2xl"
-              data-ai-hint={heroContent.dataAiHint}
-              priority
-            />
-          </div>
-        </motion.div>
+        {/* Image Area has been removed to make it blend with the background */}
       </div>
     </section>
   );

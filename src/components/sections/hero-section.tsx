@@ -8,15 +8,16 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { ArrowRight } from 'lucide-react';
 
-const heroContent = {
-  imageSrc: "/cover.png",
-  altText: "Fitness model posing",
-  dataAiHint: "fitness model action",
-  headline: "Unleash Your Potential",
-};
 
 export default function HeroSection() {
   const [textVisible, setTextVisible] = useState(false);
+
+  const heroContent = {
+    headline: 'Unleash Your Potential',
+    imageSrc: 'https://placehold.co/420x580.png',
+    altText: 'Female athlete in a powerful pose',
+    dataAiHint: 'athlete fitness pose',
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -36,9 +37,9 @@ export default function HeroSection() {
 
   const imageVariants = {
     initial: { opacity: 0, scale: 0.8, y: 50 },
-    animate: { 
-      opacity: 1, 
-      scale: 1, 
+    animate: {
+      opacity: 1,
+      scale: 1,
       y: 0,
       transition: { type: 'spring', stiffness: 50, damping: 20, delay: 0.2 }
     },
@@ -52,7 +53,7 @@ export default function HeroSection() {
       }
     }
   };
-  
+
 
   return (
     <section
@@ -64,9 +65,9 @@ export default function HeroSection() {
       )}
     >
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center justify-around gap-8 md:gap-12 w-full">
-        
+
         {/* Text Content Area */}
-        <motion.div 
+        <motion.div
           className="lg:w-1/2 lg:text-left text-center space-y-6"
           initial="hidden"
           animate={textVisible ? "visible" : "hidden"}
@@ -92,7 +93,7 @@ export default function HeroSection() {
         </motion.div>
 
         {/* Image Area */}
-        <motion.div 
+        <motion.div
           className="lg:w-1/2 mt-8 lg:mt-0 flex justify-center items-center"
           variants={imageVariants}
           initial="initial"
@@ -104,7 +105,7 @@ export default function HeroSection() {
               alt={heroContent.altText}
               layout="fill"
               objectFit="contain" // Changed to contain to ensure full image visibility
-              className="rounded-lg shadow-2xl" 
+              className="rounded-lg shadow-2xl"
               data-ai-hint={heroContent.dataAiHint}
               priority // Added priority prop
             />

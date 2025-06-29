@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image'; // Import Image
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -63,6 +64,25 @@ export default function HeroSection() {
             <span className="text-xl md:text-2xl font-semibold text-primary/70">·</span>
             <span className="text-xl md:text-2xl font-semibold text-primary">Healthier</span>
           </motion.div>
+        </motion.div>
+
+        {/* Image Placeholder */}
+        <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
+            className="w-full max-w-3xl"
+        >
+            <div className="relative aspect-[3/2] rounded-lg shadow-2xl overflow-hidden border-2 border-primary/20 bg-black/20">
+                <Image
+                    src="https://placehold.co/600x400.png"
+                    alt="SR Fitness - Unleash your potential"
+                    layout="fill"
+                    objectFit="cover"
+                    data-ai-hint="fitness athlete"
+                    priority
+                />
+            </div>
         </motion.div>
       </div>
     </section>

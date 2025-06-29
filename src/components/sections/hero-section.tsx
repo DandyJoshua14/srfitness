@@ -89,22 +89,6 @@ export default function HeroSection() {
             <span className="text-xl md:text-2xl font-semibold text-primary/70">·</span>
             <span className="text-xl md:text-2xl font-semibold text-primary">Healthier</span>
           </motion.div>
-          <motion.div
-            variants={textVariants}
-            custom={0.4}
-            className="flex flex-col sm:flex-row justify-center lg:justify-start items-center gap-4 sm:gap-5"
-          >
-            <Button asChild className="group font-headline text-base sm:text-lg px-6 py-3 sm:px-8 sm:py-3.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 w-full sm:w-auto">
-              <Link href="/#services">
-                Discover Programs <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-              </Link>
-            </Button>
-            <Button asChild variant="outline" className="font-headline text-base sm:text-lg px-6 py-3 sm:px-8 sm:py-3.5 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group w-full sm:w-auto">
-              <Link href="/#contact">
-                Get Started
-              </Link>
-            </Button>
-          </motion.div>
         </motion.div>
 
         {/* Image Area */}

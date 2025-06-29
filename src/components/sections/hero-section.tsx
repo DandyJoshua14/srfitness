@@ -28,7 +28,7 @@ export default function HeroSection() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/cove.png"
+          src="/use.png"
           alt="Fitness enthusiast"
           layout="fill"
           objectFit="cover"
@@ -42,7 +42,7 @@ export default function HeroSection() {
 
       {/* Content */}
       <motion.div
-        className="relative z-20 container px-4 sm:px-6 lg:px-8 space-y-6"
+        className="relative z-20 container px-4 sm:px-6 lg:px-8 space-y-6 pb-20"
         initial="hidden"
         animate={isMounted ? "visible" : "hidden"}
       >
@@ -57,7 +57,7 @@ export default function HeroSection() {
         <motion.div
           variants={textVariants}
           custom={0.2}
-          className="flex justify-center items-baseline space-x-3 md:space-x-4 max-w-xl mx-auto"
+          className="flex justify-center items-baseline space-x2- md:space-x-4 max-w-xl mx-auto"
         >
           <span className="text-xl md:text-2xl font-semibold text-primary" style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}>Fitter</span>
           <span className="text-xl md:text-2xl font-semibold text-primary/70">·</span>

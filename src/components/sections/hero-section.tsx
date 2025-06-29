@@ -104,10 +104,10 @@ export default function HeroSection() {
               src={heroContent.imageSrc}
               alt={heroContent.altText}
               layout="fill"
-              objectFit="contain" // Changed to contain to ensure full image visibility
+              objectFit="cover"
               className="rounded-lg shadow-2xl"
               data-ai-hint={heroContent.dataAiHint}
-              priority // Added priority prop
+              priority
             />
           </div>
         </motion.div>

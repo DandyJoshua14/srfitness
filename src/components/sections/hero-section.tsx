@@ -1,23 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image'; // Import Image
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
-
 
 export default function HeroSection() {
-  const [textVisible, setTextVisible] = useState(false);
-
-  const heroContent = {
-    headline: 'Unleash Your Potential',
-  };
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setTextVisible(true);
-    }, 300);
-    return () => clearTimeout(timer);
+    setIsMounted(true);
   }, []);
 
   const textVariants = {
@@ -32,59 +23,49 @@ export default function HeroSection() {
   return (
     <section
       id="hero"
-      className={cn(
-        "relative flex flex-col items-center justify-center text-center text-white overflow-hidden",
-        "min-h-[80vh] md:min-h-screen py-16 md:py-24",
-        "bg-gradient-to-br from-secondary via-background to-primary/30 animate-gradient-xy"
-      )}
+      className="relative w-full h-screen flex items-center justify-center text-center text-white overflow-hidden"
     >
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center gap-8 md:gap-12 w-full">
-
-        {/* Text Content Area */}
-        <motion.div
-          className="w-full text-center space-y-6"
-          initial="hidden"
-          animate={textVisible ? "visible" : "hidden"}
-        >
-          <motion.h1
-            variants={textVariants}
-            custom={0}
-            className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight"
-          >
-            {heroContent.headline}
-          </motion.h1>
-          <motion.div
-            variants={textVariants}
-            custom={0.2}
-            className="flex justify-center items-baseline space-x-3 md:space-x-4 max-w-xl mx-auto"
-          >
-            <span className="text-xl md:text-2xl font-semibold text-primary">Fitter</span>
-            <span className="text-xl md:text-2xl font-semibold text-primary/70">·</span>
-            <span className="text-xl md:text-2xl font-semibold text-primary">Stronger</span>
-            <span className="text-xl md:text-2xl font-semibold text-primary/70">·</span>
-            <span className="text-xl md:text-2xl font-semibold text-primary">Healthier</span>
-          </motion.div>
-        </motion.div>
-
-        {/* Image Placeholder */}
-        <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
-            className="w-full max-w-3xl"
-        >
-            <div className="relative aspect-[3/2] rounded-lg shadow-2xl overflow-hidden border-2 border-primary/20 bg-black/20">
-                <Image
-                    src="https://placehold.co/600x400.png"
-                    alt="SR Fitness - Unleash your potential"
-                    layout="fill"
-                    objectFit="cover"
-                    data-ai-hint="fitness athlete"
-                    priority
-                />
-            </div>
-        </motion.div>
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/cove.png"
+          alt="Fitness enthusiast"
+          layout="fill"
+          objectFit="cover"
+          objectPosition="center"
+          priority
+          data-ai-hint="fitness athlete portrait"
+        />
+        {/* Gradient Overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent z-10"></div>
       </div>
+
+      {/* Content */}
+      <motion.div
+        className="relative z-20 container px-4 sm:px-6 lg:px-8 space-y-6"
+        initial="hidden"
+        animate={isMounted ? "visible" : "hidden"}
+      >
+        <motion.h1
+          variants={textVariants}
+          custom={0}
+          className="font-headline text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-tight"
+          style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.7)' }}
+        >
+          Unleash Your Potential
+        </motion.h1>
+        <motion.div
+          variants={textVariants}
+          custom={0.2}
+          className="flex justify-center items-baseline space-x-3 md:space-x-4 max-w-xl mx-auto"
+        >
+          <span className="text-xl md:text-2xl font-semibold text-primary" style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}>Fitter</span>
+          <span className="text-xl md:text-2xl font-semibold text-primary/70">·</span>
+          <span className="text-xl md:text-2xl font-semibold text-primary" style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}>Stronger</span>
+          <span className="text-xl md:text-2xl font-semibold text-primary/70">·</span>
+          <span className="text-xl md:text-2xl font-semibold text-primary" style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}>Healthier</span>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

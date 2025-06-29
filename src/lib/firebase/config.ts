@@ -1,8 +1,10 @@
-
 // Import the functions you need from the SDKs you need
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
 import { getAuth, type Auth } from "firebase/auth";
-import { getFirestore, type Firestore } from "firebase/firestore";
+// NOTE: Firestore is removed as it's not currently used and was causing chunk loading issues.
+// To re-enable, uncomment the firestore imports and initialization below.
+// import { getFirestore, type Firestore } from "firebase/firestore";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -117,7 +119,7 @@ The application will NOT work correctly until this Firebase configuration is fix
 // Declare Firebase app, auth, and db instances
 let app: FirebaseApp;
 let auth: Auth;
-let db: Firestore;
+// let db: Firestore; // Removed Firestore
 
 // Initialize Firebase and services
 // This try-catch is a secondary safety net. 
@@ -133,8 +135,8 @@ try {
   }
 
   auth = getAuth(app);
-  db = getFirestore(app);
-  console.log("Firebase Auth and Firestore services obtained successfully.");
+  // db = getFirestore(app); // Removed Firestore
+  console.log("Firebase Auth service obtained successfully.");
 
 } catch (e: any) {
   // This catch block might still be hit if there's an extremely subtle config issue
@@ -150,4 +152,4 @@ try {
   throw new Error(`Firebase service initialization failed: ${e.message}. Check server console and .env file.`);
 }
 
-export { app, auth, db };
+export { app, auth }; // Removed db from exports

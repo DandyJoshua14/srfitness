@@ -19,7 +19,7 @@ export default function AboutSummarySection() {
           <div className="animate-in fade-in slide-in-from-left duration-700">
             <div className="relative aspect-video rounded-lg shadow-2xl overflow-hidden group">
               <Image
-                src="/team1.jpeg"
+                src="/Frame 1.png"
                 alt="SR Fitness facility interior"
                 layout="fill"
                 objectFit="cover"
@@ -34,10 +34,7 @@ export default function AboutSummarySection() {
               Welcome to <span className="text-foreground">SR Fitness</span>
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              At SR Fitness, we're more than just a gym; we're a community dedicated to empowering you on your fitness journey. Our state-of-the-art facility, expert trainers, and diverse programs are designed to help you achieve your goals, no matter your starting point.
-            </p>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              We believe in a holistic approach to wellness, combining effective workouts with nutritional guidance and unwavering support to foster lasting change.
+            SR Fitness is a wellness consultancy that helps people achieve health through personal training, community outreach, education, and advocacy. Its mission focuses on transformation and inclusivity, having positively impacted thousands via training, seminars and corporate Wellness programs.
             </p>
 
             <div className="mt-10">
@@ -56,10 +53,6 @@ export default function AboutSummarySection() {
                 place”
               </motion.blockquote>
             </div>
-
-            <Button asChild size="lg" className="group font-headline text-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transform hover:scale-105 transition-transform !mt-8">
-              <Link href="/awards">Discover Our Story <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" /></Link>
-            </Button>
           </div>
         </div>
       </div>

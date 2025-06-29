@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Award as AwardIcon, Star, Users, Trophy } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Awards & Recognition - SR Fitness',
+  title: 'Awards - SR Fitness',
   description: 'Discover the accolades and achievements of SR Fitness. We are committed to excellence in fitness and member satisfaction.',
 };
 

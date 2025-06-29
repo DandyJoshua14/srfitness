@@ -1,6 +1,6 @@
 
 import Image from 'next/image';
-import { Facebook, Instagram, Twitter, Youtube, Linkedin } from 'lucide-react';
+import { Facebook, Instagram, Twitter, Youtube,} from 'lucide-react';
 import Link from 'next/link';
 
 export default function Footer() {
@@ -64,11 +64,8 @@ export default function Footer() {
               <Link href="#" aria-label="Twitter" className="text-secondary-foreground/70 hover:text-primary transition-colors">
                 <Twitter className="h-6 w-6" />
               </Link>
-               <Link href="#" aria-label="YouTube" className="text-secondary-foreground/70 hover:text-primary transition-colors">
+               <Link href="https://youtube.com/@srfitnesslive?si=sZRk3pXarI6sBSWF" aria-label="YouTube" className="text-secondary-foreground/70 hover:text-primary transition-colors">
                 <Youtube className="h-6 w-6" />
-              </Link>
-               <Link href="#" aria-label="LinkedIn" className="text-secondary-foreground/70 hover:text-primary transition-colors">
-                <Linkedin className="h-6 w-6" />
               </Link>
             </div>
           </div>
@@ -97,9 +94,8 @@ export default function Footer() {
           <div>
             <h3 className="font-headline text-xl font-semibold text-primary mb-4">Get In Touch</h3>
             <address className="not-italic text-sm space-y-2 text-secondary-foreground/80">
-              <p>123 Fitness Avenue, Workout City, ST 90210</p>
-              <p>Email: <a href="mailto:contact@srfitness.com" className="hover:text-primary hover:underline">contact@srfitness.com</a></p>
-              <p>Phone: <a href="tel:+1234567890" className="hover:text-primary hover:underline">(123) 456-7890</a></p>
+              <p>Email: <a href="mailto:srfitness@gmail.com" className="hover:text-primary hover:underline">contact@srfitness.com</a></p>
+              <p>Phone: <a href="tel:+2347056717597" className="hover:text-primary hover:underline">(234) 7056717597</a></p>
             </address>
           </div>
         </div>
@@ -109,7 +105,7 @@ export default function Footer() {
             &copy; {currentYear} SR Fitness. All rights reserved. Designed with passion.
           </p>
            <p className="text-xs text-secondary-foreground/60 mt-2">
-             <Link href="/privacy-policy" className="hover:text-primary hover:underline">Privacy Policy</Link> | <Link href="/terms-of-service" className="hover:text-primary hover:underline">Terms of Service</Link>
+             <Link href="/privacy-policy" className="hover:text-primary hover:underline">Privacy Policy</Link>
            </p>
         </div>
       </div>

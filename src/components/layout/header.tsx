@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -33,7 +32,7 @@ const servicesDropdownItems = [
 ];
 
 const eventsDropdownItems = [
-  { label: 'Awards & Recognition', href: '/awards', icon: <Award className="mr-2 h-4 w-4" /> },
+  { label: 'SR Fitness Awards', href: '/awards', icon: <Award className="mr-2 h-4 w-4" /> },
   { label: 'Burn Off Bootcamp', href: '/burn-off-bootcamp', icon: <Sparkles className="mr-2 h-4 w-4" /> },
 ];
 

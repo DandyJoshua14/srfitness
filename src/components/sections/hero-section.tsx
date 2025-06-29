@@ -32,7 +32,7 @@ export default function HeroSection() {
           alt="Fitness enthusiast"
           layout="fill"
           objectFit="cover"
-          objectPosition="center"
+          objectPosition="center top"
           priority
           data-ai-hint="fitness athlete portrait"
         />

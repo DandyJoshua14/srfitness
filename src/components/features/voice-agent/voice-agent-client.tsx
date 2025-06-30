@@ -7,9 +7,6 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
-const SpeechRecognition =
-  typeof window !== 'undefined' ? (window.SpeechRecognition || window.webkitSpeechRecognition) : undefined;
-
 interface ConversationTurn {
   speaker: 'user' | 'ai';
   text: string;
@@ -28,25 +25,16 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
   const router = useRouter();
   const speakingCheckInterval = useRef<NodeJS.Timeout | null>(null);
   
-  const isSupported = !!SpeechRecognition && typeof window !== 'undefined' && !!window.speechSynthesis;
+  const isSupported = typeof window !== 'undefined' && !!(window.SpeechRecognition || window.webkitSpeechRecognition) && !!window.speechSynthesis;
 
   useEffect(() => {
-    // This effect runs once when the component mounts with the initial query
     if (initialQuery) {
         setConversation([{ speaker: 'user', text: initialQuery }]);
         handleAiResponse(initialQuery);
     }
     
-    // Workaround for a known browser bug where speech synthesis can stall.
-    const keepAliveInterval = setInterval(() => {
-        if (window.speechSynthesis && window.speechSynthesis.paused) {
-            window.speechSynthesis.resume();
-        }
-    }, 10000);
-
     // Cleanup function to cancel any speech on unmount
     return () => {
-        clearInterval(keepAliveInterval);
         if (speakingCheckInterval.current) {
             clearInterval(speakingCheckInterval.current);
         }
@@ -75,7 +63,7 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
           const errorMessage = "I'm having trouble connecting right now. Please try again later.";
           setError(errorMessage);
           setConversation(prev => [...prev, { speaker: 'ai', text: errorMessage }]);
-          speak(errorMessage, onConversationEnd); // Speak error then end
+          speak(errorMessage, onConversationEnd);
       } finally {
           setIsThinking(false);
       }
@@ -83,46 +71,51 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
   
   const speak = (text: string, onEndCallback: () => void) => {
     if (!isSupported || !text || text.trim() === '') {
-        onEndCallback();
+        if (onEndCallback) onEndCallback();
         return;
     };
     
-    // Cancel any previous speech and polling.
     window.speechSynthesis.cancel();
     if (speakingCheckInterval.current) {
         clearInterval(speakingCheckInterval.current);
     }
     
+    const utterance = new SpeechSynthesisUtterance(text);
     let hasEnded = false;
+
     const handleEnd = () => {
-        if (!hasEnded) {
-            hasEnded = true;
-            setIsSpeaking(false);
-            if (speakingCheckInterval.current) {
-                clearInterval(speakingCheckInterval.current);
-            }
-            onConversationEnd();
+        if (hasEnded) return;
+        hasEnded = true;
+
+        setIsSpeaking(false);
+        if (speakingCheckInterval.current) {
+            clearInterval(speakingCheckInterval.current);
         }
+        if (onEndCallback) onEndCallback();
     };
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.onstart = () => setIsSpeaking(true);
-    
-    // The 'onend' event is unreliable. We'll rely solely on polling.
+    utterance.onstart = () => {
+        setIsSpeaking(true);
+    };
+
+    // The `onend` event is notoriously unreliable across browsers.
+    // It can fire too early. We use it only as a fallback.
+    utterance.onend = handleEnd;
+
     utterance.onerror = () => {
       setError("Sorry, I couldn't speak the response.");
       handleEnd(); 
     }
     
-    // Start speaking.
     window.speechSynthesis.speak(utterance);
     
-    // The reliable way: poll until the browser says it's no longer speaking.
+    // Polling `speechSynthesis.speaking` is the most reliable cross-browser
+    // method to determine when speech has truly finished.
     speakingCheckInterval.current = setInterval(() => {
-      if (!window.speechSynthesis.speaking) {
-          handleEnd();
-      }
-    }, 250); // Check every quarter second.
+        if (!window.speechSynthesis.speaking) {
+            handleEnd();
+        }
+    }, 300); // Check every 300ms.
   };
 
 

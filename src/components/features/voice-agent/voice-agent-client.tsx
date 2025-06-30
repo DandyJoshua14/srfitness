@@ -83,19 +83,26 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
         onEndCallback(); // Execute callback even if speech is not supported or text is empty
         return;
     };
+    
+    let hasEnded = false;
+    const handleEnd = () => {
+        if (!hasEnded) {
+            hasEnded = true;
+            setIsSpeaking(false);
+            onEndCallback();
+        }
+    };
+
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => {
-        setIsSpeaking(false);
-        onEndCallback(); // Signal that the turn is complete
-    };
+    utterance.onend = handleEnd;
     utterance.onerror = (e) => {
       console.error("Speech synthesis error", e);
       setError("Sorry, I couldn't speak the response.");
-      setIsSpeaking(false);
-      onEndCallback(); // Also call onEnd on error
+      handleEnd(); // Also call onEnd on error
     }
-    window.speechSynthesis.cancel(); // Cancel any ongoing speech
+    
+    window.speechSynthesis.cancel(); // Cancel any ongoing speech before starting a new one
     window.speechSynthesis.speak(utterance);
   };
 

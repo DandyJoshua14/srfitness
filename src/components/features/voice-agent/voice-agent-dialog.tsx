@@ -120,6 +120,10 @@ export default function VoiceAgentDialog({ className }: { className?: string }) 
 
 
   const handleConversationEnd = () => {
+    // Explicitly cancel any speaking before closing the dialog
+    if (isSupported && window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+    }
     setDialogOpen(false);
     if (permissionStatus === 'granted') {
        setTimeout(startListening, 500);

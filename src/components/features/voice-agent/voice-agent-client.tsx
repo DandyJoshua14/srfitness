@@ -101,31 +101,28 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
             if (speakingCheckInterval.current) {
                 clearInterval(speakingCheckInterval.current);
             }
-            onEndCallback();
+            onConversationEnd();
         }
     };
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.onstart = () => setIsSpeaking(true);
     
-    // The 'onend' event is unreliable. We use it as a fallback.
-    utterance.onend = handleEnd;
+    // The 'onend' event is unreliable. We'll rely solely on polling.
     utterance.onerror = () => {
       setError("Sorry, I couldn't speak the response.");
       handleEnd(); 
     }
     
-    setTimeout(() => {
-      window.speechSynthesis.speak(utterance);
-      
-      // The reliable way: poll until the browser says it's no longer speaking.
-      speakingCheckInterval.current = setInterval(() => {
-        if (!window.speechSynthesis.speaking) {
-            handleEnd();
-        }
-      }, 250); // Check every quarter second.
-
-    }, 100);
+    // Start speaking.
+    window.speechSynthesis.speak(utterance);
+    
+    // The reliable way: poll until the browser says it's no longer speaking.
+    speakingCheckInterval.current = setInterval(() => {
+      if (!window.speechSynthesis.speaking) {
+          handleEnd();
+      }
+    }, 250); // Check every quarter second.
   };
 
 

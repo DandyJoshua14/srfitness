@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -120,10 +119,8 @@ export default function VoiceAgentDialog({ className }: { className?: string }) 
 
 
   const handleConversationEnd = () => {
-    // Explicitly cancel any speaking before closing the dialog
-    if (isSupported && window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-    }
+    // DO NOT explicitly cancel speech here. The speech client is responsible
+    // for its own lifecycle. Cancelling here can cut off the end of speech.
     setDialogOpen(false);
     if (permissionStatus === 'granted') {
        setTimeout(startListening, 500);

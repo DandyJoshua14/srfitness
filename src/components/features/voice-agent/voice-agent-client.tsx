@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -34,15 +33,16 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
         handleAiResponse(initialQuery);
     }
     
-    // Cleanup function
+    // Cleanup function when the component unmounts
     return () => {
-      // Clear any running keep-alive interval when the component unmounts.
+      // Clear any running keep-alive interval.
       if (keepAliveInterval.current) {
         clearInterval(keepAliveInterval.current);
       }
-      // Do not cancel speech here. If the user is being navigated, we want the
-      // speech to finish. The `cancel()` at the start of `speak()` handles
-      // cleanup between utterances within the component's lifecycle.
+      // Explicitly cancel any ongoing speech synthesis
+      if (isSupported) {
+          window.speechSynthesis.cancel();
+      }
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialQuery]);
@@ -86,6 +86,7 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
     const utterance = new SpeechSynthesisUtterance(text);
     let hasEnded = false;
 
+    // This is the single, definitive function to call when speech is over.
     const handleEnd = () => {
       if (hasEnded) return; // Prevent multiple calls
       hasEnded = true;
@@ -104,7 +105,7 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
       setIsSpeaking(true);
     };
 
-    // onend is the primary trigger for cleanup.
+    // onend is the primary trigger for cleanup. The keep-alive interval helps make it more reliable.
     utterance.onend = handleEnd;
 
     utterance.onerror = () => {
@@ -114,17 +115,17 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
 
     window.speechSynthesis.speak(utterance);
 
-    // WORKAROUND for browser bug: Keep the speech synthesis engine "warm"
-    // by periodically calling resume(). This prevents it from going idle and
-    // firing the 'onend' event prematurely on some browsers (especially mobile).
+    // WORKAROUND: This interval's ONLY job is to keep the speech synthesis engine "warm"
+    // by calling `resume()` if paused. It does NOT try to determine when the speech has ended.
+    // This helps prevent the `onend` event from firing prematurely on some browsers.
     keepAliveInterval.current = setInterval(() => {
       if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.resume();
+         if (window.speechSynthesis.paused) {
+           window.speechSynthesis.resume();
+         }
       } else {
-        // If it's no longer speaking, the `onend` event should have fired.
-        // We call handleEnd() here as a final fallback to prevent the interval
-        // from running forever if the `onend` event fails to trigger.
-        handleEnd();
+        // If it's no longer speaking, our `onend` handler should have already fired
+        // and cleared this interval. We don't call handleEnd() here to prevent races.
       }
     }, 500);
   };

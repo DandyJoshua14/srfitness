@@ -84,6 +84,9 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
         return;
     };
     
+    // Explicitly cancel any previous speech to avoid queueing conflicts.
+    window.speechSynthesis.cancel();
+    
     let hasEnded = false;
     const handleEnd = () => {
         if (!hasEnded) {
@@ -102,8 +105,10 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
       handleEnd(); // Also call onEnd on error
     }
     
-    window.speechSynthesis.cancel(); // Cancel any ongoing speech before starting a new one
-    window.speechSynthesis.speak(utterance);
+    // A tiny delay before speaking can sometimes help the browser's speech engine.
+    setTimeout(() => {
+      window.speechSynthesis.speak(utterance);
+    }, 100);
   };
 
 

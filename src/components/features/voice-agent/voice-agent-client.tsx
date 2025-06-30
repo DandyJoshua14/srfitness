@@ -100,7 +100,8 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = handleEnd;
     utterance.onerror = (e) => {
-      console.error("Speech synthesis error", e);
+      // This error is often a browser bug with an empty event object.
+      // We don't log it to the console, but we still handle it gracefully.
       setError("Sorry, I couldn't speak the response.");
       handleEnd(); // Also call onEnd on error
     }

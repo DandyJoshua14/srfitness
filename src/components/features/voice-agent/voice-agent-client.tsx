@@ -37,8 +37,16 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
         handleAiResponse(initialQuery);
     }
     
+    // Workaround for a known browser bug where speech synthesis can stall.
+    const interval = setInterval(() => {
+        if (window.speechSynthesis && window.speechSynthesis.paused) {
+            window.speechSynthesis.resume();
+        }
+    }, 10000);
+
     // Cleanup function to cancel any speech on unmount
     return () => {
+        clearInterval(interval);
         if (window.speechSynthesis) {
             window.speechSynthesis.cancel();
         }

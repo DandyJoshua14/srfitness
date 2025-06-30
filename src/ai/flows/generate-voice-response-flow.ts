@@ -18,7 +18,7 @@ export type VoiceAgentInput = z.infer<typeof VoiceAgentInputSchema>;
 
 const VoiceAgentOutputSchema = z.object({
   response: z.string().describe("The AI's text response to be spoken back to the user."),
-  navigationPath: z.string().optional().describe("An optional path to navigate to on the website (e.g., '/awards', '/meal-planner')."),
+  navigationPath: z.string().nullable().optional().describe("An optional path to navigate to on the website (e.g., '/awards', '/meal-planner'). Should be null or omitted if no navigation is required."),
 });
 export type VoiceAgentOutput = z.infer<typeof VoiceAgentOutputSchema>;
 
@@ -85,11 +85,13 @@ const generateVoiceResponseFlow = ai.defineFlow(
         }
     }
     
-    // If no navigation tool was called, return the text response.
-    const textResponse = response.text;
-    if (!textResponse) {
-      return { response: "I'm sorry, I had a problem thinking of a response. Please try again." };
+    // If no navigation tool was called, the LLM should have generated a structured response.
+    const output = response.output;
+    if (!output) {
+      return { response: "I'm sorry, I had a problem thinking of a response. Please try again.", navigationPath: null };
     }
-    return { response: textResponse };
+    
+    // The `output` is already a valid `VoiceAgentOutput` object due to the prompt's schema validation.
+    return output;
   }
 );

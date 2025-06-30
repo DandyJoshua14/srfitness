@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Bot, User, BrainCircuit } from 'lucide-react';
 import { generateVoiceResponse, VoiceAgentOutput } from '@/ai/flows/generate-voice-response-flow';
 import { cn } from '@/lib/utils';
@@ -27,6 +26,7 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
   const [conversation, setConversation] = useState<ConversationTurn[]>([]);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const speakingCheckInterval = useRef<NodeJS.Timeout | null>(null);
   
   const isSupported = !!SpeechRecognition && typeof window !== 'undefined' && !!window.speechSynthesis;
 
@@ -38,7 +38,7 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
     }
     
     // Workaround for a known browser bug where speech synthesis can stall.
-    const interval = setInterval(() => {
+    const keepAliveInterval = setInterval(() => {
         if (window.speechSynthesis && window.speechSynthesis.paused) {
             window.speechSynthesis.resume();
         }
@@ -46,7 +46,10 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
 
     // Cleanup function to cancel any speech on unmount
     return () => {
-        clearInterval(interval);
+        clearInterval(keepAliveInterval);
+        if (speakingCheckInterval.current) {
+            clearInterval(speakingCheckInterval.current);
+        }
         if (window.speechSynthesis) {
             window.speechSynthesis.cancel();
         }
@@ -80,35 +83,48 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
   
   const speak = (text: string, onEndCallback: () => void) => {
     if (!isSupported || !text || text.trim() === '') {
-        onEndCallback(); // Execute callback even if speech is not supported or text is empty
+        onEndCallback();
         return;
     };
     
-    // Explicitly cancel any previous speech to avoid queueing conflicts.
+    // Cancel any previous speech and polling.
     window.speechSynthesis.cancel();
+    if (speakingCheckInterval.current) {
+        clearInterval(speakingCheckInterval.current);
+    }
     
     let hasEnded = false;
     const handleEnd = () => {
         if (!hasEnded) {
             hasEnded = true;
             setIsSpeaking(false);
+            if (speakingCheckInterval.current) {
+                clearInterval(speakingCheckInterval.current);
+            }
             onEndCallback();
         }
     };
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.onstart = () => setIsSpeaking(true);
+    
+    // The 'onend' event is unreliable. We use it as a fallback.
     utterance.onend = handleEnd;
-    utterance.onerror = (e) => {
-      // This error is often a browser bug with an empty event object.
-      // We don't log it to the console, but we still handle it gracefully.
+    utterance.onerror = () => {
       setError("Sorry, I couldn't speak the response.");
-      handleEnd(); // Also call onEnd on error
+      handleEnd(); 
     }
     
-    // A tiny delay before speaking can sometimes help the browser's speech engine.
     setTimeout(() => {
       window.speechSynthesis.speak(utterance);
+      
+      // The reliable way: poll until the browser says it's no longer speaking.
+      speakingCheckInterval.current = setInterval(() => {
+        if (!window.speechSynthesis.speaking) {
+            handleEnd();
+        }
+      }, 250); // Check every quarter second.
+
     }, 100);
   };
 

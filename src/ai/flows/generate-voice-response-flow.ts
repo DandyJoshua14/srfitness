@@ -74,7 +74,7 @@ const generateVoiceResponseFlow = ai.defineFlow(
     const response = await prompt(input);
 
     const toolCalls = response.toolCalls;
-    if (toolCalls.length > 0) {
+    if (toolCalls && toolCalls.length > 0) {
         const navigateCall = toolCalls.find(call => call.tool === 'navigateToPage');
         if (navigateCall) {
             const { path, pageName } = navigateCall.input as { path: string; pageName: string };

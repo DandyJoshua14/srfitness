@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -78,11 +79,12 @@ export default function VoiceAgentDialog({ className }: { className?: string }) 
         };
 
         recognition.onerror = (event) => {
-          // The 'aborted' error is common and expected when recognition is stopped programmatically.
-          // We can ignore it to prevent cluttering the console with non-critical "errors".
-          if (event.error === 'aborted') {
+          // The 'aborted' and 'network' errors are common and can be ignored,
+          // as they don't represent a fatal error in the application logic.
+          if (event.error === 'aborted' || event.error === 'network') {
             return;
           }
+
           console.error("Speech recognition error:", event.error);
           if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
             setPermissionStatus('denied');

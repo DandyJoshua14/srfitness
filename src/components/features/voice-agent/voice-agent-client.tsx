@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Bot, User, BrainCircuit } from 'lucide-react';
-import { generateVoiceResponse, VoiceAgentOutput } from '@/ai/flows/generate-voice-response-flow';
+import { generateVoiceResponse } from '@/ai/flows/generate-voice-response-flow';
+import { generateSpeechAudio } from '@/ai/flows/generate-speech-audio-flow';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
@@ -19,13 +20,23 @@ interface VoiceAgentClientProps {
 
 export default function VoiceAgentClient({ initialQuery, onConversationEnd }: VoiceAgentClientProps) {
   const [isThinking, setIsThinking] = useState(true);
-  const [isSpeaking, setIsSpeaking] = useState(false);
   const [conversation, setConversation] = useState<ConversationTurn[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
-  const keepAliveInterval = useRef<NodeJS.Timeout | null>(null);
+  const [audioDataUri, setAudioDataUri] = useState<string | null>(null);
   
-  const isSupported = typeof window !== 'undefined' && !!(window.SpeechRecognition || window.webkitSpeechRecognition) && !!window.speechSynthesis;
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const navigationPathRef = useRef<string | null | undefined>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (audioDataUri && audioRef.current) {
+      audioRef.current.play().catch(e => {
+        console.error("Audio playback failed:", e);
+        setError("Could not play the audio response.");
+        onConversationEnd();
+      });
+    }
+  }, [audioDataUri, onConversationEnd]);
 
   useEffect(() => {
     if (initialQuery) {
@@ -33,106 +44,54 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
         handleAiResponse(initialQuery);
     }
     
-    // Cleanup function when the component unmounts
     return () => {
-      // Clear any running keep-alive interval.
-      if (keepAliveInterval.current) {
-        clearInterval(keepAliveInterval.current);
-      }
-      // Explicitly cancel any ongoing speech synthesis
-      if (isSupported) {
-          window.speechSynthesis.cancel();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
       }
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialQuery]);
 
+
   const handleAiResponse = async (query: string) => {
       if (!query.trim()) return;
       setIsThinking(true);
       setError(null);
+      setAudioDataUri(null);
+
       try {
-        const result: VoiceAgentOutput = await generateVoiceResponse({ query });
-        setConversation(prev => [...prev, { speaker: 'ai', text: result.response }]);
-        speak(result.response, () => {
-           if (result.navigationPath) {
-             router.push(result.navigationPath);
-           }
-           onConversationEnd();
-        });
+        const textResult = await generateVoiceResponse({ query });
+        const responseText = textResult.response;
+        navigationPathRef.current = textResult.navigationPath;
+
+        setConversation(prev => [...prev, { speaker: 'ai', text: responseText }]);
+
+        const audioUri = await generateSpeechAudio(responseText);
+        setAudioDataUri(audioUri);
+
       } catch (err) {
-          console.error("AI response error:", err);
+          console.error("AI response or audio generation error:", err);
           const errorMessage = "I'm having trouble connecting right now. Please try again later.";
           setError(errorMessage);
           setConversation(prev => [...prev, { speaker: 'ai', text: errorMessage }]);
-          speak(errorMessage, onConversationEnd);
+          onConversationEnd();
       } finally {
           setIsThinking(false);
       }
   };
   
-  const speak = (text: string, onEndCallback: () => void) => {
-    if (!isSupported || !text.trim()) {
-      if (onEndCallback) onEndCallback();
-      return;
+  const handleAudioEnded = () => {
+    if (navigationPathRef.current) {
+        router.push(navigationPathRef.current);
     }
-    
-    // Start fresh: cancel any previous speech and clear any running intervals.
-    window.speechSynthesis.cancel();
-    if (keepAliveInterval.current) {
-      clearInterval(keepAliveInterval.current);
-    }
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    let hasEnded = false;
-
-    // This is the single, definitive function to call when speech is over.
-    const handleEnd = () => {
-      if (hasEnded) return; // Prevent multiple calls
-      hasEnded = true;
-
-      // Clean up the keep-alive interval.
-      if (keepAliveInterval.current) {
-        clearInterval(keepAliveInterval.current);
-        keepAliveInterval.current = null;
-      }
-      
-      setIsSpeaking(false);
-      if (onEndCallback) onEndCallback();
-    };
-
-    utterance.onstart = () => {
-      setIsSpeaking(true);
-    };
-
-    // onend is the primary trigger for cleanup. The keep-alive interval helps make it more reliable.
-    utterance.onend = handleEnd;
-
-    utterance.onerror = () => {
-      setError("Sorry, I couldn't speak the response.");
-      handleEnd(); // Ensure cleanup and callback happen on error too.
-    };
-
-    window.speechSynthesis.speak(utterance);
-
-    // WORKAROUND: This interval's ONLY job is to keep the speech synthesis engine "warm"
-    // by calling `resume()` if paused. It does NOT try to determine when the speech has ended.
-    // This helps prevent the `onend` event from firing prematurely on some browsers.
-    keepAliveInterval.current = setInterval(() => {
-      if (window.speechSynthesis.speaking) {
-         if (window.speechSynthesis.paused) {
-           window.speechSynthesis.resume();
-         }
-      } else {
-        // If it's no longer speaking, our `onend` handler should have already fired
-        // and cleared this interval. We don't call handleEnd() here to prevent races.
-      }
-    }, 500);
+    onConversationEnd();
   };
-
 
   return (
     <div className="flex flex-col h-full p-4 gap-4">
+        <audio ref={audioRef} src={audioDataUri || ''} onEnded={handleAudioEnded} className="hidden" />
+
         <div className="flex-grow space-y-4 overflow-y-auto pr-2">
             <AnimatePresence>
                 {conversation.map((turn, index) => (
@@ -151,7 +110,7 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
                     </motion.div>
                 ))}
             </AnimatePresence>
-            {isThinking && (
+            {isThinking && !audioDataUri && (
                  <motion.div 
                     key="thinking"
                     initial={{ opacity: 0, y: 10 }}

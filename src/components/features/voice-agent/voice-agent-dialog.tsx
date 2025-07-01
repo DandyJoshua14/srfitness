@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -79,9 +78,9 @@ export default function VoiceAgentDialog({ className }: { className?: string }) 
         };
 
         recognition.onerror = (event) => {
-          // The 'aborted' and 'network' errors are common and can be ignored,
+          // The 'aborted', 'network', and 'no-speech' errors are common and can be ignored,
           // as they don't represent a fatal error in the application logic.
-          if (event.error === 'aborted' || event.error === 'network') {
+          if (event.error === 'aborted' || event.error === 'network' || event.error === 'no-speech') {
             return;
           }
 

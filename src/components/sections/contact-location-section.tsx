@@ -1,16 +1,14 @@
-
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import Image from 'next/image';
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, MapPin, Phone, Send } from "lucide-react";
+import { Mail, Phone, Send } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters.").max(50, "Name must be at most 50 characters."),
@@ -106,15 +104,8 @@ export default function ContactLocationSection() {
 
           <div className="space-y-8 animate-in fade-in slide-in-from-right duration-700 delay-200">
             <div className="bg-card p-6 sm:p-8 rounded-xl border border-border shadow-xl">
-              <h3 className="font-headline text-3xl text-foreground mb-6">Visit Our Gym</h3>
+              <h3 className="font-headline text-3xl text-foreground mb-6">Contact Information</h3>
               <div className="space-y-2 text-muted-foreground">
-                <div className="flex items-start gap-4 p-3 rounded-md transition-colors hover:bg-muted/30">
-                  <MapPin className="h-8 w-8 text-primary mt-1 shrink-0" />
-                  <div>
-                    <p className="font-semibold text-foreground text-lg">SR Fitness Gym</p>
-                    <p className="text-base">123 Fitness Avenue, Workout City, ST 90210</p>
-                  </div>
-                </div>
                 <div className="flex items-start gap-4 p-3 rounded-md transition-colors hover:bg-muted/30">
                   <Mail className="h-8 w-8 text-primary mt-1 shrink-0" />
                   <div>
@@ -130,16 +121,6 @@ export default function ContactLocationSection() {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="rounded-xl overflow-hidden shadow-xl aspect-video border border-border">
-              <Image
-                src="https://placehold.co/600x338.png" // Adjusted aspect ratio slightly
-                alt="Map showing SR Fitness location"
-                width={600}
-                height={338}
-                className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                data-ai-hint="city map location"
-              />
             </div>
           </div>
         </div>

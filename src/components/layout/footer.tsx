@@ -61,7 +61,7 @@ export default function Footer() {
               <Link href="https://www.instagram.com/sr.fitnesss/profilecard/?igsh=MXZzc3IyeGluOGFhcg==" aria-label="Instagram" className="text-secondary-foreground/70 hover:text-primary transition-colors">
                 <Instagram className="h-6 w-6" />
               </Link>
-              <Link href="https://wa.me/2347056717597" aria-label="WhatsApp" className="text-secondary-foreground/70 hover:text-primary transition-colors">
+              <Link href="https://whatsapp.com/channel/0029Vaxx5DO35fLwhWe2zs3H" aria-label="WhatsApp" className="text-secondary-foreground/70 hover:text-primary transition-colors">
                 <WhatsAppIcon className="h-6 w-6" />
               </Link>
                <Link href="https://youtube.com/@srfitnesslive?si=sZRk3pXarI6sBSWF" aria-label="YouTube" className="text-secondary-foreground/70 hover:text-primary transition-colors">

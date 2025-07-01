@@ -65,6 +65,7 @@ export default function CorporateWellnessPage() {
                 objectFit="cover"
                 className="opacity-20"
                 data-ai-hint="corporate workshop office"
+                priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-secondary"></div>
         </div>

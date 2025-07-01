@@ -110,14 +110,14 @@ export default function ContactLocationSection() {
                   <Mail className="h-8 w-8 text-primary mt-1 shrink-0" />
                   <div>
                     <p className="font-semibold text-foreground text-lg">Email Us</p>
-                    <a href="mailto:contact@srfitness.com" className="hover:text-primary transition-colors text-base">contact@srfitness.com</a>
+                    <a href="mailto:contact@srfitness.com" className="hover:text-primary transition-colors text-base">srfitness@gmail.com</a>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 p-3 rounded-md transition-colors hover:bg-muted/30">
                   <Phone className="h-8 w-8 text-primary mt-1 shrink-0" />
                   <div>
                     <p className="font-semibold text-foreground text-lg">Call Us</p>
-                    <a href="tel:+1234567890" className="hover:text-primary transition-colors text-base">(123) 456-7890</a>
+                    <a href="tel:+1234567890" className="hover:text-primary transition-colors text-base">(+234) 705 671 7597</a>
                   </div>
                 </div>
               </div>

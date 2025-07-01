@@ -1,6 +1,6 @@
 
 import Image from 'next/image';
-import { Facebook, Instagram, Twitter, Youtube,} from 'lucide-react';
+import { Facebook, Instagram, Youtube, MessageCircle as WhatsAppIcon } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Footer() {
@@ -55,14 +55,14 @@ export default function Footer() {
               Your journey to strength, wellness, and peak performance starts here.
             </p>
              <div className="flex space-x-4">
-              <Link href="#" aria-label="Facebook" className="text-secondary-foreground/70 hover:text-primary transition-colors">
+              <Link href="https://www.facebook.com/share/16baXc34D3/" aria-label="Facebook" className="text-secondary-foreground/70 hover:text-primary transition-colors">
                 <Facebook className="h-6 w-6" />
               </Link>
-              <Link href="#" aria-label="Instagram" className="text-secondary-foreground/70 hover:text-primary transition-colors">
+              <Link href="https://www.instagram.com/sr.fitnesss/profilecard/?igsh=MXZzc3IyeGluOGFhcg==" aria-label="Instagram" className="text-secondary-foreground/70 hover:text-primary transition-colors">
                 <Instagram className="h-6 w-6" />
               </Link>
-              <Link href="#" aria-label="Twitter" className="text-secondary-foreground/70 hover:text-primary transition-colors">
-                <Twitter className="h-6 w-6" />
+              <Link href="https://wa.me/2347056717597" aria-label="WhatsApp" className="text-secondary-foreground/70 hover:text-primary transition-colors">
+                <WhatsAppIcon className="h-6 w-6" />
               </Link>
                <Link href="https://youtube.com/@srfitnesslive?si=sZRk3pXarI6sBSWF" aria-label="YouTube" className="text-secondary-foreground/70 hover:text-primary transition-colors">
                 <Youtube className="h-6 w-6" />

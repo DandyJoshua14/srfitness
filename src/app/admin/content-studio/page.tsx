@@ -1,7 +1,6 @@
 
 "use client";
 
-import type { Metadata } from 'next';
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -10,83 +9,87 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { ShieldAlert, Settings, Edit, UploadCloud, SendHorizonal, CalendarClock, Save, ServerCrash, Loader2 } from 'lucide-react';
+import { ShieldAlert, Settings, Edit, UploadCloud, SendHorizonal, CalendarClock, Save, Loader2, Sparkles, Share2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
-// export const metadata: Metadata = { // Metadata needs to be handled differently for client components or in layout
-//   title: 'Admin - AI Content Studio',
-//   robots: 'noindex, nofollow', 
-// };
-// For client components, page title can be set in a useEffect hook or in the parent layout if static.
-// Or, if you need dynamic metadata based on client-side state, consider Next.js dynamic metadata functions if applicable.
-
+import { generateStudioContent, type GenerateStudioContentInput } from '@/ai/flows/generate-content-flow';
 
 export default function AdminContentStudioPage() {
+  // UI State
   const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
+  
+  // Input State
+  const [inputText, setInputText] = useState('');
+  const [contentType, setContentType] = useState('Blog Post');
+  const [tone, setTone] = useState('Informative');
+  const [length, setLength] = useState('Medium');
+  const [audience, setAudience] = useState('Fitness Beginners');
+  const [keywords, setKeywords] = useState('HIIT, nutrition, wellness');
+
+  // Output State
+  const [generatedTitle, setGeneratedTitle] = useState('');
+  const [generatedContent, setGeneratedContent] = useState('');
+  const [generatedSocialPost, setGeneratedSocialPost] = useState('');
+
 
   const handleGenerateContent = async () => {
     setIsGenerating(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2500));
-    setIsGenerating(false);
-    toast({ title: "Content Generation (Conceptual)", description: "Conceptual content generation finished. This is a placeholder." });
-  };
-  
-  // To set title for a client component, you might use:
-  // React.useEffect(() => {
-  // document.title = 'Admin - AI Content Studio';
-  // }, []);
+    setGeneratedTitle('');
+    setGeneratedContent('');
+    setGeneratedSocialPost('');
+    
+    const aiInput: GenerateStudioContentInput = {
+      inputText,
+      contentType,
+      tone,
+      length,
+      audience,
+      keywords,
+    };
 
+    try {
+      const result = await generateStudioContent(aiInput);
+      setGeneratedTitle(result.title);
+      setGeneratedContent(result.content);
+      setGeneratedSocialPost(result.socialMediaPost || '');
+      toast({ title: "Content Generated Successfully!", description: "Review the draft in the preview section." });
+    } catch (error) {
+      console.error("Content generation failed:", error);
+      toast({ 
+        title: "Generation Failed", 
+        description: error instanceof Error ? error.message : "An unknown error occurred.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-16 md:py-24 bg-muted/20 min-h-screen">
       <Card className="mb-8 shadow-lg border-primary/20">
         <CardHeader className="bg-background rounded-t-lg">
           <CardTitle className="font-headline text-3xl text-primary flex items-center">
-            <Settings className="mr-3 h-8 w-8" />
-            Admin: AI Content Studio (Conceptual)
+            <Sparkles className="mr-3 h-8 w-8" />
+            Admin: AI Content Studio
           </CardTitle>
           <CardDescription>
-            This is a conceptual placeholder for an admin-only AI Content Studio.
-            It demonstrates a possible layout for content generation and management.
+            Use this tool to generate various types of content based on your inputs and AI configurations.
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-6 bg-background rounded-b-lg">
           <Alert variant="destructive" className="mb-6 border-red-500/50 text-red-700 bg-red-50">
             <ShieldAlert className="h-5 w-5 !text-red-600" />
-            <AlertTitle className="text-red-700 font-semibold">Critical Security & Functionality Notice</AlertTitle>
-            <AlertDescription className="text-red-600 space-y-1">
-                <p>
-                    This page is currently a **visual placeholder** and publicly accessible via its URL.
-                    It **DOES NOT** have any real functionality, security, authentication, or authorization implemented.
-                </p>
-                <p>
-                    In a real-world application, this admin area would require robust backend integration for:
-                </p>
-                <ul className="list-disc list-inside pl-4 mt-1 text-xs">
-                    <li>Secure user authentication and role-based access control (RBAC).</li>
-                    <li>Frontend and backend routing guards to prevent unauthorized access.</li>
-                    <li>Secure file handling and storage for uploads.</li>
-                    <li>Integration with AI services via secure API calls.</li>
-                    <li>Database interactions for saving drafts, scheduling, and publishing.</li>
-                </ul>
-               <p className="font-semibold mt-2">
-                Attempting to use this page as-is in a production environment would be a severe security risk.
-              </p>
-            </AlertDescription>
-          </Alert>
-           <Alert variant="default" className="mb-6 border-blue-500/50 text-blue-700 bg-blue-50">
-            <ServerCrash className="h-5 w-5 !text-blue-600" />
-            <AlertTitle className="text-blue-700 font-semibold">Backend Integration Required</AlertTitle>
-            <AlertDescription className="text-blue-600">
-              Interactive elements are for demonstration. Actual functionality (content generation, saving, publishing) requires backend systems.
+            <AlertTitle className="text-red-700 font-semibold">Security Notice</AlertTitle>
+            <AlertDescription className="text-red-600">
+              This admin page is for demonstration purposes and currently lacks robust authentication and authorization. In a production environment, it would require secure access controls.
             </AlertDescription>
           </Alert>
         </CardContent>
       </Card>
 
       <div className="grid lg:grid-cols-3 gap-8">
+        {/* Left Column: Inputs & Config */}
         <div className="lg:col-span-1 space-y-6">
           <Card className="shadow-md">
             <CardHeader>
@@ -94,17 +97,12 @@ export default function AdminContentStudioPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <Label htmlFor="content-text" className="font-semibold">Paste Text</Label>
-                <Textarea id="content-text" placeholder="Paste your article text, script, or notes here..." rows={10} className="mt-1" />
+                <Label htmlFor="content-text" className="font-semibold">Base Text or Notes</Label>
+                <Textarea id="content-text" placeholder="Paste your article text, script, or just a few keywords and ideas..." rows={10} className="mt-1" value={inputText} onChange={(e) => setInputText(e.target.value)} />
               </div>
               <div>
-                <Label htmlFor="content-upload" className="font-semibold">Upload Document (Word, PDF)</Label>
-                <Input id="content-upload" type="file" className="mt-1" />
-                <p className="text-xs text-muted-foreground mt-1">File upload is conceptual.</p>
-              </div>
-              <div>
-                <Label htmlFor="media-upload" className="font-semibold">Upload Audio/Video (for transcription/podcast)</Label>
-                <Input id="media-upload" type="file" accept="audio/*,video/*" className="mt-1" />
+                <Label htmlFor="content-upload" className="font-semibold">Upload Document (Conceptual)</Label>
+                <Input id="content-upload" type="file" className="mt-1" disabled />
                 <p className="text-xs text-muted-foreground mt-1">File upload is conceptual.</p>
               </div>
             </CardContent>
@@ -116,59 +114,48 @@ export default function AdminContentStudioPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <Label htmlFor="ai-tone" className="font-semibold">Tone</Label>
-                <Select>
-                  <SelectTrigger id="ai-tone" className="mt-1"><SelectValue placeholder="Select Tone" /></SelectTrigger>
+                <Label htmlFor="ai-content-type" className="font-semibold">Content Type</Label>
+                <Select value={contentType} onValueChange={setContentType}>
+                  <SelectTrigger id="ai-content-type" className="mt-1"><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="formal">Formal</SelectItem>
-                    <SelectItem value="casual">Casual</SelectItem>
-                    <SelectItem value="witty">Witty</SelectItem>
-                    <SelectItem value="informative">Informative</SelectItem>
-                    <SelectItem value="persuasive">Persuasive</SelectItem>
+                    <SelectItem value="Blog Post">Blog Post</SelectItem>
+                    <SelectItem value="Social Media Post">Social Media Post</SelectItem>
+                    <SelectItem value="Podcast Script">Podcast Script</SelectItem>
+                    <SelectItem value="Email Newsletter">Email Newsletter</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="ai-tone" className="font-semibold">Tone</Label>
+                <Select value={tone} onValueChange={setTone}>
+                  <SelectTrigger id="ai-tone" className="mt-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Informative">Informative</SelectItem>
+                    <SelectItem value="Casual">Casual</SelectItem>
+                    <SelectItem value="Witty">Witty</SelectItem>
+                    <SelectItem value="Persuasive">Persuasive</SelectItem>
+                    <SelectItem value="Formal">Formal</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
                 <Label htmlFor="ai-length" className="font-semibold">Desired Length</Label>
-                 <Select>
-                  <SelectTrigger id="ai-length" className="mt-1"><SelectValue placeholder="Select Length" /></SelectTrigger>
+                 <Select value={length} onValueChange={setLength}>
+                  <SelectTrigger id="ai-length" className="mt-1"><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="short">Short (e.g., summary, social media post)</SelectItem>
-                    <SelectItem value="medium">Medium (e.g., blog post, short script)</SelectItem>
-                    <SelectItem value="long">Long (e.g., detailed article, podcast episode)</SelectItem>
+                    <SelectItem value="Short">Short (e.g., summary, social post)</SelectItem>
+                    <SelectItem value="Medium">Medium (e.g., blog post)</SelectItem>
+                    <SelectItem value="Long">Long (e.g., detailed article)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
                <div>
                 <Label htmlFor="ai-audience" className="font-semibold">Target Audience</Label>
-                <Input id="ai-audience" placeholder="e.g., Fitness Beginners, Pro Athletes" className="mt-1" />
+                <Input id="ai-audience" placeholder="e.g., Fitness Beginners" className="mt-1" value={audience} onChange={(e) => setAudience(e.target.value)} />
               </div>
               <div>
                 <Label htmlFor="ai-keywords" className="font-semibold">Keywords (comma-separated)</Label>
-                <Input id="ai-keywords" placeholder="e.g., HIIT, nutrition, wellness, marathon training" className="mt-1" />
-              </div>
-              <div>
-                <Label htmlFor="ai-voice" className="font-semibold">Podcast Voice (Conceptual)</Label>
-                <Select>
-                  <SelectTrigger id="ai-voice" className="mt-1"><SelectValue placeholder="Select Voice Profile" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="male_energetic">Energetic Male</SelectItem>
-                    <SelectItem value="female_calm">Calm Female</SelectItem>
-                    <SelectItem value="neutral_expert">Expert Neutral</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="ai-music" className="font-semibold">Podcast Background Music (Conceptual)</Label>
-                <Select>
-                  <SelectTrigger id="ai-music" className="mt-1"><SelectValue placeholder="Select Music Style" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="upbeat_electronic">Upbeat Electronic</SelectItem>
-                    <SelectItem value="chill_lofi">Chill Lo-fi</SelectItem>
-                    <SelectItem value="corporate_motivational">Motivational Corporate</SelectItem>
-                    <SelectItem value="none">No Music</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Input id="ai-keywords" placeholder="e.g., HIIT, nutrition" className="mt-1" value={keywords} onChange={(e) => setKeywords(e.target.value)} />
               </div>
             </CardContent>
             <CardFooter>
@@ -183,36 +170,43 @@ export default function AdminContentStudioPage() {
                       Generating...
                     </>
                   ) : (
-                    'Generate Content (Conceptual)'
+                    <>
+                     <Sparkles className="mr-2 h-4 w-4" />
+                      Generate Content
+                    </>
                   )}
                 </Button>
             </CardFooter>
           </Card>
         </div>
 
+        {/* Right Column: Outputs */}
         <div className="lg:col-span-2 space-y-6">
-          <Card className="shadow-md min-h-[400px]">
+          <Card className="shadow-md">
             <CardHeader>
-              <CardTitle className="flex items-center"><Edit className="mr-2 h-5 w-5 text-primary" />Preview & Edit Interface</CardTitle>
-              <CardDescription>AI-generated content would appear below for review and manual adjustments.</CardDescription>
+              <CardTitle className="flex items-center"><Edit className="mr-2 h-5 w-5 text-primary" />Generated Draft</CardTitle>
+              <CardDescription>AI-generated content appears below. You can edit it directly.</CardDescription>
             </CardHeader>
-            <CardContent className="h-full">
-              <div className="grid md:grid-cols-2 gap-6 h-full">
-                <div className="flex flex-col">
-                  <h3 className="text-sm font-semibold mb-1 text-muted-foreground">YOUR INPUT (HIGHLIGHTS)</h3>
-                  <div className="p-4 border rounded-md bg-muted/50 min-h-[150px] text-sm text-foreground flex-grow overflow-auto">
-                    <p className="italic">Content from your input (e.g., pasted text, document summary, or transcription) would be summarized or displayed here. This area is conceptual.</p>
-                  </div>
-                </div>
-                <div className="flex flex-col">
-                  <h3 className="text-sm font-semibold mb-1 text-muted-foreground">AI GENERATED DRAFT</h3>
-                   <Textarea placeholder="The AI-generated blog post or podcast script will appear here. You would be able to edit this text directly. This area is conceptual." rows={15} className="border-primary/30 focus:border-primary flex-grow" />
-                </div>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="generated-title" className="font-semibold text-muted-foreground">Generated Title</Label>
+                <Input id="generated-title" value={generatedTitle} onChange={(e) => setGeneratedTitle(e.target.value)} placeholder="Generated title will appear here..." className="mt-1 text-lg font-bold" />
+              </div>
+              <div>
+                <Label htmlFor="generated-content" className="font-semibold text-muted-foreground">Generated Content</Label>
+                <Textarea id="generated-content" value={generatedContent} onChange={(e) => setGeneratedContent(e.target.value)} placeholder="The AI-generated blog post or podcast script will appear here." rows={15} className="mt-1 border-primary/30 focus:border-primary" />
               </div>
             </CardContent>
-             <CardFooter>
-                <p className="text-xs text-muted-foreground">Editing and AI generation are conceptual and require backend integration.</p>
-            </CardFooter>
+          </Card>
+          
+          <Card className="shadow-md">
+            <CardHeader>
+              <CardTitle className="flex items-center"><Share2 className="mr-2 h-5 w-5 text-primary" />Suggested Social Media Post</CardTitle>
+              <CardDescription>A post to promote your new content.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Textarea value={generatedSocialPost} onChange={(e) => setGeneratedSocialPost(e.target.value)} placeholder="Suggested social media text will appear here..." rows={5} />
+            </CardContent>
           </Card>
 
           <Card className="shadow-md">
@@ -221,13 +215,13 @@ export default function AdminContentStudioPage() {
               <CardDescription>Controls to manage the content's release. (Conceptual)</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col sm:flex-row flex-wrap gap-3 items-center">
-              <Button variant="default" className="bg-green-600 hover:bg-green-700 text-white" onClick={() => toast({title: "Conceptual Action", description: "Publishing action clicked (conceptual)."})}>
+              <Button variant="default" className="bg-green-600 hover:bg-green-700 text-white" onClick={() => toast({title: "Conceptual Action", description: "Publishing requires backend integration."})}>
                 <SendHorizonal className="mr-2 h-4 w-4" /> Publish Now
               </Button>
-              <Button variant="outline" onClick={() => toast({title: "Conceptual Action", description: "Scheduling UI would open (conceptual)."})}>
+              <Button variant="outline" onClick={() => toast({title: "Conceptual Action", description: "Scheduling requires backend integration."})}>
                 <CalendarClock className="mr-2 h-4 w-4" /> Schedule Post
               </Button>
-              <Button variant="secondary" onClick={() => toast({title: "Conceptual Action", description: "Content saved as draft (conceptual)."})}>
+              <Button variant="secondary" onClick={() => toast({title: "Conceptual Action", description: "Saving drafts requires backend integration."})}>
                 <Save className="mr-2 h-4 w-4" /> Save as Draft
               </Button>
             </CardContent>
@@ -240,12 +234,3 @@ export default function AdminContentStudioPage() {
     </div>
   );
 }
-
-// Note: Static metadata export is removed because this is now a client component.
-// If you need to set the title for a client component, you can do it via:
-// 1. Parent Layout (if the title is static for this route)
-// 2. `useEffect` hook within the component: `React.useEffect(() => { document.title = 'Admin - AI Content Studio'; }, []);`
-// 3. Using Next.js dynamic metadata generation functions if your metadata depends on async data fetched on the server before rendering the client component.
-// For simplicity, and since this is a conceptual page, direct title setting isn't critical here.
-
-

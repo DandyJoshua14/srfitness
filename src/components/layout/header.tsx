@@ -26,8 +26,7 @@ const topLevelNavItems = [
 
 const servicesDropdownItems = [
   { label: 'Personal Training', href: '/personal-training', icon: <Dumbbell className="mr-2 h-4 w-4" /> },
-  { label: 'Corporate Wellness', href: '/public-speaking', icon: <Users className="mr-2 h-4 w-4" /> },
-  { label: 'Public Speaking', href: '/public-speaking', icon: <Mic className="mr-2 h-4 w-4" /> },
+  { label: 'Corp. Wellness & Speaking', href: '/public-speaking', icon: <Mic className="mr-2 h-4 w-4" /> },
   { label: 'Consultancy', href: '/equipment-services', icon: <Wrench className="mr-2 h-4 w-4" /> },
 ];
 

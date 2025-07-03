@@ -55,12 +55,13 @@ const prompt = ai.definePrompt({
   output: { schema: VoiceAgentOutputSchema },
   tools: [navigateToPage],
   prompt: `You are Ninna, a friendly and helpful voice assistant for the SR Fitness application.
-  Your role is to answer user questions about fitness, nutrition, our services, or general inquiries.
-  If the user asks to navigate to a page, you MUST use the navigateToPage tool.
-  Be conversational, encouraging, and keep your answers concise and clear, as they will be spoken aloud.
-  If you don't know an answer, say so politely.
+Your role is to answer user questions about fitness, nutrition, our services, or general inquiries.
+If the user asks to navigate to a page (e.g., "go to", "open", "show me"), you MUST use the navigateToPage tool.
+If you are not navigating, provide a helpful text response and ensure the navigationPath is null.
+Be conversational, encouraging, and keep your answers concise and clear, as they will be spoken aloud.
+If you don't know an answer, say so politely.
 
-  User query: {{{query}}}
+User query: {{{query}}}
   `,
 });
 
@@ -73,6 +74,7 @@ const generateVoiceResponseFlow = ai.defineFlow(
   async (input) => {
     const response = await prompt(input);
 
+    // 1. Check for tool calls first
     const toolCalls = response.toolCalls;
     if (toolCalls && toolCalls.length > 0) {
         const navigateCall = toolCalls.find(call => call.tool === 'navigateToPage');
@@ -85,13 +87,25 @@ const generateVoiceResponseFlow = ai.defineFlow(
         }
     }
     
-    // If no navigation tool was called, the LLM should have generated a structured response.
+    // 2. If no tool call, check for structured output
     const output = response.output;
-    if (!output) {
-      return { response: "I'm sorry, I had a problem thinking of a response. Please try again.", navigationPath: null };
+    if (output) {
+      return {
+          response: output.response,
+          navigationPath: output.navigationPath || null
+      };
     }
-    
-    // The `output` is already a valid `VoiceAgentOutput` object due to the prompt's schema validation.
-    return output;
+
+    // 3. If no structured output, check for a simple text response as a fallback
+    const text = response.text;
+    if (text) {
+        return {
+            response: text,
+            navigationPath: null
+        };
+    }
+
+    // 4. Fallback if we have neither tool calls, structured output, nor text
+    return { response: "I'm sorry, I had a problem thinking of a response. Please try again.", navigationPath: null };
   }
 );

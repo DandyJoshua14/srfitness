@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -59,6 +60,7 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
       setIsThinking(true);
       setError(null);
       setAudioDataUri(null);
+      navigationPathRef.current = null;
 
       try {
         const textResult = await generateVoiceResponse({ query });
@@ -75,7 +77,17 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
           const errorMessage = "I'm having trouble connecting right now. Please try again later.";
           setError(errorMessage);
           setConversation(prev => [...prev, { speaker: 'ai', text: errorMessage }]);
-          onConversationEnd();
+          
+          try {
+            // Attempt to speak the error message
+            const audioUri = await generateSpeechAudio(errorMessage);
+            setAudioDataUri(audioUri);
+          } catch (audioErr) {
+            console.error("Could not generate audio for error message:", audioErr);
+            // If even the error audio fails, close the dialog after a short delay
+            setTimeout(onConversationEnd, 2000);
+          }
+
       } finally {
           setIsThinking(false);
       }
@@ -110,7 +122,7 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
                     </motion.div>
                 ))}
             </AnimatePresence>
-            {isThinking && !audioDataUri && (
+            {isThinking && (
                  <motion.div 
                     key="thinking"
                     initial={{ opacity: 0, y: 10 }}

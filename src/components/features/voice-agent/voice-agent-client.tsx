@@ -102,7 +102,7 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
 
   return (
     <div className="flex flex-col h-full p-4 gap-4">
-        <audio ref={audioRef} src={audioDataUri || ''} onEnded={handleAudioEnded} className="hidden" />
+        {audioDataUri && <audio ref={audioRef} src={audioDataUri} onEnded={handleAudioEnded} className="hidden" />}
 
         <div className="flex-grow space-y-4 overflow-y-auto pr-2">
             <AnimatePresence>

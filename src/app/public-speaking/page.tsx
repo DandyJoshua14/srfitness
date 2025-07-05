@@ -1,17 +1,50 @@
 
+"use client";
+
+import * as React from 'react';
 import Image from 'next/image';
 import type { Metadata } from 'next';
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import Autoplay from "embla-carousel-autoplay"
 import { Mic, ArrowRight, Brain, TrendingUp, Sparkles, Check } from 'lucide-react';
 
-export const metadata: Metadata = {
-  title: 'Public Speaking Engagements - Samson - SR Fitness',
-  description: "Book Samson, an expert in health and wellness, for inspiring keynotes and motivational talks that captivate any audience.",
-};
+// export const metadata: Metadata = { // Metadata can't be used in a client component this way.
+//   title: 'Public Speaking Engagements - Samson - SR Fitness',
+//   description: "Book Samson, an expert in health and wellness, for inspiring keynotes and motivational talks that captivate any audience.",
+// };
 
 export default function PublicSpeakingPage() {
+  const plugin = React.useRef(
+    Autoplay({ delay: 5000, stopOnInteraction: true })
+  );
+
+  const slides = [
+    {
+      src: "/public speak.jpg",
+      alt: "Samson speaking at a corporate event",
+      dataAiHint: "public speaker stage",
+      title: "Captivate. Inspire. Transform.",
+      description: "Book Samson for dynamic keynotes and motivational talks that empower your audience to take action and unlock their potential.",
+    },
+    {
+      src: "https://placehold.co/1200x800.png",
+      alt: "A motivational speaker on stage in front of a large audience",
+      dataAiHint: "motivational speaker conference",
+      title: "Elevate Your Corporate Event",
+      description: "Bring energy and actionable insights to your next corporate meeting, summit, or team-building event.",
+    },
+    {
+      src: "https://placehold.co/1200x800.png",
+      alt: "Engaged audience listening to a talk",
+      dataAiHint: "audience listening conference",
+      title: "Connect with Your Audience",
+      description: "Samson's engaging style and evidence-based content leave a lasting impact on every attendee.",
+    }
+  ];
+
   const speakingTopics = [
     {
       icon: <TrendingUp className="h-8 w-8 text-primary" />,
@@ -40,31 +73,47 @@ export default function PublicSpeakingPage() {
   return (
     <div className="bg-background text-foreground">
       {/* Hero Section */}
-      <section className="relative bg-secondary text-secondary-foreground py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-             <Image
-                src="/public speak.jpg"
-                alt="Samson speaking at a corporate event"
-                layout="fill"
-                objectFit="cover"
-                className="opacity-20"
-                data-ai-hint="public speaker stage"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-secondary"></div>
-        </div>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-            <Mic className="h-16 w-16 text-primary mx-auto mb-6" />
-            <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl font-bold text-primary mb-4">
-              Captivate. Inspire. Transform.
-            </h1>
-            <p className="text-lg sm:text-xl text-secondary-foreground/80 max-w-3xl mx-auto mb-8">
-              Book Samson for dynamic keynotes and motivational talks that empower your audience to take action and unlock their potential.
-            </p>
-            <Button asChild size="lg" className="font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
-              <Link href="/#contact">Book Samson to Speak</Link>
-            </Button>
-        </div>
+      <section className="relative h-[80vh] md:h-screen w-full overflow-hidden">
+        <Carousel
+          plugins={[plugin.current]}
+          className="w-full h-full"
+          onMouseEnter={plugin.current.stop}
+          onMouseLeave={plugin.current.reset}
+          opts={{ loop: true }}
+        >
+          <CarouselContent className="-ml-0 h-full">
+            {slides.map((slide, index) => (
+              <CarouselItem key={index} className="pl-0 relative h-full">
+                <div className="absolute inset-0 z-0">
+                  <Image
+                    src={slide.src}
+                    alt={slide.alt}
+                    layout="fill"
+                    objectFit="cover"
+                    className="opacity-20"
+                    data-ai-hint={slide.dataAiHint}
+                    priority={index === 0}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"></div>
+                </div>
+                <div className="container h-full mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col items-center justify-center text-center">
+                  <Mic className="h-16 w-16 text-primary mx-auto mb-6" />
+                  <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl font-bold text-primary mb-4" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.5)' }}>
+                    {slide.title}
+                  </h1>
+                  <p className="text-lg sm:text-xl text-foreground/90 max-w-3xl mx-auto mb-8" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}>
+                    {slide.description}
+                  </p>
+                  <Button asChild size="lg" className="font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
+                    <Link href="/#contact">Book Samson to Speak</Link>
+                  </Button>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 border-white/20 text-white" />
+          <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 border-white/20 text-white" />
+        </Carousel>
       </section>
 
       {/* About the Speaker Section */}

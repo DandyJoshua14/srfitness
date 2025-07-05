@@ -29,12 +29,13 @@ export type GenerateMealPlanInput = z.infer<typeof GenerateMealPlanInputSchema>;
 // Define output schema for the meal plan
 const MealSchema = z.object({
   name: z.string().describe("Name of the meal (e.g., Breakfast, Lunch, Dinner, Snack)."),
-  recipe: z.string().describe("Name of the recipe or dish."),
+  recipe: z.string().describe("Creative and appealing name of the recipe or dish."),
   calories: z.coerce.number().describe("Estimated calories for the meal."),
   protein: z.coerce.number().describe("Estimated protein in grams."),
   carbs: z.coerce.number().describe("Estimated carbohydrates in grams."),
   fat: z.coerce.number().describe("Estimated fat in grams."),
-  ingredients: z.array(z.string()).describe("List of main ingredients for the recipe.")
+  ingredients: z.array(z.string()).describe("List of main ingredients for the recipe."),
+  instructions: z.string().describe("Simple, step-by-step cooking instructions for the recipe."),
 });
 
 const DailyPlanSchema = z.object({
@@ -66,7 +67,7 @@ const mealPlanPrompt = ai.definePrompt({
   name: 'mealPlanPrompt',
   input: { schema: GenerateMealPlanInputSchema },
   output: { schema: GenerateMealPlanOutputSchema },
-  prompt: `You are an expert nutritionist and personal chef. Generate a personalized meal plan for {{numberOfDays}} days based on the following user profile:
+  prompt: `You are an expert nutritionist and world-class chef, powered by Google's Gemini model. Your mission is to generate an exciting, delicious, and effective personalized meal plan for {{numberOfDays}} days based on the following user profile:
 Age: {{age}}
 Gender: {{gender}}
 Height: {{height}} cm
@@ -79,19 +80,17 @@ Disliked Foods: {{dislikedFoods}}
 
 For each day, provide a list of meals (Breakfast, Lunch, Dinner, and optionally 1-2 Snacks).
 For each meal, include:
-- Recipe name
-- Estimated calories
-- Estimated protein (grams)
-- Estimated carbohydrates (grams)
-- Estimated fat (grams)
+- A creative and appealing recipe name.
+- Estimated calories, protein (grams), carbohydrates (grams), and fat (grams).
 - A list of main ingredients.
+- Simple, step-by-step cooking instructions.
 
 Also, calculate and provide daily total calories, protein, carbs, and fat for each day.
-Ensure the meal plan is balanced, varied, and aligned with the user's fitness goal and preferences.
+Ensure the meal plan is balanced, varied, and aligned with the user's fitness goal and preferences. Be creative and avoid repetitive meals.
 If dietary preferences like Vegetarian or Vegan are specified, ensure all meals comply.
-Avoid any listed allergies and disliked foods.
+Strictly avoid any listed allergies and disliked foods.
 Provide a brief summary or any important notes about the meal plan if necessary.
-Output the plan in the specified JSON format.
+Output the plan in the specified JSON format, ensuring every meal object includes the 'instructions' field.
 `,
 });
 
@@ -110,5 +109,3 @@ const generateMealPlanFlow = ai.defineFlow(
     return output;
   }
 );
-
-    

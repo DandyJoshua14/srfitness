@@ -22,9 +22,9 @@ const placeholderPlan: GenerateMealPlanOutput = {
     {
       day: "Sample Day",
       meals: [
-        { name: "Breakfast", recipe: "Balanced Oatmeal", calories: 350, protein: 15, carbs: 50, fat: 10, ingredients: ["Rolled Oats", "Berries", "Nuts", "Milk"] },
-        { name: "Lunch", recipe: "Grilled Chicken Salad", calories: 500, protein: 40, carbs: 30, fat: 25, ingredients: ["Chicken Breast", "Mixed Greens", "Vegetables", "Olive Oil Dressing"] },
-        { name: "Dinner", recipe: "Baked Salmon with Quinoa", calories: 600, protein: 45, carbs: 50, fat: 28, ingredients: ["Salmon Fillet", "Quinoa", "Steamed Asparagus"] },
+        { name: "Breakfast", recipe: "Balanced Oatmeal", calories: 350, protein: 15, carbs: 50, fat: 10, ingredients: ["Rolled Oats", "Berries", "Nuts", "Milk"], instructions: "1. Combine oats and milk in a pot. \n2. Cook on medium heat until thick. \n3. Top with berries and nuts." },
+        { name: "Lunch", recipe: "Grilled Chicken Salad", calories: 500, protein: 40, carbs: 30, fat: 25, ingredients: ["Chicken Breast", "Mixed Greens", "Vegetables", "Olive Oil Dressing"], instructions: "1. Grill chicken breast until cooked through. \n2. Chop vegetables and combine with mixed greens. \n3. Slice chicken and add to the salad. \n4. Drizzle with olive oil dressing." },
+        { name: "Dinner", recipe: "Baked Salmon with Quinoa", calories: 600, protein: 45, carbs: 50, fat: 28, ingredients: ["Salmon Fillet", "Quinoa", "Steamed Asparagus"], instructions: "1. Preheat oven to 400°F (200°C). Season salmon with herbs, salt, and pepper. \n2. Bake salmon for 12-15 minutes. \n3. Cook quinoa according to package directions. \n4. Steam asparagus until tender-crisp." },
       ],
       dailyTotals: { calories: 1450, protein: 100, carbs: 130, fat: 63 }
     }
@@ -114,5 +114,3 @@ export default function MealPlanPage() {
     </div>
   );
 }
-
-    

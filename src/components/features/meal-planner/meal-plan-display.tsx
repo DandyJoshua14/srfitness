@@ -17,6 +17,7 @@ interface Meal {
   carbs: number;
   fat: number;
   ingredients: string[];
+  instructions?: string;
 }
 
 interface DailyPlan {
@@ -73,6 +74,9 @@ export default function MealPlanDisplay({ plan }: MealPlanDisplayProps) {
       dayPlan.meals.forEach(meal => {
         content += `${meal.name}: ${meal.recipe} (Cals: ${meal.calories}, P: ${meal.protein}g, C: ${meal.carbs}g, F: ${meal.fat}g)\n`;
         content += `  Ingredients: ${meal.ingredients.join(', ')}\n`;
+        if (meal.instructions) {
+          content += `  Instructions: ${meal.instructions.replace(/\n/g, '\n    ')}\n`;
+        }
       });
       content += `Daily Totals: Cals: ${dayPlan.dailyTotals.calories}, P: ${dayPlan.dailyTotals.protein}g, C: ${dayPlan.dailyTotals.carbs}g, F: ${dayPlan.dailyTotals.fat}g\n`;
     });
@@ -129,6 +133,12 @@ export default function MealPlanDisplay({ plan }: MealPlanDisplayProps) {
                       <ul className="list-disc list-inside text-muted-foreground text-sm space-y-0.5">
                         {meal.ingredients.map((ing, i) => <li key={i}>{ing}</li>)}
                       </ul>
+                      {meal.instructions && (
+                        <div className="mt-4">
+                          <h4 className="font-medium text-foreground mb-1">Instructions:</h4>
+                          <p className="text-muted-foreground text-sm whitespace-pre-line">{meal.instructions}</p>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 ))}

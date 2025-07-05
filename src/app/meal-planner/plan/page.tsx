@@ -1,20 +1,12 @@
-
 "use client"; // Required for useEffect and localStorage
 
 import { useEffect, useState } from 'react';
-import type { Metadata } from 'next'; // Keep for static metadata if needed, or remove if fully dynamic
 import MealPlanDisplay from '@/components/features/meal-planner/meal-plan-display';
 import { UtensilsCrossed, Info, Loader2 } from 'lucide-react';
 import { GenerateMealPlanOutput } from '@/ai/flows/generate-meal-plan-flow';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-
-// Static metadata can be a fallback
-export const metadata: Metadata = {
-  title: 'Your Meal Plan - SR Fitness',
-  description: 'View your personalized meal plan, recipes, and shopping list.',
-};
 
 // Placeholder data for when no plan is found or for initial render
 const placeholderPlan: GenerateMealPlanOutput = {

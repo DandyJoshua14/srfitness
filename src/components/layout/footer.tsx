@@ -12,6 +12,7 @@ export default function Footer() {
     { label: 'Bootcamp', href: '/burn-off-bootcamp' },
     { label: 'Awards', href: '/awards' },
     { label: 'Magazine', href: '/lifestyle-magazine' },
+    { label: 'Corporate Wellness', href: '/corporate-wellness' },
     { label: 'Public Speaking', href: '/public-speaking' },
     { label: 'Equipment Solutions', href: '/equipment-services' },
     { label: 'Contact Us', href: '/#contact' },
@@ -30,7 +31,7 @@ export default function Footer() {
     ['Home', 'Personal Training', 'Bootcamp', 'Awards', 'Meal Planner', 'Smart Mirror'].includes(item.label)
   );
   const exploreLinks = footerNavItems.filter(item => 
-    ['Magazine', 'Public Speaking', 'Equipment Solutions', 'Global Connect', 'Blog', 'Profile', 'Contact Us'].includes(item.label) // Changed from Community Hub
+    ['Magazine', 'Corporate Wellness', 'Public Speaking', 'Equipment Solutions', 'Global Connect', 'Blog', 'Profile', 'Contact Us'].includes(item.label)
   );
 
 

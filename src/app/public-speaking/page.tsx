@@ -4,37 +4,37 @@ import type { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Mic, ArrowRight, Brain, ShieldCheck, TrendingUp, Sparkles, Check } from 'lucide-react';
+import { Mic, ArrowRight, Brain, TrendingUp, Sparkles, Check } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Public Speaking & Corporate Wellness - SR Fitness',
-  description: "Book Samson, an expert in health and wellness, for inspiring keynotes and corporate workshops. Elevate your team's well-being and productivity.",
+  title: 'Public Speaking Engagements - Samson - SR Fitness',
+  description: "Book Samson, an expert in health and wellness, for inspiring keynotes and motivational talks that captivate any audience.",
 };
 
 export default function PublicSpeakingPage() {
   const speakingTopics = [
     {
       icon: <TrendingUp className="h-8 w-8 text-primary" />,
-      title: "The Future of Corporate Wellness",
-      description: "How to create a sustainable culture of health that boosts productivity and attracts top talent.",
+      title: "Peak Performance Mindset",
+      description: "Unlock the mental frameworks used by elite athletes to drive success in any field.",
     },
     {
       icon: <Brain className="h-8 w-8 text-primary" />,
-      title: "Resilience: The Ultimate Performance Enhancer",
-      description: "Strategies to build mental and physical resilience to thrive under pressure and prevent burnout.",
+      title: "Resilience: The Ultimate Human Strength",
+      description: "Strategies to build unshakable mental and physical resilience to thrive under pressure.",
     },
     {
-      icon: <ShieldCheck className="h-8 w-8 text-primary" />,
-      title: "Nutrition for the Modern Professional",
-      description: "Practical, science-backed nutritional advice to optimize energy, focus, and cognitive function.",
+      icon: <Sparkles className="h-8 w-8 text-primary" />,
+      title: "Finding Your 'Why' in Wellness",
+      description: "An inspiring journey to connect personal values with health goals for lasting motivation.",
     },
   ];
   
-  const benefits = [
-    "Increased employee engagement & morale",
-    "Reduced stress & burnout rates",
-    "Improved team cohesion & productivity",
-    "Enhanced leadership & resilience skills"
+  const audienceBenefits = [
+    "Actionable, evidence-based strategies",
+    "A captivating and energetic delivery style",
+    "Customized content for your event's theme",
+    "A memorable and inspirational experience"
   ];
 
   return (
@@ -56,13 +56,13 @@ export default function PublicSpeakingPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
             <Mic className="h-16 w-16 text-primary mx-auto mb-6" />
             <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl font-bold text-primary mb-4">
-              Inspire Your Team. Elevate Your Workplace.
+              Captivate. Inspire. Transform.
             </h1>
             <p className="text-lg sm:text-xl text-secondary-foreground/80 max-w-3xl mx-auto mb-8">
-              Book Samson for dynamic keynotes and interactive workshops that transform company culture and empower your employees to thrive.
+              Book Samson for dynamic keynotes and motivational talks that empower your audience to take action and unlock their potential.
             </p>
             <Button asChild size="lg" className="font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
-              <Link href="/#contact">Book a Speaking Engagement</Link>
+              <Link href="/#contact">Book Samson to Speak</Link>
             </Button>
         </div>
       </section>
@@ -84,13 +84,10 @@ export default function PublicSpeakingPage() {
                 <div className="space-y-6">
                     <Sparkles className="h-10 w-10 text-primary" />
                     <h2 className="font-headline text-3xl md:text-4xl text-primary font-bold">
-                        Meet Your Speaker: Samson
+                        An Unforgettable Voice
                     </h2>
                     <p className="text-lg text-muted-foreground leading-relaxed">
-                        Samson is a renowned wellness expert and captivating speaker with a passion for helping organizations build healthier, more resilient teams. With a background in elite personal training and corporate wellness consultancy, he translates complex health concepts into actionable strategies that drive real-world results.
-                    </p>
-                    <p className="text-muted-foreground leading-relaxed">
-                        His energetic and evidence-based approach makes him a favorite for leadership summits, company-wide meetings, and team-building events.
+                        Samson is a renowned wellness expert and captivating speaker with a passion for translating complex health concepts into actionable strategies that drive real-world results. His energetic and evidence-based approach makes him a favorite for summits, conferences, and team-building events.
                     </p>
                 </div>
             </div>
@@ -130,13 +127,13 @@ export default function PublicSpeakingPage() {
             <div className="grid md:grid-cols-2 gap-12 items-center">
                  <div className="space-y-6">
                     <h2 className="font-headline text-3xl md:text-4xl text-primary font-bold">
-                        What to Expect for Your Organization
+                        What to Expect for Your Audience
                     </h2>
                     <p className="text-lg text-muted-foreground leading-relaxed">
-                        Our sessions are more than just talks; they are interactive experiences designed to provide tangible value and inspire immediate action. We work with you to customize content that directly addresses your company's challenges and goals.
+                        Every session is more than just a talk; it's an interactive experience designed to provide tangible value and inspire immediate action.
                     </p>
                     <ul className="space-y-3">
-                        {benefits.map((benefit, index) => (
+                        {audienceBenefits.map((benefit, index) => (
                             <li key={index} className="flex items-start">
                                 <Check className="h-6 w-6 text-primary mr-3 mt-1 shrink-0" />
                                 <span className="text-foreground">{benefit}</span>
@@ -163,10 +160,10 @@ export default function PublicSpeakingPage() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="bg-primary/10 text-center p-8 md:p-12 rounded-lg my-10">
                 <h2 className="font-headline text-3xl md:text-4xl text-primary font-semibold mb-6">
-                    Ready to Energize Your Team?
+                    Ready to Energize Your Event?
                 </h2>
                 <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-                    Let's discuss how we can tailor a speaking engagement or workshop for your organization. Contact us today for availability and a custom proposal.
+                    Let's discuss how we can tailor a speaking engagement for your organization. Contact us today for availability and a custom proposal.
                 </p>
                 <Button asChild size="lg" className="group font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transform hover:scale-105 transition-transform">
                     <Link href="/#contact">

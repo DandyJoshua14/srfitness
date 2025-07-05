@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, Wrench, ShieldAlert, Lightbulb, Award, CalendarDays, Users } from 'lucide-react';
+import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, Wrench, ShieldAlert, Lightbulb, Award, CalendarDays, Users, Briefcase } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,7 +26,8 @@ const topLevelNavItems = [
 
 const servicesDropdownItems = [
   { label: 'Personal Training', href: '/personal-training', icon: <Dumbbell className="mr-2 h-4 w-4" /> },
-  { label: 'Corp. Wellness & Speaking', href: '/public-speaking', icon: <Mic className="mr-2 h-4 w-4" /> },
+  { label: 'Corporate Wellness', href: '/corporate-wellness', icon: <Briefcase className="mr-2 h-4 w-4" /> },
+  { label: 'Public Speaking', href: '/public-speaking', icon: <Mic className="mr-2 h-4 w-4" /> },
   { label: 'Consultancy', href: '/equipment-services', icon: <Wrench className="mr-2 h-4 w-4" /> },
 ];
 

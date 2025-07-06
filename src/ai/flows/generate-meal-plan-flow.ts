@@ -19,6 +19,7 @@ const GenerateMealPlanInputSchema = z.object({
   weight: z.coerce.number().describe("User's weight in kilograms."),
   activityLevel: z.string().describe("User's general activity level (e.g., Sedentary, Lightly Active, Moderately Active, Very Active, Extra Active)."),
   fitnessGoal: z.string().describe("User's primary fitness goal (e.g., Weight Loss, Muscle Gain, Maintenance)."),
+  country: z.string().describe("User's country of residence to tailor meals to local cuisine."),
   preferences: z.string().optional().describe("User's dietary preferences, comma-separated (e.g., Vegetarian, Gluten-Free)."),
   allergies: z.string().optional().describe("User's food allergies, comma-separated (e.g., Peanuts, Shellfish)."),
   dislikedFoods: z.string().optional().describe("Foods the user dislikes, comma-separated (e.g., Mushrooms, Olives)."),
@@ -74,6 +75,7 @@ Height: {{height}} cm
 Weight: {{weight}} kg
 Activity Level: {{activityLevel}}
 Primary Fitness Goal: {{fitnessGoal}}
+Country: {{country}}
 Dietary Preferences: {{preferences}}
 Allergies: {{allergies}}
 Disliked Foods: {{dislikedFoods}}
@@ -87,9 +89,9 @@ For each meal, include:
 
 Also, calculate and provide daily total calories, protein, carbs, and fat for each day.
 Ensure the meal plan is balanced, varied, and aligned with the user's fitness goal and preferences. Be creative and avoid repetitive meals.
+Incorporate local dishes and ingredients common in the specified country.
 If dietary preferences like Vegetarian or Vegan are specified, ensure all meals comply.
 Strictly avoid any listed allergies and disliked foods.
-Provide a brief summary or any important notes about the meal plan if necessary.
 Output the plan in the specified JSON format, ensuring every meal object includes the 'instructions' field.
 `,
 });

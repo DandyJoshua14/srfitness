@@ -20,6 +20,7 @@ import { Loader2 } from 'lucide-react';
 const dietaryPreferences = ["Vegetarian", "Vegan", "Pescatarian", "Gluten-Free", "Dairy-Free", "Keto", "Paleo", "None"];
 const activityLevels = ["Sedentary (little or no exercise)", "Lightly Active (light exercise/sports 1-3 days/week)", "Moderately Active (moderate exercise/sports 3-5 days/week)", "Very Active (hard exercise/sports 6-7 days a week)", "Extra Active (very hard exercise/sports & physical job)"];
 const fitnessGoals = ["Weight Loss", "Muscle Gain", "Maintenance", "Improve Endurance", "General Health & Wellness"];
+const countries = ["Nigeria", "United States", "United Kingdom", "India", "Brazil", "Japan", "Mexico", "Italy", "South Africa"];
 
 const formSchema = z.object({
   age: z.coerce.number().min(16, "Must be at least 16 years old").max(100, "Age seems high, please verify."),
@@ -28,6 +29,7 @@ const formSchema = z.object({
   weight: z.coerce.number().min(30, "Weight in kg (e.g., 70)").max(300, "Weight seems unusual, please verify."),
   activityLevel: z.enum(activityLevels as [string, ...string[]], { required_error: "Activity level is required" }),
   fitnessGoal: z.enum(fitnessGoals as [string, ...string[]], { required_error: "Fitness goal is required" }),
+  country: z.string({ required_error: "Country is required" }),
   numberOfDays: z.coerce.number().min(1).max(7).default(3),
   dietaryPreferences: z.array(z.string()).optional(),
   allergies: z.string().optional(),
@@ -50,6 +52,7 @@ export default function QuestionnaireForm() {
       weight: undefined,
       activityLevel: activityLevels[2], // Default to Moderately Active
       fitnessGoal: fitnessGoals[0], // Default to Weight Loss
+      country: "Nigeria",
       numberOfDays: 3,
       dietaryPreferences: [],
       allergies: "",
@@ -68,6 +71,7 @@ export default function QuestionnaireForm() {
       weight: values.weight,
       activityLevel: values.activityLevel,
       fitnessGoal: values.fitnessGoal,
+      country: values.country,
       numberOfDays: values.numberOfDays,
       preferences: values.dietaryPreferences?.includes("None") ? undefined : values.dietaryPreferences?.join(', ') || undefined,
       allergies: values.allergies || undefined,
@@ -187,23 +191,42 @@ export default function QuestionnaireForm() {
                 </FormItem>
               )}
             />
+            
+            <div className="grid md:grid-cols-2 gap-x-6 gap-y-8">
+                <FormField
+                  control={form.control}
+                  name="fitnessGoal"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Primary Fitness Goal</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl><SelectTrigger><SelectValue placeholder="Select Fitness Goal" /></SelectTrigger></FormControl>
+                        <SelectContent>
+                          {fitnessGoals.map(goal => <SelectItem key={goal} value={goal}>{goal}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="country"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Country</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl><SelectTrigger><SelectValue placeholder="Select Country" /></SelectTrigger></FormControl>
+                        <SelectContent>
+                          {countries.map(country => <SelectItem key={country} value={country}>{country}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                       <FormMessage />
+                    </FormItem>
+                  )}
+                />
+            </div>
 
-            <FormField
-              control={form.control}
-              name="fitnessGoal"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Primary Fitness Goal</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl><SelectTrigger><SelectValue placeholder="Select Fitness Goal" /></SelectTrigger></FormControl>
-                    <SelectContent>
-                      {fitnessGoals.map(goal => <SelectItem key={goal} value={goal}>{goal}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
              <FormField
                 control={form.control}
                 name="numberOfDays"

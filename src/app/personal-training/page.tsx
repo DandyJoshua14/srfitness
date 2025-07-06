@@ -20,7 +20,7 @@ export default function PersonalTrainingPage() {
             Personalized Training Programs
           </h1>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-            Unlock your full potential with our expert one-on-one coaching. We tailor every aspect of your training and nutrition to help you achieve remarkable results, faster and safer.
+            Unlock your full potential with our expert one-on-one coaching. We tailor every aspect of your training and nutrition to help you achieve remarkable results in the shortest, safest possible time.
           </p>
         </div>
 
@@ -39,7 +39,7 @@ export default function PersonalTrainingPage() {
           <div className="space-y-6">
             <h2 className="font-headline text-3xl text-foreground font-semibold">Why Choose Personal Training at SR Fitness?</h2>
             <p className="text-muted-foreground">
-              Our certified personal trainers are more than just instructors; they are your partners in fitness. They provide dedicated guidance, unwavering motivation, and the technical expertise needed for you to succeed. Whether you're taking your first step into fitness or are a seasoned athlete aiming for new heights, we customize every session to your unique abilities and aspirations.
+              Our certified personal trainers are more than just instructors; they are your partners in wellness. They provide dedicated guidance, unwavering motivation, and the technical expertise needed for you to succeed. Whether you're taking your first step into fitness or are a seasoned athlete aiming for new heights, we customize every session to your unique abilities and aspirations.
             </p>
             <ul className="space-y-3">
               <li className="flex items-start">
@@ -56,7 +56,7 @@ export default function PersonalTrainingPage() {
               </li>
             </ul>
             <Button asChild size="lg" className="font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transition-shadow">
-              <Link href="/#contact">Book Your Free Consultation</Link>
+              <Link href="/#contact">Start your Journey Today</Link>
             </Button>
           </div>
         </div>

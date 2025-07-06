@@ -26,7 +26,7 @@ export default function PublicSpeakingPage() {
       alt: "Sampson speaking at a corporate event",
       dataAiHint: "public speaker stage",
       title: "Captivate. Inspire. Transform.",
-      description: "Book Samson for dynamic keynotes and motivational talks that empower your audience to take action and unlock their potential.",
+      description: "Book SR fitness for dynamic keynotes and motivational talks that empower your audience to take action and unlock their potential.",
     },
     {
       src: "/suit.jpeg",
@@ -104,7 +104,7 @@ export default function PublicSpeakingPage() {
                     {slide.description}
                   </p>
                   <Button asChild size="lg" className="font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
-                    <Link href="/#contact">Book Samson to Speak</Link>
+                    <Link href="/#contact">Book Now</Link>
                   </Button>
                 </div>
               </CarouselItem>
@@ -191,7 +191,7 @@ export default function PublicSpeakingPage() {
                 </div>
                  <div className="relative aspect-video rounded-lg shadow-xl overflow-hidden group">
                      <Image
-                        src="/public speak.jpg"
+                        src="/aud.jpeg"
                         alt="Engaged audience at a corporate event"
                         layout="fill"
                         objectFit="cover"
@@ -211,11 +211,11 @@ export default function PublicSpeakingPage() {
                     Ready to Energize Your Event?
                 </h2>
                 <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-                    Let's discuss how we can tailor a speaking engagement for your organization. Contact us today for availability and a custom proposal.
+                    Let's discuss how we can tailor a speaking engagement for your organization. Contact us Today.
                 </p>
                 <Button asChild size="lg" className="group font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transform hover:scale-105 transition-transform">
                     <Link href="/#contact">
-                    Request Booking Info <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                    Book Now <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                     </Link>
                 </Button>
             </div>

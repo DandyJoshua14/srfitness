@@ -117,7 +117,7 @@ export default function PublicSpeakingPage() {
       </section>
 
       {/* About the Speaker Section */}
-      <section className="py-12 md:py-16">
+      <section className="py-8 md:py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-2 gap-12 items-center">
                 <div className="relative aspect-square md:aspect-[4/5] rounded-lg shadow-xl overflow-hidden group">

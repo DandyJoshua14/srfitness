@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from 'react';
@@ -29,7 +30,7 @@ export default function PublicSpeakingPage() {
       description: "Book Samson for dynamic keynotes and motivational talks that empower your audience to take action and unlock their potential.",
     },
     {
-      src: "https://placehold.co/1200x800.png",
+      src: "/suit.jpeg",
       alt: "A motivational speaker on stage in front of a large audience",
       dataAiHint: "motivational speaker conference",
       title: "Elevate Your Corporate Event",
@@ -116,7 +117,7 @@ export default function PublicSpeakingPage() {
       </section>
 
       {/* About the Speaker Section */}
-      <section className="py-16 md:py-24">
+      <section className="py-12 md:py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-2 gap-12 items-center">
                 <div className="relative aspect-square md:aspect-[4/5] rounded-lg shadow-xl overflow-hidden group">
@@ -191,7 +192,7 @@ export default function PublicSpeakingPage() {
                 </div>
                  <div className="relative aspect-video rounded-lg shadow-xl overflow-hidden group">
                      <Image
-                        src="https://placehold.co/600x400.png"
+                        src="/public speak.jpg"
                         alt="Engaged audience at a corporate event"
                         layout="fill"
                         objectFit="cover"

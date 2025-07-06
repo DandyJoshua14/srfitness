@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from 'react';
@@ -24,7 +23,7 @@ export default function PublicSpeakingPage() {
   const slides = [
     {
       src: "/public speak.jpg",
-      alt: "Samson speaking at a corporate event",
+      alt: "Sampson speaking at a corporate event",
       dataAiHint: "public speaker stage",
       title: "Captivate. Inspire. Transform.",
       description: "Book Samson for dynamic keynotes and motivational talks that empower your audience to take action and unlock their potential.",
@@ -90,7 +89,7 @@ export default function PublicSpeakingPage() {
                     alt={slide.alt}
                     layout="fill"
                     objectFit="cover"
-                    className="opacity-20"
+                    className="opacity-30"
                     data-ai-hint={slide.dataAiHint}
                     priority={index === 0}
                   />
@@ -122,7 +121,7 @@ export default function PublicSpeakingPage() {
             <div className="grid md:grid-cols-2 gap-12 items-center">
                 <div className="relative aspect-square md:aspect-[4/5] rounded-lg shadow-xl overflow-hidden group">
                      <Image
-                        src="/SR.jpg" // Using SR.jpg as placeholder for Samson
+                        src="/Sampson.jpeg" // Using SR.jpg as placeholder for Samson
                         alt="Samson, Corporate Wellness Speaker"
                         layout="fill"
                         objectFit="cover"
@@ -136,7 +135,7 @@ export default function PublicSpeakingPage() {
                         An Unforgettable Voice
                     </h2>
                     <p className="text-lg text-muted-foreground leading-relaxed">
-                        Samson is a renowned wellness expert and captivating speaker with a passion for translating complex health concepts into actionable strategies that drive real-world results. His energetic and evidence-based approach makes him a favorite for summits, conferences, and team-building events.
+                        Sampson is a renowned wellness expert, A UK certified wellness consultant with a decade of active industry experience.
                     </p>
                 </div>
             </div>

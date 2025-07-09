@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -84,12 +85,13 @@ export default function VoiceAgentDialog({ className }: { className?: string }) 
             return;
           }
 
-          console.error("Speech recognition error:", event.error);
           if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
             setPermissionStatus('denied');
             if(isListening) {
                  toast({ variant: 'destructive', title: "Microphone Access Denied", description: "Please enable microphone permissions in your browser settings." });
             }
+          } else {
+            console.error("Speech recognition error:", event.error);
           }
           setIsListening(false);
         };

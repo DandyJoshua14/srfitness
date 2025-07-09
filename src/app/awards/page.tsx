@@ -46,7 +46,7 @@ export default function AwardsPage() {
             A Celebration of Excellence
           </h1>
           <p className="text-xl sm:text-2xl text-secondary-foreground/80 max-w-4xl mx-auto">
-            Honoring the dedication, perseverance, and outstanding achievements within the SR Fitness family.
+            Honoring resilience, professionalism, and celebrating fitness industry execelence.
           </p>
         </div>
       </section>

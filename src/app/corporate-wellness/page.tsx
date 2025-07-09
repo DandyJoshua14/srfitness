@@ -25,7 +25,7 @@ export default function CorporateWellnessPage() {
     },
     {
       icon: <TrendingUp className="h-8 w-8 text-primary" />,
-      title: "Company-Wide Fitness Challenges",
+      title: "Company-Wide Team Bonding Fitness Sessions",
       description: "Boost morale and team cohesion with fun, competitive challenges that encourage healthy habits and physical activity.",
     },
   ];

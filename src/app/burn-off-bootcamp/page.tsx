@@ -1,21 +1,32 @@
 
+"use client";
+
+import * as React from 'react';
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Flame, Users, Zap, TrendingUp, CheckCircle, Info, Target as TargetIcon, Star, Camera } from 'lucide-react';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import Autoplay from "embla-carousel-autoplay";
 
-export const metadata: Metadata = {
-  title: 'Burn Off Bootcamp - 21 Day Challenge - SR Fitness',
-  description: 'Join the 21 Days Ultimate Fitness Event by SR Fitness. A complete body transformation for men & women. All fitness levels welcome.',
-};
+// Metadata can't be used directly in a Client Component for dynamic values,
+// but we can leave it for static SEO purposes.
+// export const metadata: Metadata = {
+//   title: 'Burn Off Bootcamp - 21 Day Challenge - SR Fitness',
+//   description: 'Join the 21 Days Ultimate Fitness Event by SR Fitness. A complete body transformation for men & women. All fitness levels welcome.',
+// };
 
 export default function BurnOffBootcampPage() {
-    const bootcampPhotos = [
-    { src: 'https://placehold.co/600x400.png', alt: 'Bootcamp participants doing push-ups', dataAiHint: 'group fitness pushups' },
-    { src: 'https://placehold.co/600x400.png', alt: 'Trainer motivating the group', dataAiHint: 'fitness trainer motivation' },
-    { src: 'https://placehold.co/600x400.png', alt: 'Participants in a high-energy drill', dataAiHint: 'bootcamp fitness drill' },
-    { src: 'https://placehold.co/600x400.png', alt: 'Team members encouraging each other', dataAiHint: 'fitness teamwork support' },
+  const plugin = React.useRef(
+    Autoplay({ delay: 4000, stopOnInteraction: true })
+  );
+    
+  const bootcampPhotos = [
+    { src: 'https://placehold.co/800x600.png', alt: 'Bootcamp participants doing push-ups', dataAiHint: 'group fitness pushups' },
+    { src: 'https://placehold.co/800x600.png', alt: 'Trainer motivating the group', dataAiHint: 'fitness trainer motivation' },
+    { src: 'https://placehold.co/800x600.png', alt: 'Participants in a high-energy drill', dataAiHint: 'bootcamp fitness drill' },
+    { src: 'https://placehold.co/800x600.png', alt: 'Team members encouraging each other', dataAiHint: 'fitness teamwork support' },
   ];
   
   return (
@@ -112,21 +123,39 @@ export default function BurnOffBootcampPage() {
                       Feel the energy and see the determination.
                   </p>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Carousel
+                plugins={[plugin.current]}
+                className="w-full max-w-4xl mx-auto"
+                onMouseEnter={plugin.current.stop}
+                onMouseLeave={plugin.current.reset}
+                opts={{
+                  loop: true,
+                }}
+              >
+                <CarouselContent>
                   {bootcampPhotos.map((photo, index) => (
-                      <div key={index} className="relative aspect-video rounded-lg shadow-lg overflow-hidden group border-2 border-transparent hover:border-primary transition-all duration-300">
-                           <Image
-                              src={photo.src}
-                              alt={photo.alt}
-                              layout="fill"
-                              objectFit="cover"
-                              className="transform transition-transform duration-500 group-hover:scale-110"
-                              data-ai-hint={photo.dataAiHint}
-                          />
-                           <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
+                    <CarouselItem key={index}>
+                      <div className="p-1">
+                        <Card className="overflow-hidden shadow-lg border-primary/20">
+                          <CardContent className="flex aspect-[16/9] items-center justify-center p-0 relative">
+                             <Image
+                                src={photo.src}
+                                alt={photo.alt}
+                                layout="fill"
+                                objectFit="cover"
+                                className="transform transition-transform duration-500 group-hover:scale-110"
+                                data-ai-hint={photo.dataAiHint}
+                            />
+                            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
+                          </CardContent>
+                        </Card>
                       </div>
+                    </CarouselItem>
                   ))}
-              </div>
+                </CarouselContent>
+                <CarouselPrevious className="absolute left-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
+                <CarouselNext className="absolute right-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
+              </Carousel>
             </section>
 
             {/* General Benefits & CTA */}
@@ -155,3 +184,5 @@ export default function BurnOffBootcampPage() {
     </div>
   );
 }
+
+    

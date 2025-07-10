@@ -6,6 +6,7 @@ import Image from 'next/image';
 import type { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { Card, CardContent } from '@/components/ui/card';
 import { Flame, Users, Zap, TrendingUp, CheckCircle, Info, Target as TargetIcon, Star, Camera } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Autoplay from "embla-carousel-autoplay";
@@ -184,5 +185,4 @@ export default function BurnOffBootcampPage() {
     </div>
   );
 }
-
     

@@ -1,4 +1,3 @@
-
 "use client";
 import { Award, Users, Zap, MapPin, Smile, ShieldCheck } from 'lucide-react'; 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,11 +7,6 @@ import { cn } from '@/lib/utils'; // Import cn
 
 const features = [
   {
-    icon: <Zap className="h-10 w-10 text-primary" />,
-    title: "State-of-the-Art Facility",
-    description: "Train with the latest equipment in a clean, motivating, and spacious environment designed for peak performance.",
-  },
-  {
     icon: <Users className="h-10 w-10 text-primary" />,
     title: "Expert Certified Trainers",
     description: "Our passionate and experienced trainers provide personalized guidance to help you achieve your goals safely and effectively.",
@@ -21,16 +15,6 @@ const features = [
     icon: <Award className="h-10 w-10 text-primary" />,
     title: "Diverse Fitness Programs",
     description: "From high-intensity bootcamps to specialized personal training, find the perfect program to match your style and objectives.",
-  },
-  {
-    icon: <Smile className="h-10 w-10 text-primary" />,
-    title: "Supportive Community",
-    description: "Join a welcoming and encouraging community of fitness enthusiasts who motivate and inspire each other every day.",
-  },
-  {
-    icon: <MapPin className="h-10 w-10 text-primary" />,
-    title: "Convenient Location",
-    description: "Easily accessible with ample parking, making it simple to fit your workouts into your busy schedule.",
   },
   {
     icon: <ShieldCheck className="h-10 w-10 text-primary" />,
@@ -52,7 +36,7 @@ export default function KeyFeaturesSection() {
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid sm:grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto">
           {features.map((feature, index) => (
             <div key={feature.title} className={`animate-in fade-in slide-in-from-bottom duration-700 delay-${100 + index * 100}`}>
               <Card className="group text-center bg-card border-border shadow-lg h-full transition-all duration-300 ease-in-out transform hover:-translate-y-2 hover:shadow-2xl hover:border-primary">

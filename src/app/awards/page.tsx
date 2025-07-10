@@ -11,10 +11,8 @@ export const metadata: Metadata = {
 
 export default function AwardsPage() {
   const workoutPhotos = [
-    { src: 'https://placehold.co/600x400.png', alt: 'Group workout session in progress', dataAiHint: 'group workout intense' },
-    { src: 'https://placehold.co/600x400.png', alt: 'Trainer demonstrating an exercise', dataAiHint: 'fitness trainer demonstration' },
-    { src: 'https://placehold.co/600x400.png', alt: 'Participants doing push-ups', dataAiHint: 'people pushups' },
-    { src: 'https://placehold.co/600x400.png', alt: 'Cool-down stretching session', dataAiHint: 'group stretching' },
+    { src: '/groupp.jpeg', alt: 'Group workout session in progress', dataAiHint: 'group workout intense' },
+    { src: '/group2.jpeg', alt: 'Trainer demonstrating an exercise', dataAiHint: 'fitness trainer demonstration' },
   ];
 
   const ceremonyPhotos = [
@@ -101,7 +99,19 @@ export default function AwardsPage() {
                       The energy and determination from our morning session.
                   </p>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="relative aspect-[16/9] sm:aspect-video sm:col-span-2 rounded-lg shadow-lg overflow-hidden group border-2 border-transparent hover:border-primary transition-all duration-300">
+                       <Image
+                          src="https://placehold.co/1200x675.png"
+                          alt="Participants in a high-energy group session"
+                          layout="fill"
+                          objectFit="cover"
+                          className="transform transition-transform duration-500 group-hover:scale-110"
+                          data-ai-hint="group workout high energy"
+                      />
+                       <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors"></div>
+                  </div>
+
                   {workoutPhotos.map((photo, index) => (
                       <div key={index} className="relative aspect-[4/3] rounded-lg shadow-lg overflow-hidden group border-2 border-transparent hover:border-primary transition-all duration-300">
                            <Image

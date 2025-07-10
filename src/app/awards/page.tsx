@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Trophy, Sunrise, Sunset, Camera, Award as AwardIcon } from 'lucide-react';
+import { Trophy, Sunrise, Sunset, Camera, Award as AwardIcon, Star } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'SR Fitness Awards - A Celebration of Excellence',
@@ -20,6 +20,18 @@ export default function AwardsPage() {
     { src: 'https://placehold.co/600x400.png', alt: 'Trainer of the year posing with their award', dataAiHint: 'award winner portrait' },
     { src: 'https://placehold.co/600x400.png', alt: 'Audience applauding at the awards ceremony', dataAiHint: 'audience applauding' },
     { src: 'https://placehold.co/600x400.png', alt: 'Group photo of all award winners', dataAiHint: 'award winners group' },
+  ];
+
+  const awardCategories = [
+    "Community Fitness Hero of the Year",
+    "Fitness Trainer/Coach of the Year",
+    "Inspirational Weight-Loss Journey",
+    "Corporate Wellness Champion",
+    "Foundation Fitness Award (SCHOOLS)",
+    "Mental Health & Wellness Advocate",
+    "Life Champion Award - Overcomers series",
+    "Foundation Fitness Hero Award (Male & Female)",
+    "Educators Recognition series"
   ];
 
   return (
@@ -44,7 +56,7 @@ export default function AwardsPage() {
             A Celebration of Excellence
           </h1>
           <p className="text-xl sm:text-2xl text-secondary-foreground/80 max-w-4xl mx-auto">
-            Honoring resilience, professionalism, and celebrating fitness industry execelence.
+            Honoring resilience, professionalism, and celebrating fitness industry excellence.
           </p>
         </div>
       </section>
@@ -126,6 +138,30 @@ export default function AwardsPage() {
                       </div>
                   ))}
               </div>
+          </section>
+
+          {/* Award Categories Section */}
+          <section className="mb-20 md:mb-28">
+            <div className="text-center mb-12">
+              <h2 className="font-headline text-4xl text-foreground font-semibold flex items-center justify-center gap-3">
+                <Trophy className="h-9 w-9 text-primary" />
+                This Year's Award Categories
+              </h2>
+            </div>
+            <Card className="max-w-3xl mx-auto bg-card border-border shadow-xl">
+              <CardContent className="p-8">
+                <ol className="space-y-4">
+                  {awardCategories.map((category, index) => (
+                    <li key={index} className="flex items-start text-lg">
+                      <span className="font-bold text-primary mr-3">{index + 1}.</span>
+                      <span className="text-foreground">{category.replace(/ \(Male & Female\)/, '')}
+                        {category.includes('(Male & Female)') && <span className="text-sm text-muted-foreground ml-2">(Male & Female Categories)</span>}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              </CardContent>
+            </Card>
           </section>
 
           {/* Evening Ceremony Highlights */}

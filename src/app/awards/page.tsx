@@ -17,7 +17,7 @@ export default function AwardsPage() {
 
   const ceremonyPhotos = [
     { src: 'https://placehold.co/600x400.png', alt: 'Winner receiving an award on stage', dataAiHint: 'award ceremony winner' },
-    { src: 'https://placehold.co/600x400.png', alt: 'Sampson giving a speech', dataAiHint: 'ceo speech stage' },
+    { src: 'https://placehold.co/600x400.png', alt: 'Trainer of the year posing with their award', dataAiHint: 'award winner portrait' },
     { src: 'https://placehold.co/600x400.png', alt: 'Audience applauding at the awards ceremony', dataAiHint: 'audience applauding' },
     { src: 'https://placehold.co/600x400.png', alt: 'Group photo of all award winners', dataAiHint: 'award winners group' },
   ];
@@ -28,7 +28,7 @@ export default function AwardsPage() {
       <section className="relative py-24 md:py-32 text-center bg-secondary">
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://placehold.co/1200x800.png"
+            src="/srward.jpeg"
             alt="Elegant awards ceremony background"
             layout="fill"
             objectFit="cover"
@@ -100,9 +100,9 @@ export default function AwardsPage() {
                   </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="relative aspect-[16/9] sm:aspect-video sm:col-span-2 rounded-lg shadow-lg overflow-hidden group border-2 border-transparent hover:border-primary transition-all duration-300">
+                  <div className="relative aspect-[16/9] sm:col-span-2 rounded-lg shadow-lg overflow-hidden group border-2 border-transparent hover:border-primary transition-all duration-300">
                        <Image
-                          src="https://placehold.co/1200x675.png"
+                          src="/srward.jpeg"
                           alt="Participants in a high-energy group session"
                           layout="fill"
                           objectFit="cover"
@@ -161,12 +161,12 @@ export default function AwardsPage() {
                       </div>
                   </div>
 
-                  {/* Highlight 2: Founder's Speech */}
+                  {/* Highlight 2: Trainer of the Year */}
                    <div className="grid md:grid-cols-2 gap-10 items-center">
                        <div className="space-y-4 md:order-2">
-                          <h3 className="font-headline text-3xl text-primary">A Word From Our Founder</h3>
+                          <h3 className="font-headline text-3xl text-primary">Trainer of the Year: Alex M.</h3>
                           <p className="text-muted-foreground leading-relaxed text-base">
-                              Sampson delivered a powerful and motivating speech, reflecting on the year's collective successes and outlining an exciting future for the SR Fitness family. He emphasized the core values of community, perseverance, and holistic well-being.
+                              For his exceptional coaching, innovative training programs, and unwavering dedication to his clients' success, Alex was named Trainer of the Year. His commitment to fitness education has elevated the entire SR Fitness community.
                           </p>
                       </div>
                       <div className="relative aspect-[4/3] rounded-lg shadow-xl overflow-hidden group md:order-1">

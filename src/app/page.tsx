@@ -3,7 +3,6 @@ import HeroSection from '@/components/sections/hero-section';
 import AboutSummarySection from '@/components/sections/about-summary-section';
 import ServicesHighlightSection from '@/components/sections/services-highlight-section';
 import KeyFeaturesSection from '@/components/sections/key-features-section';
-import TrainerProfilesSection from '@/components/sections/trainer-profiles-section'; // Added import
 import OurImpactSection from '@/components/sections/our-impact-section';
 import InnovationsSection from '@/components/sections/innovations-section';
 import DailyTipSection from '@/components/sections/daily-tip-section';
@@ -22,7 +21,6 @@ export default function HomePage() {
       <AboutSummarySection />
       <ServicesHighlightSection />
       <KeyFeaturesSection />
-      <TrainerProfilesSection /> {/* Added new section */}
       <OurImpactSection />
       <InnovationsSection />
       <DailyTipSection />

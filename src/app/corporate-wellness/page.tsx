@@ -116,14 +116,14 @@ export default function CorporateWellnessPage() {
                     </ul>
                 </div>
                  <div className="relative aspect-video rounded-lg shadow-xl overflow-hidden group">
-                     <Image
-                        src="https://placehold.co/600x400.png"
-                        alt="Happy employees in a meeting"
+                    <Image
+                        src="/corp2.jpeg"
+                        alt="Team members participating in a wellness activity"
                         layout="fill"
                         objectFit="cover"
                         className="transform transition-transform duration-500 group-hover:scale-110"
-                        data-ai-hint="happy employees meeting"
-                      />
+                        data-ai-hint="team wellness activity"
+                    />
                 </div>
             </div>
         </div>

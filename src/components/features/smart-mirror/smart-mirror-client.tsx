@@ -214,7 +214,7 @@ export default function SmartMirrorClient() {
               <Camera className="mr-2 h-5 w-5" /> 
               {isCameraOn && !isAnalyzing ? <><Timer className="mr-2 h-5 w-5 animate-spin" />Preparing (20s)...</> : 
                isAnalyzing ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Analyzing...</> : 
-               "Start Smart Mirror"}
+               "Start Align by SR"}
             </Button>
           </div>
         </CardContent>
@@ -284,7 +284,7 @@ export default function SmartMirrorClient() {
               <Info className="h-4 w-4" />
               <AlertTitle>Ready to Start</AlertTitle>
               <AlertDescription>
-                Click 'Start Smart Mirror' to begin your automated form analysis.
+                Click 'Start Align by SR' to begin your automated form analysis.
               </AlertDescription>
             </Alert>
           )}

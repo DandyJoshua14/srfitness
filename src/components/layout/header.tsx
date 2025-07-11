@@ -1,3 +1,4 @@
+
 "use client";
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -38,7 +39,7 @@ const eventsDropdownItems = [
 
 const digitalWellnessDropdownItems = [
   { label: 'Meal Planner', href: '/meal-planner', icon: <NotebookText className="mr-2 h-4 w-4" /> },
-  { label: 'Smart Mirror', href: '/smart-mirror', icon: <ScanLine className="mr-2 h-4 w-4" /> },
+  { label: 'Align by SR', href: '/smart-mirror', icon: <ScanLine className="mr-2 h-4 w-4" /> },
   { label: 'Global Connect', href: '/global-connect', icon: <Globe className="mr-2 h-4 w-4" /> },
   { label: 'Blog', href: '/community', icon: <CommunityIcon className="mr-2 h-4 w-4" /> },
 ];

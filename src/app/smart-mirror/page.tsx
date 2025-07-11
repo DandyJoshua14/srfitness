@@ -4,8 +4,8 @@ import SmartMirrorClient from '@/components/features/smart-mirror/smart-mirror-c
 import { ScanLine } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Smart Mirror Form Analysis - SR Fitness',
-  description: 'Get real-time feedback on your exercise form using our AI-powered Smart Mirror.',
+  title: 'Align by SR - AI Form Analysis - SR Fitness',
+  description: 'Perfect your exercise form with real-time feedback from Align by SR, our AI-powered form coach.',
 };
 
 export default function SmartMirrorPage() {
@@ -14,7 +14,7 @@ export default function SmartMirrorPage() {
       <div className="text-center mb-12 md:mb-16">
         <ScanLine className="h-16 w-16 text-primary mx-auto mb-4" />
         <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl font-bold text-primary mb-4">
-          Smart Mirror Form Analysis
+          Align by SR
         </h1>
         <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
           Perfect your technique with AI-driven real-time feedback. Allow camera access to begin.

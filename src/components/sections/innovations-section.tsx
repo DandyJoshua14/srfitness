@@ -18,7 +18,7 @@ const innovativeFeatures = [
   },
   {
     icon: <ScanLine className="h-10 w-10 text-primary" />,
-    title: "Smart Mirror Form Analysis",
+    title: "Align by SR",
     description: "Perfect your technique with real-time AI feedback on your exercise form, enhancing safety and effectiveness.",
     link: "/smart-mirror",
     cta: "Analyze Your Form",

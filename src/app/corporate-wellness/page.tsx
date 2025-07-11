@@ -1,17 +1,27 @@
 
+"use client";
+
+import * as React from 'react';
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Briefcase, HeartPulse, ShieldCheck, TrendingUp, Users, ArrowRight } from 'lucide-react';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import Autoplay from "embla-carousel-autoplay";
 
-export const metadata: Metadata = {
-  title: 'Corporate Wellness Programs - SR Fitness',
-  description: "Elevate your team's health and productivity with SR Fitness's comprehensive corporate wellness programs, including workshops, health assessments, and team challenges.",
-};
+// Metadata is best handled in a parent layout or page for client components.
+// export const metadata: Metadata = {
+//   title: 'Corporate Wellness Programs - SR Fitness',
+//   description: "Elevate your team's health and productivity with SR Fitness's comprehensive corporate wellness programs, including workshops, health assessments, and team challenges.",
+// };
 
 export default function CorporateWellnessPage() {
+   const autoplayPlugin = React.useRef(
+    Autoplay({ delay: 4000, stopOnInteraction: true })
+  );
+
   const wellnessServices = [
     {
       icon: <Users className="h-8 w-8 text-primary" />,
@@ -36,6 +46,14 @@ export default function CorporateWellnessPage() {
     "Reduced absenteeism and healthcare costs",
     "Attraction and retention of top talent",
     "A stronger, more resilient company culture",
+  ];
+  
+  const carouselImages = [
+    { src: "/corp2.jpeg", alt: "Team members participating in a wellness activity", dataAiHint: "team wellness activity" },
+    { src: "https://placehold.co/600x400.png", alt: "Corporate yoga session", dataAiHint: "corporate yoga" },
+    { src: "https://placehold.co/600x400.png", alt: "Healthy cooking workshop", dataAiHint: "cooking class corporate" },
+    { src: "https://placehold.co/600x400.png", alt: "Office ergonomic assessment", dataAiHint: "office ergonomics" },
+    { src: "https://placehold.co/600x400.png", alt: "Team celebrating a fitness challenge", dataAiHint: "team celebration office" },
   ];
 
   return (
@@ -94,7 +112,7 @@ export default function CorporateWellnessPage() {
           </div>
       </section>
       
-       {/* Benefits Section */}
+       {/* Benefits Section with Carousel */}
        <section className="py-16 md:py-24 bg-secondary">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -115,15 +133,33 @@ export default function CorporateWellnessPage() {
                         ))}
                     </ul>
                 </div>
-                 <div className="relative aspect-video rounded-lg shadow-xl overflow-hidden group">
-                    <Image
-                        src="/corp2.jpeg"
-                        alt="Team members participating in a wellness activity"
-                        layout="fill"
-                        objectFit="cover"
-                        className="transform transition-transform duration-500 group-hover:scale-110"
-                        data-ai-hint="team wellness activity"
-                    />
+                 <div className="relative">
+                    <Carousel
+                        plugins={[autoplayPlugin.current]}
+                        opts={{ loop: true }}
+                        className="w-full"
+                        onMouseEnter={autoplayPlugin.current.stop}
+                        onMouseLeave={autoplayPlugin.current.reset}
+                    >
+                        <CarouselContent>
+                            {carouselImages.map((image, index) => (
+                                <CarouselItem key={index}>
+                                    <div className="aspect-video relative rounded-lg shadow-xl overflow-hidden group">
+                                        <Image
+                                            src={image.src}
+                                            alt={image.alt}
+                                            layout="fill"
+                                            objectFit="cover"
+                                            className="transform transition-transform duration-500 group-hover:scale-110"
+                                            data-ai-hint={image.dataAiHint}
+                                        />
+                                    </div>
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                        <CarouselPrevious className="absolute left-[-16px] top-1/2 -translate-y-1/2 hidden sm:flex" />
+                        <CarouselNext className="absolute right-[-16px] top-1/2 -translate-y-1/2 hidden sm:flex" />
+                    </Carousel>
                 </div>
             </div>
         </div>

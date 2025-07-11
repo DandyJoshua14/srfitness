@@ -31,16 +31,21 @@ export default function Footer() {
     ['Home', 'Personal Training', 'Bootcamp', 'Awards', 'Meal Planner', 'Smart Mirror'].includes(item.label)
   );
   const exploreLinks = footerNavItems.filter(item => 
-    ['Magazine', 'Corporate Wellness', 'Public Speaking', 'Equipment Solutions', 'Global Connect', 'Blog', 'Profile', 'Contact Us'].includes(item.label)
+    ['Magazine', 'Corporate Wellness', 'Public Speaking', 'Equipment Solutions', 'Global Connect', 'Blog', 'Profile'].includes(item.label)
   );
 
+  const contactLinks = [
+    { label: 'Contact Us', href: '/#contact' },
+    { label: 'Privacy Policy', href: '/privacy-policy' },
+    { label: 'Terms of Service', href: '/terms-of-service' },
+  ];
 
   return (
     <footer className="border-t border-border/40 bg-secondary text-secondary-foreground">
       <div className="container mx-auto py-12 md:py-16 px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-8">
           {/* Column 1: Brand and Slogan */}
-          <div className="md:col-span-2 lg:col-span-1">
+          <div className="col-span-2 md:col-span-4 lg:col-span-1">
             <Link href="/" className="flex items-center space-x-3 mb-4">
               <Image 
                 src="/SR.jpg" // Assuming /SR.jpg is in public folder
@@ -72,7 +77,7 @@ export default function Footer() {
           </div>
 
           {/* Column 2: Main Links */}
-          <div>
+          <div className="col-span-1">
             <h3 className="font-headline text-xl font-semibold text-primary mb-4">Navigate</h3>
             <ul className="space-y-2 text-sm">
               {mainLinks.map(item => (
@@ -82,7 +87,7 @@ export default function Footer() {
           </div>
 
           {/* Column 3: Explore Links */}
-          <div>
+          <div className="col-span-1">
             <h3 className="font-headline text-xl font-semibold text-primary mb-4">Discover</h3>
             <ul className="space-y-2 text-sm">
               {exploreLinks.map(item => ( 
@@ -91,13 +96,33 @@ export default function Footer() {
             </ul>
           </div>
           
-          {/* Column 4: Contact Info */}
-          <div>
+          {/* Column 4: Partners */}
+          <div className="col-span-1">
+             <h3 className="font-headline text-xl font-semibold text-primary mb-4">Our Partners</h3>
+             <div className="space-y-3">
+                <div className="flex items-center space-x-2">
+                    <Image src="https://placehold.co/32x32.png" alt="Partner 1 Logo" width={24} height={24} className="rounded-full" data-ai-hint="company logo" />
+                    <span className="text-sm text-secondary-foreground/80">Wellness Inc.</span>
+                </div>
+                 <div className="flex items-center space-x-2">
+                    <Image src="https://placehold.co/32x32.png" alt="Partner 2 Logo" width={24} height={24} className="rounded-full" data-ai-hint="company logo" />
+                    <span className="text-sm text-secondary-foreground/80">HealthFirst Org</span>
+                </div>
+             </div>
+          </div>
+
+          {/* Column 5: Contact Info */}
+          <div className="col-span-2 md:col-span-1">
             <h3 className="font-headline text-xl font-semibold text-primary mb-4">Get In Touch</h3>
-            <address className="not-italic text-sm space-y-2 text-secondary-foreground/80">
+            <address className="not-italic text-sm space-y-2 text-secondary-foreground/80 mb-4">
               <p>Email: <a href="mailto:srfitness@gmail.com" className="hover:text-primary hover:underline">contact@srfitness.com</a></p>
               <p>Phone: <a href="tel:+2347056717597" className="hover:text-primary hover:underline">(234) 7056717597</a></p>
             </address>
+             <ul className="space-y-2 text-sm">
+              {contactLinks.map(item => ( 
+                 <li key={item.label}><Link href={item.href} className="text-secondary-foreground/80 hover:text-primary hover:underline transition-colors">{item.label}</Link></li>
+              ))}
+            </ul>
           </div>
         </div>
 
@@ -105,9 +130,6 @@ export default function Footer() {
           <p className="text-sm text-secondary-foreground/70">
             &copy; {currentYear} SR Fitness. All rights reserved. Designed with passion.
           </p>
-           <p className="text-xs text-secondary-foreground/60 mt-2">
-             <Link href="/privacy-policy" className="hover:text-primary hover:underline">Privacy Policy</Link>
-           </p>
         </div>
       </div>
     </footer>

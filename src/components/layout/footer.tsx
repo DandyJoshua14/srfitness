@@ -101,12 +101,12 @@ export default function Footer() {
              <h3 className="font-headline text-xl font-semibold text-primary mb-4">Our Partners</h3>
              <div className="space-y-3">
                 <div className="flex items-center space-x-2">
-                    <Image src="https://placehold.co/32x32.png" alt="Partner 1 Logo" width={24} height={24} className="rounded-full" data-ai-hint="company logo" />
-                    <span className="text-sm text-secondary-foreground/80">Wellness Inc.</span>
+                    <Image src="/wessa.jpeg" alt="Partner 1 Logo" width={32} height={32} className="rounded-full" data-ai-hint="company logo" />
+                    <span className="text-sm text-secondary-foreground/80">WessaPharm.</span>
                 </div>
                  <div className="flex items-center space-x-2">
-                    <Image src="https://placehold.co/32x32.png" alt="Partner 2 Logo" width={24} height={24} className="rounded-full" data-ai-hint="company logo" />
-                    <span className="text-sm text-secondary-foreground/80">HealthFirst Org</span>
+                    <Image src="/baby.jpeg" alt="Partner 2 Logo" width={32} height={32} className="rounded-full" data-ai-hint="company logo" />
+                    <span className="text-sm text-secondary-foreground/80">Baby clothing store UK</span>
                 </div>
              </div>
           </div>

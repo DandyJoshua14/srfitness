@@ -22,7 +22,7 @@ export default function PublicSpeakingPage() {
 
   const slides = [
     {
-      src: "/public speak.jpg",
+      src: "/suit.jpeg",
       alt: "Sampson speaking at a corporate event",
       dataAiHint: "public speaker stage",
       title: "Captivate. Inspire. Transform.",
@@ -36,7 +36,7 @@ export default function PublicSpeakingPage() {
       description: "Bring energy and actionable insights to your next corporate meeting, summit, or team-building event.",
     },
     {
-      src: "https://placehold.co/1200x800.png",
+      src: "/suit.jpeg",
       alt: "Engaged audience listening to a talk",
       dataAiHint: "audience listening conference",
       title: "Connect with Your Audience",

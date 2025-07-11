@@ -44,11 +44,11 @@ export default function CorporateWellnessPage() {
       <section className="relative bg-secondary text-secondary-foreground py-20 md:py-32 overflow-hidden">
         <div className="absolute inset-0 z-0">
              <Image
-                src="https://placehold.co/1200x800.png"
+                src="/cop.jpeg"
                 alt="A modern office with people collaborating"
                 layout="fill"
                 objectFit="cover"
-                className="opacity-20"
+                className="opacity-30"
                 data-ai-hint="corporate office team"
                 priority
               />

@@ -55,11 +55,20 @@ const generateFitnessTipFlow = ai.defineFlow(
     outputSchema: GenerateFitnessTipOutputSchema,
   },
   async (input) => {
-    const { output } = await fitnessTipPrompt(input);
-    if (!output) {
-      throw new Error("Failed to generate fitness tip from AI.");
+    try {
+        const { output } = await fitnessTipPrompt(input);
+        if (!output) {
+          throw new Error("Failed to generate fitness tip from AI.");
+        }
+        return output;
+    } catch (error) {
+        console.error("Error in generateFitnessTipFlow:", error);
+        // Return a friendly fallback tip if the AI service fails.
+        return {
+            tip: "Stay hydrated! Drinking enough water throughout the day is key to a great workout and overall health.",
+            category: "Hydration",
+        };
     }
-    return output;
   }
 );
 

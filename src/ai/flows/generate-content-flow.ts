@@ -11,7 +11,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const GenerateStudioContentInputSchema = z.object({
+const GenerateStudioContentInputSchema = z.object({
   inputText: z.string().optional().describe('The base text, notes, or script to use for generation.'),
   contentType: z.string().describe("The type of content to generate (e.g., 'Blog Post', 'Social Media Post', 'Podcast Script')."),
   tone: z.string().optional().describe('The desired tone of the content.'),
@@ -21,7 +21,7 @@ export const GenerateStudioContentInputSchema = z.object({
 });
 export type GenerateStudioContentInput = z.infer<typeof GenerateStudioContentInputSchema>;
 
-export const GenerateStudioContentOutputSchema = z.object({
+const GenerateStudioContentOutputSchema = z.object({
   title: z.string().describe('The generated title for the content.'),
   content: z.string().describe('The main body of the generated content.'),
   socialMediaPost: z.string().optional().describe('A suggested social media post to promote the content.'),
@@ -29,14 +29,11 @@ export const GenerateStudioContentOutputSchema = z.object({
 export type GenerateStudioContentOutput = z.infer<typeof GenerateStudioContentOutputSchema>;
 
 export async function generateStudioContent(input: GenerateStudioContentInput): Promise<GenerateStudioContentOutput> {
-  return generateStudioContentFlow(input);
-}
-
-const prompt = ai.definePrompt({
-  name: 'generateStudioContentPrompt',
-  input: {schema: GenerateStudioContentInputSchema},
-  output: {schema: GenerateStudioContentOutputSchema},
-  prompt: `You are an expert content creator and marketing assistant for SR Fitness.
+  const prompt = ai.definePrompt({
+    name: 'generateStudioContentPrompt',
+    input: {schema: GenerateStudioContentInputSchema},
+    output: {schema: GenerateStudioContentOutputSchema},
+    prompt: `You are an expert content creator and marketing assistant for SR Fitness.
 Your task is to generate a compelling "{{contentType}}" based on the user's input and configuration.
 
 **Content Generation Request:**
@@ -61,19 +58,22 @@ Your task is to generate a compelling "{{contentType}}" based on the user's inpu
 5.  **Generate a Social Media Post:** Create a short, engaging social media post (e.g., for Instagram or Facebook) to promote this new piece of content. Include relevant hashtags based on the keywords and topic.
 6.  **Adhere to all parameters:** Ensure the final output matches the requested tone, length, audience, and includes the specified keywords naturally.
 `,
-});
+  });
 
-const generateStudioContentFlow = ai.defineFlow(
-  {
-    name: 'generateStudioContentFlow',
-    inputSchema: GenerateStudioContentInputSchema,
-    outputSchema: GenerateStudioContentOutputSchema,
-  },
-  async (input) => {
-    const {output} = await prompt(input);
-    if (!output) {
-      throw new Error('The AI model failed to generate content. Please try again.');
+  const generateStudioContentFlow = ai.defineFlow(
+    {
+      name: 'generateStudioContentFlow',
+      inputSchema: GenerateStudioContentInputSchema,
+      outputSchema: GenerateStudioContentOutputSchema,
+    },
+    async (input) => {
+      const {output} = await prompt(input);
+      if (!output) {
+        throw new Error('The AI model failed to generate content. Please try again.');
+      }
+      return output;
     }
-    return output;
-  }
-);
+  );
+
+  return generateStudioContentFlow(input);
+}

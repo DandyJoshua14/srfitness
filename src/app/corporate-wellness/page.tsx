@@ -49,11 +49,11 @@ export default function CorporateWellnessPage() {
   ];
   
   const carouselImages = [
-    { src: "/corp2.jpeg", alt: "Team members participating in a wellness activity", dataAiHint: "team wellness activity" },
-    { src: "https://placehold.co/600x400.png", alt: "Corporate yoga session", dataAiHint: "corporate yoga" },
-    { src: "https://placehold.co/600x400.png", alt: "Healthy cooking workshop", dataAiHint: "cooking class corporate" },
-    { src: "https://placehold.co/600x400.png", alt: "Office ergonomic assessment", dataAiHint: "office ergonomics" },
-    { src: "https://placehold.co/600x400.png", alt: "Team celebrating a fitness challenge", dataAiHint: "team celebration office" },
+    { src: "/cc1.jpeg", alt: "Team members participating in a wellness activity", dataAiHint: "team wellness activity" },
+    { src: "/cc2.jpeg", alt: "Corporate yoga session", dataAiHint: "corporate yoga" },
+    { src: "/cc3.jpeg", alt: "Healthy cooking workshop", dataAiHint: "cooking class corporate" },
+    { src: "/cc4.jpeg", alt: "Office ergonomic assessment", dataAiHint: "office ergonomics" },
+    { src: "/cc5.jpeg", alt: "Team celebrating a fitness challenge", dataAiHint: "team celebration office" },
   ];
 
   return (
@@ -160,6 +160,9 @@ export default function CorporateWellnessPage() {
                         <CarouselPrevious className="absolute left-[-16px] top-1/2 -translate-y-1/2 hidden sm:flex" />
                         <CarouselNext className="absolute right-[-16px] top-1/2 -translate-y-1/2 hidden sm:flex" />
                     </Carousel>
+                     <p className="text-center text-sm text-secondary-foreground/70 mt-4 italic">
+                        Savannah Energy Corporate Wellness Program (Calabar, Udo-Udoma,Uyo, Ikot-Abasi and CPF Eket)
+                    </p>
                 </div>
             </div>
         </div>

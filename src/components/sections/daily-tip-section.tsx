@@ -73,7 +73,7 @@ export default function DailyTipSection() {
                 </p>
                 {tipData.category && (
                   <Badge variant="secondary" className="font-medium bg-primary/10 text-primary border-primary/30">
-                    Category: {tipData.category}
+                    SR Fitness
                   </Badge>
                 )}
               </div>

@@ -18,7 +18,7 @@ export default function Footer() {
     { label: 'Contact Us', href: '/#contact' },
     // New Feature Links
     { label: 'Meal Planner', href: '/meal-planner' },
-    { label: 'Align by SR', href: '/smart-mirror' },
+    { label: 'Smart Scan', href: '/Smart Scan' },
     { label: 'Global Connect', href: '/global-connect' },
     { label: 'Blog', href: '/community' }, // Changed from Community Hub
     { label: 'Profile', href: '/profile' },
@@ -28,7 +28,7 @@ export default function Footer() {
   ];
 
   const mainLinks = footerNavItems.filter(item => 
-    ['Home', 'Personal Training', 'Bootcamp', 'Awards', 'Meal Planner', 'Align by SR'].includes(item.label)
+    ['Home', 'Personal Training', 'Bootcamp', 'Awards', 'Meal Planner', 'Smart Scan'].includes(item.label)
   );
   const exploreLinks = footerNavItems.filter(item => 
     ['Magazine', 'Corporate Wellness', 'Public Speaking', 'Equipment Solutions', 'Global Connect', 'Blog', 'Profile'].includes(item.label)

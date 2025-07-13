@@ -15,7 +15,7 @@ const services = [
     image: "/train.jpeg",
     dataAiHint: "personal trainer client",
     link: "/personal-training",
-    cta: "Learn More"
+    cta: "Book a Session"
   },
   {
     title: "Burn Off Bootcamp",

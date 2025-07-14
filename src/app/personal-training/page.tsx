@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from 'react';
@@ -17,14 +18,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 // };
 
 const transformations = [
-    {
-        name: 'David L.',
-        story: '"I lost 30lbs and gained a new level of confidence I never thought possible. The personalized plan was key."',
-        beforeImg: 'https://placehold.co/400x600.png',
-        afterImg: 'https://placehold.co/400x600.png',
-        beforeHint: 'overweight man portrait',
-        afterHint: 'fit man portrait'
-    },
     {
         name: 'Maria S.',
         story: '"SR Fitness helped me build strength and tone up after years of inconsistent workouts. I feel stronger and more energetic than ever!"',
@@ -97,7 +90,7 @@ export default function PersonalTrainingPage() {
                 </p>
             </div>
             
-            <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 gap-8 max-w-xl mx-auto">
                 {transformations.map((item, index) => (
                     <Card key={index} className="bg-card border-border shadow-xl text-center overflow-hidden group">
                         <CardHeader className="p-0">

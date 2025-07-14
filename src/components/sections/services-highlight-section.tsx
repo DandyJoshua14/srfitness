@@ -10,7 +10,6 @@ import { motion } from 'framer-motion';
 const services = [
   {
     title: "Personal Training",
-    icon: <Dumbbell className="h-10 w-10 text-primary mb-4" />,
     description: "Unlock your full potential with tailored one-on-one coaching. Our expert trainers create personalized workout and nutrition plans to fast-track your results safely and effectively.",
     image: "/train.jpeg",
     dataAiHint: "personal trainer client",
@@ -19,7 +18,6 @@ const services = [
   },
   {
     title: "Burn Off Bootcamp",
-    icon: <Zap className="h-10 w-10 text-primary mb-4" />,
     description: "Ignite your metabolism in our high-energy group sessions! Burn Off Bootcamp combines HIIT, strength, and cardio for a fun, challenging, and results-driven full-body workout.",
     image: "/burn.png",
     dataAiHint: "group fitness energetic",

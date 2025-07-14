@@ -3,12 +3,40 @@ import Image from 'next/image';
 import type { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Dumbbell, Zap, Users, Target } from 'lucide-react';
+import { Dumbbell, Zap, Users, Target, ArrowRight } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export const metadata: Metadata = {
-  title: 'Personal Training - SR Fitness',
-  description: 'Achieve your unique fitness goals with our expert one-on-one coaching and customized training plans at SR Fitness.',
+  title: 'Personal Training - Real Transformations - SR Fitness',
+  description: 'Achieve your unique fitness goals with our expert one-on-one coaching and customized training plans at SR Fitness. See real client transformations.',
 };
+
+const transformations = [
+    {
+        name: 'David L.',
+        story: '"I lost 30lbs and gained a new level of confidence I never thought possible. The personalized plan was key."',
+        beforeImg: 'https://placehold.co/400x600.png',
+        afterImg: 'https://placehold.co/400x600.png',
+        beforeHint: 'overweight man portrait',
+        afterHint: 'fit man portrait'
+    },
+    {
+        name: 'Maria S.',
+        story: '"SR Fitness helped me build strength and tone up after years of inconsistent workouts. I feel stronger and more energetic than ever!"',
+        beforeImg: 'https://placehold.co/400x600.png',
+        afterImg: 'https://placehold.co/400x600.png',
+        beforeHint: 'woman workout beginner',
+        afterHint: 'woman workout fit'
+    },
+     {
+        name: 'John K.',
+        story: '"As a former athlete, I needed to get back in shape. The trainers pushed me to a new peak of performance."',
+        beforeImg: 'https://placehold.co/400x600.png',
+        afterImg: 'https://placehold.co/400x600.png',
+        beforeHint: 'man out of shape',
+        afterHint: 'man muscular athlete'
+    }
+];
 
 export default function PersonalTrainingPage() {
   return (
@@ -55,10 +83,54 @@ export default function PersonalTrainingPage() {
                 <span><span className="font-semibold text-foreground">Accountability & Motivation:</span> Consistent support to keep you on track, pushing your limits safely.</span>
               </li>
             </ul>
-            <Button asChild size="lg" className="font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transition-shadow">
-              <Link href="/#contact">Start your Journey Today</Link>
-            </Button>
           </div>
+        </div>
+      </section>
+
+      {/* Before and After Section */}
+      <section className="bg-secondary py-16 md:py-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12 md:mb-16">
+                 <h2 className="font-headline text-4xl md:text-5xl font-bold text-primary mb-4">
+                    Real Transformations, Real Results
+                </h2>
+                <p className="text-lg text-secondary-foreground/80 max-w-2xl mx-auto">
+                    Be inspired by the incredible journeys of our members.
+                </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {transformations.map((item, index) => (
+                    <Card key={index} className="bg-card border-border shadow-xl text-center overflow-hidden group">
+                        <CardHeader className="p-0">
+                            <div className="grid grid-cols-2">
+                                <div className="relative aspect-[3/4]">
+                                    <Image src={item.beforeImg} alt={`Before photo of ${item.name}`} layout="fill" objectFit="cover" data-ai-hint={item.beforeHint} />
+                                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                                        <span className="font-headline text-white text-2xl tracking-widest opacity-80" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.8)'}}>BEFORE</span>
+                                    </div>
+                                </div>
+                                <div className="relative aspect-[3/4]">
+                                    <Image src={item.afterImg} alt={`After photo of ${item.name}`} layout="fill" objectFit="cover" data-ai-hint={item.afterHint} />
+                                    <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
+                                         <span className="font-headline text-white text-2xl tracking-widest" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.8)'}}>AFTER</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="p-6">
+                            <CardTitle className="font-headline text-2xl text-primary mb-2">{item.name}</CardTitle>
+                            <p className="text-muted-foreground text-sm italic">"{item.story}"</p>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+             <div className="text-center mt-12 md:mt-16">
+                <Button asChild size="lg" className="group font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transform hover:scale-105 transition-transform">
+                    <Link href="/#contact">
+                        Start Your Transformation <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                    </Link>
+                </Button>
+            </div>
         </div>
       </section>
     </div>

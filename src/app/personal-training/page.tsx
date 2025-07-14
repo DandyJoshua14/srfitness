@@ -7,8 +7,6 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Dumbbell, Zap, Users, Target, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import Autoplay from "embla-carousel-autoplay";
 
 
 // Metadata can't be used directly in a Client Component for dynamic values,
@@ -30,17 +28,14 @@ const transformations = [
     {
         name: 'Maria S.',
         story: '"SR Fitness helped me build strength and tone up after years of inconsistent workouts. I feel stronger and more energetic than ever!"',
-        beforeImg: 'https://placehold.co/400x600.png',
-        afterImg: 'https://placehold.co/400x600.png',
+        beforeImg: '/before.jpeg',
+        afterImg: '/after.jpeg',
         beforeHint: 'woman workout beginner',
         afterHint: 'woman workout fit'
     }
 ];
 
 export default function PersonalTrainingPage() {
-    const plugin = React.useRef(
-        Autoplay({ delay: 5000, stopOnInteraction: true })
-    );
 
   return (
     <div className="bg-background text-foreground">
@@ -102,50 +97,34 @@ export default function PersonalTrainingPage() {
                 </p>
             </div>
             
-            <Carousel
-                plugins={[plugin.current]}
-                className="w-full max-w-sm sm:max-w-md md:max-w-lg mx-auto"
-                onMouseEnter={plugin.current.stop}
-                onMouseLeave={plugin.current.reset}
-                opts={{
-                  loop: true,
-                }}
-              >
-                <CarouselContent>
-                  {transformations.map((item, index) => (
-                    <CarouselItem key={index}>
-                      <div className="p-1">
-                        <Card className="bg-card border-border shadow-xl text-center overflow-hidden group">
-                            <CardHeader className="p-0">
-                                <div className="grid grid-cols-2">
-                                    <div className="relative aspect-[3/4]">
-                                        <Image src={item.beforeImg} alt={`Before photo of ${item.name}`} layout="fill" objectFit="cover" data-ai-hint={item.beforeHint} />
-                                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                                            <span className="font-headline text-white text-2xl tracking-widest opacity-80" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.8)'}}>BEFORE</span>
-                                        </div>
-                                    </div>
-                                    <div className="relative aspect-[3/4]">
-                                        <Image src={item.afterImg} alt={`After photo of ${item.name}`} layout="fill" objectFit="cover" data-ai-hint={item.afterHint} />
-                                        <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
-                                             <span className="font-headline text-white text-2xl tracking-widest" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.8)'}}>AFTER</span>
-                                        </div>
+            <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                {transformations.map((item, index) => (
+                    <Card key={index} className="bg-card border-border shadow-xl text-center overflow-hidden group">
+                        <CardHeader className="p-0">
+                            <div className="grid grid-cols-2">
+                                <div className="relative aspect-[3/4]">
+                                    <Image src={item.beforeImg} alt={`Before photo of ${item.name}`} layout="fill" objectFit="cover" data-ai-hint={item.beforeHint} />
+                                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                                        <span className="font-headline text-white text-2xl tracking-widest opacity-80" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.8)'}}>BEFORE</span>
                                     </div>
                                 </div>
-                            </CardHeader>
-                            <CardContent className="p-6">
-                                <CardTitle className="font-headline text-2xl text-primary mb-2">{item.name}</CardTitle>
-                                <p className="text-muted-foreground text-sm italic">"{item.story}"</p>
-                            </CardContent>
-                        </Card>
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="absolute left-[-10px] sm:left-[-50px] top-1/2 -translate-y-1/2" />
-                <CarouselNext className="absolute right-[-10px] sm:right-[-50px] top-1/2 -translate-y-1/2" />
-            </Carousel>
+                                <div className="relative aspect-[3/4]">
+                                    <Image src={item.afterImg} alt={`After photo of ${item.name}`} layout="fill" objectFit="cover" data-ai-hint={item.afterHint} />
+                                    <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
+                                         <span className="font-headline text-white text-2xl tracking-widest" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.8)'}}>AFTER</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="p-6">
+                            <CardTitle className="font-headline text-2xl text-primary mb-2">{item.name}</CardTitle>
+                            <p className="text-muted-foreground text-sm italic">"{item.story}"</p>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
 
-             <div className="text-center mt-12 md:mt-16">
+             <div className="text-center mt-12 md:py-24">
                 <Button asChild size="lg" className="group font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transform hover:scale-105 transition-transform">
                     <Link href="/#contact">
                         Start Your Transformation <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />

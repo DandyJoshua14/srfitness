@@ -3,19 +3,12 @@
 
 import * as React from 'react';
 import Image from 'next/image';
-import type { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Dumbbell, Zap, Users, Target, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
-
-// Metadata can't be used directly in a Client Component for dynamic values,
-// but we can leave it for static SEO purposes.
-// export const metadata: Metadata = {
-//   title: 'Personal Training - Real Transformations - SR Fitness',
-//   description: 'Achieve your unique fitness goals with our expert one-on-one coaching and customized training plans at SR Fitness. See real client transformations.',
-// };
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import Autoplay from "embla-carousel-autoplay";
 
 const transformations = [
     {
@@ -25,10 +18,37 @@ const transformations = [
         afterImg: '/after.jpeg',
         beforeHint: 'woman workout beginner',
         afterHint: 'woman workout fit'
+    },
+    {
+        name: 'John D.',
+        story: '"I lost 30 pounds in 3 months! The personal training program kept me accountable and motivated. Completely life-changing."',
+        beforeImg: 'https://placehold.co/300x400.png',
+        afterImg: 'https://placehold.co/300x400.png',
+        beforeHint: 'man overweight before',
+        afterHint: 'man fit after'
+    },
+    {
+        name: 'Emily R.',
+        story: '"As a new mom, finding time was hard. The trainers were so flexible and helped me regain my pre-pregnancy fitness safely."',
+        beforeImg: 'https://placehold.co/300x400.png',
+        afterImg: 'https://placehold.co/300x400.png',
+        beforeHint: 'tired woman portrait',
+        afterHint: 'happy woman park'
+    },
+    {
+        name: 'David L.',
+        story: '"I wanted to improve my athletic performance for marathons. My trainer designed a sports-specific plan that took me to the next level."',
+        beforeImg: 'https://placehold.co/300x400.png',
+        afterImg: 'https://placehold.co/300x400.png',
+        beforeHint: 'runner tired',
+        afterHint: 'runner finishing race'
     }
 ];
 
 export default function PersonalTrainingPage() {
+    const plugin = React.useRef(
+        Autoplay({ delay: 5000, stopOnInteraction: true })
+    );
 
   return (
     <div className="bg-background text-foreground">
@@ -90,32 +110,49 @@ export default function PersonalTrainingPage() {
                 </p>
             </div>
             
-            <div className="grid grid-cols-1 gap-8 max-w-xl mx-auto">
-                {transformations.map((item, index) => (
-                    <Card key={index} className="bg-card border-border shadow-xl text-center overflow-hidden group">
-                        <CardHeader className="p-0">
-                            <div className="grid grid-cols-2">
-                                <div className="relative aspect-[3/4]">
-                                    <Image src={item.beforeImg} alt={`Before photo of ${item.name}`} layout="fill" objectFit="cover" data-ai-hint={item.beforeHint} />
-                                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                                        <span className="font-headline text-white text-2xl tracking-widest opacity-80" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.8)'}}>BEFORE</span>
-                                    </div>
-                                </div>
-                                <div className="relative aspect-[3/4]">
-                                    <Image src={item.afterImg} alt={`After photo of ${item.name}`} layout="fill" objectFit="cover" data-ai-hint={item.afterHint} />
-                                    <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
-                                         <span className="font-headline text-white text-2xl tracking-widest" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.8)'}}>AFTER</span>
-                                    </div>
-                                </div>
+            <Carousel
+                plugins={[plugin.current]}
+                className="w-full max-w-2xl mx-auto"
+                onMouseEnter={plugin.current.stop}
+                onMouseLeave={plugin.current.reset}
+                opts={{
+                  loop: true,
+                }}
+            >
+                <CarouselContent>
+                    {transformations.map((item, index) => (
+                        <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/2">
+                            <div className="p-1">
+                                <Card className="bg-card border-border shadow-xl text-center overflow-hidden group h-full">
+                                    <CardHeader className="p-0">
+                                        <div className="grid grid-cols-2">
+                                            <div className="relative aspect-[3/4]">
+                                                <Image src={item.beforeImg} alt={`Before photo of ${item.name}`} layout="fill" objectFit="cover" data-ai-hint={item.beforeHint} />
+                                                <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                                                    <span className="font-headline text-white text-2xl tracking-widest opacity-80" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.8)'}}>BEFORE</span>
+                                                </div>
+                                            </div>
+                                            <div className="relative aspect-[3/4]">
+                                                <Image src={item.afterImg} alt={`After photo of ${item.name}`} layout="fill" objectFit="cover" data-ai-hint={item.afterHint} />
+                                                <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
+                                                     <span className="font-headline text-white text-2xl tracking-widest" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.8)'}}>AFTER</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </CardHeader>
+                                    <CardContent className="p-6">
+                                        <CardTitle className="font-headline text-2xl text-primary mb-2">{item.name}</CardTitle>
+                                        <p className="text-muted-foreground text-sm italic">"{item.story}"</p>
+                                    </CardContent>
+                                </Card>
                             </div>
-                        </CardHeader>
-                        <CardContent className="p-6">
-                            <CardTitle className="font-headline text-2xl text-primary mb-2">{item.name}</CardTitle>
-                            <p className="text-muted-foreground text-sm italic">"{item.story}"</p>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+                <CarouselPrevious className="absolute left-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
+                <CarouselNext className="absolute right-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
+            </Carousel>
+
 
              <div className="text-center mt-12 md:py-24">
                 <Button asChild size="lg" className="group font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transform hover:scale-105 transition-transform">
@@ -129,3 +166,4 @@ export default function PersonalTrainingPage() {
     </div>
   );
 }
+

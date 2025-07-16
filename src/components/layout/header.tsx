@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, Wrench, ShieldAlert, Lightbulb, Award, CalendarDays, Users, Briefcase } from 'lucide-react';
+import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, Wrench, ShieldAlert, Lightbulb, Award, CalendarDays, Users, Briefcase, ShoppingCart } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,7 +44,7 @@ const digitalWellnessDropdownItems = [
   { label: 'Blog', href: '/community', icon: <CommunityIcon className="mr-2 h-4 w-4" /> },
 ];
 
-const exploreDropdownItemsBase = [
+const productsDropdownItemsBase = [
   { label: 'Lifestyle Magazine', href: '/lifestyle-magazine', icon: <Newspaper className="mr-2 h-4 w-4" /> },
 ];
 
@@ -65,7 +65,7 @@ export default function Header() {
   // Removed isLoginModalOpen, setIsLoginModalOpen, isSignupModalOpen, setIsSignupModalOpen states
 
 
-  const exploreDropdownItems = MOCK_IS_ADMIN ? [...exploreDropdownItemsBase, adminStudioItem] : exploreDropdownItemsBase;
+  const productsDropdownItems = MOCK_IS_ADMIN ? [...productsDropdownItemsBase, adminStudioItem] : productsDropdownItemsBase;
 
   useEffect(() => {
     let currentPath = pathname;
@@ -122,7 +122,7 @@ export default function Header() {
 
   const isServicesActive = servicesDropdownItems.some(item => isLinkActive(item.href));
   const isEventsActive = eventsDropdownItems.some(item => isLinkActive(item.href));
-  const isExploreActive = exploreDropdownItems.some(item => isLinkActive(item.href) && (MOCK_IS_ADMIN || !item.isAdminOnly));
+  const isProductsActive = productsDropdownItems.some(item => isLinkActive(item.href) && (MOCK_IS_ADMIN || !item.isAdminOnly));
   const isDigitalWellnessActive = digitalWellnessDropdownItems.some(item => isLinkActive(item.href));
 
   const navLinkBaseClasses = "px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 relative";
@@ -165,8 +165,8 @@ export default function Header() {
     ...topLevelNavItems,
     { label: 'Services', href: '#category-toggle-services', isCategory: true, subItems: servicesDropdownItems, icon: <Dumbbell /> },
     { label: 'Events', href: '#category-toggle-events', isCategory: true, subItems: eventsDropdownItems, icon: <CalendarDays /> },
+    { label: 'Products', href: '#category-toggle-products', isCategory: true, subItems: productsDropdownItems.filter(item => MOCK_IS_ADMIN || !item.isAdminOnly), icon: <ShoppingCart /> },
     { label: 'Digital Wellness', href: '#category-toggle-digital-wellness', isCategory: true, subItems: digitalWellnessDropdownItems, icon: <Lightbulb /> },
-    { label: 'Explore', href: '#category-toggle-explore', isCategory: true, subItems: exploreDropdownItems.filter(item => MOCK_IS_ADMIN || !item.isAdminOnly), icon: <Newspaper /> },
     contactNavItem,
   ];
   
@@ -248,6 +248,23 @@ export default function Header() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
+               <DropdownMenu>
+                <DropdownMenuTrigger className={dropdownTriggerClasses(isProductsActive)}>
+                  Products <ChevronDown className="h-4 w-4 opacity-70" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-max rounded-lg">
+                  {productsDropdownItems.map((item) => {
+                    if (item.isAdminOnly && !MOCK_IS_ADMIN) return null;
+                    return (
+                      <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground", item.isAdminOnly && "font-semibold text-primary/90")}>
+                        <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">
+                          {item.icon} {item.label}
+                        </Link>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
               <DropdownMenu>
                 <DropdownMenuTrigger className={dropdownTriggerClasses(isDigitalWellnessActive)}>
                   Digital Wellness <ChevronDown className="h-4 w-4 opacity-70" />
@@ -260,23 +277,6 @@ export default function Header() {
                       </Link>
                     </DropdownMenuItem>
                   ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <DropdownMenu>
-                <DropdownMenuTrigger className={dropdownTriggerClasses(isExploreActive)}>
-                  Explore <ChevronDown className="h-4 w-4 opacity-70" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-max rounded-lg">
-                  {exploreDropdownItems.map((item) => {
-                    if (item.isAdminOnly && !MOCK_IS_ADMIN) return null;
-                    return (
-                      <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground", item.isAdminOnly && "font-semibold text-primary/90")}>
-                        <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">
-                          {item.icon} {item.label}
-                        </Link>
-                      </DropdownMenuItem>
-                    );
-                  })}
                 </DropdownMenuContent>
               </DropdownMenu>
               <Link href={contactNavItem.href} onClick={() => handleLinkClick(contactNavItem.href, contactNavItem.href.startsWith('/#'))} className={navLinkClasses(isLinkActive(contactNavItem.href))}>

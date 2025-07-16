@@ -24,10 +24,18 @@ export default function BurnOffBootcampPage() {
   );
     
   const bootcampPhotos = [
-    { src: 'https://placehold.co/800x600.png', alt: 'Bootcamp participants doing push-ups', dataAiHint: 'group fitness pushups' },
-    { src: 'https://placehold.co/800x600.png', alt: 'Trainer motivating the group', dataAiHint: 'fitness trainer motivation' },
-    { src: 'https://placehold.co/800x600.png', alt: 'Participants in a high-energy drill', dataAiHint: 'bootcamp fitness drill' },
-    { src: 'https://placehold.co/800x600.png', alt: 'Team members encouraging each other', dataAiHint: 'fitness teamwork support' },
+    { src: '/b1.jpeg', alt: 'Bootcamp', dataAiHint: 'group fitness pushups' },
+    { src: '/b2.jpeg', alt: 'Bootcamp', dataAiHint: 'fitness trainer motivation' },
+    { src: '/b3.jpeg', alt: 'Bootcamp', dataAiHint: 'bootcamp fitness drill' },
+    { src: '/b4.jpeg', alt: 'Bootcamp', dataAiHint: 'fitness teamwork support' },
+    { src: '/b5.jpeg', alt: 'Bootcamp', dataAiHint: 'fitness teamwork support' },
+  ];
+
+  const resultsPhotos = [
+    { src: 'https://placehold.co/600x400.png', alt: 'Bootcamp result after photo', dataAiHint: 'fitness transformation after' },
+    { src: 'https://placehold.co/600x400.png', alt: 'Client happy with results', dataAiHint: 'happy fit person' },
+    { src: 'https://placehold.co/600x400.png', alt: 'Client showing improved strength', dataAiHint: 'person lifting weight' },
+    { src: 'https://placehold.co/600x400.png', alt: 'Group celebrating success', dataAiHint: 'fitness group celebration' },
   ];
   
   return (
@@ -49,7 +57,7 @@ export default function BurnOffBootcampPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <Flame className="h-20 w-20 text-primary mx-auto mb-6" />
           <h1 className="font-headline text-5xl sm:text-6xl md:text-7xl font-bold text-primary mb-4" style={{ textShadow: '1px 1px 2px hsl(var(--secondary))' }}>
-            Burn Off Bootcamp
+            Burn-Off Bootcamp
           </h1>
           <p className="text-xl sm:text-2xl text-secondary-foreground/80 max-w-4xl mx-auto">
             Ignite your metabolism with our signature high-intensity sessions, engineered to maximize calorie burn, build lean muscle, and skyrocket your endurance.
@@ -159,23 +167,53 @@ export default function BurnOffBootcampPage() {
               </Carousel>
             </section>
 
-            {/* General Benefits & CTA */}
-             <div className="mt-8 pt-6 border-t border-border/20 text-center">
-              <h2 className="font-headline text-3xl text-primary font-semibold mb-4">General Bootcamp Benefits</h2>
-              <div className="max-w-4xl mx-auto grid sm:grid-cols-3 gap-8 mb-8 text-left">
-                 <div className="flex items-start">
-                  <Zap className="h-6 w-6 text-primary mr-3 mt-1 shrink-0" />
-                  <span><span className="font-semibold text-primary-foreground">Dynamic Full-Body Workouts:</span> Varied routines to prevent plateaus.</span>
-                </div>
-                <div className="flex items-start">
-                  <Users className="h-6 w-6 text-primary mr-3 mt-1 shrink-0" />
-                  <span><span className="font-semibold text-primary-foreground">Motivating Group Atmosphere:</span> A supportive community that cheers you on.</span>
-                </div>
-                <div className="flex items-start">
-                  <TrendingUp className="h-6 w-6 text-primary mr-3 mt-1 shrink-0" />
-                  <span><span className="font-semibold text-primary-foreground">Rapid Results:</span> Proven to improve health, build strength, and shed fat.</span>
-                </div>
+            {/* Bootcamp Results Section */}
+            <section id="bootcamp-results" className="mb-20 md:mb-28">
+              <div className="text-center mb-12">
+                  <h2 className="font-headline text-4xl text-foreground font-semibold flex items-center justify-center gap-3">
+                      <Star className="h-9 w-9 text-primary" />
+                      Bootcamp Results
+                  </h2>
+                   <p className="text-lg text-muted-foreground max-w-2xl mx-auto mt-2">
+                      See the incredible transformations from our members.
+                  </p>
               </div>
+              <Carousel
+                plugins={[plugin.current]}
+                className="w-full max-w-4xl mx-auto"
+                onMouseEnter={plugin.current.stop}
+                onMouseLeave={plugin.current.reset}
+                opts={{
+                  loop: true,
+                }}
+              >
+                <CarouselContent>
+                  {resultsPhotos.map((photo, index) => (
+                    <CarouselItem key={index}>
+                      <div className="p-1">
+                        <Card className="overflow-hidden shadow-lg border-primary/20">
+                          <CardContent className="flex aspect-[16/9] items-center justify-center p-0 relative">
+                             <Image
+                                src={photo.src}
+                                alt={photo.alt}
+                                layout="fill"
+                                objectFit="cover"
+                                className="transform transition-transform duration-500 group-hover:scale-110"
+                                data-ai-hint={photo.dataAiHint}
+                            />
+                            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="absolute left-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
+                <CarouselNext className="absolute right-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
+              </Carousel>
+            </section>
+
+             <div className="mt-8 pt-6 border-t border-border/20 text-center">
                 <Button asChild size="lg" className="font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transition-shadow">
                     <Link href="/#contact">Inquire About the Next Bootcamp</Link>
                 </Button>

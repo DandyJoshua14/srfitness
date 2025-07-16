@@ -64,12 +64,12 @@ export default function PersonalTrainingPage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
-          <div className="relative aspect-[4/3] rounded-lg shadow-xl overflow-hidden group">
+          <div className="relative h-[450px] rounded-lg shadow-xl overflow-hidden group">
             <Image
               src="/personal.jpeg"
               alt="Personal Training Session"
               layout="fill"
-              objectFit="cover"
+              objectFit="contain"
               className="transform transition-transform duration-500 group-hover:scale-110"
               data-ai-hint="trainer client workout"
             />
@@ -166,4 +166,3 @@ export default function PersonalTrainingPage() {
     </div>
   );
 }
-

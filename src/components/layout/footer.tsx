@@ -100,10 +100,10 @@ export default function Footer() {
           <div className="col-span-1">
              <h3 className="font-headline text-xl font-semibold text-primary mb-4">Our Partners</h3>
              <div className="space-y-3">
-                 <div className="flex items-center space-x-2">
-                    <Image src="/baby.jpeg" alt="Partner 2 Logo" width={32} height={32} className="rounded-full" data-ai-hint="company logo" />
-                    <span className="text-sm text-secondary-foreground/80">Baby clothing store UK</span>
-                </div>
+                <Link href="#" className="flex items-center space-x-2 group">
+                    <Image src="/baby.jpeg" alt="Partner 2 Logo" width={32} height={32} className="rounded-full transition-transform duration-300 group-hover:scale-110" data-ai-hint="company logo" />
+                    <span className="text-sm text-secondary-foreground/80 group-hover:text-primary group-hover:underline">Baby clothing store UK</span>
+                </Link>
              </div>
           </div>
 

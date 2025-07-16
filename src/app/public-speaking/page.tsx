@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from 'react';
@@ -40,7 +41,7 @@ export default function PublicSpeakingPage() {
       alt: "Engaged audience listening to a talk",
       dataAiHint: "audience listening conference",
       title: "Connect with Your Audience",
-      description: "Samson's engaging style and evidence-based content leave a lasting impact on every attendee.",
+      description: "Sampson's engaging style and evidence-based content leave a lasting impact on every attendee.",
     }
   ];
 
@@ -124,7 +125,7 @@ export default function PublicSpeakingPage() {
                         src="/Sampson.jpeg" // Using SR.jpg as placeholder for Samson
                         alt="Samson, Corporate Wellness Speaker"
                         layout="fill"
-                        objectFit="cover"
+                        objectFit="contain"
                         className="transform transition-transform duration-500 group-hover:scale-110"
                         data-ai-hint="professional speaker portrait"
                       />

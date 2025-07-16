@@ -192,13 +192,13 @@ export default function BurnOffBootcampPage() {
                     <CarouselItem key={index}>
                       <div className="p-1">
                         <Card className="overflow-hidden shadow-lg border-primary/20">
-                          <CardContent className="flex aspect-[16/9] items-center justify-center p-0 relative">
+                          <CardContent className="flex aspect-[16/9] items-center justify-center p-0 relative bg-black">
                              <Image
                                 src={photo.src}
                                 alt={photo.alt}
                                 layout="fill"
-                                objectFit="cover"
-                                className="transform transition-transform duration-500 group-hover:scale-110"
+                                objectFit="contain"
+                                className="transform transition-transform duration-500 group-hover:scale-105"
                                 data-ai-hint={photo.dataAiHint}
                             />
                             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>

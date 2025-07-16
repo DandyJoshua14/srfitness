@@ -32,10 +32,10 @@ export default function BurnOffBootcampPage() {
   ];
 
   const resultsPhotos = [
-    { src: 'https://placehold.co/600x400.png', alt: 'Bootcamp result after photo', dataAiHint: 'fitness transformation after' },
-    { src: 'https://placehold.co/600x400.png', alt: 'Client happy with results', dataAiHint: 'happy fit person' },
-    { src: 'https://placehold.co/600x400.png', alt: 'Client showing improved strength', dataAiHint: 'person lifting weight' },
-    { src: 'https://placehold.co/600x400.png', alt: 'Group celebrating success', dataAiHint: 'fitness group celebration' },
+    { src: '/re1.jpeg', alt: 'Bootcamp result after photo', dataAiHint: 'fitness transformation after' },
+    { src: '/re2.jpeg', alt: 'Client happy with results', dataAiHint: 'happy fit person' },
+    { src: '/re3.jpeg', alt: 'Client showing improved strength', dataAiHint: 'person lifting weight' },
+    { src: '/re4.jpeg', alt: 'Group celebrating success', dataAiHint: 'fitness group celebration' },
   ];
   
   return (

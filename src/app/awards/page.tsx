@@ -4,9 +4,10 @@
 import React from 'react';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Trophy, Sunrise, Sunset, Camera, Award as AwardIcon, Star } from 'lucide-react';
+import { Trophy, Sunrise, Sunset, Award as AwardIcon, Star } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Autoplay from "embla-carousel-autoplay";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 
 export default function AwardsPage() {
@@ -23,24 +24,59 @@ export default function AwardsPage() {
   const ceremonyPhotos = [
     { src: 'https://placehold.co/600x400.png', alt: 'Winner receiving an award on stage', dataAiHint: 'award ceremony winner' },
     { src: 'https://placehold.co/600x400.png', alt: 'Trainer of the year posing with their award', dataAiHint: 'award winner portrait' },
-    { src: 'https://placehold.co/600x400.png', alt: 'Audience applauding at the awards ceremony', dataAiHint: 'audience applauding' },
-    { src: 'https://placehold.co/600x400.png', alt: 'Group photo of all award winners', dataAiHint: 'award winners group' },
+  ];
+  
+  const awardCategories = [
+    { 
+      title: "Community Fitness Hero of the Year (M & F)", 
+      description: "Recognizing individuals who have inspired and motivated others within the fitness community through their dedication and positive influence." 
+    },
+    { 
+      title: "Fitness Trainer/Coach of the Year", 
+      description: "Honoring the trainer who has demonstrated exceptional skill, knowledge, and commitment to their clients' success and well-being." 
+    },
+    { 
+      title: "Inspirational Weight-Loss Journey (M & F)", 
+      description: "Celebrating members who have achieved remarkable weight-loss transformations through perseverance, dedication, and a healthy lifestyle." 
+    },
+    { 
+      title: "Corporate Wellness Champion", 
+      description: "Awarded to a company or individual that has successfully implemented and promoted a culture of health and wellness in the workplace." 
+    },
+    { 
+      title: "Foundation Fitness Award (SCHOOLS)", 
+      description: "Recognizing a school that has shown outstanding commitment to promoting physical education and healthy habits among its students." 
+    },
+    { 
+      title: "Mental Health & Wellness Advocate", 
+      description: "Honoring an individual who has championed the importance of mental well-being as a crucial component of overall fitness." 
+    },
+    { 
+      title: "Life Champion Award - Overcomers series", 
+      description: "A special award for individuals who have overcome significant personal challenges and used fitness as a tool for recovery and empowerment." 
+    },
+    { 
+      title: "Foundation Fitness Hero Award (Male & Female)", 
+      description: "Celebrating foundational members who consistently embody the spirit and values of our fitness community." 
+    },
+    { 
+      title: "Educators Recognition series", 
+      description: "A tribute to educators who go above and beyond to integrate wellness and fitness into their teaching and student interactions." 
+    },
+    { 
+      title: "Outstanding Achievement Recognition", 
+      description: "This award acknowledges members who have reached exceptional personal fitness milestones, from mastering a new skill to conquering a competition." 
+    },
+    { 
+      title: "Fitness Event Of The Year (Coaches)", 
+      description: "Awarded to the coach or team of coaches who organized and executed the most impactful and engaging fitness event of the year." 
+    },
+    { 
+      title: "Fitness Event Of The Year", 
+      description: "Recognizing the single best fitness event that brought the community together, promoted health, and created a memorable experience for all." 
+    },
   ];
 
-  const awardCategories = [
-    "Community Fitness Hero of the Year (M & F)",
-    "Fitness Trainer/Coach of the Year",
-    "Inspirational Weight-Loss Journey(M & F)",
-    "Corporate Wellness Champion",
-    "Foundation Fitness Award (SCHOOLS)",
-    "Mental Health & Wellness Advocate",
-    "Life Champion Award - Overcomers series",
-    "Foundation Fitness Hero Award (Male & Female)",
-    "Educators Recognition series",
-    "Outstanding Achievement Recognition",
-    "Fitness Event Of The Year (Coaches)",
-    "Fitess Event Of The Year",
-  ];
 
   return (
     <div className="bg-background text-foreground">
@@ -112,7 +148,6 @@ export default function AwardsPage() {
           <section id="morning-session" className="mb-20 md:mb-28">
               <div className="text-center mb-10">
                   <h2 className="font-headline text-4xl text-foreground font-semibold flex items-center justify-center gap-3">
-                      <Camera className="h-9 w-9 text-primary" />
                       Workout Exhibition Gallery
                   </h2>
                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto mt-2">
@@ -163,17 +198,20 @@ export default function AwardsPage() {
               </h2>
             </div>
             <Card className="max-w-3xl mx-auto bg-card border-border shadow-xl">
-              <CardContent className="p-8">
-                <ol className="space-y-4">
+              <CardContent className="p-6">
+                <Accordion type="single" collapsible className="w-full">
                   {awardCategories.map((category, index) => (
-                    <li key={index} className="flex items-start text-lg">
-                      <span className="font-bold text-primary mr-3">{index + 1}.</span>
-                      <span className="text-foreground">{category.replace(/ \(Male & Female\)/, '')}
-                        {category.includes('(Male & Female)') && <span className="text-sm text-muted-foreground ml-2">(Male & Female Categories)</span>}
-                      </span>
-                    </li>
+                    <AccordionItem value={`item-${index}`} key={index}>
+                      <AccordionTrigger className="font-headline text-lg text-left hover:text-primary">
+                        {category.title.replace(/ \(M & F\)/, '').replace(/ \(Male & Female Categories\)/, '')}
+                         {(category.title.includes('(M & F)') || category.title.includes('(Male & Female Categories)')) && <span className="text-sm text-muted-foreground font-body font-normal ml-2">(M & F)</span>}
+                      </AccordionTrigger>
+                      <AccordionContent className="text-muted-foreground pl-2 pr-2 pb-4">
+                        {category.description}
+                      </AccordionContent>
+                    </AccordionItem>
                   ))}
-                </ol>
+                </Accordion>
               </CardContent>
             </Card>
           </section>
@@ -230,36 +268,6 @@ export default function AwardsPage() {
                           />
                       </div>
                   </div>
-
-                  {/* Photo Highlights Section */}
-                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                       <div className="relative aspect-[4/3] rounded-lg shadow-lg overflow-hidden group border-2 border-transparent hover:border-primary transition-all duration-300">
-                           <Image
-                                src={ceremonyPhotos[2].src}
-                                alt={ceremonyPhotos[2].alt}
-                                layout="fill"
-                                objectFit="cover"
-                                className="transform transition-transform duration-500 group-hover:scale-110"
-                                data-ai-hint={ceremonyPhotos[2].dataAiHint}
-                           />
-                           <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors flex items-end p-4">
-                               <p className="text-white font-semibold text-sm" style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>The crowd's applause filled the room.</p>
-                           </div>
-                       </div>
-                       <div className="relative aspect-[4/3] rounded-lg shadow-lg overflow-hidden group border-2 border-transparent hover:border-primary transition-all duration-300">
-                           <Image
-                                src={ceremonyPhotos[3].src}
-                                alt={ceremonyPhotos[3].alt}
-                                layout="fill"
-                                objectFit="cover"
-                                className="transform transition-transform duration-500 group-hover:scale-110"
-                                data-ai-hint={ceremonyPhotos[3].dataAiHint}
-                           />
-                            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors flex items-end p-4">
-                               <p className="text-white font-semibold text-sm" style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>All our winners, celebrating together.</p>
-                           </div>
-                       </div>
-                   </div>
               </div>
           </section>
 
@@ -268,5 +276,3 @@ export default function AwardsPage() {
     </div>
   );
 }
-
-    

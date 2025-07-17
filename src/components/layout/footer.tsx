@@ -61,18 +61,18 @@ export default function Footer() {
               Your journey to strength, wellness, and peak performance starts here.
             </p>
              <div className="flex space-x-4">
-              <Link href="https://www.facebook.com/share/16baXc34D3/" aria-label="Facebook" className="text-secondary-foreground/70 hover:text-primary transition-colors">
+              <a href="https://www.facebook.com/share/16baXc34D3/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-secondary-foreground/70 hover:text-primary transition-colors">
                 <Facebook className="h-6 w-6" />
-              </Link>
-              <Link href="https://www.instagram.com/sr.fitnesss/profilecard/?igsh=MXZzc3IyeGluOGFhcg==" aria-label="Instagram" className="text-secondary-foreground/70 hover:text-primary transition-colors">
+              </a>
+              <a href="https://www.instagram.com/sr.fitnesss/profilecard/?igsh=MXZzc3IyeGluOGFhcg==" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-secondary-foreground/70 hover:text-primary transition-colors">
                 <Instagram className="h-6 w-6" />
-              </Link>
-              <Link href="https://whatsapp.com/channel/0029Vaxx5DO35fLwhWe2zs3H" aria-label="WhatsApp" className="text-secondary-foreground/70 hover:text-primary transition-colors">
+              </a>
+              <a href="https://whatsapp.com/channel/0029Vaxx5DO35fLwhWe2zs3H" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="text-secondary-foreground/70 hover:text-primary transition-colors">
                 <WhatsAppIcon className="h-6 w-6" />
-              </Link>
-               <Link href="https://youtube.com/@srfitnesslive?si=sZRk3pXarI6sBSWF" aria-label="YouTube" className="text-secondary-foreground/70 hover:text-primary transition-colors">
+              </a>
+               <a href="https://youtube.com/@srfitnesslive?si=sZRk3pXarI6sBSWF" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-secondary-foreground/70 hover:text-primary transition-colors">
                 <Youtube className="h-6 w-6" />
-              </Link>
+              </a>
             </div>
           </div>
 
@@ -100,10 +100,10 @@ export default function Footer() {
           <div className="col-span-1">
              <h3 className="font-headline text-xl font-semibold text-primary mb-4">Our Partners</h3>
              <div className="space-y-3">
-                <Link href="https://www.babyclothingstore.co.uk/" className="flex items-center space-x-2 group">
+                <a href="https://www.babyclothingstore.co.uk/" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 group">
                     <Image src="/baby.jpeg" alt="Partner 2 Logo" width={32} height={32} className="rounded-full transition-transform duration-300 group-hover:scale-110" data-ai-hint="company logo" />
                     <span className="text-sm text-secondary-foreground/80 group-hover:text-primary group-hover:underline">Baby clothing store UK</span>
-                </Link>
+                </a>
              </div>
           </div>
 

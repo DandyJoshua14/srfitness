@@ -201,7 +201,7 @@ export default function AwardsPage() {
               <CardContent className="p-6">
                 <Accordion type="single" collapsible className="w-full">
                   {awardCategories.map((category, index) => (
-                    <AccordionItem value={`item-${index}`} key={index}>
+                    <AccordionItem value={`item-${index}`} key={index} className="border-b-0">
                       <AccordionTrigger className="font-headline text-lg text-left hover:text-primary">
                         {category.title.replace(/ \(M & F\)/, '').replace(/ \(Male & Female Categories\)/, '')}
                          {(category.title.includes('(M & F)') || category.title.includes('(Male & Female Categories)')) && <span className="text-sm text-muted-foreground font-body font-normal ml-2">(M & F)</span>}

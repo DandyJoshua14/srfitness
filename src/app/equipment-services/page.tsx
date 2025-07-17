@@ -17,7 +17,7 @@ export default function EquipmentServicesPage() {
       title: "Home or Commercial Gym Space Design",
       description: "We conceptualize and design functional and inspiring gym spaces tailored to your specific needs, whether for private home use or a commercial facility.",
       icon: <Ruler className="h-8 w-8 text-primary" />,
-      image: "/gym.jpeg", // Corrected from 'src' to 'image'
+      image: "/gym.jpeg",
       dataAiHint: "gym layout blueprint"
     },
     {
@@ -62,17 +62,6 @@ export default function EquipmentServicesPage() {
               key={service.title} 
               className="bg-card border-border shadow-xl overflow-hidden flex flex-col group transition-all duration-300 ease-in-out transform hover:-translate-y-2 hover:scale-[1.02] hover:shadow-2xl"
             >
-              <div className="relative h-56 w-full overflow-hidden">
-                <Image
-                  src={service.image}
-                  alt={service.title}
-                  layout="fill"
-                  objectFit="cover"
-                  className="transform transition-transform duration-500 group-hover:scale-110"
-                  data-ai-hint={service.dataAiHint}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-              </div>
               <CardHeader className="p-6">
                 <div className="flex items-center text-primary mb-2">
                   {service.icon}

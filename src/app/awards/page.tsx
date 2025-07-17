@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -27,47 +28,58 @@ export default function AwardsPage() {
   
   const awardCategories = [
     { 
-      title: "Community Fitness Hero of the Year (Male & Female)", 
+      title: "Community Fitness Hero of the Year",
+      qualifier: "Male & Female",
       description: "Recognizing individuals who have inspired and motivated others within the fitness community through their dedication and positive influence." 
     },
     { 
       title: "Fitness Trainer/Coach of the Year", 
+      qualifier: "",
       description: "Honoring the trainer who has demonstrated exceptional skill, knowledge, and commitment to their clients' success and well-being." 
     },
     { 
-      title: "Inspirational Weight-Loss Journey (Male & Female)", 
+      title: "Inspirational Weight-Loss Journey", 
+      qualifier: "Male & Female",
       description: "Celebrating individuals who have achieved remarkable weight-loss transformations through perseverance, dedication, and a healthy lifestyle." 
     },
     { 
       title: "Corporate Wellness Champion", 
+      qualifier: "",
       description: "Awarded to a company or brand that supports and promotes a culture of health and wellness in the workplace and in the community." 
     },
     { 
-      title: "Foundation Fitness Award (Schools)", 
+      title: "Foundation Fitness Award", 
+      qualifier: "Schools",
       description: "Recognizing a school that has shown outstanding commitment to promoting physical education and healthy habits among its students." 
     },
     { 
       title: "Mental Health & Wellness Advocate", 
+      qualifier: "",
       description: "Honoring an individual who has championed the importance of mental well-being as an important component of overall fitness." 
     },
     { 
       title: "Life Champion Award - Overcomers series", 
+      qualifier: "",
       description: "A special recognition for individuals who have overcome significant personal challenges and used fitness as a tool for recovery and empowerment." 
     },
     { 
-      title: "Foundation Fitness Hero Award (Male & Female)", 
+      title: "Foundation Fitness Hero Award",
+      qualifier: "Male & Female",
       description: "Celebrating individual student who consistently embody the spirit and values of our fitness community and by doing so has inspired others to adopt a healthy lifestyle." 
     },
     { 
       title: "Educators Recognition series", 
+      qualifier: "",
       description: "A tribute to our unsung fitness heroes, educators who go above and beyond to promote wellness through positive learning, and motivating the students to stay active and engage in physical activity." 
     },
     { 
-      title: "Fitness Event Of The Year (Coaches)", 
+      title: "Fitness Event Of The Year",
+      qualifier: "Coaches",
       description: "Awarded to the coach or team of coaches who organized and executed the most impactful and engaging fitness event of the year." 
     },
     { 
-      title: "Fitness Event Of The Year (Clubs)", 
+      title: "Fitness Event Of The Year",
+      qualifier: "Clubs",
       description: "Recognizing the single best fitness event that brought the community together, promoted health, and created a memorable experience for all." 
     },
   ];
@@ -198,9 +210,8 @@ export default function AwardsPage() {
                   {awardCategories.map((category, index) => (
                     <AccordionItem value={`item-${index}`} key={index} className="border-b-0">
                       <AccordionTrigger className="font-headline text-lg text-left hover:text-primary">
-                        {category.title.replace(/ \((Male & Female|SCHOOLS)\)/, '')}
-                        {(category.title.includes('(Male & Female)')) && <span className="text-sm text-muted-foreground font-body font-normal ml-2">(Male & Female)</span>}
-                        {category.title.includes('(SCHOOLS)') && <span className="text-sm text-muted-foreground font-body font-normal ml-2">(SCHOOLS)</span>}
+                        {category.title}
+                        {category.qualifier && <span className="text-sm text-muted-foreground font-body font-normal ml-2">({category.qualifier})</span>}
                       </AccordionTrigger>
                       <AccordionContent className="text-muted-foreground pl-2 pr-2 pb-4">
                         {category.description}
@@ -225,45 +236,7 @@ export default function AwardsPage() {
               </div>
               
               <div className="space-y-16">
-                  {/* Highlight 1: Member of the Year */}
-                  <div className="grid md:grid-cols-2 gap-10 items-center">
-                      <div className="relative aspect-[4/3] rounded-lg shadow-xl overflow-hidden group">
-                          <Image
-                              src={ceremonyPhotos[0].src}
-                              alt={ceremonyPhotos[0].alt}
-                              layout="fill"
-                              objectFit="cover"
-                              className="transform transition-transform duration-500 group-hover:scale-110"
-                              data-ai-hint={ceremonyPhotos[0].dataAiHint}
-                          />
-                      </div>
-                      <div className="space-y-4">
-                          <h3 className="font-headline text-3xl text-primary">Member of the Year: Jessica L.</h3>
-                          <p className="text-muted-foreground leading-relaxed text-base">
-                              Jessica was crowned Member of the Year for her incredible dedication, losing 20lbs and becoming an inspiration to everyone at the gym. Her consistent hard work, positive attitude, and support for fellow members truly embody the spirit of SR Fitness.
-                          </p>
-                      </div>
-                  </div>
-
-                  {/* Highlight 2: Trainer of the Year */}
-                   <div className="grid md:grid-cols-2 gap-10 items-center">
-                       <div className="space-y-4 md:order-2">
-                          <h3 className="font-headline text-3xl text-primary">Trainer of the Year: Alex M.</h3>
-                          <p className="text-muted-foreground leading-relaxed text-base">
-                              For his exceptional coaching, innovative training programs, and unwavering dedication to his clients' success, Alex was named Trainer of the Year. His commitment to fitness education has elevated the entire SR Fitness community.
-                          </p>
-                      </div>
-                      <div className="relative aspect-[4/3] rounded-lg shadow-xl overflow-hidden group md:order-1">
-                          <Image
-                              src={ceremonyPhotos[1].src}
-                              alt={ceremonyPhotos[1].alt}
-                              layout="fill"
-                              objectFit="cover"
-                              className="transform transition-transform duration-500 group-hover:scale-110"
-                              data-ai-hint={ceremonyPhotos[1].dataAiHint}
-                          />
-                      </div>
-                  </div>
+                  {/* Highlights were removed as per user request */}
               </div>
           </section>
 

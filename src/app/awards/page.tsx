@@ -40,38 +40,34 @@ export default function AwardsPage() {
     },
     { 
       title: "Corporate Wellness Champion", 
-      description: "Awarded to a company or individual that has successfully implemented and promoted a culture of health and wellness in the workplace." 
+      description: "Awarded to a company or brand that supports and promotes a culture of health and wellness in the workplace and in the community." 
     },
     { 
-      title: "Foundation Fitness Award (SCHOOLS)", 
+      title: "Foundation Fitness Award (Schools)", 
       description: "Recognizing a school that has shown outstanding commitment to promoting physical education and healthy habits among its students." 
     },
     { 
       title: "Mental Health & Wellness Advocate", 
-      description: "Honoring an individual who has championed the importance of mental well-being as a crucial component of overall fitness." 
+      description: "Honoring an individual who has championed the importance of mental well-being as an important component of overall fitness." 
     },
     { 
       title: "Life Champion Award - Overcomers series", 
-      description: "A special award for individuals who have overcome significant personal challenges and used fitness as a tool for recovery and empowerment." 
+      description: "A special recognition for individuals who have overcome significant personal challenges and used fitness as a tool for recovery and empowerment." 
     },
     { 
       title: "Foundation Fitness Hero Award (Male & Female)", 
-      description: "Celebrating foundational members who consistently embody the spirit and values of our fitness community." 
+      description: "Celebrating individual student who consistently embody the spirit and values of our fitness community and by doing so has inspired others to adopt a healthy lifestyle." 
     },
     { 
       title: "Educators Recognition series", 
-      description: "A tribute to educators who go above and beyond to integrate wellness and fitness into their teaching and student interactions." 
-    },
-    { 
-      title: "Outstanding Achievement Recognition", 
-      description: "This award acknowledges members who have reached exceptional personal fitness milestones, from mastering a new skill to conquering a competition." 
+      description: "A tribute to our unsung fitness heroes, educators who go above and beyond to promote wellness through positive learning, and motivating the students to stay active and engage in physical activity." 
     },
     { 
       title: "Fitness Event Of The Year (Coaches)", 
       description: "Awarded to the coach or team of coaches who organized and executed the most impactful and engaging fitness event of the year." 
     },
     { 
-      title: "Fitness Event Of The Year", 
+      title: "Fitness Event Of The Year (Clubs)", 
       description: "Recognizing the single best fitness event that brought the community together, promoted health, and created a memorable experience for all." 
     },
   ];

@@ -5,8 +5,13 @@ import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
+interface ChatPageProps {
+  params: { chatId: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
 // This approach for metadata is basic. In a real app, you'd fetch chat details.
-export async function generateMetadata({ params, searchParams }: { params: { chatId: string }, searchParams: { type?: string, name?: string } }): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: ChatPageProps): Promise<Metadata> {
   const chatName = searchParams.name || `Chat ${params.chatId}`;
   return {
     title: `${chatName} - SR Fitness Messages`,
@@ -14,10 +19,10 @@ export async function generateMetadata({ params, searchParams }: { params: { cha
   };
 }
 
-export default function ChatPage({ params, searchParams }: { params: { chatId: string }, searchParams: { type?: string, name?: string } }) {
+export default function ChatPage({ params, searchParams }: ChatPageProps) {
   const { chatId } = params;
-  const chatType = searchParams.type || 'dm'; // default to dm
-  const chatName = searchParams.name || (chatType === 'dm' ? 'Direct Message' : 'Group Chat');
+  const chatType = (searchParams.type as string) || 'dm'; // default to dm
+  const chatName = (searchParams.name as string) || (chatType === 'dm' ? 'Direct Message' : 'Group Chat');
 
   // Mock data, in a real app, fetch based on chatId
   const mockChatDetails = {

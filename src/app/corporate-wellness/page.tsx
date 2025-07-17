@@ -3,19 +3,12 @@
 
 import * as React from 'react';
 import Image from 'next/image';
-import type { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Briefcase, HeartPulse, ShieldCheck, TrendingUp, Users, ArrowRight } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Autoplay from "embla-carousel-autoplay";
-
-// Metadata is best handled in a parent layout or page for client components.
-// export const metadata: Metadata = {
-//   title: 'Corporate Wellness Programs - SR Fitness',
-//   description: "Elevate your team's health and productivity with SR Fitness's comprehensive corporate wellness programs, including workshops, health assessments, and team challenges.",
-// };
 
 export default function CorporateWellnessPage() {
    const autoplayPlugin = React.useRef(

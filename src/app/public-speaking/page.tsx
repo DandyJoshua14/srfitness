@@ -3,18 +3,12 @@
 
 import * as React from 'react';
 import Image from 'next/image';
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Autoplay from "embla-carousel-autoplay"
 import { Mic, ArrowRight, Brain, TrendingUp, Sparkles, Check } from 'lucide-react';
-
-// export const metadata: Metadata = { // Metadata can't be used in a client component this way.
-//   title: 'Public Speaking Engagements - Samson - SR Fitness',
-//   description: "Book Samson, an expert in health and wellness, for inspiring keynotes and motivational talks that captivate any audience.",
-// };
 
 export default function PublicSpeakingPage() {
   const plugin = React.useRef(

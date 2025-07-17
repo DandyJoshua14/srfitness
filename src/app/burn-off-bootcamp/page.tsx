@@ -3,20 +3,12 @@
 
 import * as React from 'react';
 import Image from 'next/image';
-import type { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
-import { Flame, Users, Zap, TrendingUp, CheckCircle, Info, Target as TargetIcon, Star, Camera } from 'lucide-react';
+import { Flame, Users, CheckCircle, Info, Target as TargetIcon, Star, Camera } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Autoplay from "embla-carousel-autoplay";
-
-// Metadata can't be used directly in a Client Component for dynamic values,
-// but we can leave it for static SEO purposes.
-// export const metadata: Metadata = {
-//   title: 'Burn Off Bootcamp - 21 Day Challenge - SR Fitness',
-//   description: 'Join the 21 Days Ultimate Fitness Event by SR Fitness. A complete body transformation for men & women. All fitness levels welcome.',
-// };
 
 export default function BurnOffBootcampPage() {
   const plugin = React.useRef(
@@ -146,7 +138,7 @@ export default function BurnOffBootcampPage() {
                     <CarouselItem key={index}>
                       <div className="p-1">
                         <Card className="overflow-hidden shadow-lg border-primary/20">
-                          <CardContent className="flex aspect-[16/9] items-center justify-center p-0 relative">
+                          <CardContent className="flex aspect-[16/9] items-center justify-center p-0 relative group">
                              <Image
                                 src={photo.src}
                                 alt={photo.alt}

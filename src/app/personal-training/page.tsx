@@ -112,7 +112,7 @@ export default function PersonalTrainingPage() {
             
             <Carousel
                 plugins={[plugin.current]}
-                className="w-full max-w-2xl mx-auto"
+                className="w-full max-w-4xl mx-auto"
                 onMouseEnter={plugin.current.stop}
                 onMouseLeave={plugin.current.reset}
                 opts={{
@@ -121,7 +121,7 @@ export default function PersonalTrainingPage() {
             >
                 <CarouselContent>
                     {transformations.map((item, index) => (
-                        <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/2">
+                        <CarouselItem key={index} className="md:basis-1/2">
                             <div className="p-1">
                                 <Card className="bg-card border-border shadow-xl text-center overflow-hidden group h-full">
                                     <CardHeader className="p-0">

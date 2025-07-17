@@ -4,7 +4,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Trophy, Sunrise, Sunset, Award as AwardIcon, Star } from 'lucide-react';
+import { Trophy, Sunrise, Sunset, Award as AwardIcon } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Autoplay from "embla-carousel-autoplay";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -22,9 +22,9 @@ export default function AwardsPage() {
   ];
 
   const ceremonyPhotos = [
-    { src: 'https://placehold.co/600x400.png', alt: 'Winner receiving an award on stage', dataAiHint: 'award ceremony winner' },
-    { src: 'https://placehold.co/600x400.png', alt: 'Trainer of the year posing with their award', dataAiHint: 'award winner portrait' },
-    { src: 'https://placehold.co/600x400.png', alt: 'Audience applauding during the awards gala', dataAiHint: 'audience applause conference' },
+    { src: 'https://placehold.co/600x400.png', alt: 'Awards ceremony highlight 1', dataAiHint: 'award ceremony winner' },
+    { src: 'https://placehold.co/600x400.png', alt: 'Awards ceremony highlight 2', dataAiHint: 'award winner portrait' },
+    { src: 'https://placehold.co/600x400.png', alt: 'Awards ceremony highlight 3', dataAiHint: 'audience applause conference' },
   ];
   
   const awardCategories = [

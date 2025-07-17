@@ -1,16 +1,21 @@
 
+"use client";
+
+import React from 'react';
 import Image from 'next/image';
-import type { Metadata } from 'next';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Trophy, Sunrise, Sunset, Camera, Award as AwardIcon, Star } from 'lucide-react';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import Autoplay from "embla-carousel-autoplay";
 
-export const metadata: Metadata = {
-  title: 'SR Fitness Awards - A Celebration of Excellence',
-  description: 'Explore the highlights from the SR Fitness Awards, celebrating the dedication and achievements of our community.',
-};
 
 export default function AwardsPage() {
+  const autoplayPlugin = React.useRef(
+    Autoplay({ delay: 4000, stopOnInteraction: true })
+  );
+
   const workoutPhotos = [
+    { src: '/srward.jpeg', alt: 'Participants in a high-energy group session', dataAiHint: 'group workout high energy' },
     { src: '/groupp.jpeg', alt: 'Group workout session in progress', dataAiHint: 'group workout intense' },
     { src: '/group2.jpeg', alt: 'Trainer demonstrating an exercise', dataAiHint: 'fitness trainer demonstration' },
   ];
@@ -23,15 +28,18 @@ export default function AwardsPage() {
   ];
 
   const awardCategories = [
-    "Community Fitness Hero of the Year",
+    "Community Fitness Hero of the Year (M & F)",
     "Fitness Trainer/Coach of the Year",
-    "Inspirational Weight-Loss Journey",
+    "Inspirational Weight-Loss Journey(M & F)",
     "Corporate Wellness Champion",
     "Foundation Fitness Award (SCHOOLS)",
     "Mental Health & Wellness Advocate",
     "Life Champion Award - Overcomers series",
     "Foundation Fitness Hero Award (Male & Female)",
-    "Educators Recognition series"
+    "Educators Recognition series",
+    "Outstanding Achievement Recognition",
+    "Fitness Event Of The Year (Coaches)",
+    "Fitess Event Of The Year",
   ];
 
   return (
@@ -111,33 +119,39 @@ export default function AwardsPage() {
                       The energy and determination from our morning session.
                   </p>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="relative aspect-[16/9] sm:col-span-2 rounded-lg shadow-lg overflow-hidden group border-2 border-transparent hover:border-primary transition-all duration-300">
-                       <Image
-                          src="/srward.jpeg"
-                          alt="Participants in a high-energy group session"
-                          layout="fill"
-                          objectFit="cover"
-                          className="transform transition-transform duration-500 group-hover:scale-110"
-                          data-ai-hint="group workout high energy"
-                      />
-                       <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors"></div>
-                  </div>
-
+              <Carousel
+                plugins={[autoplayPlugin.current]}
+                className="w-full max-w-4xl mx-auto"
+                onMouseEnter={autoplayPlugin.current.stop}
+                onMouseLeave={autoplayPlugin.current.reset}
+                opts={{
+                  loop: true,
+                }}
+              >
+                <CarouselContent>
                   {workoutPhotos.map((photo, index) => (
-                      <div key={index} className="relative aspect-[4/3] rounded-lg shadow-lg overflow-hidden group border-2 border-transparent hover:border-primary transition-all duration-300">
-                           <Image
-                              src={photo.src}
-                              alt={photo.alt}
-                              layout="fill"
-                              objectFit="cover"
-                              className="transform transition-transform duration-500 group-hover:scale-110"
-                              data-ai-hint={photo.dataAiHint}
-                          />
-                           <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors"></div>
+                    <CarouselItem key={index}>
+                      <div className="p-1">
+                        <Card className="overflow-hidden shadow-lg border-primary/20">
+                          <CardContent className="flex aspect-[16/9] items-center justify-center p-0 relative group">
+                             <Image
+                                src={photo.src}
+                                alt={photo.alt}
+                                layout="fill"
+                                objectFit="cover"
+                                className="transform transition-transform duration-500 group-hover:scale-110"
+                                data-ai-hint={photo.dataAiHint}
+                            />
+                            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
+                          </CardContent>
+                        </Card>
                       </div>
+                    </CarouselItem>
                   ))}
-              </div>
+                </CarouselContent>
+                <CarouselPrevious className="absolute left-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
+                <CarouselNext className="absolute right-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
+              </Carousel>
           </section>
 
           {/* Award Categories Section */}
@@ -254,3 +268,5 @@ export default function AwardsPage() {
     </div>
   );
 }
+
+    

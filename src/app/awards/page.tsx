@@ -24,6 +24,7 @@ export default function AwardsPage() {
   const ceremonyPhotos = [
     { src: 'https://placehold.co/600x400.png', alt: 'Winner receiving an award on stage', dataAiHint: 'award ceremony winner' },
     { src: 'https://placehold.co/600x400.png', alt: 'Trainer of the year posing with their award', dataAiHint: 'award winner portrait' },
+    { src: 'https://placehold.co/600x400.png', alt: 'Audience applauding during the awards gala', dataAiHint: 'audience applause conference' },
   ];
   
   const awardCategories = [
@@ -235,9 +236,39 @@ export default function AwardsPage() {
                   </p>
               </div>
               
-              <div className="space-y-16">
-                  {/* Highlights were removed as per user request */}
-              </div>
+                <Carousel
+                    plugins={[autoplayPlugin.current]}
+                    className="w-full max-w-4xl mx-auto"
+                    onMouseEnter={autoplayPlugin.current.stop}
+                    onMouseLeave={autoplayPlugin.current.reset}
+                    opts={{
+                    loop: true,
+                    }}
+                >
+                    <CarouselContent>
+                    {ceremonyPhotos.map((photo, index) => (
+                        <CarouselItem key={index}>
+                        <div className="p-1">
+                            <Card className="overflow-hidden shadow-lg border-primary/20">
+                            <CardContent className="flex aspect-[16/9] items-center justify-center p-0 relative group">
+                                <Image
+                                    src={photo.src}
+                                    alt={photo.alt}
+                                    layout="fill"
+                                    objectFit="cover"
+                                    className="transform transition-transform duration-500 group-hover:scale-110"
+                                    data-ai-hint={photo.dataAiHint}
+                                />
+                                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
+                            </CardContent>
+                            </Card>
+                        </div>
+                        </CarouselItem>
+                    ))}
+                    </CarouselContent>
+                    <CarouselPrevious className="absolute left-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
+                    <CarouselNext className="absolute right-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
+                </Carousel>
           </section>
 
         </div>

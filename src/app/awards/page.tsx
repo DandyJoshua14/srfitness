@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -37,7 +36,7 @@ export default function AwardsPage() {
     },
     { 
       title: "Inspirational Weight-Loss Journey (Male & Female)", 
-      description: "Celebrating members who have achieved remarkable weight-loss transformations through perseverance, dedication, and a healthy lifestyle." 
+      description: "Celebrating individuals who have achieved remarkable weight-loss transformations through perseverance, dedication, and a healthy lifestyle." 
     },
     { 
       title: "Corporate Wellness Champion", 
@@ -203,8 +202,8 @@ export default function AwardsPage() {
                   {awardCategories.map((category, index) => (
                     <AccordionItem value={`item-${index}`} key={index} className="border-b-0">
                       <AccordionTrigger className="font-headline text-lg text-left hover:text-primary">
-                        {category.title.replace(/ \((M & F|Male & Female|SCHOOLS)\)/, '')}
-                        {(category.title.includes('(M & F)') || category.title.includes('(Male & Female)')) && <span className="text-sm text-muted-foreground font-body font-normal ml-2">(Male & Female)</span>}
+                        {category.title.replace(/ \((Male & Female|SCHOOLS)\)/, '')}
+                        {(category.title.includes('(Male & Female)')) && <span className="text-sm text-muted-foreground font-body font-normal ml-2">(Male & Female)</span>}
                         {category.title.includes('(SCHOOLS)') && <span className="text-sm text-muted-foreground font-body font-normal ml-2">(SCHOOLS)</span>}
                       </AccordionTrigger>
                       <AccordionContent className="text-muted-foreground pl-2 pr-2 pb-4">

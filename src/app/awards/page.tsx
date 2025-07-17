@@ -28,7 +28,7 @@ export default function AwardsPage() {
   
   const awardCategories = [
     { 
-      title: "Community Fitness Hero of the Year (M & F)", 
+      title: "Community Fitness Hero of the Year (Male & Female)", 
       description: "Recognizing individuals who have inspired and motivated others within the fitness community through their dedication and positive influence." 
     },
     { 
@@ -36,7 +36,7 @@ export default function AwardsPage() {
       description: "Honoring the trainer who has demonstrated exceptional skill, knowledge, and commitment to their clients' success and well-being." 
     },
     { 
-      title: "Inspirational Weight-Loss Journey (M & F)", 
+      title: "Inspirational Weight-Loss Journey (Male & Female)", 
       description: "Celebrating members who have achieved remarkable weight-loss transformations through perseverance, dedication, and a healthy lifestyle." 
     },
     { 
@@ -204,7 +204,7 @@ export default function AwardsPage() {
                     <AccordionItem value={`item-${index}`} key={index} className="border-b-0">
                       <AccordionTrigger className="font-headline text-lg text-left hover:text-primary">
                         {category.title.replace(/ \((M & F|Male & Female|SCHOOLS)\)/, '')}
-                        {(category.title.includes('(M & F)') || category.title.includes('(Male & Female)')) && <span className="text-sm text-muted-foreground font-body font-normal ml-2">(M & F)</span>}
+                        {(category.title.includes('(M & F)') || category.title.includes('(Male & Female)')) && <span className="text-sm text-muted-foreground font-body font-normal ml-2">(Male & Female)</span>}
                         {category.title.includes('(SCHOOLS)') && <span className="text-sm text-muted-foreground font-body font-normal ml-2">(SCHOOLS)</span>}
                       </AccordionTrigger>
                       <AccordionContent className="text-muted-foreground pl-2 pr-2 pb-4">

@@ -17,7 +17,6 @@ interface Stat {
 const statsData: Stat[] = [
   { icon: <Users className="h-10 w-10 text-primary" />, value: 1200, label: "Happy Members", suffix: "+" },
   { icon: <Award className="h-10 w-10 text-primary" />, value: 10, label: "Years of Expertise", suffix: "+" },
-  { icon: <Zap className="h-10 w-10 text-primary" />, value: 50, label: "Weekly Classes", suffix: "+" },
   { icon: <Smile className="h-10 w-10 text-primary" />, value: 98, label: "Client Satisfaction", suffix: "%" },
 ];
 
@@ -64,7 +63,7 @@ export default function OurImpactSection() {
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+        <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto">
           {statsData.map((stat, index) => (
             <motion.div
               key={stat.label}

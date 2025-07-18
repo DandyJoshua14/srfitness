@@ -39,10 +39,10 @@ export default function EquipmentServicesPage() {
   ];
 
   const carouselImages = [
-    { src: "/gym.jpeg", alt: "Modern gym layout", dataAiHint: "modern gym design" },
-    { src: "https://placehold.co/800x600.png", alt: "Treadmills in a row", dataAiHint: "gym treadmills" },
-    { src: "https://placehold.co/800x600.png", alt: "Weight rack with various dumbbells", dataAiHint: "gym weight rack" },
-    { src: "https://placehold.co/800x600.png", alt: "Person using a leg press machine", dataAiHint: "gym leg press" },
+    { src: "https://placehold.co/800x450.png", alt: "Modern gym layout", dataAiHint: "modern gym design" },
+    { src: "https://placehold.co/800x450.png", alt: "Treadmills in a row", dataAiHint: "gym treadmills" },
+    { src: "https://placehold.co/800x450.png", alt: "Weight rack with various dumbbells", dataAiHint: "gym weight rack" },
+    { src: "https://placehold.co/800x450.png", alt: "Person using a leg press machine", dataAiHint: "gym leg press" },
   ];
 
   return (

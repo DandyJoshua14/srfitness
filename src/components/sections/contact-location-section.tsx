@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,7 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, Phone, Send } from "lucide-react";
+import { Mail, Phone, Send, MapPin } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters.").max(50, "Name must be at most 50 characters."),
@@ -105,8 +106,17 @@ export default function ContactLocationSection() {
           <div className="space-y-8 animate-in fade-in slide-in-from-right duration-700 delay-200">
             <div className="bg-card p-6 sm:p-8 rounded-xl border border-border shadow-xl">
               <h3 className="font-headline text-3xl text-foreground mb-6">Contact Information</h3>
-              <div className="space-y-2 text-muted-foreground">
+              <div className="space-y-4 text-muted-foreground">
                 <div className="flex items-start gap-4 p-3 rounded-md transition-colors hover:bg-muted/30">
+                  <MapPin className="h-8 w-8 text-primary mt-1 shrink-0" />
+                  <div>
+                    <p className="font-semibold text-foreground text-lg">Our Location</p>
+                    <a href="#" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors text-base not-italic">
+                      123 Fitness Avenue, Uyo, Nigeria
+                    </a>
+                  </div>
+                </div>
+                 <div className="flex items-start gap-4 p-3 rounded-md transition-colors hover:bg-muted/30">
                   <Mail className="h-8 w-8 text-primary mt-1 shrink-0" />
                   <div>
                     <p className="font-semibold text-foreground text-lg">Email Us</p>

@@ -1,8 +1,9 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function HeroSection() {
   const [isMounted, setIsMounted] = useState(false);
@@ -46,25 +47,31 @@ export default function HeroSection() {
         initial="hidden"
         animate={isMounted ? "visible" : "hidden"}
       >
-        <motion.h1
-          variants={textVariants}
-          custom={0}
-          className="font-headline text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-tight"
-          style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.7)' }}
-        >
-          Unleash Your Potential
-        </motion.h1>
-        <motion.div
-          variants={textVariants}
-          custom={0.2}
-          className="flex justify-center items-baseline space-x2- md:space-x-4 max-w-xl mx-auto"
-        >
-          <span className="text-xl md:text-2xl font-semibold text-primary" style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}>Fitter</span>
-          <span className="text-xl md:text-2xl font-semibold text-primary/70">·</span>
-          <span className="text-xl md:text-2xl font-semibold text-primary" style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}>Stronger</span>
-          <span className="text-xl md:text-2xl font-semibold text-primary/70">·</span>
-          <span className="text-xl md:text-2xl font-semibold text-primary" style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}>Healthier</span>
-        </motion.div>
+        <AnimatePresence>
+          {isMounted && (
+            <>
+              <motion.h1
+                variants={textVariants}
+                custom={0.1}
+                className="font-headline text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-tight"
+                style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.7)' }}
+              >
+                Unleash Your Potential
+              </motion.h1>
+              <motion.div
+                variants={textVariants}
+                custom={0.3}
+                className="flex justify-center items-baseline space-x-2 md:space-x-4 max-w-xl mx-auto"
+              >
+                <span className="text-xl md:text-2xl font-semibold text-primary" style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}>Fitter</span>
+                <span className="text-xl md:text-2xl font-semibold text-primary/70">·</span>
+                <span className="text-xl md:text-2xl font-semibold text-primary" style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}>Stronger</span>
+                <span className="text-xl md:text-2xl font-semibold text-primary/70">·</span>
+                <span className="text-xl md:text-2xl font-semibold text-primary" style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.5)' }}>Healthier</span>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </motion.div>
     </section>
   );

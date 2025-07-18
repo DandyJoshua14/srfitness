@@ -1,11 +1,11 @@
 
 "use client";
 
-import { useEffect, useState } from 'react';
-import { motion, useAnimation, useInView, animate } from 'framer-motion'; // Added 'animate' to imports
+import { useEffect, useState, useRef } from 'react';
+import { motion, useAnimation, useInView, animate } from 'framer-motion';
 import { Users, Award, Zap, Smile } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import React from 'react'; // Ensure React is imported for JSX
+import React from 'react';
 
 interface Stat {
   icon: React.ReactElement;
@@ -21,32 +21,27 @@ const statsData: Stat[] = [
 ];
 
 const AnimatedNumber = ({ value, suffix }: { value: number, suffix?: string }) => {
-  const [count, setCount] = useState(0);
-  const controls = useAnimation();
-  const ref = React.useRef(null);
+  const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const [displayValue, setDisplayValue] = useState(0);
 
   useEffect(() => {
     if (isInView) {
-      controls.start({
-        opacity: 1,
-        transition: { duration: 0.5 }
-      });
-      const animation = animate(0, value, { // Changed from motion.animate to animate
+      const controls = animate(0, value, {
         duration: 2,
         ease: "easeOut",
         onUpdate: (latest) => {
-          setCount(Math.round(latest));
+          setDisplayValue(Math.round(latest));
         },
       });
-      return () => animation.stop();
+      return () => controls.stop();
     }
-  }, [isInView, value, controls]);
+  }, [isInView, value]);
 
   return (
-    <motion.span ref={ref} initial={{ opacity: 0 }} animate={controls}>
-      {count}{suffix}
-    </motion.span>
+    <span ref={ref}>
+      {displayValue}{suffix}
+    </span>
   );
 };
 
@@ -72,7 +67,7 @@ export default function OurImpactSection() {
               transition={{ duration: 0.5, delay: index * 0.15 }}
               viewport={{ once: true, amount: 0.3 }}
             >
-              <Card className="group text-center bg-background text-foreground border-border shadow-xl h-full transition-all duration-300 ease-in-out transform hover:-translate-y-2 hover:shadow-2xl hover:border-primary">
+              <Card className="group text-center bg-background text-foreground border-border shadow-xl h-full transition-all duration-300 ease-in-out transform hover:-translate-y-2 hover:shadow-2xl hover:border-primary/50">
                 <CardHeader className="pb-4 items-center">
                   <motion.div
                     className="p-4 bg-primary/10 rounded-full mb-4 inline-block transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110"

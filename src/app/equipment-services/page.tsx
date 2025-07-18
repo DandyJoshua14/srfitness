@@ -1,46 +1,48 @@
 
+"use client";
+
+import * as React from 'react';
 import Image from 'next/image';
-import type { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Ruler, Wrench, ShieldCheck, Users, ArrowRight, Settings } from 'lucide-react';
-
-export const metadata: Metadata = {
-  title: 'Gym Equipment Solutions - SR Fitness',
-  description: 'Expert gym equipment sourcing, installation, space design, management solutions, and safety training by SR Fitness.',
-};
+import { Ruler, Wrench, ShieldCheck, ArrowRight, Settings } from 'lucide-react';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import Autoplay from "embla-carousel-autoplay";
 
 export default function EquipmentServicesPage() {
+  const autoplayPlugin = React.useRef(
+    Autoplay({ delay: 4000, stopOnInteraction: true })
+  );
+
   const services = [
     {
       title: "Home or Commercial Gym Space Design",
       description: "We conceptualize and design functional and inspiring gym spaces tailored to your specific needs, whether for private home use or a commercial facility.",
       icon: <Ruler className="h-8 w-8 text-primary" />,
-      image: "/gym.jpeg",
-      dataAiHint: "gym layout blueprint"
     },
     {
       title: "Equipment Sourcing, Installation & Maintenance",
       description: "Leverage our industry connections to source high-quality gym equipment. We handle professional installation and offer ongoing maintenance plans.",
       icon: <Wrench className="h-8 w-8 text-primary" />,
-      image: "https://placehold.co/600x400.png",
-      dataAiHint: "gym equipment installation"
     },
     {
       title: "Gym Management Solutions",
       description: "Optimize your gym operations with our expert consultancy, covering everything from membership systems to staff training and retention strategies.",
       icon: <Settings className="h-8 w-8 text-primary" />,
-      image: "https://placehold.co/600x400.png",
-      dataAiHint: "gym management software"
     },
     {
       title: "Commercial Gym Safety Staff Training",
       description: "Ensure a safe environment for your members and staff with our comprehensive safety training programs, covering equipment usage and emergency protocols.",
       icon: <ShieldCheck className="h-8 w-8 text-primary" />,
-      image: "https://placehold.co/600x400.png",
-      dataAiHint: "safety training class"
     },
+  ];
+
+  const carouselImages = [
+    { src: "/gym.jpeg", alt: "Modern gym layout", dataAiHint: "modern gym design" },
+    { src: "https://placehold.co/800x600.png", alt: "Treadmills in a row", dataAiHint: "gym treadmills" },
+    { src: "https://placehold.co/800x600.png", alt: "Weight rack with various dumbbells", dataAiHint: "gym weight rack" },
+    { src: "https://placehold.co/800x600.png", alt: "Person using a leg press machine", dataAiHint: "gym leg press" },
   ];
 
   return (
@@ -54,6 +56,42 @@ export default function EquipmentServicesPage() {
           <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
             With over a decade of experience in the fitness business, we specialize in providing comprehensive, value-driven solutions for all your gym-related needs.
           </p>
+        </div>
+
+        <div className="mb-16 md:mb-20">
+          <Carousel
+            plugins={[autoplayPlugin.current]}
+            className="w-full max-w-4xl mx-auto"
+            onMouseEnter={autoplayPlugin.current.stop}
+            onMouseLeave={autoplayPlugin.current.reset}
+            opts={{
+              loop: true,
+            }}
+          >
+            <CarouselContent>
+              {carouselImages.map((photo, index) => (
+                <CarouselItem key={index}>
+                  <div className="p-1">
+                    <Card className="overflow-hidden shadow-lg border-primary/20">
+                      <CardContent className="flex aspect-video items-center justify-center p-0 relative group">
+                        <Image
+                          src={photo.src}
+                          alt={photo.alt}
+                          layout="fill"
+                          objectFit="cover"
+                          className="transform transition-transform duration-500 group-hover:scale-110"
+                          data-ai-hint={photo.dataAiHint}
+                        />
+                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="absolute left-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
+            <CarouselNext className="absolute right-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
+          </Carousel>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 md:gap-10 mb-16">

@@ -34,7 +34,7 @@ export default function AboutSummarySection() {
               Welcome to <span className="text-foreground">SR Fitness</span>
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
-            SR Fitness is a wellness consultancy that helps people achieve health through personal training, community outreach, education, and advocacy. Its mission focuses on transformation and inclusivity, having positively impacted thousands via training, seminars and corporate Wellness programs.
+            SR Fitness is a wellness consultancy brand that helps people achieve good health through personal training, community outreach, education, and advocacy. Its mission focuses on transformation and inclusivity, having positively impacted thousands via training, seminars and corporate Wellness programs.
             </p>
 
             <div className="mt-10">

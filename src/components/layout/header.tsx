@@ -46,6 +46,7 @@ const digitalWellnessDropdownItems = [
 
 const productsDropdownItemsBase = [
   { label: 'Lifestyle Magazine', href: '/lifestyle-magazine', icon: <Newspaper className="mr-2 h-4 w-4" /> },
+  {label: 'Marketplace', href: '/marketplace', icon: <ShoppingCart className="mr-2 h-4 w-4" />},
 ];
 
 const adminStudioItem = { label: 'Admin Studio', href: '/admin/content-studio', icon: <ShieldAlert className="mr-2 h-4 w-4" />, isAdminOnly: true };

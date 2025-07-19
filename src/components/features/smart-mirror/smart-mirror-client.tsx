@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Camera, AlertTriangle, Info, CheckCircle, Loader2, Sparkles, ListChecks, Timer } from 'lucide-react';
+import { Camera, AlertTriangle, Info, CheckCircle, Loader2, ListChecks, Timer } from 'lucide-react';
 import { analyzeExerciseForm, type AnalyzeExerciseFormInput, type AnalyzeExerciseFormOutput } from '@/ai/flows/analyze-exercise-form-flow';
 
 export default function SmartMirrorClient() {
@@ -33,7 +33,6 @@ export default function SmartMirrorClient() {
       if (currentVideoRef && currentVideoRef.srcObject) {
         const stream = currentVideoRef.srcObject as MediaStream;
         stream.getTracks().forEach(track => track.stop());
-        // currentVideoRef.srcObject = null; // Avoid error if ref is nullified before this runs
         console.log("Camera stream stopped on unmount.");
       }
       if (currentTimerRef) {
@@ -55,9 +54,8 @@ export default function SmartMirrorClient() {
 
   const handleAnalyzeForm = async () => {
     if (!videoRef.current || !canvasRef.current || !videoRef.current.srcObject) {
-      // Camera might have been stopped or lost stream before analysis
       console.log("Analysis skipped: camera not ready or stream lost.");
-      stopCameraStream(); // Ensure camera is marked as off
+      stopCameraStream();
       return;
     }
 
@@ -105,7 +103,7 @@ export default function SmartMirrorClient() {
       });
     } finally {
       setIsAnalyzing(false);
-      stopCameraStream(); // Stop camera after analysis attempt
+      stopCameraStream();
       toast({ title: "Camera session ended."});
     }
   };
@@ -121,7 +119,7 @@ export default function SmartMirrorClient() {
       return;
     }
 
-    setIsAnalyzing(false); // Reset analysis state
+    setIsAnalyzing(false);
     setAnalysisResult(null);
     setAnalysisError(null);
     setCountdownMessage(null);
@@ -144,7 +142,7 @@ export default function SmartMirrorClient() {
       }
 
       timerRef.current = setTimeout(() => {
-        handleAnalyzeForm(); // This will also stop the camera after analysis
+        handleAnalyzeForm();
       }, 20000); // 20 seconds
 
     } catch (error) {
@@ -226,21 +224,21 @@ export default function SmartMirrorClient() {
           <CardDescription>Suggestions to improve your form will appear here.</CardDescription>
         </CardHeader>
         <CardContent className="min-h-[200px]">
-          {isAnalyzing && !analysisResult && !analysisError && ( // Show analyzing only if no result/error yet
+          {isAnalyzing && !analysisResult && !analysisError && (
             <div className="flex flex-col items-center justify-center text-muted-foreground py-8">
               <Loader2 className="h-10 w-10 animate-spin text-primary mb-3" />
               <p className="font-semibold">AI is analyzing your form...</p>
               <p className="text-sm">Please hold still.</p>
             </div>
           )}
-          {analysisError && ( // Always show error if present
+          {analysisError && (
             <Alert variant="destructive">
               <AlertTriangle className="h-4 w-4" />
               <AlertTitle>Analysis Error</AlertTitle>
               <AlertDescription>{analysisError}</AlertDescription>
             </Alert>
           )}
-          {analysisResult && !analysisError && ( // Show result if present and no error
+          {analysisResult && !analysisError && (
             <div className="space-y-4">
               {analysisResult.overallAssessment && (
                 <Alert variant={analysisResult.isFormCorrect === false ? "destructive" : (analysisResult.isFormCorrect === true ? "default" : "default")} 

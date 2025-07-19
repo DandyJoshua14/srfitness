@@ -14,7 +14,7 @@ const features = [
   {
     icon: <Award className="h-10 w-10 text-primary" />,
     title: "Diverse Fitness Programs",
-    description: "Leveraging global best practices, our programs are crafted to meet world-class standards, offering a fitness experience that caters to an international clientele.",
+    description: "Our services are crafted leveraging global best practices to meet world-class standards, offering a fitness experience that caters to an international clientele.",
   },
   {
     icon: <ShieldCheck className="h-10 w-10 text-primary" />,

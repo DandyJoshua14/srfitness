@@ -26,8 +26,8 @@ export type VoiceAgentOutput = z.infer<typeof VoiceAgentOutputSchema>;
 const validPaths = [
     '/', '/personal-training', '/burn-off-bootcamp', '/awards', 
     '/lifestyle-magazine', '/public-speaking', '/equipment-services', '/#contact',
-    '/meal-planner', '/smart-mirror', '/global-connect', '/community', '/profile', 
-    '/privacy-policy', '/terms-of-service'
+    '/meal-planner', '/Smart Scan', '/global-connect', '/community', '/profile', 
+    '/privacy-policy', '/terms-of-service', '/corporate-wellness', '/marketplace'
 ] as const;
 
 // Define the navigation tool

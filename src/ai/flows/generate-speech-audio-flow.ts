@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview Converts text to speech audio.
@@ -32,7 +33,7 @@ const generateSpeechAudioFlow = ai.defineFlow(
         responseModalities: ['AUDIO'],
         speechConfig: {
           voiceConfig: {
-            prebuiltVoiceConfig: { voiceName: 'Algenib' },
+            prebuiltVoiceConfig: { voiceName: 'Canopus' }, // Updated to a female voice
           },
         },
       },

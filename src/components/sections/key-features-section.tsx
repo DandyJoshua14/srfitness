@@ -1,4 +1,3 @@
-
 "use client";
 import { Award, Users, Zap, MapPin, Smile, ShieldCheck } from 'lucide-react'; 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,7 +14,7 @@ const features = [
   {
     icon: <Award className="h-10 w-10 text-primary" />,
     title: "Diverse Fitness Programs",
-    description: "From high-intensity bootcamps to specialized personal training, find the perfect program to match your style and objectives.",
+    description: "Leveraging global best practices, our programs are crafted to meet world-class standards, offering a fitness experience that caters to an international clientele.",
   },
   {
     icon: <ShieldCheck className="h-10 w-10 text-primary" />,

@@ -11,8 +11,12 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 
 
 export default function AwardsPage() {
-  const autoplayPlugin = React.useRef(
+  const workoutAutoplay = React.useRef(
     Autoplay({ delay: 4000, stopOnInteraction: true })
+  );
+
+  const ceremonyAutoplay = React.useRef(
+    Autoplay({ delay: 4500, stopOnInteraction: true })
   );
 
   const workoutPhotos = [
@@ -163,10 +167,10 @@ export default function AwardsPage() {
                   </p>
               </div>
               <Carousel
-                plugins={[autoplayPlugin.current]}
+                plugins={[workoutAutoplay.current]}
                 className="w-full max-w-4xl mx-auto"
-                onMouseEnter={autoplayPlugin.current.stop}
-                onMouseLeave={autoplayPlugin.current.reset}
+                onMouseEnter={workoutAutoplay.current.stop}
+                onMouseLeave={workoutAutoplay.current.reset}
                 opts={{
                   loop: true,
                 }}
@@ -237,10 +241,10 @@ export default function AwardsPage() {
               </div>
               
                 <Carousel
-                    plugins={[autoplayPlugin.current]}
+                    plugins={[ceremonyAutoplay.current]}
                     className="w-full max-w-4xl mx-auto"
-                    onMouseEnter={autoplayPlugin.current.stop}
-                    onMouseLeave={autoplayPlugin.current.reset}
+                    onMouseEnter={ceremonyAutoplay.current.stop}
+                    onMouseLeave={ceremonyAutoplay.current.reset}
                     opts={{
                     loop: true,
                     }}

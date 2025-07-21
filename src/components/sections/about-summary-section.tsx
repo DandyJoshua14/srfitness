@@ -65,13 +65,6 @@ export default function AboutSummarySection() {
               place”
             </motion.blockquote>
 
-            <div className="mt-8">
-                <Button asChild size="lg" className="group font-headline text-lg bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20 hover:text-primary-foreground hover:bg-primary transition-all">
-                    <Link href="/lifestyle-magazine">
-                        Learn More <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                    </Link>
-                </Button>
-            </div>
           </motion.div>
         </div>
       </div>

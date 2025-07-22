@@ -11,14 +11,6 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 
 
 export default function AwardsPage() {
-  const workoutAutoplay = React.useRef(
-    Autoplay({ delay: 4000, stopOnInteraction: true })
-  );
-
-  const ceremonyAutoplay = React.useRef(
-    Autoplay({ delay: 4500, stopOnInteraction: true })
-  );
-
   const workoutPhotos = [
     { src: '/srward.jpeg', alt: 'Participants in a high-energy group session', dataAiHint: 'group workout high energy' },
     { src: '/groupp.jpeg', alt: 'Group workout session in progress', dataAiHint: 'group workout intense' },
@@ -167,10 +159,8 @@ export default function AwardsPage() {
                   </p>
               </div>
               <Carousel
-                plugins={[workoutAutoplay.current]}
+                plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
                 className="w-full max-w-4xl mx-auto"
-                onMouseEnter={workoutAutoplay.current.stop}
-                onMouseLeave={workoutAutoplay.current.reset}
                 opts={{
                   loop: true,
                 }}
@@ -241,10 +231,8 @@ export default function AwardsPage() {
               </div>
               
                 <Carousel
-                    plugins={[ceremonyAutoplay.current]}
+                    plugins={[Autoplay({ delay: 4500, stopOnInteraction: true })]}
                     className="w-full max-w-4xl mx-auto"
-                    onMouseEnter={ceremonyAutoplay.current.stop}
-                    onMouseLeave={ceremonyAutoplay.current.reset}
                     opts={{
                     loop: true,
                     }}

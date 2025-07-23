@@ -130,7 +130,7 @@ export default function PublicSpeakingPage() {
                         An Unforgettable Voice
                     </h2>
                     <p className="text-lg text-muted-foreground leading-relaxed">
-                        Sampson is a renowned wellness expert, A UK certified wellness consultant with a decade of active industry experience.
+                        Sampson is a renowned Wellness expert, A UK Certified Wellness Consultant with a decade of active industry experience.
                     </p>
                 </div>
             </div>

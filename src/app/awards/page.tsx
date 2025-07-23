@@ -18,9 +18,9 @@ export default function AwardsPage() {
   ];
 
   const ceremonyPhotos = [
-    { src: 'https://placehold.co/600x400.png', alt: 'Awards ceremony highlight 1', dataAiHint: 'award ceremony winner' },
-    { src: 'https://placehold.co/600x400.png', alt: 'Awards ceremony highlight 2', dataAiHint: 'award winner portrait' },
-    { src: 'https://placehold.co/600x400.png', alt: 'Awards ceremony highlight 3', dataAiHint: 'audience applause conference' },
+    { src: '/gl.jpeg', alt: 'Awards ceremony highlight 1', dataAiHint: 'award ceremony winner' },
+    { src: '/gl2.jpeg', alt: 'Awards ceremony highlight 2', dataAiHint: 'award winner portrait' },
+    { src: '/gl3.jpeg', alt: 'Awards ceremony highlight 3', dataAiHint: 'audience applause conference' },
   ];
   
   const awardCategories = [

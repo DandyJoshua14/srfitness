@@ -169,6 +169,7 @@ export default function Header() {
     { label: 'Products', href: '#category-toggle-products', isCategory: true, subItems: productsDropdownItems.filter(item => MOCK_IS_ADMIN || !item.isAdminOnly), icon: <ShoppingCart /> },
     { label: 'Digital Wellness', href: '#category-toggle-digital-wellness', isCategory: true, subItems: digitalWellnessDropdownItems, icon: <Lightbulb /> },
     contactNavItem,
+    { label: 'Cart', href: '/marketplace#cart', isCategory: false, icon: <ShoppingCart />}, // Placeholder link
   ];
   
   const mobileCategoryClasses = (isActive: boolean, isExpanded: boolean) => cn(
@@ -189,6 +190,12 @@ export default function Header() {
   );
 
   // Removed authButtonClasses
+  const iconButtonClasses = (isActive?: boolean) => cn(
+      "relative hidden md:inline-flex ml-2 h-auto p-2 text-2xl rounded-full transition-colors focus-visible:ring-primary/70",
+      isScrolled ? "text-gray-200 hover:bg-gray-700/50 hover:text-primary" : "text-white hover:bg-white/10 hover:text-primary",
+      isActive && (isScrolled ? "text-primary" : "text-primary")
+    );
+
 
   return (
     <>
@@ -283,14 +290,13 @@ export default function Header() {
               <Link href={contactNavItem.href} onClick={() => handleLinkClick(contactNavItem.href, contactNavItem.href.startsWith('/#'))} className={navLinkClasses(isLinkActive(contactNavItem.href))}>
                 {contactNavItem.label}
               </Link>
-
-              {/* Auth Buttons Desktop REMOVED */}
             </nav>
-
-            <VoiceAgentDialog className={cn(
-              "hidden md:inline-flex ml-2",
-              isScrolled ? "text-gray-200 hover:text-primary" : "text-white hover:text-primary/80"
-            )} />
+            <VoiceAgentDialog className={iconButtonClasses()} />
+            <Button asChild variant="ghost" size="icon" className={iconButtonClasses(isLinkActive('/marketplace'))}>
+                <Link href="/marketplace#cart" aria-label="Shopping Cart">
+                    <ShoppingCart className="h-5 w-5" />
+                </Link>
+            </Button>
           </div>
 
           {/* Mobile Menu Area */}

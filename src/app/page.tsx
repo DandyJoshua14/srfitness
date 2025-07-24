@@ -21,12 +21,12 @@ export default function HomePage() {
     <>
       <HeroSection />
       <AboutSummarySection />
+      <GallerySection />
       <ServicesHighlightSection />
       <KeyFeaturesSection />
       <BlogHighlightSection />
       <MarketplaceHighlightSection />
       <OurImpactSection />
-      <GallerySection />
       <DailyTipSection />
       <ContactLocationSection />
     </>

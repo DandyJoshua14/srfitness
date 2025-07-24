@@ -3,10 +3,14 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Newspaper } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import Autoplay from "embla-carousel-autoplay";
+import * as React from "react";
+
 
 const highlightedPosts = [
   {
@@ -41,20 +45,12 @@ const highlightedPosts = [
   },
 ];
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: i * 0.15,
-      duration: 0.5,
-      ease: "easeOut"
-    }
-  })
-};
 
 export default function BlogHighlightSection() {
+    const plugin = React.useRef(
+      Autoplay({ delay: 5000, stopOnInteraction: true })
+    );
+  
   return (
     <section className="py-16 md:py-24 bg-background text-foreground">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -74,44 +70,58 @@ export default function BlogHighlightSection() {
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-          {highlightedPosts.map((post, index) => (
-             <motion.div
-              key={post.id}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
-              custom={index}
-            >
-              <Card className="h-full flex flex-col overflow-hidden group transition-all duration-300 ease-in-out transform hover:-translate-y-2 hover:shadow-2xl hover:border-primary/50">
-                <CardHeader className="p-0 relative">
-                   <Link href="/community" className="block aspect-video w-full relative overflow-hidden rounded-t-lg">
-                    <Image 
-                      src={post.image}
-                      alt={post.title}
-                      layout="fill"
-                      objectFit="cover"
-                      className="transition-transform duration-500 group-hover:scale-110"
-                      data-ai-hint={post.dataAiHint}
-                    />
-                  </Link>
-                </CardHeader>
-                <CardContent className="p-6 flex-grow flex flex-col">
-                  <CardTitle className="text-xl font-headline text-foreground leading-snug group-hover:text-primary transition-colors mb-2">
-                     <Link href="/community">{post.title}</Link>
-                  </CardTitle>
-                  <CardDescription className="text-muted-foreground line-clamp-3 mb-4 flex-grow">{post.content}</CardDescription>
-                  <Button asChild variant="link" className="text-primary font-semibold p-0 self-start group-hover:underline">
-                    <Link href="/community">
-                        Read More <ArrowRight className="ml-1.5 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                    </Link>
-                 </Button>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+        <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+        >
+            <Carousel
+                plugins={[plugin.current]}
+                className="w-full max-w-xl mx-auto"
+                onMouseEnter={plugin.current.stop}
+                onMouseLeave={plugin.current.reset}
+                opts={{
+                  loop: true,
+                }}
+              >
+                <CarouselContent>
+                  {highlightedPosts.map((post) => (
+                     <CarouselItem key={post.id}>
+                        <div className="p-1">
+                            <Card className="h-full flex flex-col overflow-hidden group transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl hover:border-primary/50">
+                                <CardHeader className="p-0 relative">
+                                <Link href="/community" className="block aspect-video w-full relative overflow-hidden rounded-t-lg">
+                                    <Image 
+                                    src={post.image}
+                                    alt={post.title}
+                                    layout="fill"
+                                    objectFit="cover"
+                                    className="transition-transform duration-500 group-hover:scale-110"
+                                    data-ai-hint={post.dataAiHint}
+                                    />
+                                </Link>
+                                </CardHeader>
+                                <CardContent className="p-6 flex-grow flex flex-col">
+                                <CardTitle className="text-xl font-headline text-foreground leading-snug group-hover:text-primary transition-colors mb-2">
+                                    <Link href="/community">{post.title}</Link>
+                                </CardTitle>
+                                <CardDescription className="text-muted-foreground line-clamp-2 mb-4 flex-grow">{post.content}</CardDescription>
+                                <Button asChild variant="link" className="text-primary font-semibold p-0 self-start group-hover:underline">
+                                    <Link href="/community">
+                                        Read More <ArrowRight className="ml-1.5 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                                    </Link>
+                                </Button>
+                                </CardContent>
+                            </Card>
+                        </div>
+                     </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="absolute left-[-20px] sm:left-[-50px] top-1/2 -translate-y-1/2" />
+                <CarouselNext className="absolute right-[-20px] sm:right-[-50px] top-1/2 -translate-y-1/2" />
+              </Carousel>
+        </motion.div>
       </div>
     </section>
   );

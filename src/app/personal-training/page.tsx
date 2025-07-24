@@ -112,7 +112,7 @@ export default function PersonalTrainingPage() {
             
             <Carousel
                 plugins={[plugin.current]}
-                className="w-full max-w-md mx-auto"
+                className="w-full max-w-xl mx-auto"
                 onMouseEnter={plugin.current.stop}
                 onMouseLeave={plugin.current.reset}
                 opts={{

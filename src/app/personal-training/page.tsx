@@ -22,24 +22,24 @@ const transformations = [
     {
         name: 'John D.',
         story: '"I lost 30 pounds in 3 months! The personal training program kept me accountable and motivated. Completely life-changing."',
-        beforeImg: 'https://placehold.co/300x400.png',
-        afterImg: 'https://placehold.co/300x400.png',
+        beforeImg: 'https://placehold.co/400x533.png',
+        afterImg: 'https://placehold.co/400x533.png',
         beforeHint: 'man overweight before',
         afterHint: 'man fit after'
     },
     {
         name: 'Emily R.',
         story: '"As a new mom, finding time was hard. The trainers were so flexible and helped me regain my pre-pregnancy fitness safely."',
-        beforeImg: 'https://placehold.co/300x400.png',
-        afterImg: 'https://placehold.co/300x400.png',
+        beforeImg: 'https://placehold.co/400x533.png',
+        afterImg: 'https://placehold.co/400x533.png',
         beforeHint: 'tired woman portrait',
         afterHint: 'happy woman park'
     },
     {
         name: 'David L.',
         story: '"I wanted to improve my athletic performance for marathons. My trainer designed a sports-specific plan that took me to the next level."',
-        beforeImg: 'https://placehold.co/300x400.png',
-        afterImg: 'https://placehold.co/300x400.png',
+        beforeImg: 'https://placehold.co/400x533.png',
+        afterImg: 'https://placehold.co/400x533.png',
         beforeHint: 'runner tired',
         afterHint: 'runner finishing race'
     }

@@ -59,7 +59,7 @@ export default function GallerySection() {
             >
                 <CarouselContent className="-ml-4">
                     {galleryImages.map((photo, index) => (
-                        <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                        <CarouselItem key={index} className="pl-4">
                             <div className="p-1">
                                 <Card className="overflow-hidden shadow-lg border-primary/20">
                                     <CardContent className="flex aspect-video items-center justify-center p-0 relative group">

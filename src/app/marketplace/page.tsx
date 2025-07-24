@@ -8,8 +8,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ShoppingCart, Star, Search, Filter, ArrowRight } from 'lucide-react';
+import { ShoppingCart, Star, Search, Filter, Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useToast } from '@/hooks/use-toast';
 
 const mockProducts = [
   { id: 'prod1', name: 'SR Pro-Grip Dumbbell Set', category: 'Equipment', price: 129.99, image: 'https://placehold.co/600x600.png', dataAiHint: 'dumbbell set', rating: 5, isNew: true },
@@ -34,6 +35,7 @@ export default function MarketplacePage() {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState('All');
   const [sortOption, setSortOption] = React.useState('newest');
+  const { toast } = useToast();
 
   const filteredAndSortedProducts = React.useMemo(() => {
     let products = mockProducts.filter(p => 
@@ -58,6 +60,13 @@ export default function MarketplacePage() {
     }
     return products;
   }, [searchTerm, selectedCategory, sortOption]);
+  
+  const handleAddToCart = (productName: string) => {
+    toast({
+      title: "Item Added (Conceptual)",
+      description: `${productName} has been added to your cart.`,
+    });
+  };
 
   return (
     <div className="bg-background text-foreground">
@@ -158,8 +167,14 @@ export default function MarketplacePage() {
                       ))}
                     </div>
                   </div>
-                  <Button variant="outline" size="icon" className="group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-colors">
-                    <ShoppingCart className="h-5 w-5" />
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-colors"
+                    onClick={() => handleAddToCart(product.name)}
+                    aria-label={`Add ${product.name} to cart`}
+                  >
+                    <Plus className="h-5 w-5" />
                   </Button>
                 </CardFooter>
               </Card>

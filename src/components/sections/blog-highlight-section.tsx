@@ -78,7 +78,7 @@ export default function BlogHighlightSection() {
         >
             <Carousel
                 plugins={[plugin.current]}
-                className="w-full max-w-xl mx-auto"
+                className="w-full max-w-4xl mx-auto"
                 onMouseEnter={plugin.current.stop}
                 onMouseLeave={plugin.current.reset}
                 opts={{

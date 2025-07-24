@@ -33,7 +33,7 @@ const generateSpeechAudioFlow = ai.defineFlow(
         responseModalities: ['AUDIO'],
         speechConfig: {
           voiceConfig: {
-            prebuiltVoiceConfig: { voiceName: 'Canopus' }, // Updated to a female voice
+            prebuiltVoiceConfig: { voiceName: 'Umbriel' }, // Updated to a valid female-sounding voice
           },
         },
       },

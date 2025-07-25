@@ -135,7 +135,7 @@ export default function MarketplacePage() {
         </Card>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
           {filteredAndSortedProducts.map((product, index) => (
             <motion.div
               key={product.id}
@@ -159,11 +159,11 @@ export default function MarketplacePage() {
                 </CardHeader>
                 <CardContent className="p-4 flex-grow">
                   <Badge variant="secondary" className="mb-2 text-xs bg-muted text-muted-foreground">{product.category}</Badge>
-                  <CardTitle className="text-lg font-semibold text-foreground leading-snug group-hover:text-primary transition-colors">{product.name}</CardTitle>
+                  <CardTitle className="text-base sm:text-lg font-semibold text-foreground leading-snug group-hover:text-primary transition-colors">{product.name}</CardTitle>
                 </CardContent>
-                <CardFooter className="p-4 pt-0 flex justify-between items-center">
-                  <div>
-                    <p className="text-xl font-bold text-primary">${product.price.toFixed(2)}</p>
+                <CardFooter className="p-4 pt-0 flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                  <div className="mb-2 sm:mb-0">
+                    <p className="text-lg sm:text-xl font-bold text-primary">${product.price.toFixed(2)}</p>
                     <div className="flex items-center">
                       {[...Array(5)].map((_, i) => (
                         <Star key={i} className={`h-4 w-4 ${i < product.rating ? 'text-amber-400 fill-amber-400' : 'text-muted-foreground/30'}`} />
@@ -173,7 +173,7 @@ export default function MarketplacePage() {
                   <Button 
                     variant="outline" 
                     size="icon" 
-                    className="group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-colors"
+                    className="group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-colors self-end sm:self-center"
                     onClick={() => handleAddToCart(product)}
                     aria-label={`Add ${product.name} to cart`}
                   >

@@ -9,12 +9,13 @@ import { Camera } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const galleryImages = [
-  { src: 'https://placehold.co/800x600.png', alt: 'Group workout session', dataAiHint: 'group workout energy' },
-  { src: 'https://placehold.co/800x600.png', alt: 'Client lifting weights with trainer', dataAiHint: 'personal training weights' },
-  { src: 'https://placehold.co/800x600.png', alt: 'Yoga class in progress', dataAiHint: 'yoga class zen' },
-  { src: 'https://placehold.co/800x600.png', alt: 'Bootcamp outdoor drill', dataAiHint: 'bootcamp outdoor fitness' },
-  { src: 'https://placehold.co/800x600.png', alt: 'Modern gym interior', dataAiHint: 'modern gym empty' },
-  { src: 'https://placehold.co/800x600.png', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling' },
+  { src: '/aw1.jpeg', alt: 'Group workout session', dataAiHint: 'group workout energy' },
+  { src: '/aw2.jpeg', alt: 'Client lifting weights with trainer', dataAiHint: 'personal training weights' },
+  { src: '/aw3.jpeg', alt: 'Yoga class in progress', dataAiHint: 'yoga class zen' },
+  { src: '/aw4.jpeg', alt: 'Bootcamp outdoor drill', dataAiHint: 'bootcamp outdoor fitness' },
+  { src: '/gal.jpeg', alt: 'Modern gym interior', dataAiHint: 'modern gym empty' },
+  { src: '/gal1.jpeg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling' },
+  { src: '/gal2.jpeg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling' },
 ];
 
 export default function GallerySection() {
@@ -62,13 +63,13 @@ export default function GallerySection() {
                         <CarouselItem key={index} className="pl-4">
                             <div className="p-1">
                                 <Card className="overflow-hidden shadow-lg border-primary/20">
-                                    <CardContent className="flex aspect-video items-center justify-center p-0 relative group">
+                                    <CardContent className="flex aspect-video items-center justify-center p-0 relative group bg-black">
                                         <Image
                                             src={photo.src}
                                             alt={photo.alt}
                                             layout="fill"
-                                            objectFit="cover"
-                                            className="transform transition-transform duration-500 group-hover:scale-110"
+                                            objectFit="contain"
+                                            className="transform transition-transform duration-500 group-hover:scale-105"
                                             data-ai-hint={photo.dataAiHint}
                                         />
                                         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>

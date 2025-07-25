@@ -16,6 +16,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useLoading } from '@/contexts/loading-context';
+import { useCart } from '@/contexts/cart-context';
 import VoiceAgentDialog from '@/components/features/voice-agent/voice-agent-dialog';
 // Removed useAuth, AuthForm, logoutUser, UserCircle2, LogOut, LogIn, Dialog-related imports
 
@@ -57,7 +58,7 @@ const contactNavItem = { label: 'Contact', href: '/#contact' };
 export default function Header() {
   const pathname = usePathname();
   const { showLoading } = useLoading();
-  // Removed currentUser, isAuthReady, toast from useAuth and useToast
+  const { cartCount } = useCart();
 
   const [activeLink, setActiveLink] = useState(pathname);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -169,7 +170,7 @@ export default function Header() {
     { label: 'Products', href: '#category-toggle-products', isCategory: true, subItems: productsDropdownItems.filter(item => MOCK_IS_ADMIN || !item.isAdminOnly), icon: <ShoppingCart /> },
     { label: 'Digital Wellness', href: '#category-toggle-digital-wellness', isCategory: true, subItems: digitalWellnessDropdownItems, icon: <Lightbulb /> },
     contactNavItem,
-    { label: 'Cart', href: '/marketplace#cart', isCategory: false, icon: <ShoppingCart />}, // Placeholder link
+    { label: 'Cart', href: '/cart', isCategory: false, icon: <ShoppingCart />},
   ];
   
   const mobileCategoryClasses = (isActive: boolean, isExpanded: boolean) => cn(
@@ -179,7 +180,7 @@ export default function Header() {
   );
   
   const mobileLinkClasses = (isActive: boolean) => cn(
-    "font-medium text-base py-3.5 px-4 w-full text-left flex items-center rounded-lg transition-colors duration-150",
+    "font-medium text-base py-3.5 px-4 w-full text-left flex items-center rounded-lg transition-colors duration-150 relative",
      isActive ? "text-primary bg-primary/10 font-semibold" : "text-foreground hover:bg-muted/60"
   );
   
@@ -292,9 +293,14 @@ export default function Header() {
               </Link>
             </nav>
             <VoiceAgentDialog className={iconButtonClasses()} />
-            <Button asChild variant="ghost" size="icon" className={iconButtonClasses(isLinkActive('/marketplace'))}>
-                <Link href="/marketplace#cart" aria-label="Shopping Cart">
+            <Button asChild variant="ghost" size="icon" className={iconButtonClasses(isLinkActive('/cart'))}>
+                <Link href="/cart" aria-label="Shopping Cart">
                     <ShoppingCart className="h-5 w-5" />
+                    {cartCount > 0 && (
+                      <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
+                        {cartCount}
+                      </span>
+                    )}
                 </Link>
             </Button>
           </div>
@@ -358,6 +364,11 @@ export default function Header() {
                         <Link href={item.href} onClick={() => handleLinkClick(item.href, item.href.startsWith('/#'))} className={mobileLinkClasses(isLinkActive(item.href))}>
                            {item.icon && React.cloneElement(item.icon as React.ReactElement, { className: "mr-3.5 h-5 w-5 shrink-0 opacity-90" })}
                           {item.label}
+                          {item.label === 'Cart' && cartCount > 0 && (
+                            <span className="ml-auto flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
+                                {cartCount}
+                            </span>
+                          )}
                         </Link>
                       )}
                     </div>

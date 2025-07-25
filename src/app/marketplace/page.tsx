@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ShoppingCart, Star, Search, Filter, Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useToast } from '@/hooks/use-toast';
+import { useCart } from '@/contexts/cart-context';
 
 const mockProducts = [
   { id: 'prod1', name: 'SR Pro-Grip Dumbbell Set', category: 'Equipment', price: 129.99, image: 'https://placehold.co/600x600.png', dataAiHint: 'dumbbell set', rating: 5, isNew: true },
@@ -35,7 +35,7 @@ export default function MarketplacePage() {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState('All');
   const [sortOption, setSortOption] = React.useState('newest');
-  const { toast } = useToast();
+  const { addToCart } = useCart();
 
   const filteredAndSortedProducts = React.useMemo(() => {
     let products = mockProducts.filter(p => 
@@ -61,10 +61,13 @@ export default function MarketplacePage() {
     return products;
   }, [searchTerm, selectedCategory, sortOption]);
   
-  const handleAddToCart = (productName: string) => {
-    toast({
-      title: "Item Added (Conceptual)",
-      description: `${productName} has been added to your cart.`,
+  const handleAddToCart = (product: Omit<typeof mockProducts[0], 'rating' | 'isNew' | 'category'>) => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      dataAiHint: product.dataAiHint,
     });
   };
 
@@ -171,7 +174,7 @@ export default function MarketplacePage() {
                     variant="outline" 
                     size="icon" 
                     className="group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-colors"
-                    onClick={() => handleAddToCart(product.name)}
+                    onClick={() => handleAddToCart(product)}
                     aria-label={`Add ${product.name} to cart`}
                   >
                     <Plus className="h-5 w-5" />

@@ -62,7 +62,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         return [...prevItems, { ...item, quantity: 1 }];
       }
     });
-  }, [toast]);
+  }, []);
 
   const updateQuantity = useCallback((itemId: string, quantity: number) => {
     setCartItems(prevItems => {
@@ -78,7 +78,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const removeFromCart = useCallback((itemId: string) => {
     setCartItems(prevItems => prevItems.filter(i => i.id !== itemId));
     toast({ title: "Item Removed", description: "The item has been removed from your cart.", variant: 'destructive' });
-  }, [toast]);
+  }, []);
 
   const clearCart = useCallback(() => {
     setCartItems([]);

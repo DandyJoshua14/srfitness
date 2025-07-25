@@ -170,7 +170,6 @@ export default function Header() {
     { label: 'Products', href: '#category-toggle-products', isCategory: true, subItems: productsDropdownItems.filter(item => MOCK_IS_ADMIN || !item.isAdminOnly), icon: <ShoppingCart /> },
     { label: 'Digital Wellness', href: '#category-toggle-digital-wellness', isCategory: true, subItems: digitalWellnessDropdownItems, icon: <Lightbulb /> },
     contactNavItem,
-    { label: 'Cart', href: '/cart', isCategory: false, icon: <ShoppingCart />},
   ];
   
   const mobileCategoryClasses = (isActive: boolean, isExpanded: boolean) => cn(
@@ -311,6 +310,16 @@ export default function Header() {
                 "h-auto p-2 text-2xl",
                 isScrolled ? "text-gray-200 hover:bg-gray-700/50 hover:text-primary" : "text-white hover:bg-white/10 hover:text-primary"
              )} />
+             <Button asChild variant="ghost" size="icon" className={cn("relative h-auto p-2 text-2xl", isScrolled ? "text-gray-200 hover:bg-gray-700/50 hover:text-primary" : "text-white hover:bg-white/10 hover:text-primary")}>
+                <Link href="/cart" aria-label="Shopping Cart">
+                    <ShoppingCart className="h-7 w-7" />
+                    {cartCount > 0 && (
+                      <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground text-[10px] font-bold">
+                        {cartCount}
+                      </span>
+                    )}
+                </Link>
+            </Button>
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button

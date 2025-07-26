@@ -8,6 +8,7 @@ import { generateSpeechAudio } from '@/ai/flows/generate-speech-audio-flow';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { useLoading } from '@/contexts/loading-context';
 
 interface ConversationTurn {
   speaker: 'user' | 'ai';
@@ -28,6 +29,7 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
   const audioRef = useRef<HTMLAudioElement>(null);
   const navigationPathRef = useRef<string | null | undefined>(null);
   const router = useRouter();
+  const { showLoading } = useLoading();
 
   useEffect(() => {
     if (audioDataUri && audioRef.current) {
@@ -95,6 +97,7 @@ export default function VoiceAgentClient({ initialQuery, onConversationEnd }: Vo
   
   const handleAudioEnded = () => {
     if (navigationPathRef.current) {
+        showLoading();
         router.push(navigationPathRef.current);
     }
     onConversationEnd();

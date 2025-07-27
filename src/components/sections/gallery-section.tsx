@@ -63,12 +63,12 @@ export default function GallerySection() {
                         <CarouselItem key={index} className="pl-4">
                             <div className="p-1">
                                 <Card className="overflow-hidden shadow-lg border-primary/20">
-                                    <CardContent className="flex aspect-video items-center justify-center p-0 relative group bg-black">
+                                    <CardContent className="flex aspect-video items-center justify-center p-0 relative group">
                                         <Image
                                             src={photo.src}
                                             alt={photo.alt}
                                             layout="fill"
-                                            objectFit="contain"
+                                            objectFit="cover"
                                             className="transform transition-transform duration-500 group-hover:scale-105"
                                             data-ai-hint={photo.dataAiHint}
                                         />

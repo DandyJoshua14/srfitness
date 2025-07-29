@@ -104,7 +104,13 @@ export default function Footer() {
                     <Image src="/baby.jpeg" alt="Partner 2 Logo" width={32} height={32} className="rounded-full transition-transform duration-300 group-hover:scale-110" data-ai-hint="company logo" />
                     <span className="text-sm text-secondary-foreground/80 group-hover:text-primary group-hover:underline">Baby clothing store UK</span>
                 </a>
-             </div>
+                <div className="space-y-3">
+                    <a href="https://www.instagram.com/agqcube?igsh=Mnd0bDR6Mzh2eGl1" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 group">
+                        <Image src="/allur.jpg" alt="Partner 2 Logo" width={32} height={32} className="rounded-full transition-transform duration-300 group-hover:scale-110" data-ai-hint="company logo" />
+                        <span className="text-sm text-secondary-foreground/80 group-hover:text-primary group-hover:underline"></span>
+                    </a>
+                 </div>
+              </div>
           </div>
 
           {/* Column 5: Contact Info */}

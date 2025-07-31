@@ -45,20 +45,16 @@ export default function Footer() {
 
   const footerNavItems = [
     { label: 'Home', href: '/' },
-    { label: 'Personal Training', href: '/personal-training' },
-    { label: 'Bootcamp', href: '/burn-off-bootcamp' },
     { label: 'Awards', href: '/awards' },
+    { label: 'Bootcamp', href: '/burn-off-bootcamp' },
+    { label: 'Personal Training', href: '/personal-training' },
+    { label: 'Blog', href: '/community' }, // Changed from Community Hub
     { label: 'Magazine', href: '/lifestyle-magazine' },
-    { label: 'Corporate Wellness', href: '/corporate-wellness' },
     { label: 'Public Speaking', href: '/public-speaking' },
+    { label: 'Corporate Wellness', href: '/corporate-wellness' },
     { label: 'Equipment Solutions', href: '/equipment-services' },
     { label: 'Contact Us', href: '/#contact' },
     // New Feature Links
-    { label: 'Meal Planner', href: '/meal-planner' },
-    { label: 'Smart Scan', href: '/Smart Scan' },
-    { label: 'Global Connect', href: '/global-connect' },
-    { label: 'Blog', href: '/community' }, // Changed from Community Hub
-    { label: 'Profile', href: '/profile' },
     // Legal Links
     { label: 'Privacy Policy', href: '/privacy-policy' }, 
     { label: 'Terms of Service', href: '/terms-of-service' }, 
@@ -136,17 +132,13 @@ export default function Footer() {
           {/* Column 4: Partners */}
           <div className="col-span-1">
              <h3 className="font-headline text-xl font-semibold text-primary mb-4">Our Partners</h3>
-             <div className="space-y-3">
-                <a href="https://www.babyclothingstore.co.uk/" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 group">
-                    <Image src="/baby.jpeg" alt="Partner 2 Logo" width={32} height={32} className="rounded-full transition-transform duration-300 group-hover:scale-110" data-ai-hint="company logo" />
-                    <span className="text-sm text-secondary-foreground/80 group-hover:text-primary group-hover:underline">Baby clothing store UK</span>
+             <div className="flex space-x-4">
+                <a href="https://www.babyclothingstore.co.uk/" target="_blank" rel="noopener noreferrer" className="flex items-center group">
+                    <Image src="/baby.jpeg" alt="Baby Clothing Store Logo" width={32} height={32} className="rounded-full transition-transform duration-300 group-hover:scale-110" data-ai-hint="company logo" />
                 </a>
-                <div className="space-y-3">
-                    <a href="https://www.instagram.com/agqcube?igsh=Mnd0bDR6Mzh2eGl1" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 group">
-                        <Image src="/allur.jpg" alt="Partner 2 Logo" width={32} height={32} className="rounded-full transition-transform duration-300 group-hover:scale-110" data-ai-hint="company logo" />
-                        <span className="text-sm text-secondary-foreground/80 group-hover:text-primary group-hover:underline"></span>
-                    </a>
-                 </div>
+                <a href="https://www.instagram.com/agqcube?igsh=Mnd0bDR6Mzh2eGl1" target="_blank" rel="noopener noreferrer" className="flex items-center group">
+                    <Image src="/allur.jpg" alt="Allur Logo" width={32} height={32} className="rounded-full transition-transform duration-300 group-hover:scale-110" data-ai-hint="company logo" />
+                </a>
               </div>
           </div>
 

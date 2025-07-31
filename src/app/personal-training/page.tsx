@@ -12,7 +12,7 @@ import Autoplay from "embla-carousel-autoplay";
 
 const transformations = [
     {
-        name: 'Maria S.',
+        name: 'Vicky U.',
         story: '"SR Fitness helped me build strength and tone up after years of inconsistent workouts. I feel stronger and more energetic than ever!"',
         beforeImg: '/before.jpeg',
         afterImg: '/after.jpeg',
@@ -20,7 +20,7 @@ const transformations = [
         afterHint: 'woman workout fit'
     },
     {
-        name: 'John D.',
+        name: 'Tracy S.',
         story: '"I lost 30 pounds in 3 months! The personal training program kept me accountable and motivated. Completely life-changing."',
         beforeImg: 'https://placehold.co/400x533.png',
         afterImg: 'https://placehold.co/400x533.png',
@@ -28,7 +28,7 @@ const transformations = [
         afterHint: 'man fit after'
     },
     {
-        name: 'Emily R.',
+        name: '.',
         story: '"As a new mom, finding time was hard. The trainers were so flexible and helped me regain my pre-pregnancy fitness safely."',
         beforeImg: 'https://placehold.co/400x533.png',
         afterImg: 'https://placehold.co/400x533.png',

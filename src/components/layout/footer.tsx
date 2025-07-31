@@ -1,10 +1,47 @@
 
+"use client";
+
+import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Facebook, Instagram, Youtube, MessageCircle as WhatsAppIcon } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const router = useRouter();
+  const [logoClickCount, setLogoClickCount] = useState(0);
+  const clickTimer = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    // Clean up the timer when the component unmounts
+    return () => {
+      if (clickTimer.current) {
+        clearTimeout(clickTimer.current);
+      }
+    };
+  }, []);
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault(); // Prevent default link navigation
+    const newClickCount = logoClickCount + 1;
+    setLogoClickCount(newClickCount);
+
+    if (clickTimer.current) {
+      clearTimeout(clickTimer.current);
+    }
+
+    if (newClickCount === 4) {
+      router.push('/admin/content-studio');
+      setLogoClickCount(0); // Reset after successful navigation
+    } else {
+      // Reset count if there's a pause between clicks (e.g., > 1 second)
+      clickTimer.current = setTimeout(() => {
+        setLogoClickCount(0);
+      }, 1000);
+    }
+  };
+
 
   const footerNavItems = [
     { label: 'Home', href: '/' },
@@ -46,7 +83,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-8">
           {/* Column 1: Brand and Slogan */}
           <div className="col-span-2 md:col-span-4 lg:col-span-1">
-            <Link href="/" className="flex items-center space-x-3 mb-4">
+             <div onClick={handleLogoClick} className="cursor-pointer inline-flex items-center space-x-3 mb-4">
               <Image 
                 src="/SR.jpg" // Assuming /SR.jpg is in public folder
                 alt="SR Fitness Logo" 
@@ -56,7 +93,7 @@ export default function Footer() {
                 data-ai-hint="logo brand"
               />
               <span className="font-headline text-3xl font-bold text-primary">SR Fitness</span>
-            </Link>
+            </div>
             <p className="text-sm text-secondary-foreground/80 mb-4">
               Your journey to strength, wellness, and peak performance starts here.
             </p>

@@ -16,12 +16,12 @@ const galleryImages = [
   { src: '/gal.jpeg', alt: 'Modern gym interior', dataAiHint: 'modern gym empty' },
   { src: '/gal1.jpeg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling' },
   { src: '/gal2.jpeg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling' },
-  { src: '/gal31.jpeg', alt: 'Client lifting weights with trainer', dataAiHint: 'personal training weights' },
-  { src: '/gal32.jpeg', alt: 'Yoga class in progress', dataAiHint: 'yoga class zen' },
-  { src: '/gal33.jpeg', alt: 'Bootcamp outdoor drill', dataAiHint: 'bootcamp outdoor fitness' },
-  { src: '/gal34.jpeg', alt: 'Modern gym interior', dataAiHint: 'modern gym empty' },
-  { src: '/gal35.jpeg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling' },
-  { src: '/gal36.jpeg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling' },
+  { src: '/gal31.jpg', alt: 'Client lifting weights with trainer', dataAiHint: 'personal training weights' },
+  { src: '/gal32.jpg', alt: 'Yoga class in progress', dataAiHint: 'yoga class zen' },
+  { src: '/gal33.jpg', alt: 'Bootcamp outdoor drill', dataAiHint: 'bootcamp outdoor fitness' },
+  { src: '/gal34.jpg', alt: 'Modern gym interior', dataAiHint: 'modern gym empty' },
+  { src: '/gal35.jpg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling' },
+  { src: '/gal36.jpg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling' },
 ];
 
 export default function GallerySection() {

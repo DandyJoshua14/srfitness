@@ -45,12 +45,10 @@ const digitalWellnessDropdownItems = [
   { label: 'Blog', href: '/community', icon: <CommunityIcon className="mr-2 h-4 w-4" /> },
 ];
 
-const productsDropdownItemsBase = [
+const productsDropdownItems = [
   { label: 'Lifestyle Magazine', href: '/lifestyle-magazine', icon: <Newspaper className="mr-2 h-4 w-4" /> },
   {label: 'Marketplace', href: '/marketplace', icon: <ShoppingCart className="mr-2 h-4 w-4" />},
 ];
-
-const adminStudioItem = { label: 'Admin Studio', href: '/admin/content-studio', icon: <ShieldAlert className="mr-2 h-4 w-4" />, isAdminOnly: true };
 
 const contactNavItem = { label: 'Contact', href: '/#contact' };
 
@@ -66,8 +64,6 @@ export default function Header() {
   const [expandedMobileCategories, setExpandedMobileCategories] = useState<Record<string, boolean>>({});
   // Removed isLoginModalOpen, setIsLoginModalOpen, isSignupModalOpen, setIsSignupModalOpen states
 
-
-  const productsDropdownItems = MOCK_IS_ADMIN ? [...productsDropdownItemsBase, adminStudioItem] : productsDropdownItemsBase;
 
   useEffect(() => {
     let currentPath = pathname;
@@ -118,13 +114,13 @@ export default function Header() {
   };
   
   const isCategoryActiveForMobile = (subItems: any[]) => {
-    return subItems.some(item => isLinkActive(item.href) && (MOCK_IS_ADMIN || !item.isAdminOnly));
+    return subItems.some(item => isLinkActive(item.href));
   };
 
 
   const isServicesActive = servicesDropdownItems.some(item => isLinkActive(item.href));
   const isEventsActive = eventsDropdownItems.some(item => isLinkActive(item.href));
-  const isProductsActive = productsDropdownItems.some(item => isLinkActive(item.href) && (MOCK_IS_ADMIN || !item.isAdminOnly));
+  const isProductsActive = productsDropdownItems.some(item => isLinkActive(item.href));
   const isDigitalWellnessActive = digitalWellnessDropdownItems.some(item => isLinkActive(item.href));
 
   const navLinkBaseClasses = "px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 relative";
@@ -167,7 +163,7 @@ export default function Header() {
     ...topLevelNavItems,
     { label: 'Services', href: '#category-toggle-services', isCategory: true, subItems: servicesDropdownItems, icon: <Dumbbell /> },
     { label: 'Events', href: '#category-toggle-events', isCategory: true, subItems: eventsDropdownItems, icon: <CalendarDays /> },
-    { label: 'Products', href: '#category-toggle-products', isCategory: true, subItems: productsDropdownItems.filter(item => MOCK_IS_ADMIN || !item.isAdminOnly), icon: <ShoppingCart /> },
+    { label: 'Products', href: '#category-toggle-products', isCategory: true, subItems: productsDropdownItems, icon: <ShoppingCart /> },
     { label: 'Digital Wellness', href: '#category-toggle-digital-wellness', isCategory: true, subItems: digitalWellnessDropdownItems, icon: <Lightbulb /> },
     contactNavItem,
   ];
@@ -261,16 +257,13 @@ export default function Header() {
                   Products <ChevronDown className="h-4 w-4 opacity-70" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-max rounded-lg">
-                  {productsDropdownItems.map((item) => {
-                    if (item.isAdminOnly && !MOCK_IS_ADMIN) return null;
-                    return (
-                      <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground", item.isAdminOnly && "font-semibold text-primary/90")}>
+                  {productsDropdownItems.map((item) => (
+                      <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground")}>
                         <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">
                           {item.icon} {item.label}
                         </Link>
                       </DropdownMenuItem>
-                    );
-                  })}
+                  ))}
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenu>
@@ -356,15 +349,12 @@ export default function Header() {
                           <AnimatePresence>
                             {expandedMobileCategories[item.label] && (
                               <motion.div initial="hidden" animate="visible" exit="exit" variants={mobileCategorySubItemVariants} className="flex flex-col space-y-0.5 mt-1.5 overflow-hidden pl-4 border-l border-border ml-2">
-                                {item.subItems.map(subItem => {
-                                   if (subItem.isAdminOnly && !MOCK_IS_ADMIN) return null;
-                                   return (
-                                     <Link key={subItem.label} href={subItem.href} onClick={() => handleLinkClick(subItem.href)} className={mobileSubLinkClasses(isLinkActive(subItem.href), subItem.isAdminOnly)}>
+                                {item.subItems.map(subItem => (
+                                     <Link key={subItem.label} href={subItem.href} onClick={() => handleLinkClick(subItem.href)} className={mobileSubLinkClasses(isLinkActive(subItem.href))}>
                                         {subItem.icon && React.cloneElement(subItem.icon as React.ReactElement, { className: "mr-3.5 h-5 w-5 shrink-0 opacity-80" })}
                                         <span className="truncate">{subItem.label}</span>
                                       </Link>
-                                   );
-                                })}
+                                ))}
                               </motion.div>
                             )}
                           </AnimatePresence>

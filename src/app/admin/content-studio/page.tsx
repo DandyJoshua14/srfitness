@@ -8,8 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { ShieldAlert, Settings, Edit, UploadCloud, SendHorizonal, CalendarClock, Save, Loader2, Sparkles, Share2 } from 'lucide-react';
+import { Settings, Edit, UploadCloud, SendHorizonal, CalendarClock, Save, Loader2, Sparkles, Share2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { generateStudioContent, type GenerateStudioContentInput } from '@/ai/flows/generate-content-flow';
 
@@ -110,26 +109,17 @@ export default function AdminContentStudioPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-16 md:py-24 bg-muted/20 min-h-screen">
-      <Card className="mb-8 shadow-lg border-primary/20">
-        <CardHeader className="bg-background rounded-t-lg">
+    <div className="space-y-8">
+      <Card className="shadow-lg border-primary/20">
+        <CardHeader>
           <CardTitle className="font-headline text-3xl text-primary flex items-center">
             <Sparkles className="mr-3 h-8 w-8" />
-            Admin: AI Content Studio
+            Content Studio
           </CardTitle>
           <CardDescription>
             Use this tool to generate various types of content and publish it to the blog.
           </CardDescription>
         </CardHeader>
-        <CardContent className="pt-6 bg-background rounded-b-lg">
-          <Alert variant="destructive" className="mb-6 border-red-500/50 text-red-700 bg-red-50">
-            <ShieldAlert className="h-5 w-5 !text-red-600" />
-            <AlertTitle className="text-red-700 font-semibold">Security Notice</AlertTitle>
-            <AlertDescription className="text-red-600">
-              This admin page is for demonstration purposes and currently lacks robust authentication and authorization. In a production environment, it would require secure access controls.
-            </AlertDescription>
-          </Alert>
-        </CardContent>
       </Card>
 
       <div className="grid lg:grid-cols-3 gap-8">
@@ -139,7 +129,7 @@ export default function AdminContentStudioPage() {
             <CardHeader>
               <CardTitle className="flex items-center"><UploadCloud className="mr-2 h-5 w-5 text-primary" />Content Input</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 pt-6">
               <div>
                 <Label htmlFor="content-text" className="font-semibold">Base Text or Notes</Label>
                 <Textarea id="content-text" placeholder="Paste your article text, script, or just a few keywords and ideas..." rows={10} className="mt-1" value={inputText} onChange={(e) => setInputText(e.target.value)} />
@@ -156,7 +146,7 @@ export default function AdminContentStudioPage() {
             <CardHeader>
               <CardTitle className="flex items-center"><Settings className="mr-2 h-5 w-5 text-primary" />AI Configuration</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 pt-6">
               <div>
                 <Label htmlFor="ai-content-type" className="font-semibold">Content Type</Label>
                 <Select value={contentType} onValueChange={setContentType}>
@@ -231,7 +221,7 @@ export default function AdminContentStudioPage() {
               <CardTitle className="flex items-center"><Edit className="mr-2 h-5 w-5 text-primary" />Generated Draft</CardTitle>
               <CardDescription>AI-generated content appears below. You can edit it directly before publishing.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 pt-6">
               <div>
                 <Label htmlFor="generated-title" className="font-semibold text-muted-foreground">Generated Title</Label>
                 <Input id="generated-title" value={generatedTitle} onChange={(e) => setGeneratedTitle(e.target.value)} placeholder="Generated title will appear here..." className="mt-1 text-lg font-bold" />
@@ -248,7 +238,7 @@ export default function AdminContentStudioPage() {
               <CardTitle className="flex items-center"><Share2 className="mr-2 h-5 w-5 text-primary" />Suggested Social Media Post</CardTitle>
               <CardDescription>A post to promote your new content.</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-6">
               <Textarea value={generatedSocialPost} onChange={(e) => setGeneratedSocialPost(e.target.value)} placeholder="Suggested social media text will appear here..." rows={5} />
             </CardContent>
           </Card>
@@ -258,7 +248,7 @@ export default function AdminContentStudioPage() {
               <CardTitle className="flex items-center"><SendHorizonal className="mr-2 h-5 w-5 text-primary" />Publishing Controls</CardTitle>
               <CardDescription>Publish the generated content directly to the public blog.</CardDescription>
             </CardHeader>
-            <CardContent className="flex flex-col sm:flex-row flex-wrap gap-3 items-center">
+            <CardContent className="flex flex-col sm:flex-row flex-wrap gap-3 items-center pt-6">
               <Button variant="default" className="bg-green-600 hover:bg-green-700 text-white" onClick={handlePublishToBlog} disabled={!generatedTitle || !generatedContent}>
                 <SendHorizonal className="mr-2 h-4 w-4" /> Publish to Blog
               </Button>
@@ -269,7 +259,7 @@ export default function AdminContentStudioPage() {
                 <Save className="mr-2 h-4 w-4" /> Save as Draft
               </Button>
             </CardContent>
-             <CardFooter>
+             <CardFooter className="pt-4">
                 <p className="text-xs text-muted-foreground">Publishing to blog uses LocalStorage for this demo. Scheduling and drafts are conceptual.</p>
             </CardFooter>
           </Card>

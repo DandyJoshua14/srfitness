@@ -32,7 +32,7 @@ export default function Footer() {
     }
 
     if (newClickCount === 4) {
-      router.push('/admin/content-studio');
+      router.push('/admin');
       setLogoClickCount(0); // Reset after successful navigation
     } else {
       // Reset count if there's a pause between clicks (e.g., > 1 second)

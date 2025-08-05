@@ -64,6 +64,50 @@ export default function AdminContentStudioPage() {
       setIsGenerating(false);
     }
   };
+  
+  const handlePublishToBlog = () => {
+    if (!generatedTitle || !generatedContent) {
+      toast({
+        title: "Cannot Publish",
+        description: "Please generate a title and content before publishing.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const storedPosts = JSON.parse(localStorage.getItem('sr-fitness-blog-posts') || '[]');
+      const newPost = {
+        id: String(Date.now()),
+        author: { name: 'SR Fitness Admin', avatar: '/logo.png', dataAiHint: 'brand logo' },
+        timestamp: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        title: generatedTitle,
+        content: generatedContent,
+        image: 'https://placehold.co/600x400.png',
+        dataAiHint: 'fitness blog article',
+        likes: 0,
+        comments: 0,
+        isAnnouncement: true,
+        category: "Announcements"
+      };
+      
+      const updatedPosts = [newPost, ...storedPosts];
+      localStorage.setItem('sr-fitness-blog-posts', JSON.stringify(updatedPosts));
+
+      toast({
+        title: "Post Published!",
+        description: "Your new post is now live on the blog.",
+      });
+
+    } catch (error) {
+        console.error("Failed to publish post to localStorage:", error);
+        toast({
+            title: "Publishing Failed",
+            description: "Could not save the post. Please check console for errors.",
+            variant: "destructive"
+        });
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-16 md:py-24 bg-muted/20 min-h-screen">
@@ -74,7 +118,7 @@ export default function AdminContentStudioPage() {
             Admin: AI Content Studio
           </CardTitle>
           <CardDescription>
-            Use this tool to generate various types of content based on your inputs and AI configurations.
+            Use this tool to generate various types of content and publish it to the blog.
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-6 bg-background rounded-b-lg">
@@ -185,7 +229,7 @@ export default function AdminContentStudioPage() {
           <Card className="shadow-md">
             <CardHeader>
               <CardTitle className="flex items-center"><Edit className="mr-2 h-5 w-5 text-primary" />Generated Draft</CardTitle>
-              <CardDescription>AI-generated content appears below. You can edit it directly.</CardDescription>
+              <CardDescription>AI-generated content appears below. You can edit it directly before publishing.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
@@ -211,14 +255,14 @@ export default function AdminContentStudioPage() {
 
           <Card className="shadow-md">
             <CardHeader>
-              <CardTitle className="flex items-center"><SendHorizonal className="mr-2 h-5 w-5 text-primary" />Publishing & Scheduling</CardTitle>
-              <CardDescription>Controls to manage the content's release. (Conceptual)</CardDescription>
+              <CardTitle className="flex items-center"><SendHorizonal className="mr-2 h-5 w-5 text-primary" />Publishing Controls</CardTitle>
+              <CardDescription>Publish the generated content directly to the public blog.</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col sm:flex-row flex-wrap gap-3 items-center">
-              <Button variant="default" className="bg-green-600 hover:bg-green-700 text-white" onClick={() => toast({title: "Conceptual Action", description: "Publishing requires backend integration."})}>
-                <SendHorizonal className="mr-2 h-4 w-4" /> Publish Now
+              <Button variant="default" className="bg-green-600 hover:bg-green-700 text-white" onClick={handlePublishToBlog} disabled={!generatedTitle || !generatedContent}>
+                <SendHorizonal className="mr-2 h-4 w-4" /> Publish to Blog
               </Button>
-              <Button variant="outline" onClick={() => toast({title: "Conceptual Action", description: "Scheduling requires backend integration."})}>
+               <Button variant="outline" onClick={() => toast({title: "Conceptual Action", description: "Scheduling requires backend integration."})}>
                 <CalendarClock className="mr-2 h-4 w-4" /> Schedule Post
               </Button>
               <Button variant="secondary" onClick={() => toast({title: "Conceptual Action", description: "Saving drafts requires backend integration."})}>
@@ -226,7 +270,7 @@ export default function AdminContentStudioPage() {
               </Button>
             </CardContent>
              <CardFooter>
-                <p className="text-xs text-muted-foreground">Publishing and scheduling controls are conceptual and require backend integration.</p>
+                <p className="text-xs text-muted-foreground">Publishing to blog uses LocalStorage for this demo. Scheduling and drafts are conceptual.</p>
             </CardFooter>
           </Card>
         </div>

@@ -1,22 +1,18 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Heart, MessageCircle, Share2, Send, ImagePlus, Video, Info, ArrowRight, Edit2 } from 'lucide-react';
+import { Heart, MessageCircle, Share2, Info, ArrowRight, Rss } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from '@/components/ui/badge'; // Added Badge
-import { Separator } from '@/components/ui/separator'; // Added Separator
-import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 
-// Mock Data Updated for a more blog-like structure
-const mockUser = { name: "Current User", avatar: "https://placehold.co/40x40.png?text=CU" };
-const mockPosts = [
+const initialPosts = [
   {
     id: 'announcement-1',
     author: { name: 'SR Fitness Admin', avatar: '/logo.png', dataAiHint: 'brand logo' },
@@ -58,76 +54,53 @@ const mockPosts = [
   },
 ];
 
-
 export default function CommunityFeedClient() {
-  const [newPostContent, setNewPostContent] = useState('');
-  const [newPostTitle, setNewPostTitle] = useState(''); // Added for title
-  const [posts, setPosts] = useState(mockPosts);
+  const [posts, setPosts] = useState(initialPosts);
 
-  const handlePostSubmit = () => {
-    if (!newPostTitle.trim() || !newPostContent.trim()) return;
-    const newPost = {
-      id: String(Date.now()),
-      author: mockUser,
-      timestamp: 'Just now',
-      title: newPostTitle,
-      content: newPostContent,
-      image: null, 
-      dataAiHint: null,
-      likes: 0,
-      comments: 0,
-      isAnnouncement: false,
-      category: "User Post" 
+  const loadPosts = useCallback(() => {
+    try {
+      const storedPosts = localStorage.getItem('sr-fitness-blog-posts');
+      if (storedPosts) {
+        setPosts(JSON.parse(storedPosts));
+      } else {
+        // If nothing in storage, set initial posts
+        localStorage.setItem('sr-fitness-blog-posts', JSON.stringify(initialPosts));
+      }
+    } catch (error) {
+      console.error("Could not load posts from localStorage", error);
+      // Keep initial posts on error
+    }
+  }, []);
+
+  useEffect(() => {
+    loadPosts();
+
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === 'sr-fitness-blog-posts') {
+        loadPosts();
+      }
     };
-    setPosts(prevPosts => [newPost, ...prevPosts]);
-    setNewPostTitle('');
-    setNewPostContent('');
-    // In a real app, this would be an API call.
-  };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [loadPosts]);
 
   return (
     <div className="max-w-3xl mx-auto space-y-8">
-      {/* Post Composer - Simplified for now */}
-      <Card className="shadow-lg border-primary/20">
-        <CardHeader>
-          <CardTitle className="font-headline text-xl text-primary flex items-center">
-            <Edit2 className="mr-2 h-5 w-5" /> Create a New Post (Conceptual)
-          </CardTitle>
-          <CardDescription>Share your thoughts, achievements, or questions with the community.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-           <Input 
-            placeholder="Post Title"
-            value={newPostTitle}
-            onChange={(e) => setNewPostTitle(e.target.value)}
-            className="font-semibold"
-          />
-          <Textarea
-            placeholder={`What's on your mind, ${mockUser.name.split(' ')[0]}?`}
-            value={newPostContent}
-            onChange={(e) => setNewPostContent(e.target.value)}
-            rows={4}
-          />
-          <div className="flex justify-between items-center">
-            <div className="flex space-x-1">
-              <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-primary">
-                <ImagePlus className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-primary">
-                <Video className="h-5 w-5" />
-              </Button>
-            </div>
-            <Button onClick={handlePostSubmit} disabled={!newPostContent.trim() || !newPostTitle.trim()} className="bg-primary hover:bg-primary/90">
-              <Send className="h-4 w-4 mr-2" /> Post
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Separator />
-
       {/* Blog Feed */}
       <div className="space-y-6">
+        {posts.length === 0 && (
+            <Card className="text-center py-16 shadow-lg">
+                <CardHeader>
+                    <Rss className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <CardTitle className="text-2xl text-muted-foreground">The Blog is Quiet...</CardTitle>
+                    <CardDescription>No posts have been published yet. Check back soon!</CardDescription>
+                </CardHeader>
+            </Card>
+        )}
         {posts.map(post => (
           <Card 
             key={post.id} 

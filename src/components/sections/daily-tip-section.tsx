@@ -4,31 +4,32 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Lightbulb, AlertTriangle, Loader2 } from 'lucide-react';
-import { generateFitnessTip, GenerateFitnessTipOutput } from '@/ai/flows/generate-fitness-tip-flow';
 import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 
+interface TipData {
+  tip: string;
+  category: string;
+}
+
 export default function DailyTipSection() {
-  const [tipData, setTipData] = useState<GenerateFitnessTipOutput | null>(null);
+  const [tipData, setTipData] = useState<TipData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchTip = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const data = await generateFitnessTip(); // No input needed for a general tip
-        setTipData(data);
-      } catch (err) {
-        console.error("Failed to fetch fitness tip:", err);
-        setError("Could not load a fresh tip right now. Sparkle on your own!");
-      } finally {
-        setIsLoading(false);
-      }
+    // Set a hardcoded tip instead of fetching from the AI
+    const staticTip = {
+      tip: "Stay hydrated! Drinking enough water throughout the day is key to a great workout and overall health.",
+      category: "Hydration",
     };
+    
+    // Simulate a brief loading period
+    setTimeout(() => {
+        setTipData(staticTip);
+        setIsLoading(false);
+    }, 500);
 
-    fetchTip();
   }, []);
 
   return (
@@ -56,7 +57,7 @@ export default function DailyTipSection() {
             {isLoading && (
               <div className="flex flex-col items-center text-muted-foreground">
                 <Loader2 className="h-8 w-8 animate-spin text-primary mb-2" />
-                <p>Fetching your daily spark...</p>
+                <p>Getting your daily spark...</p>
               </div>
             )}
             {error && !isLoading && (
@@ -84,5 +85,3 @@ export default function DailyTipSection() {
     </motion.section>
   );
 }
-
-    

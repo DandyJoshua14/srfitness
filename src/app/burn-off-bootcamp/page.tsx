@@ -158,7 +158,7 @@ export default function BurnOffBootcampPage() {
 
              <div className="mt-8 pt-6 border-t border-border/20 text-center">
                 <Button asChild size="lg" className="font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transition-shadow">
-                    <Link href="/#contact">Inquire About the Next Bootcamp</Link>
+                    <Link href="#contact">Inquire About the Next Bootcamp</Link>
                 </Button>
             </div>
         </div>

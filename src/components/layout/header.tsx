@@ -50,7 +50,7 @@ const productsDropdownItems = [
   {label: 'Marketplace', href: '/marketplace', icon: <ShoppingCart className="mr-2 h-4 w-4" />},
 ];
 
-const contactNavItem = { label: 'Contact', href: '/#contact' };
+const contactNavItem = { label: 'Contact', href: '#contact' };
 
 
 export default function Header() {
@@ -81,15 +81,20 @@ export default function Header() {
   }, [pathname]);
 
   const handleLinkClick = (href: string, isExternalOrSamePageHash: boolean = false) => {
-    if (!isExternalOrSamePageHash && !href.startsWith('#category-toggle-') && !href.startsWith('#auth-action-')) {
+    if (!isExternalOrSamePageHash && !href.startsWith('#category-toggle-') && !href.startsWith('#auth-action-') && !href.startsWith('#')) {
         showLoading();
     }
-    if (href.startsWith('/#') && pathname === '/') {
-      const elementId = href.substring(2);
-      const element = document.getElementById(elementId);
-      element?.scrollIntoView({ behavior: 'smooth' });
-      setActiveLink(href);
+    if (href.startsWith('#') && pathname !== '/') {
+        const elementId = href.substring(1);
+        const element = document.getElementById(elementId);
+        element?.scrollIntoView({ behavior: 'smooth' });
+    } else if (href.startsWith('/#')) {
+        const elementId = href.substring(2);
+        const element = document.getElementById(elementId);
+        element?.scrollIntoView({ behavior: 'smooth' });
     }
+    setActiveLink(href);
+
     if (!href.startsWith('#category-toggle-') && !href.startsWith('#auth-action-')) {
         setIsMobileMenuOpen(false);
         setExpandedMobileCategories({});
@@ -108,8 +113,8 @@ export default function Header() {
 
   const isLinkActive = (href: string) => {
     if (href === '/' && activeLink === '/') return true;
-    if (href !== '/' && !href.startsWith('/#') && activeLink.startsWith(href)) return true;
-    if (pathname === '/' && href.startsWith('/#') && activeLink === href) return true;
+    if (href !== '/' && !href.startsWith('#') && activeLink.startsWith(href)) return true;
+    if (activeLink.includes(href)) return true;
     return false;
   };
   
@@ -280,7 +285,7 @@ export default function Header() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Link href={contactNavItem.href} onClick={() => handleLinkClick(contactNavItem.href, contactNavItem.href.startsWith('/#'))} className={navLinkClasses(isLinkActive(contactNavItem.href))}>
+              <Link href={contactNavItem.href} onClick={() => handleLinkClick(contactNavItem.href, contactNavItem.href.startsWith('/#') || contactNavItem.href.startsWith('#'))} className={navLinkClasses(isLinkActive(contactNavItem.href))}>
                 {contactNavItem.label}
               </Link>
             </nav>
@@ -360,7 +365,7 @@ export default function Header() {
                           </AnimatePresence>
                         </>
                       ) : ( /* Regular Links */
-                        <Link href={item.href} onClick={() => handleLinkClick(item.href, item.href.startsWith('/#'))} className={mobileLinkClasses(isLinkActive(item.href))}>
+                        <Link href={item.href} onClick={() => handleLinkClick(item.href, item.href.startsWith('#'))} className={mobileLinkClasses(isLinkActive(item.href))}>
                            {item.icon && React.cloneElement(item.icon as React.ReactElement, { className: "mr-3.5 h-5 w-5 shrink-0 opacity-90" })}
                           {item.label}
                           {item.label === 'Cart' && cartCount > 0 && (

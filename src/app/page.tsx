@@ -8,7 +8,6 @@ import MarketplaceHighlightSection from '@/components/sections/marketplace-highl
 import OurImpactSection from '@/components/sections/our-impact-section';
 import GallerySection from '@/components/sections/gallery-section';
 import DailyTipSection from '@/components/sections/daily-tip-section';
-import ContactLocationSection from '@/components/sections/contact-location-section';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -28,7 +27,6 @@ export default function HomePage() {
       <MarketplaceHighlightSection />
       <OurImpactSection />
       <DailyTipSection />
-      <ContactLocationSection />
     </>
   );
 }

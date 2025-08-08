@@ -53,7 +53,7 @@ export default function Footer() {
     { label: 'Public Speaking', href: '/public-speaking' },
     { label: 'Corporate Wellness', href: '/corporate-wellness' },
     { label: 'Equipment Solutions', href: '/equipment-services' },
-    { label: 'Contact Us', href: '/#contact' },
+    { label: 'Contact Us', href: '#contact' },
     // New Feature Links
     // Legal Links
     { label: 'Privacy Policy', href: '/privacy-policy' }, 
@@ -68,7 +68,7 @@ export default function Footer() {
   );
 
   const contactLinks = [
-    { label: 'Contact Us', href: '/#contact' },
+    { label: 'Contact Us', href: '#contact' },
     { label: 'Privacy Policy', href: '/privacy-policy' },
     { label: 'Terms of Service', href: '/terms-of-service' },
   ];

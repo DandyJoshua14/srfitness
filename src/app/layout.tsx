@@ -9,6 +9,7 @@ import { AuthProvider } from '@/contexts/auth-context';
 import { CartProvider } from '@/contexts/cart-context'; // Added CartProvider
 import LoadingOverlay from '@/components/common/loading-overlay';
 import NavigationLoadingManager from '@/components/common/navigation-loading-manager';
+import ContactLocationSection from '@/components/sections/contact-location-section';
 
 
 export const metadata: Metadata = {
@@ -39,6 +40,7 @@ export default function RootLayout({
               <main className="flex-grow">
                 {children}
               </main>
+              <ContactLocationSection />
               <Footer />
               <Toaster />
             </CartProvider>

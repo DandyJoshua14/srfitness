@@ -15,15 +15,12 @@ export default function BurnOffBootcampPage() {
     Autoplay({ delay: 4000, stopOnInteraction: true })
   );
     
-  const bootcampPhotos = [
+  const allPhotos = [
     { src: '/b1.jpeg', alt: 'Bootcamp', dataAiHint: 'group fitness pushups' },
     { src: '/b2.jpeg', alt: 'Bootcamp', dataAiHint: 'fitness trainer motivation' },
     { src: '/b3.jpeg', alt: 'Bootcamp', dataAiHint: 'bootcamp fitness drill' },
     { src: '/b4.jpeg', alt: 'Bootcamp', dataAiHint: 'fitness teamwork support' },
     { src: '/b5.jpeg', alt: 'Bootcamp', dataAiHint: 'fitness teamwork support' },
-  ];
-
-  const resultsPhotos = [
     { src: '/re1.jpeg', alt: 'Bootcamp result after photo', dataAiHint: 'fitness transformation after' },
     { src: '/re2.jpeg', alt: 'Client happy with results', dataAiHint: 'happy fit person' },
     { src: '/re3.jpeg', alt: 'Client showing improved strength', dataAiHint: 'person lifting weight' },
@@ -113,15 +110,15 @@ export default function BurnOffBootcampPage() {
                 </div>
             </div>
 
-            {/* Photo Gallery Section */}
-            <section id="bootcamp-gallery" className="mb-20 md:mb-28">
+            {/* Combined Photo Gallery Section */}
+            <section id="event-gallery" className="mb-20 md:mb-28">
               <div className="text-center mb-12">
                   <h2 className="font-headline text-4xl text-foreground font-semibold flex items-center justify-center gap-3">
                       <Camera className="h-9 w-9 text-primary" />
-                      Bootcamp in Action
+                      Event Highlights
                   </h2>
                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto mt-2">
-                      Feel the energy and see the determination.
+                      Feel the energy and see the incredible transformations.
                   </p>
               </div>
               <Carousel
@@ -134,7 +131,7 @@ export default function BurnOffBootcampPage() {
                 }}
               >
                 <CarouselContent>
-                  {bootcampPhotos.map((photo, index) => (
+                  {allPhotos.map((photo, index) => (
                     <CarouselItem key={index}>
                       <div className="p-1">
                         <Card className="overflow-hidden shadow-lg border-primary/20">
@@ -145,52 +142,6 @@ export default function BurnOffBootcampPage() {
                                 layout="fill"
                                 objectFit="cover"
                                 className="transform transition-transform duration-500 group-hover:scale-110"
-                                data-ai-hint={photo.dataAiHint}
-                            />
-                            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="absolute left-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
-                <CarouselNext className="absolute right-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
-              </Carousel>
-            </section>
-
-            {/* Bootcamp Results Section */}
-            <section id="bootcamp-results" className="mb-20 md:mb-28">
-              <div className="text-center mb-12">
-                  <h2 className="font-headline text-4xl text-foreground font-semibold flex items-center justify-center gap-3">
-                      <Star className="h-9 w-9 text-primary" />
-                      Bootcamp Results
-                  </h2>
-                   <p className="text-lg text-muted-foreground max-w-2xl mx-auto mt-2">
-                      See the incredible transformations from our members.
-                  </p>
-              </div>
-              <Carousel
-                plugins={[plugin.current]}
-                className="w-full max-w-4xl mx-auto"
-                onMouseEnter={plugin.current.stop}
-                onMouseLeave={plugin.current.reset}
-                opts={{
-                  loop: true,
-                }}
-              >
-                <CarouselContent>
-                  {resultsPhotos.map((photo, index) => (
-                    <CarouselItem key={index}>
-                      <div className="p-1">
-                        <Card className="overflow-hidden shadow-lg border-primary/20">
-                          <CardContent className="flex aspect-[16/9] items-center justify-center p-0 relative bg-black">
-                             <Image
-                                src={photo.src}
-                                alt={photo.alt}
-                                layout="fill"
-                                objectFit="contain"
-                                className="transform transition-transform duration-500 group-hover:scale-105"
                                 data-ai-hint={photo.dataAiHint}
                             />
                             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>

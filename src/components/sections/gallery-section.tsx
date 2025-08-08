@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from 'react';
@@ -7,22 +8,21 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import Autoplay from "embla-carousel-autoplay";
 import { Camera } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
 
 const galleryImages = [
-  { src: '/aw1.jpeg', alt: 'Group workout session', dataAiHint: 'group workout energy', position: 'object-center' },
-  { src: '/aw2.jpeg', alt: 'Client lifting weights with trainer', dataAiHint: 'personal training weights', position: 'object-center' },
-  { src: '/aw3.jpeg', alt: 'Yoga class in progress', dataAiHint: 'yoga class zen', position: 'object-center' },
-  { src: '/aw4.jpeg', alt: 'Bootcamp outdoor drill', dataAiHint: 'bootcamp outdoor fitness', position: 'object-top' },
-  { src: '/gal.jpeg', alt: 'Modern gym interior', dataAiHint: 'modern gym empty', position: 'object-center' },
-  { src: '/gal1.jpeg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling', position: 'object-top' },
-  { src: '/gal2.jpeg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling', position: 'object-top' },
-  { src: '/gal31.jpg', alt: 'Client lifting weights with trainer', dataAiHint: 'personal training weights', position: 'object-center' },
-  { src: '/gal32.jpg', alt: 'Yoga class in progress', dataAiHint: 'yoga class zen', position: 'object-center' },
-  { src: '/gal33.jpg', alt: 'Bootcamp outdoor drill', dataAiHint: 'bootcamp outdoor fitness', position: 'object-center' },
-  { src: '/gal34.jpg', alt: 'Modern gym interior', dataAiHint: 'modern gym empty', position: 'object-center' },
-  { src: '/gal35.jpg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling', position: 'object-center' },
-  { src: '/gal36.jpg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling', position: 'object-center' },
+  { src: '/aw1.jpeg', alt: 'Group workout session', dataAiHint: 'group workout energy', position: 'center' },
+  { src: '/aw2.jpeg', alt: 'Client lifting weights with trainer', dataAiHint: 'personal training weights', position: 'center' },
+  { src: '/aw3.jpeg', alt: 'Yoga class in progress', dataAiHint: 'yoga class zen', position: 'center' },
+  { src: '/aw4.jpeg', alt: 'Bootcamp outdoor drill', dataAiHint: 'bootcamp outdoor fitness', position: 'center 20%' }, // Focus higher
+  { src: '/gal.jpeg', alt: 'Modern gym interior', dataAiHint: 'modern gym empty', position: 'center' },
+  { src: '/gal1.jpeg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling', position: 'center 30%' }, // Focus higher
+  { src: '/gal2.jpeg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling', position: 'center 25%' }, // Focus higher
+  { src: '/gal31.jpg', alt: 'Client lifting weights with trainer', dataAiHint: 'personal training weights', position: 'center' },
+  { src: '/gal32.jpg', alt: 'Yoga class in progress', dataAiHint: 'yoga class zen', position: 'center' },
+  { src: '/gal33.jpg', alt: 'Bootcamp outdoor drill', dataAiHint: 'bootcamp outdoor fitness', position: 'center' },
+  { src: '/gal34.jpg', alt: 'Modern gym interior', dataAiHint: 'modern gym empty', position: 'center' },
+  { src: '/gal35.jpg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling', position: 'center' },
+  { src: '/gal36.jpg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling', position: 'center' },
 ];
 
 export default function GallerySection() {
@@ -67,7 +67,7 @@ export default function GallerySection() {
             >
                 <CarouselContent className="-ml-4">
                     {galleryImages.map((photo, index) => (
-                        <CarouselItem key={index} className="pl-4">
+                        <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
                             <div className="p-1">
                                 <Card className="overflow-hidden shadow-lg border-primary/20">
                                     <CardContent className="flex aspect-video items-center justify-center p-0 relative group">
@@ -76,10 +76,8 @@ export default function GallerySection() {
                                             alt={photo.alt}
                                             layout="fill"
                                             objectFit="cover"
-                                            className={cn(
-                                                "transform transition-transform duration-500 group-hover:scale-105",
-                                                photo.position
-                                            )}
+                                            className="transform transition-transform duration-500 group-hover:scale-105"
+                                            style={{ objectPosition: photo.position }}
                                             data-ai-hint={photo.dataAiHint}
                                         />
                                         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>

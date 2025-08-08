@@ -7,21 +7,22 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import Autoplay from "embla-carousel-autoplay";
 import { Camera } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 const galleryImages = [
-  { src: '/aw1.jpeg', alt: 'Group workout session', dataAiHint: 'group workout energy' },
-  { src: '/aw2.jpeg', alt: 'Client lifting weights with trainer', dataAiHint: 'personal training weights' },
-  { src: '/aw3.jpeg', alt: 'Yoga class in progress', dataAiHint: 'yoga class zen' },
-  { src: '/aw4.jpeg', alt: 'Bootcamp outdoor drill', dataAiHint: 'bootcamp outdoor fitness' },
-  { src: '/gal.jpeg', alt: 'Modern gym interior', dataAiHint: 'modern gym empty' },
-  { src: '/gal1.jpeg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling' },
-  { src: '/gal2.jpeg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling' },
-  { src: '/gal31.jpg', alt: 'Client lifting weights with trainer', dataAiHint: 'personal training weights' },
-  { src: '/gal32.jpg', alt: 'Yoga class in progress', dataAiHint: 'yoga class zen' },
-  { src: '/gal33.jpg', alt: 'Bootcamp outdoor drill', dataAiHint: 'bootcamp outdoor fitness' },
-  { src: '/gal34.jpg', alt: 'Modern gym interior', dataAiHint: 'modern gym empty' },
-  { src: '/gal35.jpg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling' },
-  { src: '/gal36.jpg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling' },
+  { src: '/aw1.jpeg', alt: 'Group workout session', dataAiHint: 'group workout energy', position: 'object-center' },
+  { src: '/aw2.jpeg', alt: 'Client lifting weights with trainer', dataAiHint: 'personal training weights', position: 'object-center' },
+  { src: '/aw3.jpeg', alt: 'Yoga class in progress', dataAiHint: 'yoga class zen', position: 'object-center' },
+  { src: '/aw4.jpeg', alt: 'Bootcamp outdoor drill', dataAiHint: 'bootcamp outdoor fitness', position: 'object-top' },
+  { src: '/gal.jpeg', alt: 'Modern gym interior', dataAiHint: 'modern gym empty', position: 'object-center' },
+  { src: '/gal1.jpeg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling', position: 'object-top' },
+  { src: '/gal2.jpeg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling', position: 'object-top' },
+  { src: '/gal31.jpg', alt: 'Client lifting weights with trainer', dataAiHint: 'personal training weights', position: 'object-center' },
+  { src: '/gal32.jpg', alt: 'Yoga class in progress', dataAiHint: 'yoga class zen', position: 'object-center' },
+  { src: '/gal33.jpg', alt: 'Bootcamp outdoor drill', dataAiHint: 'bootcamp outdoor fitness', position: 'object-center' },
+  { src: '/gal34.jpg', alt: 'Modern gym interior', dataAiHint: 'modern gym empty', position: 'object-center' },
+  { src: '/gal35.jpg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling', position: 'object-center' },
+  { src: '/gal36.jpg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling', position: 'object-center' },
 ];
 
 export default function GallerySection() {
@@ -75,7 +76,10 @@ export default function GallerySection() {
                                             alt={photo.alt}
                                             layout="fill"
                                             objectFit="cover"
-                                            className="transform transition-transform duration-500 group-hover:scale-105 object-center"
+                                            className={cn(
+                                                "transform transition-transform duration-500 group-hover:scale-105",
+                                                photo.position
+                                            )}
                                             data-ai-hint={photo.dataAiHint}
                                         />
                                         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>

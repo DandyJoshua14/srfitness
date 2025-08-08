@@ -22,8 +22,8 @@ const transformations = [
     {
         name: 'Tracy S.',
         story: '"I lost 30 pounds in 3 months! The personal training program kept me accountable and motivated. Completely life-changing."',
-        beforeImg: 'https://placehold.co/400x533.png',
-        afterImg: 'https://placehold.co/400x533.png',
+        beforeImg: '/tracy before.jpg',
+        afterImg: '/tracy after.jpg',
         beforeHint: 'man overweight before',
         afterHint: 'man fit after'
     },

@@ -75,7 +75,7 @@ export default function GallerySection() {
                                             alt={photo.alt}
                                             layout="fill"
                                             objectFit="cover"
-                                            className="transform transition-transform duration-500 group-hover:scale-105 object-center object-top"
+                                            className="transform transition-transform duration-500 group-hover:scale-105 object-center"
                                             data-ai-hint={photo.dataAiHint}
                                         />
                                         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>

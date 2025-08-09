@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Newspaper, Settings, Home } from 'lucide-react';
+import { Newspaper, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Tooltip,
@@ -15,9 +15,7 @@ import {
 
 
 const navItems = [
-  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/content-studio', label: 'Content Studio', icon: Newspaper },
-  { href: '#', label: 'Settings', icon: Settings },
+  { href: '/admin', label: 'Content Studio', icon: Newspaper },
 ];
 
 export default function AdminSidebar() {
@@ -36,7 +34,8 @@ export default function AdminSidebar() {
         </Link>
         <TooltipProvider>
           {navItems.map((item) => {
-            const isActive = pathname === item.href;
+            // Since there's only one item, it's always active in the admin section.
+            const isActive = pathname.startsWith('/admin');
             return (
               <Tooltip key={item.label}>
                 <TooltipTrigger asChild>

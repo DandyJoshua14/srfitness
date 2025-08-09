@@ -1,140 +1,158 @@
 
 "use client";
 
-import { BarChart, Users, Newspaper, Activity, MessageSquare } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { Bar, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from 'recharts';
+import { Input } from '@/components/ui/input';
+import { Newspaper, SendHorizonal, Loader2, Sparkles } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
-const chartData = [
-  { month: "Jan", users: 186, posts: 5 },
-  { month: "Feb", users: 305, posts: 6 },
-  { month: "Mar", users: 237, posts: 4 },
-  { month: "Apr", users: 273, posts: 8 },
-  { month: "May", users: 209, posts: 7 },
-  { month: "Jun", users: 250, posts: 9 },
-];
+// Define a type for a blog post
+interface BlogPost {
+  id: string;
+  author: { name: string; avatar: string; dataAiHint: string; };
+  timestamp: string;
+  title: string;
+  content: string;
+  image: string;
+  dataAiHint: string;
+  likes: number;
+  comments: number;
+  isAnnouncement: boolean;
+  category: string;
+}
 
-const recentActivities = [
-    { user: 'Alex P.', action: 'Posted in Blog', item: 'Morning Run Fuel', time: '2h ago', type: 'content' },
-    { user: 'Sarah K.', action: 'Joined', item: 'New Member', time: '1d ago', type: 'user' },
-    { user: 'Admin', action: 'Published Announcement', item: 'New Spin Class Schedule!', time: '1d ago', type: 'content' },
-    { user: 'Mike D.', action: 'Commented on', item: 'Crushed My Squat PB', time: '2d ago', type: 'comment' },
-];
+export default function AdminContentStudioPage() {
+  // UI State
+  const [isPublishing, setIsPublishing] = useState(false);
+  const { toast } = useToast();
+  
+  // Input State
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
 
-export default function AdminDashboardPage() {
+  const handlePublishToBlog = () => {
+    if (!title || !content) {
+      toast({
+        title: "Cannot Publish",
+        description: "Please provide a title and content before publishing.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setIsPublishing(true);
+
+    try {
+      const storedPostsString = localStorage.getItem('sr-fitness-blog-posts');
+      const storedPosts: BlogPost[] = storedPostsString ? JSON.parse(storedPostsString) : [];
+      
+      const newPost: BlogPost = {
+        id: String(Date.now()),
+        author: { name: 'SR Fitness Admin', avatar: '/logo.png', dataAiHint: 'brand logo' },
+        timestamp: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        title: title,
+        content: content,
+        image: 'https://placehold.co/600x400.png',
+        dataAiHint: 'fitness blog article',
+        likes: 0,
+        comments: 0,
+        isAnnouncement: true, // All admin posts are announcements
+        category: "Announcements"
+      };
+      
+      const updatedPosts = [newPost, ...storedPosts];
+      localStorage.setItem('sr-fitness-blog-posts', JSON.stringify(updatedPosts));
+
+      toast({
+        title: "Post Published!",
+        description: "Your new post is now live on the blog.",
+      });
+
+      // Clear fields after publishing
+      setTitle('');
+      setContent('');
+
+    } catch (error) {
+        console.error("Failed to publish post to localStorage:", error);
+        toast({
+            title: "Publishing Failed",
+            description: "Could not save the post. Please check console for errors.",
+            variant: "destructive"
+        });
+    } finally {
+        setIsPublishing(false);
+    }
+  };
+
   return (
-    <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">1,257</div>
-            <p className="text-xs text-muted-foreground">+20.1% from last month</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Blog Posts</CardTitle>
-            <Newspaper className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">28</div>
-            <p className="text-xs text-muted-foreground">+5 since last month</p>
-          </CardContent>
-        </Card>
-         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Engagement</CardTitle>
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">+1.2k</div>
-            <p className="text-xs text-muted-foreground">Likes & Comments this month</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Now</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">73</div>
-            <p className="text-xs text-muted-foreground">Users on site</p>
-          </CardContent>
-        </Card>
-      </div>
+    <div className="space-y-8 max-w-4xl mx-auto">
+      <Card className="shadow-lg border-primary/20">
+        <CardHeader>
+          <CardTitle className="font-headline text-3xl text-primary flex items-center">
+            <Newspaper className="mr-3 h-8 w-8" />
+            Blog Post Editor
+          </CardTitle>
+          <CardDescription>
+            Create and publish a new post directly to the SR Fitness Blog.
+          </CardDescription>
+        </CardHeader>
+      </Card>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="lg:col-span-4">
-          <CardHeader>
-            <CardTitle>Overview</CardTitle>
-          </CardHeader>
-          <CardContent className="pl-2">
-             <ChartContainer config={{
-                users: { label: "Users", color: "hsl(var(--primary))" },
-             }} className="h-[300px] w-full">
-                <ResponsiveContainer>
-                    <BarChart data={chartData}>
-                        <CartesianGrid vertical={false} />
-                        <XAxis
-                            dataKey="month"
-                            tickLine={false}
-                            tickMargin={10}
-                            axisLine={false}
-                            tickFormatter={(value) => value.slice(0, 3)}
-                        />
-                         <YAxis />
-                        <ChartTooltip content={<ChartTooltipContent />} />
-                        <Bar dataKey="users" fill="var(--color-users)" radius={4} />
-                    </BarChart>
-                </ResponsiveContainer>
-             </ChartContainer>
-          </CardContent>
-        </Card>
-        <Card className="lg:col-span-3">
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>An overview of recent user and content actions.</CardDescription>
-          </CardHeader>
-          <CardContent>
-             <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>User</TableHead>
-                        <TableHead>Action</TableHead>
-                        <TableHead>Time</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {recentActivities.map((activity, index) => (
-                         <TableRow key={index}>
-                            <TableCell>
-                                <div className="font-medium">{activity.user}</div>
-                                <div className="hidden text-sm text-muted-foreground md:inline">
-                                    {activity.item}
-                                </div>
-                            </TableCell>
-                            <TableCell>
-                                <Badge variant={activity.type === 'user' ? 'default' : 'secondary'} className="text-xs">
-                                    {activity.action}
-                                </Badge>
-                            </TableCell>
-                            <TableCell>{activity.time}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-             </Table>
-          </CardContent>
-        </Card>
-      </div>
+      <Card className="shadow-md">
+        <CardHeader>
+          <CardTitle className="flex items-center"><Sparkles className="mr-2 h-5 w-5 text-primary" />New Post</CardTitle>
+          <CardDescription>Enter the details for your new blog post below.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6 pt-6">
+          <div>
+            <Label htmlFor="post-title" className="font-semibold text-lg">Post Title</Label>
+            <Input 
+                id="post-title" 
+                value={title} 
+                onChange={(e) => setTitle(e.target.value)} 
+                placeholder="Enter a catchy title..." 
+                className="mt-1 text-lg font-bold" 
+            />
+          </div>
+          <div>
+            <Label htmlFor="post-content" className="font-semibold text-lg">Post Content</Label>
+            <Textarea 
+                id="post-content" 
+                value={content} 
+                onChange={(e) => setContent(e.target.value)} 
+                placeholder="Write your blog post content here. You can use Markdown for formatting." 
+                rows={18} 
+                className="mt-1 border-primary/30 focus:border-primary text-base" 
+            />
+          </div>
+        </CardContent>
+        <CardFooter className="border-t pt-6">
+            <Button 
+              className="w-full sm:w-auto ml-auto bg-green-600 hover:bg-green-700 text-white font-semibold"
+              onClick={handlePublishToBlog}
+              disabled={isPublishing || !title || !content}
+            >
+              {isPublishing ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Publishing...
+                </>
+              ) : (
+                <>
+                 <SendHorizonal className="mr-2 h-4 w-4" />
+                  Publish Post
+                </>
+              )}
+            </Button>
+        </CardFooter>
+      </Card>
+      <p className="text-center text-muted-foreground text-xs mt-4">
+        This editor uses your browser's LocalStorage to simulate a real-time blog.
+      </p>
     </div>
   );
 }

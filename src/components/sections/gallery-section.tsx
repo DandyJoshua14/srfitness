@@ -9,26 +9,36 @@ import Autoplay from "embla-carousel-autoplay";
 import { Camera } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const galleryImages = [
-  { src: '/aw1.jpeg', alt: 'Group workout session', dataAiHint: 'group workout energy' },
-  { src: '/aw2.jpeg', alt: 'Client lifting weights with trainer', dataAiHint: 'personal training weights' },
-  { src: '/aw3.jpeg', alt: 'Yoga class in progress', dataAiHint: 'yoga class zen' },
-  { src: '/aw4.jpeg', alt: 'Bootcamp outdoor drill', dataAiHint: 'bootcamp outdoor fitness' },
-  { src: '/gal.jpeg', alt: 'Modern gym interior', dataAiHint: 'modern gym empty' },
-  { src: '/gal1.jpeg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling' },
-  { src: '/gal2.jpeg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling' },
-  { src: '/gal31.jpg', alt: 'Client lifting weights with trainer', dataAiHint: 'personal training weights' },
-  { src: '/gal32.jpg', alt: 'Yoga class in progress', dataAiHint: 'yoga class zen' },
-  { src: '/gal33.jpg', alt: 'Bootcamp outdoor drill', dataAiHint: 'bootcamp outdoor fitness' },
-  { src: '/gal34.jpg', alt: 'Modern gym interior', dataAiHint: 'modern gym empty' },
-  { src: '/gal35.jpg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling' },
-  { src: '/gal36.jpg', alt: 'Happy members after a class', dataAiHint: 'fitness group smiling' },
+const defaultImages = [
+  { id: 'def1', src: '/aw1.jpeg', alt: 'Group workout session', dataAiHint: 'group workout energy' },
+  { id: 'def2', src: '/aw2.jpeg', alt: 'Client lifting weights with trainer', dataAiHint: 'personal training weights' },
+  { id: 'def3', src: '/aw3.jpeg', alt: 'Yoga class in progress', dataAiHint: 'yoga class zen' },
+  { id: 'def4', src: '/aw4.jpeg', alt: 'Bootcamp outdoor drill', dataAiHint: 'bootcamp outdoor fitness' },
+  { id: 'def5', src: '/gal.jpeg', alt: 'Modern gym interior', dataAiHint: 'modern gym empty' },
 ];
+
+const STORAGE_KEY = 'sr-fitness-gallery-images';
 
 export default function GallerySection() {
   const plugin = React.useRef(
     Autoplay({ delay: 3000, stopOnInteraction: true })
   );
+
+  const [galleryImages, setGalleryImages] = React.useState(defaultImages);
+
+  React.useEffect(() => {
+    try {
+      const storedImages = localStorage.getItem(STORAGE_KEY);
+      if (storedImages) {
+        const parsedImages = JSON.parse(storedImages);
+        if(parsedImages.length > 0) {
+           setGalleryImages(parsedImages);
+        }
+      }
+    } catch(e) {
+      console.error("Could not parse gallery images from localStorage", e);
+    }
+  }, []);
 
   return (
     <section className="py-16 md:py-24 bg-background text-foreground">
@@ -67,7 +77,7 @@ export default function GallerySection() {
             >
                 <CarouselContent className="-ml-4">
                     {galleryImages.map((photo, index) => (
-                        <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
+                        <CarouselItem key={photo.id} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
                             <div className="p-1">
                                 <Card className="overflow-hidden shadow-lg border-primary/20">
                                     <CardContent className="flex aspect-video items-center justify-center p-0 relative group bg-black">

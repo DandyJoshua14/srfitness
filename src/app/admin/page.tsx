@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Newspaper, Store, ArrowRight } from 'lucide-react';
+import { Newspaper, Store, ArrowRight, ImageIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -22,6 +22,13 @@ export default function AdminDashboardPage() {
       href: '/admin/store',
       cta: 'Go to Store Manager',
     },
+    {
+      title: 'Gallery Manager',
+      description: 'Upload and delete homepage gallery images.',
+      icon: <ImageIcon className="h-8 w-8" />,
+      href: '/admin/gallery',
+      cta: 'Go to Gallery Manager',
+    },
   ];
 
   return (
@@ -37,7 +44,7 @@ export default function AdminDashboardPage() {
         </CardHeader>
       </Card>
 
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {managementSections.map((section) => (
            <Card key={section.title} className="shadow-md hover:shadow-lg transition-shadow hover:border-primary/30 flex flex-col">
               <CardHeader className="flex-row items-center gap-4 space-y-0">

@@ -20,6 +20,14 @@ interface GalleryImage {
 
 const STORAGE_KEY = 'sr-fitness-gallery-images';
 
+const defaultImages = [
+  { id: 'def1', src: '/aw1.jpeg', alt: 'Group workout session', dataAiHint: 'group workout energy' },
+  { id: 'def2', src: '/aw2.jpeg', alt: 'Client lifting weights with trainer', dataAiHint: 'personal training weights' },
+  { id: 'def3', src: '/aw3.jpeg', alt: 'Yoga class in progress', dataAiHint: 'yoga class zen' },
+  { id: 'def4', src: '/aw4.jpeg', alt: 'Bootcamp outdoor drill', dataAiHint: 'bootcamp outdoor fitness' },
+  { id: 'def5', src: '/gal.jpeg', alt: 'Modern gym interior', dataAiHint: 'modern gym empty' },
+];
+
 export default function AdminGalleryManagerPage() {
   const { toast } = useToast();
   
@@ -31,12 +39,18 @@ export default function AdminGalleryManagerPage() {
       const storedImages = localStorage.getItem(STORAGE_KEY);
       if (storedImages) {
         setImages(JSON.parse(storedImages));
+      } else {
+        // If no images in storage, initialize with defaults
+        setImages(defaultImages);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultImages));
       }
     } catch (error) {
       console.error("Could not load images from localStorage", error);
-      toast({ title: "Error Loading Images", variant: "destructive" });
+      toast({ title: "Error Loading Images", description: "Falling back to default images.", variant: "destructive" });
+      setImages(defaultImages);
     }
   }, [toast]);
+
 
   useEffect(() => {
     loadImages();
@@ -166,7 +180,7 @@ export default function AdminGalleryManagerPage() {
                     {images.map(img => (
                         <div key={img.id} className="relative group">
                              <div className="relative aspect-video rounded-md overflow-hidden border">
-                                <Image src={img.src} alt={img.alt} layout="fill" objectFit="cover" />
+                                <Image src={img.src} alt={img.alt} layout="fill" objectFit="cover" data-ai-hint={img.dataAiHint} />
                             </div>
                             <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <Button variant="destructive" size="icon" onClick={() => handleDeleteImage(img.id)}>
@@ -188,3 +202,5 @@ export default function AdminGalleryManagerPage() {
     </div>
   );
 }
+
+    

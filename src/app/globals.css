@@ -6,6 +6,13 @@ body {
   font-family: var(--font-open-sans), sans-serif;
 }
 
+/* Hide global footer and contact section within the admin layout context */
+.admin-layout-wrapper ~ #contact,
+.admin-layout-wrapper ~ footer {
+  display: none;
+}
+
+
 @layer base {
   :root {
     --background: 0 0% 10%; /* Dark Gray */

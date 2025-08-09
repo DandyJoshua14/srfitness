@@ -11,8 +11,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import Autoplay from "embla-carousel-autoplay";
 import * as React from "react";
 
-
-const highlightedPosts = [
+const initialHighlightedPosts = [
   {
     id: 'announcement-1',
     author: { name: 'SR Fitness Admin', avatar: '/logo.png' },
@@ -45,11 +44,45 @@ const highlightedPosts = [
   },
 ];
 
+const STORAGE_KEY = 'sr-fitness-blog-posts';
 
 export default function BlogHighlightSection() {
     const plugin = React.useRef(
       Autoplay({ delay: 5000, stopOnInteraction: true })
     );
+
+    const [highlightedPosts, setHighlightedPosts] = React.useState(initialHighlightedPosts);
+
+    React.useEffect(() => {
+        try {
+            const storedPosts = localStorage.getItem(STORAGE_KEY);
+            if (storedPosts) {
+                const parsedPosts = JSON.parse(storedPosts);
+                if(parsedPosts.length > 0) {
+                    // Take the 3 most recent posts for the highlight section
+                    setHighlightedPosts(parsedPosts.slice(0, 3));
+                }
+            } else {
+                // If no posts in storage, initialize with defaults
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(initialHighlightedPosts));
+            }
+        } catch (e) {
+            console.error("Could not load blog posts from localStorage", e);
+            setHighlightedPosts(initialHighlightedPosts); // Fallback to defaults
+        }
+
+        const handleStorageChange = (event: StorageEvent) => {
+          if (event.key === STORAGE_KEY && event.newValue) {
+              const updatedPosts = JSON.parse(event.newValue);
+              setHighlightedPosts(updatedPosts.slice(0, 3));
+          }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
+    }, []);
   
   return (
     <section className="py-16 md:py-24 bg-background text-foreground">
@@ -82,12 +115,12 @@ export default function BlogHighlightSection() {
                 onMouseEnter={plugin.current.stop}
                 onMouseLeave={plugin.current.reset}
                 opts={{
-                  loop: true,
+                  loop: highlightedPosts.length > 1,
                 }}
               >
                 <CarouselContent>
                   {highlightedPosts.map((post) => (
-                     <CarouselItem key={post.id}>
+                     <CarouselItem key={post.id} className="md:basis-1/2 lg:basis-1/3">
                         <div className="p-1">
                             <Card className="h-full flex flex-col overflow-hidden group transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl hover:border-primary/50">
                                 <CardHeader className="p-0 relative">
@@ -98,7 +131,7 @@ export default function BlogHighlightSection() {
                                     layout="fill"
                                     objectFit="cover"
                                     className="transition-transform duration-500 group-hover:scale-110"
-                                    data-ai-hint={post.dataAiHint}
+                                    data-ai-hint={post.dataAiHint || 'blog post image'}
                                     />
                                 </Link>
                                 </CardHeader>

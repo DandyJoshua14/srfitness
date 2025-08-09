@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Newspaper, Store, GalleryHorizontal } from 'lucide-react';
+import { Newspaper, Store } from 'lucide-react';
 
 const features = [
     {
@@ -17,12 +17,6 @@ const features = [
         description: "Add and remove products from the marketplace.",
         href: "/admin/store",
         icon: <Store className="h-8 w-8 text-primary" />,
-    },
-     {
-        title: "Gallery Manager",
-        description: "Update images on the homepage gallery.",
-        href: "/admin/gallery",
-        icon: <GalleryHorizontal className="h-8 w-8 text-primary" />,
     },
 ];
 

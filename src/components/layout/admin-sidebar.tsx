@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Newspaper, Home, LayoutDashboard, Store, ImageIcon } from 'lucide-react';
+import { Newspaper, Home, LayoutDashboard, Store } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Tooltip,
@@ -18,7 +18,6 @@ const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
   { href: '/admin/blog', label: 'Blog Manager', icon: Newspaper },
   { href: '/admin/store', label: 'Store Manager', icon: Store },
-  { href: '/admin/gallery', label: 'Gallery Manager', icon: ImageIcon },
 ];
 
 export default function AdminSidebar() {

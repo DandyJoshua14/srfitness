@@ -9,36 +9,13 @@ import Autoplay from "embla-carousel-autoplay";
 import { Camera } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const defaultImages = [
-  { id: 'def1', src: 'https://placehold.co/1280x720.png', alt: 'Group workout session', dataAiHint: 'group workout energy' },
-  { id: 'def2', src: 'https://placehold.co/1280x720.png', alt: 'Client lifting weights with trainer', dataAiHint: 'personal training weights' },
-  { id: 'def3', src: 'https://placehold.co/1280x720.png', alt: 'Yoga class in progress', dataAiHint: 'yoga class zen' },
-  { id: 'def4', src: 'https://placehold.co/1280x720.png', alt: 'Bootcamp outdoor drill', dataAiHint: 'bootcamp outdoor fitness' },
-  { id: 'def5', src: 'https://placehold.co/1280x720.png', alt: 'Modern gym interior', dataAiHint: 'modern gym empty' },
-];
-
-const STORAGE_KEY = 'sr-fitness-gallery-images';
+const SINGLE_IMAGE_PLACEHOLDER = 'https://placehold.co/1280x720.png';
+const SLIDE_COUNT = 5; // Number of slides to show in the carousel
 
 export default function GallerySection() {
   const plugin = React.useRef(
     Autoplay({ delay: 3000, stopOnInteraction: true })
   );
-
-  const [galleryImages, setGalleryImages] = React.useState(defaultImages);
-
-  React.useEffect(() => {
-    try {
-      const storedImages = localStorage.getItem(STORAGE_KEY);
-      if (storedImages) {
-        const parsedImages = JSON.parse(storedImages);
-        if(parsedImages.length > 0) {
-           setGalleryImages(parsedImages);
-        }
-      }
-    } catch(e) {
-      console.error("Could not parse gallery images from localStorage", e);
-    }
-  }, []);
 
   return (
     <section className="py-16 md:py-24 bg-background text-foreground">
@@ -76,18 +53,18 @@ export default function GallerySection() {
                 }}
             >
                 <CarouselContent className="-ml-4">
-                    {galleryImages.map((photo, index) => (
-                        <CarouselItem key={photo.id} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
+                    {Array.from({ length: SLIDE_COUNT }).map((_, index) => (
+                        <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
                             <div className="p-1">
                                 <Card className="overflow-hidden shadow-lg border-primary/20">
                                     <CardContent className="flex aspect-video items-center justify-center p-0 relative group bg-black">
                                         <Image
-                                            src={photo.src}
-                                            alt={photo.alt}
+                                            src={SINGLE_IMAGE_PLACEHOLDER}
+                                            alt="SR Fitness gallery image"
                                             layout="fill"
                                             objectFit="contain"
                                             className="transform transition-transform duration-500 group-hover:scale-105"
-                                            data-ai-hint={photo.dataAiHint}
+                                            data-ai-hint="fitness community"
                                         />
                                     </CardContent>
                                 </Card>

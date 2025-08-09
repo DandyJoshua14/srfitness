@@ -3,7 +3,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Newspaper } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -14,37 +14,22 @@ import * as React from "react";
 const initialHighlightedPosts = [
   {
     id: 'announcement-1',
-    author: { name: 'SR Fitness Admin', avatar: '/logo.png' },
-    timestamp: '1 day ago',
     title: 'New Spin Class Schedule!',
     content: 'Our new Spin Class schedule is out now with more morning and evening slots. Get ready to sweat!',
-    image: 'https://placehold.co/1280x720.png',
-    dataAiHint: 'spin class bikes',
-    category: "Announcements"
   },
   {
     id: '1',
-    author: { name: 'Sarah K.', avatar: 'https://placehold.co/40x40.png?text=SK' },
-    timestamp: '2 hours ago',
     title: 'Crushed My Squat PB Today!',
     content: 'Just hit a new personal best on squats! Feeling absolutely amazing and stronger than ever.',
-    image: 'https://placehold.co/1280x720.png',
-    dataAiHint: 'gym squat rack',
-    category: "Member Stories"
   },
   {
     id: '2',
-    author: { name: 'Alex P.', avatar: 'https://placehold.co/40x40.png?text=AP' },
-    timestamp: '5 hours ago',
     title: 'Morning Run Fuelled by the New Meal Plan',
     content: 'Early morning run with a stunning view. The new AI meal plan is making a difference.',
-    image: "https://placehold.co/1280x720.png",
-    dataAiHint: "sunrise run park",
-    category: "Fitness Tips"
   },
 ];
 
-const STORAGE_KEY = 'sr-fitness-blog-posts';
+const SINGLE_IMAGE_PLACEHOLDER = 'https://placehold.co/1280x720.png';
 
 export default function BlogHighlightSection() {
     const plugin = React.useRef(
@@ -55,24 +40,22 @@ export default function BlogHighlightSection() {
 
     React.useEffect(() => {
         try {
-            const storedPosts = localStorage.getItem(STORAGE_KEY);
+            const storedPosts = localStorage.getItem('sr-fitness-blog-posts');
             if (storedPosts) {
                 const parsedPosts = JSON.parse(storedPosts);
                 if(parsedPosts.length > 0) {
-                    // Take the 3 most recent posts for the highlight section
                     setHighlightedPosts(parsedPosts.slice(0, 3));
                 }
             } else {
-                // If no posts in storage, initialize with defaults
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(initialHighlightedPosts));
+                localStorage.setItem('sr-fitness-blog-posts', JSON.stringify(initialHighlightedPosts));
             }
         } catch (e) {
             console.error("Could not load blog posts from localStorage", e);
-            setHighlightedPosts(initialHighlightedPosts); // Fallback to defaults
+            setHighlightedPosts(initialHighlightedPosts);
         }
 
         const handleStorageChange = (event: StorageEvent) => {
-          if (event.key === STORAGE_KEY && event.newValue) {
+          if (event.key === 'sr-fitness-blog-posts' && event.newValue) {
               const updatedPosts = JSON.parse(event.newValue);
               setHighlightedPosts(updatedPosts.slice(0, 3));
           }
@@ -126,12 +109,12 @@ export default function BlogHighlightSection() {
                                 <CardHeader className="p-0 relative">
                                 <Link href="/community" className="block aspect-video w-full relative overflow-hidden rounded-t-lg">
                                     <Image 
-                                    src={post.image}
+                                    src={SINGLE_IMAGE_PLACEHOLDER}
                                     alt={post.title}
                                     layout="fill"
                                     objectFit="cover"
                                     className="transition-transform duration-500 group-hover:scale-110"
-                                    data-ai-hint={post.dataAiHint || 'blog post image'}
+                                    data-ai-hint="fitness blog"
                                     />
                                 </Link>
                                 </CardHeader>

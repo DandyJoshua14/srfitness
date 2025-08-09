@@ -7,8 +7,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { SendHorizonal, Newspaper, Image as ImageIcon } from 'lucide-react';
+import { SendHorizonal, Newspaper, Image as ImageIcon, Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import Image from 'next/image';
 
 export default function AdminBlogEditorPage() {
   const { toast } = useToast();
@@ -16,6 +17,26 @@ export default function AdminBlogEditorPage() {
   const [title, setTitle] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [content, setContent] = useState('');
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) { // 2MB limit
+        toast({
+          title: "Image Too Large",
+          description: "Please select an image smaller than 2MB.",
+          variant: "destructive",
+        });
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
 
   const handlePublish = () => {
     if (!title.trim() || !content.trim()) {
@@ -97,16 +118,21 @@ export default function AdminBlogEditorPage() {
                 />
               </div>
                <div>
-                <Label htmlFor="post-image" className="font-semibold text-lg flex items-center">
-                  <ImageIcon className="mr-2 h-5 w-5" /> Image URL
+                <Label htmlFor="post-image" className="font-semibold text-lg flex items-center mb-2">
+                  <ImageIcon className="mr-2 h-5 w-5" /> Cover Image
                 </Label>
-                <Input 
+                 <Input 
                   id="post-image" 
-                  value={imageUrl} 
-                  onChange={(e) => setImageUrl(e.target.value)} 
-                  placeholder="https://example.com/image.png (optional)" 
-                  className="mt-2 text-base h-11" 
+                  type="file"
+                  accept="image/png, image/jpeg, image/gif"
+                  onChange={handleImageUpload}
+                  className="mt-2 text-base h-11 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                 />
+                {imageUrl && (
+                  <div className="mt-4 relative aspect-video rounded-lg overflow-hidden border">
+                     <Image src={imageUrl} alt="Selected preview" layout="fill" objectFit="cover" />
+                  </div>
+                )}
               </div>
               <div>
                 <Label htmlFor="post-content" className="font-semibold text-lg">Content</Label>

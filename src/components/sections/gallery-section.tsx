@@ -61,7 +61,7 @@ export default function GallerySection() {
                                           src={SINGLE_IMAGE_PLACEHOLDER}
                                           alt="SR Fitness gallery placeholder"
                                           layout="fill"
-                                          objectFit="contain"
+                                          objectFit="cover"
                                           className="transform transition-transform duration-500 group-hover:scale-105"
                                           data-ai-hint="fitness community"
                                       />

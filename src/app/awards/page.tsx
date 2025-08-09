@@ -11,15 +11,18 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 
 
 export default function AwardsPage() {
-  const allPhotos = [
+  const workoutPhotos = [
     { src: '/srward.jpeg', alt: 'Participants in a high-energy group session', dataAiHint: 'group workout high energy' },
     { src: '/groupp.jpeg', alt: 'Group workout session in progress', dataAiHint: 'group workout intense' },
     { src: '/group2.jpeg', alt: 'Trainer demonstrating an exercise', dataAiHint: 'fitness trainer demonstration' },
+  ];
+  
+  const ceremonyPhotos = [
     { src: '/gl.jpeg', alt: 'Awards ceremony highlight 1', dataAiHint: 'award ceremony winner' },
     { src: '/gl2.jpeg', alt: 'Awards ceremony highlight 2', dataAiHint: 'award winner portrait' },
     { src: '/gl3.jpeg', alt: 'Awards ceremony highlight 3', dataAiHint: 'audience applause conference' },
   ];
-  
+
   const awardCategories = [
     { 
       title: "Community Fitness Hero of the Year",
@@ -172,15 +175,59 @@ export default function AwardsPage() {
             </Card>
           </section>
 
-          {/* Combined Event Gallery */}
-          <section id="event-gallery">
-               <div className="text-center mb-12">
+          {/* Workout Exhibition Gallery */}
+          <section id="morning-gallery" className="mb-20 md:mb-28">
+              <div className="text-center mb-12">
                   <h2 className="font-headline text-4xl text-foreground font-semibold flex items-center justify-center gap-3">
                       <Camera className="h-9 w-9 text-primary" />
-                      Event Highlights
+                      Workout Exhibition Gallery
                   </h2>
                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto mt-2">
-                      Moments from our workout exhibition and awards gala.
+                      Capturing the energy and determination of our morning session.
+                  </p>
+              </div>
+              <Carousel
+                plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
+                className="w-full max-w-4xl mx-auto"
+                opts={{
+                  loop: true,
+                }}
+              >
+                <CarouselContent>
+                  {workoutPhotos.map((photo, index) => (
+                    <CarouselItem key={index}>
+                      <div className="p-1">
+                        <Card className="overflow-hidden shadow-lg border-primary/20">
+                          <CardContent className="flex aspect-[16/9] items-center justify-center p-0 relative group">
+                            <Image
+                                src={photo.src}
+                                alt={photo.alt}
+                                layout="fill"
+                                objectFit="cover"
+                                className="transform transition-transform duration-500 group-hover:scale-110"
+                                data-ai-hint={photo.dataAiHint}
+                            />
+                             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="absolute left-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
+                <CarouselNext className="absolute right-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
+              </Carousel>
+          </section>
+
+          {/* Awards Gala Gallery */}
+          <section id="evening-gallery">
+               <div className="text-center mb-12">
+                  <h2 className="font-headline text-4xl text-foreground font-semibold flex items-center justify-center gap-3">
+                      <Trophy className="h-9 w-9 text-primary" />
+                      Awards Gala Gallery
+                  </h2>
+                   <p className="text-lg text-muted-foreground max-w-2xl mx-auto mt-2">
+                      Celebrating the achievements of our incredible community.
                   </p>
               </div>
               
@@ -192,7 +239,7 @@ export default function AwardsPage() {
                     }}
                 >
                     <CarouselContent>
-                    {allPhotos.map((photo, index) => (
+                    {ceremonyPhotos.map((photo, index) => (
                         <CarouselItem key={index}>
                         <div className="p-1">
                             <Card className="overflow-hidden shadow-lg border-primary/20">

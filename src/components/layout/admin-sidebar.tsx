@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Newspaper, Home } from 'lucide-react';
+import { Newspaper, Home, LayoutDashboard, Store } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Tooltip,
@@ -15,7 +15,9 @@ import {
 
 
 const navItems = [
-  { href: '/admin', label: 'Blog Editor', icon: Newspaper },
+  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
+  { href: '/admin/blog', label: 'Blog Manager', icon: Newspaper },
+  { href: '/admin/store', label: 'Store Manager', icon: Store },
 ];
 
 export default function AdminSidebar() {
@@ -34,7 +36,7 @@ export default function AdminSidebar() {
         </Link>
         <TooltipProvider>
           {navItems.map((item) => {
-            const isActive = pathname.startsWith(item.href);
+            const isActive = item.exact ? pathname === item.href : pathname.startsWith(item.href);
             return (
               <Tooltip key={item.label}>
                 <TooltipTrigger asChild>

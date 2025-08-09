@@ -7,10 +7,11 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Heart, MessageCircle, Share2, Info, ArrowRight, Rss } from 'lucide-react';
+import { Heart, MessageCircle, Share2, Info, ArrowRight, Rss, Trash2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { useToast } from '@/hooks/use-toast';
 
 const initialPosts = [
   {
@@ -56,6 +57,7 @@ const initialPosts = [
 
 export default function CommunityFeedClient() {
   const [posts, setPosts] = useState(initialPosts);
+  const { toast } = useToast();
 
   const loadPosts = useCallback(() => {
     try {
@@ -63,34 +65,48 @@ export default function CommunityFeedClient() {
       if (storedPosts) {
         setPosts(JSON.parse(storedPosts));
       } else {
-        // If nothing in storage, set initial posts
         localStorage.setItem('sr-fitness-blog-posts', JSON.stringify(initialPosts));
       }
     } catch (error) {
       console.error("Could not load posts from localStorage", error);
-      // Keep initial posts on error
     }
   }, []);
 
   useEffect(() => {
     loadPosts();
-
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === 'sr-fitness-blog-posts') {
         loadPosts();
       }
     };
-
     window.addEventListener('storage', handleStorageChange);
-
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
   }, [loadPosts]);
 
+  const handleDeletePost = (postId: string) => {
+    try {
+      const updatedPosts = posts.filter(p => p.id !== postId);
+      setPosts(updatedPosts);
+      localStorage.setItem('sr-fitness-blog-posts', JSON.stringify(updatedPosts));
+      toast({
+        title: "Post Deleted",
+        description: "The blog post has been successfully removed.",
+        variant: "destructive"
+      });
+    } catch (error) {
+      console.error("Failed to delete post:", error);
+      toast({
+        title: "Deletion Failed",
+        description: "Could not delete the post. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
     <div className="max-w-3xl mx-auto space-y-8">
-      {/* Blog Feed */}
       <div className="space-y-6">
         {posts.length === 0 && (
             <Card className="text-center py-16 shadow-lg">
@@ -150,6 +166,16 @@ export default function CommunityFeedClient() {
               <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary hover:bg-primary/10">
                 <Share2 className="h-4 w-4 mr-1.5" /> Share
               </Button>
+              {post.isAnnouncement && (
+                 <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 ml-auto"
+                    onClick={() => handleDeletePost(post.id)}
+                 >
+                    <Trash2 className="h-4 w-4 mr-1.5" /> Delete
+                </Button>
+              )}
             </CardFooter>
              {post.isAnnouncement && (
                 <Alert className="m-4 mt-0 border-primary/50 bg-primary/10 rounded-b-lg text-primary">

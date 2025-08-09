@@ -7,13 +7,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { SendHorizonal, Newspaper } from 'lucide-react';
+import { SendHorizonal, Newspaper, Image as ImageIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function AdminBlogEditorPage() {
   const { toast } = useToast();
   
   const [title, setTitle] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [content, setContent] = useState('');
 
   const handlePublish = () => {
@@ -27,7 +28,6 @@ export default function AdminBlogEditorPage() {
     }
 
     try {
-      // In a real app, this would be an API call. We use localStorage for this demo.
       const storedPosts = JSON.parse(localStorage.getItem('sr-fitness-blog-posts') || '[]');
       const newPost = {
         id: String(Date.now()),
@@ -35,11 +35,11 @@ export default function AdminBlogEditorPage() {
         timestamp: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         title: title,
         content: content,
-        image: 'https://placehold.co/600x400.png', // Default image for new posts
+        image: imageUrl || 'https://placehold.co/600x400.png',
         dataAiHint: 'fitness blog article',
         likes: 0,
         comments: 0,
-        isAnnouncement: true, // Marking posts from admin as announcements
+        isAnnouncement: true, 
         category: "Announcements"
       };
       
@@ -53,6 +53,7 @@ export default function AdminBlogEditorPage() {
 
       // Clear the form
       setTitle('');
+      setImageUrl('');
       setContent('');
 
     } catch (error) {
@@ -95,6 +96,18 @@ export default function AdminBlogEditorPage() {
                   className="mt-2 text-lg font-bold h-12" 
                 />
               </div>
+               <div>
+                <Label htmlFor="post-image" className="font-semibold text-lg flex items-center">
+                  <ImageIcon className="mr-2 h-5 w-5" /> Image URL
+                </Label>
+                <Input 
+                  id="post-image" 
+                  value={imageUrl} 
+                  onChange={(e) => setImageUrl(e.target.value)} 
+                  placeholder="https://example.com/image.png (optional)" 
+                  className="mt-2 text-base h-11" 
+                />
+              </div>
               <div>
                 <Label htmlFor="post-content" className="font-semibold text-lg">Content</Label>
                 <Textarea 
@@ -102,7 +115,7 @@ export default function AdminBlogEditorPage() {
                   value={content} 
                   onChange={(e) => setContent(e.target.value)} 
                   placeholder="Write your blog post content here. The content supports Markdown..." 
-                  rows={18} 
+                  rows={15} 
                   className="mt-2 border-primary/30 focus:border-primary text-base" 
                 />
               </div>

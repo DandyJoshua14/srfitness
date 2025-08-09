@@ -15,7 +15,7 @@ import {
 
 
 const navItems = [
-  { href: '/admin/content-studio', label: 'Content Studio', icon: Newspaper },
+  { href: '/admin', label: 'Blog Editor', icon: Newspaper },
 ];
 
 export default function AdminSidebar() {

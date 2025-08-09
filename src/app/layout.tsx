@@ -1,47 +1,53 @@
 
-import type { Metadata } from 'next';
+"use client"; // Required to use the usePathname hook
+
+import type { ReactNode } from 'react';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { LoadingProvider } from '@/contexts/loading-context';
 import { AuthProvider } from '@/contexts/auth-context';
-import { CartProvider } from '@/contexts/cart-context'; // Added CartProvider
+import { CartProvider } from '@/contexts/cart-context';
 import LoadingOverlay from '@/components/common/loading-overlay';
 import NavigationLoadingManager from '@/components/common/navigation-loading-manager';
 import ContactLocationSection from '@/components/sections/contact-location-section';
+import { usePathname } from 'next/navigation';
 
-
-export const metadata: Metadata = {
-  title: 'SR Fitness',
-  description: 'Your journey to strength and wellness starts here.',
-};
+// Metadata needs to be exported from a server component, so we can't define it here anymore.
+// We'll rely on the default metadata in a new page.tsx or keep it in the original if this were a larger refactor.
+// For now, we'll remove it to allow this component to be a client component.
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
+  const pathname = usePathname();
+  const isAdminPage = pathname.startsWith('/admin');
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <title>SR Fitness</title>
+        <meta name="description" content="Your journey to strength and wellness starts here." />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased flex flex-col min-h-screen">
+      <body className="font-body antialiased flex flex-col min-h-screen bg-background">
         <LoadingProvider>
           <AuthProvider>
-            <CartProvider> {/* CartProvider wraps content */}
+            <CartProvider>
               <NavigationLoadingManager />
               <LoadingOverlay />
-              <Header />
+              {!isAdminPage && <Header />}
               <main className="flex-grow">
                 {children}
               </main>
-              <ContactLocationSection />
-              <Footer />
+              {!isAdminPage && <ContactLocationSection />}
+              {!isAdminPage && <Footer />}
               <Toaster />
             </CartProvider>
           </AuthProvider>

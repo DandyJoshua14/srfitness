@@ -9,7 +9,13 @@ import Autoplay from "embla-carousel-autoplay";
 import { Camera } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const SINGLE_IMAGE_PLACEHOLDER = 'https://placehold.co/1280x720.png';
+const galleryImages = [
+  { src: "/g1.jpeg", alt: "Group workout session", dataAiHint: "group workout" },
+  { src: "/g2.jpeg", alt: "Weight training area", dataAiHint: "weight training" },
+  { src: "/g3.jpeg", alt: "Cardio machines at SR Fitness", dataAiHint: "cardio machines" },
+  { src: "/g4.jpeg", alt: "Fitness class in session", dataAiHint: "fitness class" },
+  { src: "/g5.jpeg", alt: "Client doing a rope exercise", dataAiHint: "battle ropes" },
+];
 
 export default function GallerySection() {
   const plugin = React.useRef(
@@ -52,18 +58,18 @@ export default function GallerySection() {
                 }}
             >
                 <CarouselContent className="-ml-4">
-                    {Array.from({ length: 5 }).map((_, index) => (
+                    {galleryImages.map((image, index) => (
                       <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
                           <div className="p-1">
                               <Card className="overflow-hidden shadow-lg border-primary/20">
                                   <CardContent className="flex aspect-video items-center justify-center p-0 relative group bg-black">
                                       <Image
-                                          src={SINGLE_IMAGE_PLACEHOLDER}
-                                          alt="SR Fitness gallery placeholder"
+                                          src={image.src}
+                                          alt={image.alt}
                                           layout="fill"
                                           objectFit="cover"
                                           className="transform transition-transform duration-500 group-hover:scale-105"
-                                          data-ai-hint="fitness community"
+                                          data-ai-hint={image.dataAiHint}
                                       />
                                   </CardContent>
                               </Card>

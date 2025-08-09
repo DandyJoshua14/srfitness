@@ -79,7 +79,7 @@ export default function AdminContentStudioPage() {
       const newPost = {
         id: String(Date.now()),
         author: { name: 'SR Fitness Admin', avatar: '/logo.png', dataAiHint: 'brand logo' },
-        timestamp: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        timestamp: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         title: generatedTitle,
         content: generatedContent,
         image: 'https://placehold.co/600x400.png',
@@ -117,7 +117,7 @@ export default function AdminContentStudioPage() {
             Content Studio
           </CardTitle>
           <CardDescription>
-            Use this tool to generate various types of content and publish it to the blog.
+            Use our powerful AI to generate various types of content and publish it directly to the blog.
           </CardDescription>
         </CardHeader>
       </Card>

@@ -15,7 +15,7 @@ import {
 
 
 const navItems = [
-  { href: '/admin', label: 'Blog Editor', icon: Newspaper },
+  { href: '/admin/content-studio', label: 'Content Studio', icon: Newspaper },
 ];
 
 export default function AdminSidebar() {
@@ -34,8 +34,7 @@ export default function AdminSidebar() {
         </Link>
         <TooltipProvider>
           {navItems.map((item) => {
-            // Since there's only one item, it's always active in the admin section.
-            const isActive = pathname.startsWith('/admin');
+            const isActive = pathname.startsWith(item.href);
             return (
               <Tooltip key={item.label}>
                 <TooltipTrigger asChild>

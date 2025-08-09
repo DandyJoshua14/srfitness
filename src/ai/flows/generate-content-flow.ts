@@ -1,76 +1,82 @@
-"use client";
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { usePathname } from 'next/navigation';
-import { Newspaper, Home } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+'use server';
+/**
+ * @fileOverview Generates various types of marketing and blog content using AI.
+ *
+ * - generateStudioContent - A function that calls the content generation flow.
+ * - GenerateStudioContentInput - The input type for content generation.
+ * - GenerateStudioContentOutput - The return type for the generated content.
+ */
+
+import { ai } from '@/ai/genkit';
+import { z } from 'genkit';
+
+// Input schema for the content studio
+export const GenerateStudioContentInputSchema = z.object({
+  inputText: z.string().optional().describe("The base text, notes, or keywords to generate content from."),
+  contentType: z.string().describe("The type of content to generate (e.g., Blog Post, Social Media Post)."),
+  tone: z.string().describe("The desired tone of the content (e.g., Informative, Casual, Witty)."),
+  length: z.string().describe("The desired length of the content (e.g., Short, Medium, Long)."),
+  audience: z.string().optional().describe("The target audience for the content (e.g., Fitness Beginners, Advanced Athletes)."),
+  keywords: z.string().optional().describe("Comma-separated keywords to include in the content."),
+});
+export type GenerateStudioContentInput = z.infer<typeof GenerateStudioContentInputSchema>;
+
+// Output schema for the generated content
+export const GenerateStudioContentOutputSchema = z.object({
+  title: z.string().describe("The generated title or headline for the content."),
+  content: z.string().describe("The main body of the generated content (e.g., the blog post text, the script)."),
+  socialMediaPost: z.string().optional().describe("A short, engaging social media post to promote the main content."),
+});
+export type GenerateStudioContentOutput = z.infer<typeof GenerateStudioContentOutputSchema>;
 
 
-const navItems = [
-  { href: '/admin', label: 'Content Studio', icon: Newspaper },
-];
-
-export default function AdminSidebar() {
-  const pathname = usePathname();
-
-  return (
-    <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex md:w-64">
-      <nav className="flex flex-col items-center gap-4 px-2 sm:py-5 md:items-stretch">
-        <Link
-          href="/"
-          className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base mb-4 md:self-start md:px-4 md:w-auto"
-        >
-          <Image src="/SR.jpg" alt="SR Fitness Logo" width={24} height={24} className="h-6 w-6 transition-all group-hover:scale-110" />
-          <span className="hidden md:inline">SR Fitness</span>
-          <span className="sr-only">SR Fitness</span>
-        </Link>
-        <TooltipProvider>
-          {navItems.map((item) => {
-            // Since there's only one item, it's always active in the admin section.
-            const isActive = pathname.startsWith('/admin');
-            return (
-              <Tooltip key={item.label}>
-                <TooltipTrigger asChild>
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      "flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-auto md:justify-start md:px-3 md:py-2",
-                      isActive && "bg-accent text-accent-foreground"
-                    )}
-                  >
-                    <item.icon className="h-5 w-5" />
-                    <span className="sr-only md:not-sr-only md:ml-4">{item.label}</span>
-                  </Link>
-                </TooltipTrigger>
-                <TooltipContent side="right" className="md:hidden">{item.label}</TooltipContent>
-              </Tooltip>
-            );
-          })}
-        </TooltipProvider>
-      </nav>
-      <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5 md:items-stretch">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                href="/"
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-auto md:justify-start md:px-3 md:py-2"
-              >
-                <Home className="h-5 w-5" />
-                <span className="sr-only md:not-sr-only md:ml-4">Back to Site</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right" className="md:hidden">Back to Site</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </nav>
-    </aside>
-  );
+// Exported function for React components to call
+export async function generateStudioContent(input: GenerateStudioContentInput): Promise<GenerateStudioContentOutput> {
+  return generateStudioContentFlow(input);
 }
+
+
+// Define the Genkit prompt for content generation
+const contentStudioPrompt = ai.definePrompt({
+  name: 'contentStudioPrompt',
+  input: { schema: GenerateStudioContentInputSchema },
+  output: { schema: GenerateStudioContentOutputSchema },
+  prompt: `You are an expert content creator and copywriter for SR Fitness, a premium fitness brand.
+Your task is to generate a compelling "{{contentType}}" based on the user's request.
+
+**Content Request Details:**
+- **Base Topic/Keywords:** {{{inputText}}}
+- **Desired Tone:** {{tone}}
+- **Desired Length:** {{length}}
+{{#if audience}}
+- **Target Audience:** {{audience}}
+{{/if}}
+{{#if keywords}}
+- **SEO Keywords to include:** {{keywords}}
+{{/if}}
+
+**Your Tasks:**
+1.  **Generate a 'title':** Create a catchy, engaging title for the content.
+2.  **Generate 'content':** Write the main body of the content. It should be well-structured, informative, and perfectly match the requested tone, length, and audience.
+3.  **Generate 'socialMediaPost':** Write a short, exciting social media post (e.g., for Instagram or Facebook) to promote this new content. Include relevant hashtags based on the keywords.
+
+Ensure the output is in the specified JSON format.
+`,
+});
+
+// Define the Genkit flow for content generation
+const generateStudioContentFlow = ai.defineFlow(
+  {
+    name: 'generateStudioContentFlow',
+    inputSchema: GenerateStudioContentInputSchema,
+    outputSchema: GenerateStudioContentOutputSchema,
+  },
+  async (input) => {
+    const { output } = await contentStudioPrompt(input);
+    if (!output) {
+      throw new Error("The AI failed to generate content. Please try again with a clearer prompt.");
+    }
+    return output;
+  }
+);

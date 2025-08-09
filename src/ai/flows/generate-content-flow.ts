@@ -12,7 +12,7 @@ import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 
 // Input schema for the content studio
-export const GenerateStudioContentInputSchema = z.object({
+const GenerateStudioContentInputSchema = z.object({
   inputText: z.string().optional().describe("The base text, notes, or keywords to generate content from."),
   contentType: z.string().describe("The type of content to generate (e.g., Blog Post, Social Media Post)."),
   tone: z.string().describe("The desired tone of the content (e.g., Informative, Casual, Witty)."),
@@ -23,7 +23,7 @@ export const GenerateStudioContentInputSchema = z.object({
 export type GenerateStudioContentInput = z.infer<typeof GenerateStudioContentInputSchema>;
 
 // Output schema for the generated content
-export const GenerateStudioContentOutputSchema = z.object({
+const GenerateStudioContentOutputSchema = z.object({
   title: z.string().describe("The generated title or headline for the content."),
   content: z.string().describe("The main body of the generated content (e.g., the blog post text, the script)."),
   socialMediaPost: z.string().optional().describe("A short, engaging social media post to promote the main content."),

@@ -18,7 +18,7 @@ const initialHighlightedPosts = [
     timestamp: '1 day ago',
     title: 'New Spin Class Schedule!',
     content: 'Our new Spin Class schedule is out now with more morning and evening slots. Get ready to sweat!',
-    image: 'https://placehold.co/600x400.png',
+    image: 'https://placehold.co/1280x720.png',
     dataAiHint: 'spin class bikes',
     category: "Announcements"
   },
@@ -28,7 +28,7 @@ const initialHighlightedPosts = [
     timestamp: '2 hours ago',
     title: 'Crushed My Squat PB Today!',
     content: 'Just hit a new personal best on squats! Feeling absolutely amazing and stronger than ever.',
-    image: 'https://placehold.co/600x400.png',
+    image: 'https://placehold.co/1280x720.png',
     dataAiHint: 'gym squat rack',
     category: "Member Stories"
   },
@@ -38,7 +38,7 @@ const initialHighlightedPosts = [
     timestamp: '5 hours ago',
     title: 'Morning Run Fuelled by the New Meal Plan',
     content: 'Early morning run with a stunning view. The new AI meal plan is making a difference.',
-    image: "https://placehold.co/600x400.png",
+    image: "https://placehold.co/1280x720.png",
     dataAiHint: "sunrise run park",
     category: "Fitness Tips"
   },

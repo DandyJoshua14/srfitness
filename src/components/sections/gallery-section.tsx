@@ -10,11 +10,11 @@ import { Camera } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const defaultImages = [
-  { id: 'def1', src: '/aw1.jpeg', alt: 'Group workout session', dataAiHint: 'group workout energy' },
-  { id: 'def2', src: '/aw2.jpeg', alt: 'Client lifting weights with trainer', dataAiHint: 'personal training weights' },
-  { id: 'def3', src: '/aw3.jpeg', alt: 'Yoga class in progress', dataAiHint: 'yoga class zen' },
-  { id: 'def4', src: '/aw4.jpeg', alt: 'Bootcamp outdoor drill', dataAiHint: 'bootcamp outdoor fitness' },
-  { id: 'def5', src: '/gal.jpeg', alt: 'Modern gym interior', dataAiHint: 'modern gym empty' },
+  { id: 'def1', src: 'https://placehold.co/1280x720.png', alt: 'Group workout session', dataAiHint: 'group workout energy' },
+  { id: 'def2', src: 'https://placehold.co/1280x720.png', alt: 'Client lifting weights with trainer', dataAiHint: 'personal training weights' },
+  { id: 'def3', src: 'https://placehold.co/1280x720.png', alt: 'Yoga class in progress', dataAiHint: 'yoga class zen' },
+  { id: 'def4', src: 'https://placehold.co/1280x720.png', alt: 'Bootcamp outdoor drill', dataAiHint: 'bootcamp outdoor fitness' },
+  { id: 'def5', src: 'https://placehold.co/1280x720.png', alt: 'Modern gym interior', dataAiHint: 'modern gym empty' },
 ];
 
 const STORAGE_KEY = 'sr-fitness-gallery-images';

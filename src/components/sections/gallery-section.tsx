@@ -9,8 +9,15 @@ import Autoplay from "embla-carousel-autoplay";
 import { Camera } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const SINGLE_IMAGE_PLACEHOLDER = "https://placehold.co/1280x720.png";
-const SLIDE_COUNT = 5; // Number of slides to animate
+const galleryImages = [
+    { src: "/gg1.jpeg", alt: "Modern gym layout", dataAiHint: "modern gym design" },
+    { src: "/gg2.jpeg", alt: "Treadmills in a row", dataAiHint: "gym treadmills" },
+    { src: "/gg3.jpeg", alt: "Weight rack with various dumbbells", dataAiHint: "gym weight rack" },
+    { src: "/b1.jpeg", alt: "Bootcamp participants doing pushups", dataAiHint: "group fitness pushups" },
+    { src: "/b2.jpeg", alt: "Fitness trainer motivating the class", dataAiHint: "fitness trainer motivation" },
+    { src: "/personal.jpeg", alt: "Personal training session in progress", dataAiHint: "trainer client workout" },
+];
+
 
 export default function GallerySection() {
   const plugin = React.useRef(
@@ -53,18 +60,18 @@ export default function GallerySection() {
                 }}
             >
                 <CarouselContent className="-ml-4">
-                    {Array.from({ length: SLIDE_COUNT }).map((_, index) => (
+                    {galleryImages.map((image, index) => (
                       <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
                           <div className="p-1">
                               <Card className="overflow-hidden shadow-lg border-primary/20">
                                   <CardContent className="flex aspect-video items-center justify-center p-0 relative group bg-black">
                                       <Image
-                                          src={SINGLE_IMAGE_PLACEHOLDER}
-                                          alt={`SR Fitness Community Glimpse ${index + 1}`}
+                                          src={image.src}
+                                          alt={image.alt}
                                           layout="fill"
                                           objectFit="cover"
                                           className="transform transition-transform duration-500 group-hover:scale-105"
-                                          data-ai-hint="fitness community"
+                                          data-ai-hint={image.dataAiHint}
                                       />
                                   </CardContent>
                               </Card>
@@ -72,8 +79,8 @@ export default function GallerySection() {
                       </CarouselItem>
                     ))}
                 </CarouselContent>
-                <CarouselPrevious className="absolute left-[-20px] sm:left-[-50px] top-1/2 -translate-y-1/2" />
-                <CarouselNext className="absolute right-[-20px] sm:right-[-50px] top-1/2 -translate-y-1/2" />
+                <CarouselPrevious className="absolute left-[-20px] sm:left-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
+                <CarouselNext className="absolute right-[-20px] sm:right-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
             </Carousel>
         </motion.div>
       </div>

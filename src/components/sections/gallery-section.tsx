@@ -9,15 +9,22 @@ import Autoplay from "embla-carousel-autoplay";
 import { Camera } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const galleryImages = [
-    { src: "/gal35.jpeg", alt: "Modern gym layout", dataAiHint: "modern gym design" },
-    { src: "/gal2.jpeg", alt: "Treadmills in a row", dataAiHint: "gym treadmills" },
+interface GalleryImage {
+    src: string;
+    alt: string;
+    dataAiHint: string;
+    objectPosition?: string;
+}
+
+const galleryImages: GalleryImage[] = [
+    { src: "/gal35.jpg", alt: "Modern gym layout", dataAiHint: "modern gym design" },
+    { src: "/gal2.jpeg", alt: "Treadmills in a row", dataAiHint: "gym treadmills", objectPosition: "center top" },
     { src: "/gal1.jpeg", alt: "Weight rack with various dumbbells", dataAiHint: "gym weight rack" },
     { src: "/b1.jpeg", alt: "Bootcamp participants doing pushups", dataAiHint: "group fitness pushups" },
     { src: "/b2.jpeg", alt: "Fitness trainer motivating the class", dataAiHint: "fitness trainer motivation" },
-    { src: "/personal.jpeg", alt: "Personal training session in progress", dataAiHint: "trainer client workout" },
-    { src: "/gal31.jpeg", alt: "View of the gym floor", dataAiHint: "gym floor" },
-    { src: "/gal34.jpeg", alt: "Fitness class in session", dataAiHint: "fitness class" },
+    { src: "/gal32.jpg", alt: "Personal training session in progress", dataAiHint: "trainer client workout" },
+    { src: "/gal31.jpg", alt: "View of the gym floor", dataAiHint: "gym floor", objectPosition: "center center" },
+    { src: "/gal34.jpg", alt: "Fitness class in session", dataAiHint: "fitness class" },
 ];
 
 
@@ -72,6 +79,7 @@ export default function GallerySection() {
                                           alt={image.alt}
                                           layout="fill"
                                           objectFit="cover"
+                                          objectPosition={image.objectPosition || 'center'}
                                           className="transform transition-transform duration-500 group-hover:scale-105"
                                           data-ai-hint={image.dataAiHint}
                                       />

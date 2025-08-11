@@ -11,8 +11,8 @@ import DailyTipSection from '@/components/sections/daily-tip-section';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'SR Fitness - Unleash Your Potential | Modern Gym & Training',
-  description: 'Experience SR Fitness: state-of-the-art facilities, expert personal training, dynamic bootcamps, and a supportive community. Start your transformation today!',
+  title: 'SR Fitness - Unleash Your Potential',
+  description: 'SR Fitness is a wellness consultancy brand that helps people achieve good health through personal training, community outreach, education, and advocacy. Its mission focuses on transformation and inclusivity, having positively impacted thousands via training, seminars and corporate Wellness programs.',
 };
 
 export default function HomePage() {

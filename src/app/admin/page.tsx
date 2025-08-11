@@ -34,26 +34,24 @@ export default function AdminDashboardPage() {
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature) => (
-                <Link key={feature.title} href={feature.href} legacyBehavior>
-                    <a className="block">
-                        <Card className="h-full hover:border-primary hover:shadow-xl transition-all duration-200 group transform hover:-translate-y-1">
-                            <CardHeader>
-                                <div className="flex items-center gap-4">
-                                    <div className="bg-primary/10 p-3 rounded-full group-hover:bg-primary/20 transition-colors">
-                                        {feature.icon}
-                                    </div>
-                                    <div>
-                                        <CardTitle className="font-headline text-2xl text-foreground group-hover:text-primary transition-colors">
-                                            {feature.title}
-                                        </CardTitle>
-                                    </div>
+                <Link key={feature.title} href={feature.href} className="block">
+                    <Card className="h-full hover:border-primary hover:shadow-xl transition-all duration-200 group transform hover:-translate-y-1">
+                        <CardHeader>
+                            <div className="flex items-center gap-4">
+                                <div className="bg-primary/10 p-3 rounded-full group-hover:bg-primary/20 transition-colors">
+                                    {feature.icon}
                                 </div>
-                            </CardHeader>
-                             <CardContent>
-                                <CardDescription>{feature.description}</CardDescription>
-                            </CardContent>
-                        </Card>
-                    </a>
+                                <div>
+                                    <CardTitle className="font-headline text-2xl text-foreground group-hover:text-primary transition-colors">
+                                        {feature.title}
+                                    </CardTitle>
+                                </div>
+                            </div>
+                        </CardHeader>
+                         <CardContent>
+                            <CardDescription>{feature.description}</CardDescription>
+                        </CardContent>
+                    </Card>
                 </Link>
             ))}
         </div>

@@ -10,12 +10,14 @@ import { Camera } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const galleryImages = [
-    { src: "/gg1.jpeg", alt: "Modern gym layout", dataAiHint: "modern gym design" },
-    { src: "/gg2.jpeg", alt: "Treadmills in a row", dataAiHint: "gym treadmills" },
-    { src: "/gg3.jpeg", alt: "Weight rack with various dumbbells", dataAiHint: "gym weight rack" },
+    { src: "/gal.jpeg", alt: "Modern gym layout", dataAiHint: "modern gym design" },
+    { src: "/gal2.jpeg", alt: "Treadmills in a row", dataAiHint: "gym treadmills" },
+    { src: "/gal3.jpeg", alt: "Weight rack with various dumbbells", dataAiHint: "gym weight rack" },
     { src: "/b1.jpeg", alt: "Bootcamp participants doing pushups", dataAiHint: "group fitness pushups" },
     { src: "/b2.jpeg", alt: "Fitness trainer motivating the class", dataAiHint: "fitness trainer motivation" },
     { src: "/personal.jpeg", alt: "Personal training session in progress", dataAiHint: "trainer client workout" },
+    { src: "/gal4.jpeg", alt: "View of the gym floor", dataAiHint: "gym floor" },
+    { src: "/gal5.jpeg", alt: "Fitness class in session", dataAiHint: "fitness class" },
 ];
 
 

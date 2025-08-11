@@ -43,29 +43,19 @@ export default function Footer() {
   };
 
 
-  const footerNavItems = [
+  const mainLinks = [
     { label: 'Home', href: '/' },
-    { label: 'Awards', href: '/awards' },
-    { label: 'Bootcamp', href: '/burn-off-bootcamp' },
     { label: 'Personal Training', href: '/personal-training' },
-    { label: 'Blog', href: '/community' }, // Changed from Community Hub
-    { label: 'Magazine', href: '/lifestyle-magazine' },
-    { label: 'Public Speaking', href: '/public-speaking' },
-    { label: 'Corporate Wellness', href: '/corporate-wellness' },
-    { label: 'Equipment Solutions', href: '/equipment-services' },
-    { label: 'Contact Us', href: '#contact' },
-    // New Feature Links
-    // Legal Links
-    { label: 'Privacy Policy', href: '/privacy-policy' }, 
-    { label: 'Terms of Service', href: '/terms-of-service' }, 
+    { label: 'Bootcamp', href: '/burn-off-bootcamp' },
+    { label: 'Awards', href: '/awards' },
   ];
-
-  const mainLinks = footerNavItems.filter(item => 
-    ['Home', 'Personal Training', 'Bootcamp', 'Awards', 'Meal Planner', 'Smart Scan'].includes(item.label)
-  );
-  const exploreLinks = footerNavItems.filter(item => 
-    ['Magazine', 'Corporate Wellness', 'Public Speaking', 'Equipment Solutions', 'Global Connect', 'Blog', 'Profile'].includes(item.label)
-  );
+  const exploreLinks = [
+    { label: 'Magazine', href: '/lifestyle-magazine' },
+    { label: 'Corporate Wellness', href: '/corporate-wellness' },
+    { label: 'Public Speaking', href: '/public-speaking' },
+    { label: 'Equipment Solutions', href: '/equipment-services' },
+    { label: 'Blog', href: '/community' },
+  ];
 
   const contactLinks = [
     { label: 'Contact Us', href: '#contact' },

@@ -9,13 +9,8 @@ import Autoplay from "embla-carousel-autoplay";
 import { Camera } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const galleryImages = [
-  { src: "/g1.jpeg", alt: "Group workout session", dataAiHint: "group workout" },
-  { src: "/g2.jpeg", alt: "Weight training area", dataAiHint: "weight training" },
-  { src: "/g3.jpeg", alt: "Cardio machines at SR Fitness", dataAiHint: "cardio machines" },
-  { src: "/g4.jpeg", alt: "Fitness class in session", dataAiHint: "fitness class" },
-  { src: "/g5.jpeg", alt: "Client doing a rope exercise", dataAiHint: "battle ropes" },
-];
+const SINGLE_IMAGE_PLACEHOLDER = "https://placehold.co/1280x720.png";
+const SLIDE_COUNT = 5; // Number of slides to animate
 
 export default function GallerySection() {
   const plugin = React.useRef(
@@ -58,18 +53,18 @@ export default function GallerySection() {
                 }}
             >
                 <CarouselContent className="-ml-4">
-                    {galleryImages.map((image, index) => (
+                    {Array.from({ length: SLIDE_COUNT }).map((_, index) => (
                       <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
                           <div className="p-1">
                               <Card className="overflow-hidden shadow-lg border-primary/20">
                                   <CardContent className="flex aspect-video items-center justify-center p-0 relative group bg-black">
                                       <Image
-                                          src={image.src}
-                                          alt={image.alt}
+                                          src={SINGLE_IMAGE_PLACEHOLDER}
+                                          alt={`SR Fitness Community Glimpse ${index + 1}`}
                                           layout="fill"
                                           objectFit="cover"
                                           className="transform transition-transform duration-500 group-hover:scale-105"
-                                          data-ai-hint={image.dataAiHint}
+                                          data-ai-hint="fitness community"
                                       />
                                   </CardContent>
                               </Card>

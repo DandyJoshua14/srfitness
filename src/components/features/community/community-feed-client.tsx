@@ -117,74 +117,79 @@ export default function CommunityFeedClient() {
                 </CardHeader>
             </Card>
         )}
-        {posts.map(post => (
-          <Card 
-            key={post.id} 
-            className={`shadow-lg transition-all duration-300 ease-in-out hover:shadow-2xl ${post.isAnnouncement ? 'bg-primary/5 border-primary/30' : 'bg-card border-border'}`}
-          >
-            {post.image && (
-              <div className="aspect-video relative overflow-hidden rounded-t-lg border-b border-border">
-                <Image src={post.image} alt={post.title || "Blog post image"} layout="fill" objectFit="cover" data-ai-hint={post.dataAiHint || 'blog image'} />
-                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-              </div>
-            )}
-            <CardHeader className={post.image ? "pt-4" : ""}>
-              <div className="flex items-center space-x-3 mb-2">
-                <Avatar className="h-10 w-10">
-                  <AvatarImage src={post.author.avatar} alt={post.author.name} data-ai-hint={post.author.dataAiHint || 'person avatar'}/>
-                  <AvatarFallback>{post.author.name.substring(0,2).toUpperCase()}</AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className={`font-semibold text-sm ${post.isAnnouncement ? 'text-primary' : 'text-foreground'}`}>{post.author.name}</p>
-                  <p className="text-xs text-muted-foreground">{post.timestamp}</p>
+        {posts.map(post => {
+          const authorName = post.author?.name || 'Anonymous';
+          const authorAvatar = post.author?.avatar || 'https://placehold.co/40x40.png?text=AN';
+          const authorDataAiHint = post.author?.dataAiHint || 'person avatar';
+
+          return (
+            <Card 
+              key={post.id} 
+              className={`shadow-lg transition-all duration-300 ease-in-out hover:shadow-2xl ${post.isAnnouncement ? 'bg-primary/5 border-primary/30' : 'bg-card border-border'}`}
+            >
+              {post.image && (
+                <div className="aspect-video relative overflow-hidden rounded-t-lg border-b border-border">
+                  <Image src={post.image} alt={post.title || "Blog post image"} layout="fill" objectFit="cover" data-ai-hint={post.dataAiHint || 'blog image'} />
+                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                 </div>
-                 {post.isAnnouncement && <Badge variant="default" className="ml-auto text-xs">Official</Badge>}
-                 {post.category && !post.isAnnouncement && <Badge variant="secondary" className="ml-auto text-xs bg-muted text-muted-foreground">{post.category}</Badge>}
-              </div>
-              <CardTitle className="font-headline text-2xl lg:text-3xl text-foreground hover:text-primary transition-colors">
-                <Link href="#" className="focus:outline-none focus:ring-1 focus:ring-primary/50 rounded-sm">
-                  {post.title}
-                </Link>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CardDescription className="text-muted-foreground line-clamp-3 leading-relaxed mb-4">{post.content}</CardDescription>
-              <Button asChild variant="link" className="text-primary p-0 font-semibold group">
-                <Link href="#">
-                  Read More <ArrowRight className="ml-1.5 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
-              </Button>
-            </CardContent>
-            <Separator className="my-0"/>
-            <CardFooter className="flex justify-start items-center pt-4 gap-1">
-              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary hover:bg-primary/10">
-                <Heart className="h-4 w-4 mr-1.5" /> {post.likes}
-              </Button>
-              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary hover:bg-primary/10">
-                <MessageCircle className="h-4 w-4 mr-1.5" /> {post.comments}
-              </Button>
-              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary hover:bg-primary/10">
-                <Share2 className="h-4 w-4 mr-1.5" /> Share
-              </Button>
-              {post.isAnnouncement && (
-                 <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 ml-auto"
-                    onClick={() => handleDeletePost(post.id)}
-                 >
-                    <Trash2 className="h-4 w-4 mr-1.5" /> Delete
-                </Button>
               )}
-            </CardFooter>
-             {post.isAnnouncement && (
-                <Alert className="m-4 mt-0 border-primary/50 bg-primary/10 rounded-b-lg text-primary">
-                    <Info className="h-4 w-4 !text-primary" />
-                    <AlertTitle className="text-sm font-semibold">Official Announcement</AlertTitle>
-                </Alert>
-            )}
-          </Card>
-        ))}
+              <CardHeader className={post.image ? "pt-4" : ""}>
+                <div className="flex items-center space-x-3 mb-2">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={authorAvatar} alt={authorName} data-ai-hint={authorDataAiHint}/>
+                    <AvatarFallback>{authorName.substring(0,2).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className={`font-semibold text-sm ${post.isAnnouncement ? 'text-primary' : 'text-foreground'}`}>{authorName}</p>
+                    <p className="text-xs text-muted-foreground">{post.timestamp}</p>
+                  </div>
+                   {post.isAnnouncement && <Badge variant="default" className="ml-auto text-xs">Official</Badge>}
+                   {post.category && !post.isAnnouncement && <Badge variant="secondary" className="ml-auto text-xs bg-muted text-muted-foreground">{post.category}</Badge>}
+                </div>
+                <CardTitle className="font-headline text-2xl lg:text-3xl text-foreground hover:text-primary transition-colors">
+                  <Link href="#" className="focus:outline-none focus:ring-1 focus:ring-primary/50 rounded-sm">
+                    {post.title}
+                  </Link>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-muted-foreground line-clamp-3 leading-relaxed mb-4">{post.content}</CardDescription>
+                <Button asChild variant="link" className="text-primary p-0 font-semibold group">
+                  <Link href="#">
+                    Read More <ArrowRight className="ml-1.5 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </Link>
+                </Button>
+              </CardContent>
+              <Separator className="my-0"/>
+              <CardFooter className="flex justify-start items-center pt-4 gap-1">
+                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary hover:bg-primary/10">
+                  <Heart className="h-4 w-4 mr-1.5" /> {post.likes}
+                </Button>
+                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary hover:bg-primary/10">
+                  <MessageCircle className="h-4 w-4 mr-1.5" /> {post.comments}
+                </Button>
+                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary hover:bg-primary/10">
+                  <Share2 className="h-4 w-4 mr-1.5" /> Share
+                </Button>
+                {post.isAnnouncement && (
+                   <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 ml-auto"
+                      onClick={() => handleDeletePost(post.id)}
+                   >
+                      <Trash2 className="h-4 w-4 mr-1.5" /> Delete
+                  </Button>
+                )}
+              </CardFooter>
+               {post.isAnnouncement && (
+                  <Alert className="m-4 mt-0 border-primary/50 bg-primary/10 rounded-b-lg text-primary">
+                      <Info className="h-4 w-4 !text-primary" />
+                      <AlertTitle className="text-sm font-semibold">Official Announcement</AlertTitle>
+                  </Alert>
+              )}
+            </Card>
+          )})}
       </div>
       <p className="text-center text-muted-foreground text-xs mt-8">
         This is a conceptual blog feed. Full article display and interaction require backend integration.

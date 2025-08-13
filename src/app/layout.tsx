@@ -25,12 +25,14 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
   const isAdminPage = pathname.startsWith('/admin');
+  const isCommunityPage = pathname.startsWith('/community');
+
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <title>SR Fitness</title>
-        <meta name="description" content="Your journey to strength and wellness starts here." />
+        <meta name="description" content="SR Fitness is a wellness consultancy brand that helps people achieve good health through personal training, community outreach, education, and advocacy. Its mission focuses on transformation and inclusivity, having positively impacted thousands via training, seminars and corporate Wellness programs." />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
@@ -46,7 +48,7 @@ export default function RootLayout({
               <main className="flex-grow">
                 {children}
               </main>
-              {!isAdminPage && <ContactLocationSection />}
+              {!isAdminPage && !isCommunityPage && <ContactLocationSection />}
               {!isAdminPage && <Footer />}
               <Toaster />
             </CartProvider>

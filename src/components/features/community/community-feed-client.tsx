@@ -10,8 +10,24 @@ import { Heart, MessageCircle, Share2, Rss, Trash2, BadgeCheck } from 'lucide-re
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
-const initialPosts = [
+interface Post {
+    id: string;
+    author: { name: string; avatar: string; dataAiHint: string; };
+    timestamp: string;
+    title: string;
+    content: string;
+    image: string;
+    dataAiHint: string;
+    likes: number;
+    comments: number;
+    isAnnouncement: boolean;
+    category: string;
+    isLiked?: boolean; // Add isLiked for local state tracking
+}
+
+const initialPosts: Post[] = [
   {
     id: 'announcement-1',
     author: { name: 'SR Fitness Admin', avatar: '/logo.png', dataAiHint: 'brand logo' },
@@ -55,28 +71,31 @@ const initialPosts = [
 
 
 export default function CommunityFeedClient() {
-  const [posts, setPosts] = useState(initialPosts);
+  const [posts, setPosts] = useState<Post[]>([]);
   const { toast } = useToast();
 
   const loadPosts = useCallback(() => {
     try {
       const storedPosts = localStorage.getItem('sr-fitness-blog-posts');
-      if (storedPosts) {
-        // Ensure all posts are marked as announcements from admin
-        const parsed = JSON.parse(storedPosts).map((p: any) => ({
-             ...p, 
-             isAnnouncement: true,
-             author: { name: 'SR Fitness Admin', avatar: '/logo.png', dataAiHint: 'brand logo' }
-        }));
-        setPosts(parsed);
-      } else {
+      const postsToLoad = storedPosts ? JSON.parse(storedPosts) : initialPosts;
+      
+      const processedPosts = postsToLoad.map((p: any) => ({
+         ...p, 
+         isAnnouncement: true,
+         author: { name: 'SR Fitness Admin', avatar: '/logo.png', dataAiHint: 'brand logo' },
+         isLiked: p.isLiked || false,
+      }));
+      setPosts(processedPosts);
+
+      if (!storedPosts) {
         localStorage.setItem('sr-fitness-blog-posts', JSON.stringify(initialPosts));
       }
+
     } catch (error) {
       console.error("Could not load posts from localStorage", error);
     }
   }, []);
-
+  
   useEffect(() => {
     loadPosts();
     const handleStorageChange = (event: StorageEvent) => {
@@ -90,24 +109,26 @@ export default function CommunityFeedClient() {
     };
   }, [loadPosts]);
 
-  const handleDeletePost = (postId: string) => {
-    try {
-      const updatedPosts = posts.filter(p => p.id !== postId);
-      setPosts(updatedPosts);
-      localStorage.setItem('sr-fitness-blog-posts', JSON.stringify(updatedPosts));
-      toast({
-        title: "Post Deleted",
-        description: "The blog post has been successfully removed.",
-        variant: "destructive"
-      });
-    } catch (error) {
-      console.error("Failed to delete post:", error);
-      toast({
-        title: "Deletion Failed",
-        description: "Could not delete the post. Please try again.",
-        variant: "destructive"
-      });
-    }
+
+  const handleLike = (postId: string) => {
+    setPosts(prevPosts =>
+      prevPosts.map(post =>
+        post.id === postId
+          ? {
+              ...post,
+              isLiked: !post.isLiked,
+              likes: post.isLiked ? post.likes - 1 : post.likes + 1,
+            }
+          : post
+      )
+    );
+  };
+  
+  const showPlaceholderToast = (feature: string) => {
+    toast({
+        title: "Coming Soon!",
+        description: `The ${feature} feature is not yet implemented.`
+    });
   };
 
   return (
@@ -157,15 +178,30 @@ export default function CommunityFeedClient() {
               </CardContent>
               <Separator className="my-0"/>
               <CardFooter className="flex justify-start items-center p-2 gap-1">
-                <Button variant="ghost" className="text-muted-foreground hover:text-primary hover:bg-primary/10 flex-1 justify-center">
-                  <Heart className="h-4 w-4 mr-2" /> {post.likes}
+                <Button 
+                  variant="ghost" 
+                  className={cn(
+                    "text-muted-foreground hover:text-primary hover:bg-primary/10 flex-1 justify-center",
+                    post.isLiked && "text-primary"
+                  )}
+                  onClick={() => handleLike(post.id)}
+                >
+                  <Heart className={cn("h-4 w-4 mr-2", post.isLiked && "fill-current")} /> {post.likes}
                 </Button>
                 <Separator orientation="vertical" className="h-6" />
-                <Button variant="ghost" className="text-muted-foreground hover:text-primary hover:bg-primary/10 flex-1 justify-center">
+                <Button 
+                  variant="ghost" 
+                  className="text-muted-foreground hover:text-primary hover:bg-primary/10 flex-1 justify-center"
+                  onClick={() => showPlaceholderToast('commenting')}
+                >
                   <MessageCircle className="h-4 w-4 mr-2" /> {post.comments}
                 </Button>
                   <Separator orientation="vertical" className="h-6" />
-                <Button variant="ghost" className="text-muted-foreground hover:text-primary hover:bg-primary/10 flex-1 justify-center">
+                <Button 
+                  variant="ghost" 
+                  className="text-muted-foreground hover:text-primary hover:bg-primary/10 flex-1 justify-center"
+                  onClick={() => showPlaceholderToast('sharing')}
+                >
                   <Share2 className="h-4 w-4 mr-2" /> Share
                 </Button>
               </CardFooter>

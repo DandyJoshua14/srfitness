@@ -107,15 +107,6 @@ export default function ContactLocationSection() {
             <div className="bg-card p-6 sm:p-8 rounded-xl border border-border shadow-xl">
               <h3 className="font-headline text-3xl text-foreground mb-6">Contact Information</h3>
               <div className="space-y-4 text-muted-foreground">
-                <div className="flex items-start gap-4 p-3 rounded-md transition-colors hover:bg-muted/30">
-                  <MapPin className="h-8 w-8 text-primary mt-1 shrink-0" />
-                  <div>
-                    <p className="font-semibold text-foreground text-lg">Our Location</p>
-                    <a href="#" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors text-base not-italic">
-                      123 Fitness Avenue, Uyo, Nigeria
-                    </a>
-                  </div>
-                </div>
                  <div className="flex items-start gap-4 p-3 rounded-md transition-colors hover:bg-muted/30">
                   <Mail className="h-8 w-8 text-primary mt-1 shrink-0" />
                   <div>

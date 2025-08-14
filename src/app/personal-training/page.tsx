@@ -25,7 +25,8 @@ const transformations = [
         beforeImg: '/tracy before.jpg',
         afterImg: '/tracy after.jpg',
         beforeHint: 'man overweight before',
-        afterHint: 'man fit after'
+        afterHint: 'man fit after',
+        afterObjectPosition: 'center 20%', // Shift image up to show face
     },
     {
         name: '.',
@@ -127,13 +128,13 @@ export default function PersonalTrainingPage() {
                                     <CardHeader className="p-0">
                                         <div className="grid grid-cols-2">
                                             <div className="relative aspect-[3/4]">
-                                                <Image src={item.beforeImg} alt={`Before photo of ${item.name}`} layout="fill" objectFit="cover" data-ai-hint={item.beforeHint} />
+                                                <Image src={item.beforeImg} alt={`Before photo of ${item.name}`} layout="fill" objectFit="cover" data-ai-hint={item.beforeHint} style={{ objectPosition: (item as any).beforeObjectPosition || 'center' }} />
                                                 <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
                                                     <span className="font-headline text-white text-2xl tracking-widest opacity-80" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.8)'}}>BEFORE</span>
                                                 </div>
                                             </div>
                                             <div className="relative aspect-[3/4]">
-                                                <Image src={item.afterImg} alt={`After photo of ${item.name}`} layout="fill" objectFit="cover" data-ai-hint={item.afterHint} />
+                                                <Image src={item.afterImg} alt={`After photo of ${item.name}`} layout="fill" objectFit="cover" data-ai-hint={item.afterHint} style={{ objectPosition: (item as any).afterObjectPosition || 'center' }} />
                                                 <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
                                                      <span className="font-headline text-white text-2xl tracking-widest" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.8)'}}>AFTER</span>
                                                 </div>

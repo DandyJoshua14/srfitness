@@ -26,7 +26,7 @@ const transformations = [
         afterImg: '/tracy after.jpg',
         beforeHint: 'man overweight before',
         afterHint: 'man fit after',
-        afterObjectPosition: 'center 20%', // Shift image up to show face
+        afterObjectPosition: 'center 10%', // Shift image up more to show face
     },
     {
         name: '.',

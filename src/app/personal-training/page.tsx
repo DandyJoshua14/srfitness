@@ -152,15 +152,6 @@ export default function PersonalTrainingPage() {
                 <CarouselPrevious className="absolute left-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
                 <CarouselNext className="absolute right-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
             </Carousel>
-
-
-             <div className="text-center mt-12 md:py-24">
-                <Button asChild size="lg" className="group font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transform hover:scale-105 transition-transform">
-                    <Link href="#contact">
-                        Start Your Transformation <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                    </Link>
-                </Button>
-            </div>
         </div>
       </section>
     </div>

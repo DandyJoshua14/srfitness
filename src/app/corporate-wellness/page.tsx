@@ -73,9 +73,6 @@ export default function CorporateWellnessPage() {
             <p className="text-lg sm:text-xl text-secondary-foreground/80 max-w-3xl mx-auto mb-8">
               Discover our tailored corporate wellness solutions designed to build a healthier, happier, and more productive workforce.
             </p>
-            <Button asChild size="lg" className="font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
-              <Link href="#contact">Design Your Wellness Program</Link>
-            </Button>
         </div>
       </section>
       
@@ -171,11 +168,6 @@ export default function CorporateWellnessPage() {
                 <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
                     Let's discuss how we can build a wellness program that aligns with your company's culture and goals. Contact us for a complimentary consultation.
                 </p>
-                <Button asChild size="lg" className="group font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transform hover:scale-105 transition-transform">
-                    <Link href="#contact">
-                    Get a Custom Quote <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                    </Link>
-                </Button>
             </div>
         </div>
       </section>

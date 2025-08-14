@@ -4,6 +4,7 @@ import ChatViewClient from '@/components/features/community/chat-view-client';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { use } from 'react';
 
 interface ChatPageProps {
   params: { chatId: string };
@@ -20,9 +21,12 @@ export async function generateMetadata({ params, searchParams }: ChatPageProps):
 }
 
 export default function ChatPage({ params, searchParams }: ChatPageProps) {
+  // The use() hook is the modern way to resolve the searchParams promise-like object in Server Components
+  const resolvedSearchParams = use(new Promise((resolve) => resolve(searchParams)));
+
   const { chatId } = params;
-  const chatType = (searchParams.type as string) || 'dm'; // default to dm
-  const chatName = (searchParams.name as string) || (chatType === 'dm' ? 'Direct Message' : 'Group Chat');
+  const chatType = (resolvedSearchParams.type as string) || 'dm'; // default to dm
+  const chatName = (resolvedSearchParams.name as string) || (chatType === 'dm' ? 'Direct Message' : 'Group Chat');
 
   // Mock data, in a real app, fetch based on chatId
   const mockChatDetails = {

@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Newspaper, Store } from 'lucide-react';
+import { Newspaper, Store, BookOpen } from 'lucide-react';
 
 const features = [
     {
@@ -17,6 +17,12 @@ const features = [
         description: "Add and remove products from the marketplace.",
         href: "/admin/store",
         icon: <Store className="h-8 w-8 text-primary" />,
+    },
+    {
+        title: "Magazine Manager",
+        description: "Manage articles for the Lifestyle Magazine.",
+        href: "/admin/magazine",
+        icon: <BookOpen className="h-8 w-8 text-primary" />,
     },
 ];
 
@@ -58,5 +64,3 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
-
-    

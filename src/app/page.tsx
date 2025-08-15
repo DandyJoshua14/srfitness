@@ -1,7 +1,6 @@
 
 import HeroSection from '@/components/sections/hero-section';
 import AboutSummarySection from '@/components/sections/about-summary-section';
-import ServicesHighlightSection from '@/components/sections/services-highlight-section';
 import KeyFeaturesSection from '@/components/sections/key-features-section';
 import BlogHighlightSection from '@/components/sections/blog-highlight-section';
 import MarketplaceHighlightSection from '@/components/sections/marketplace-highlight-section';
@@ -21,7 +20,6 @@ export default function HomePage() {
       <HeroSection />
       <AboutSummarySection />
       <GallerySection />
-      <ServicesHighlightSection />
       <KeyFeaturesSection />
       <BlogHighlightSection />
       <MarketplaceHighlightSection />

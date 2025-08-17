@@ -27,7 +27,7 @@ export default function AwardsPage() {
     { 
       title: "Community Fitness Hero of the Year",
       qualifier: "Male & Female",
-      description: "Recognizing individuals who have inspired and motivated others within the fitness community through their dedication and positive influence." 
+      description: "Recognizing individuals who have inspired and motivated others within the fitness community through their dedication and positive influence ." 
     },
     { 
       title: "Fitness Trainer/Coach of the Year", 

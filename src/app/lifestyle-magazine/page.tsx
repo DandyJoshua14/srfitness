@@ -21,8 +21,6 @@ interface Article {
 const initialArticles: Article[] = [
     { id: '1', title: "Top 5 Nutrition Myths Debunked for Peak Performance", category: "Nutrition", image: "https://placehold.co/600x400.png", dataAiHint: "healthy food bowl", excerpt: "Cut through the confusion and learn the truth about common nutrition beliefs to optimize your diet and fuel your workouts effectively." },
     { id: '2', title: "Mindful Movement: The Key to Consistent & Joyful Workouts", category: "Wellness", image: "https://placehold.co/600x400.png", dataAiHint: "yoga meditation park", excerpt: "Discover how incorporating mindfulness into your exercise routine can enhance focus, reduce stress, and foster a sustainable love for fitness." },
-    { id: '3', title: "Fuel Your Performance: Pre & Post Workout Meal Ideas", category: "Nutrition", image: "https://placehold.co/600x400.png", dataAiHint: "protein shake fruit", excerpt: "Unlock optimal energy and recovery with these simple, delicious, and effective meal and snack ideas to eat before and after your training sessions." },
-    { id: '4', title: "The Ultimate Guide to Active Recovery for Faster Gains", category: "Fitness Tips", image: "https://placehold.co/600x400.png", dataAiHint: "stretching foam roller", excerpt: "Learn essential active recovery techniques that can help reduce muscle soreness, improve flexibility, and get you back to your workouts stronger." },
 ];
 
 const categoryIcons: { [key: string]: React.ReactElement } = {
@@ -70,9 +68,9 @@ export default function LifestyleMagazinePage() {
         {/* Magazine Cover Placeholder */}
         <div className="mb-16 md:mb-20">
           <Card className="max-w-2xl mx-auto bg-background shadow-2xl border-border overflow-hidden group">
-            <div className="aspect-[3/4] relative">
+            <div className="aspect-[2/4] relative">
                <Image
-                  src="https://placehold.co/800x1067.png"
+                  src="/magazine.jpg"
                   alt="SR Fitness Magazine Cover"
                   layout="fill"
                   objectFit="cover"
@@ -92,7 +90,7 @@ export default function LifestyleMagazinePage() {
 
         {loading ? (
           <div className="grid md:grid-cols-2 gap-8 md:gap-10">
-            {[...Array(4)].map((_, i) => (
+            {[...Array(2)].map((_, i) => (
               <Card key={i} className="bg-background border-border shadow-xl overflow-hidden">
                 <Skeleton className="h-64 w-full" />
                 <CardHeader className="p-6">

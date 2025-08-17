@@ -5,7 +5,7 @@ import { Rss } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'The SR Fitness Wellness Hub - Blog & News',
-  description: 'The official blog for SR Fitness. Explore articles, news, and announcements from our admin team.',
+  description: 'Your source for inspiration, expert advice, and success stories that fuel a healthier you.',
 };
 
 export default function CommunityPage() {
@@ -18,7 +18,7 @@ export default function CommunityPage() {
                 The SR Fitness Wellness Hub
                 </h1>
                 <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-                The official blog for SR Fitness. All posts are from our admin team.
+                Your source for inspiration, expert advice, and success stories that fuel a healthier you.
                 </p>
             </div>
             <CommunityFeedClient />

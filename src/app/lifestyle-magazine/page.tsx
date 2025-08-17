@@ -67,6 +67,29 @@ export default function LifestyleMagazinePage() {
           </p>
         </div>
 
+        {/* Magazine Cover Placeholder */}
+        <div className="mb-16 md:mb-20">
+          <Card className="max-w-2xl mx-auto bg-background shadow-2xl border-border overflow-hidden group">
+            <div className="aspect-[3/4] relative">
+               <Image
+                  src="https://placehold.co/800x1067.png"
+                  alt="SR Fitness Magazine Cover"
+                  layout="fill"
+                  objectFit="cover"
+                  className="transition-transform duration-500 group-hover:scale-105"
+                  data-ai-hint="fitness magazine cover"
+                  priority
+                />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-8">
+                  <h2 className="font-headline text-4xl md:text-6xl text-white font-bold" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.7)' }}>
+                    THE WELLNESS ISSUE
+                  </h2>
+                  <p className="text-lg text-primary font-semibold">Transform Your Mind & Body</p>
+              </div>
+            </div>
+          </Card>
+        </div>
+
         {loading ? (
           <div className="grid md:grid-cols-2 gap-8 md:gap-10">
             {[...Array(4)].map((_, i) => (

@@ -98,9 +98,6 @@ export default function PublicSpeakingPage() {
                   <p className="text-lg sm:text-xl text-foreground/90 max-w-3xl mx-auto mb-8" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}>
                     {slide.description}
                   </p>
-                  <Button asChild size="lg" className="font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
-                    <Link href="#contact">Book Now</Link>
-                  </Button>
                 </div>
               </CarouselItem>
             ))}
@@ -210,7 +207,7 @@ export default function PublicSpeakingPage() {
                 </p>
                 <Button asChild size="lg" className="group font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transform hover:scale-105 transition-transform">
                     <Link href="#contact">
-                    Book Now <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                    Get in Touch <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                     </Link>
                 </Button>
             </div>

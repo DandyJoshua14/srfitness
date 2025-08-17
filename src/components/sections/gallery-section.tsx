@@ -24,7 +24,6 @@ const galleryImages: GalleryImage[] = [
     { src: "/b1.jpeg", alt: "Bootcamp participants doing pushups", dataAiHint: "group fitness pushups" },
     { src: "/b2.jpeg", alt: "Fitness trainer motivating the class", dataAiHint: "fitness trainer motivation" },
     { src: "/gal32.jpg", alt: "Personal training session in progress", dataAiHint: "trainer client workout" },
-    { src: "/gal31.jpg", alt: "View of the gym floor", dataAiHint: "gym floor", objectFit: "contain", objectPosition: "center center" },
     { src: "/gal34.jpg", alt: "Fitness class in session", dataAiHint: "fitness class" },
 ];
 

@@ -16,15 +16,15 @@ export default function BurnOffBootcampPage() {
   );
     
   const allPhotos = [
-    { src: '/b1.jpeg', alt: 'Bootcamp', dataAiHint: 'group fitness pushups' },
-    { src: '/b2.jpeg', alt: 'Bootcamp', dataAiHint: 'fitness trainer motivation' },
-    { src: '/b3.jpeg', alt: 'Bootcamp', dataAiHint: 'bootcamp fitness drill' },
-    { src: '/b4.jpeg', alt: 'Bootcamp', dataAiHint: 'fitness teamwork support' },
+    { src: '/re2.jpeg', alt: 'Bootcamp', dataAiHint: 'group fitness pushups', objectPosition: 'center 30%' },
+    { src: '/re1.jpeg', alt: 'Bootcamp', dataAiHint: 'fitness trainer motivation', objectPosition: 'center 20%' },
+    { src: '/re3.jpeg', alt: 'Bootcamp', dataAiHint: 'bootcamp fitness drill' },
+    { src: '/re4.jpeg', alt: 'Bootcamp', dataAiHint: 'fitness teamwork support' },
     { src: '/b5.jpeg', alt: 'Bootcamp', dataAiHint: 'fitness teamwork support' },
-    { src: '/re1.jpeg', alt: 'Bootcamp result after photo', dataAiHint: 'fitness transformation after' },
-    { src: '/re2.jpeg', alt: 'Client happy with results', dataAiHint: 'happy fit person' },
-    { src: '/re3.jpeg', alt: 'Client showing improved strength', dataAiHint: 'person lifting weight' },
-    { src: '/re4.jpeg', alt: 'Group celebrating success', dataAiHint: 'fitness group celebration' },
+    { src: '/b1.jpeg', alt: 'Bootcamp result after photo', dataAiHint: 'fitness transformation after' },
+    { src: '/b2.jpeg', alt: 'Client happy with results', dataAiHint: 'happy fit person' },
+    { src: '/b3.jpeg', alt: 'Client showing improved strength', dataAiHint: 'person lifting weight' },
+    { src: '/b4.jpeg', alt: 'Group celebrating success', dataAiHint: 'fitness group celebration' },
   ];
   
   return (
@@ -143,6 +143,7 @@ export default function BurnOffBootcampPage() {
                                 objectFit="cover"
                                 className="transform transition-transform duration-500 group-hover:scale-110"
                                 data-ai-hint={photo.dataAiHint}
+                                style={{ objectPosition: (photo as any).objectPosition || 'center' }}
                             />
                             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
                           </CardContent>

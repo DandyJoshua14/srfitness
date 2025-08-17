@@ -155,12 +155,6 @@ export default function BurnOffBootcampPage() {
                 <CarouselNext className="absolute right-[-50px] top-1/2 -translate-y-1/2 hidden sm:flex" />
               </Carousel>
             </section>
-
-             <div className="mt-8 pt-6 border-t border-border/20 text-center">
-                <Button asChild size="lg" className="font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transition-shadow">
-                    <Link href="#contact">Inquire About the Next Bootcamp</Link>
-                </Button>
-            </div>
         </div>
       </section>
     </div>

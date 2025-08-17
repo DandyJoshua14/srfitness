@@ -71,7 +71,7 @@ export default function AwardsPage() {
     },
     {
       title: "Pharmaceutical Service Champion",
-      qualifier: "Pharmacist (Staff)",
+      qualifier: "Pharmacist",
       description: "Honoring an individual pharmacist for their excellent service and patient care.",
     },
     {

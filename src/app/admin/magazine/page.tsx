@@ -210,10 +210,10 @@ export default function AdminMagazineManagerPage() {
                                     <div className="flex justify-between items-start gap-2">
                                         <div className="flex-grow overflow-hidden">
                                             <p className="font-semibold truncate text-foreground">{article.title}</p>
-                                            <p className="text-xs text-muted-foreground">
+                                            <div className="text-xs text-muted-foreground">
                                                 <Badge variant="secondary" className="mr-2">{article.category}</Badge>
                                                 {article.timestamp}
-                                            </p>
+                                            </div>
                                         </div>
                                         <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10 shrink-0" onClick={() => handleDeleteArticle(article.id)} aria-label={`Delete article titled ${article.title}`}>
                                             <Trash2 className="h-4 w-4" />

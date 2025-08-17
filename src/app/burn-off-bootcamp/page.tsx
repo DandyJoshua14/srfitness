@@ -16,9 +16,9 @@ export default function BurnOffBootcampPage() {
   );
     
   const allPhotos = [
-    { src: '/re2.jpeg', alt: 'Bootcamp', dataAiHint: 'group fitness pushups', objectPosition: 'center 30%' },
-    { src: '/re1.jpeg', alt: 'Bootcamp', dataAiHint: 'fitness trainer motivation', objectPosition: 'center 20%' },
-    { src: '/re3.jpeg', alt: 'Bootcamp', dataAiHint: 'bootcamp fitness drill' },
+    { src: '/re2.jpeg', alt: 'Bootcamp', dataAiHint: 'group fitness pushups', objectPosition: 'center 20%' },
+    { src: '/re1.jpeg', alt: 'Bootcamp', dataAiHint: 'fitness trainer motivation', objectPosition: 'center 10%' },
+    { src: '/re3.jpeg', alt: 'Bootcamp', dataAiHint: 'bootcamp fitness drill', objectPosition: 'center 30%' },
     { src: '/re4.jpeg', alt: 'Bootcamp', dataAiHint: 'fitness teamwork support' },
     { src: '/b5.jpeg', alt: 'Bootcamp', dataAiHint: 'fitness teamwork support' },
     { src: '/b1.jpeg', alt: 'Bootcamp result after photo', dataAiHint: 'fitness transformation after' },

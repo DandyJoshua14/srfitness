@@ -12,6 +12,9 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'SR Fitness - Unleash Your Potential',
   description: 'SR Fitness is a wellness consultancy brand that helps people achieve good health through personal training, community outreach, education, and advocacy. Its mission focuses on transformation and inclusivity, having positively impacted thousands via training, seminars and corporate Wellness programs.',
+  verification: {
+    google: 'aXKYc51I-jKg23iI2dIdJxJ6XjU984_An5WrJe7Cl0g',
+  },
 };
 
 export default function HomePage() {

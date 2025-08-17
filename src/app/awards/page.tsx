@@ -54,6 +54,31 @@ export default function AwardsPage() {
       qualifier: "",
       description: "Honoring an individual who has championed the importance of mental well-being as an important component of overall fitness." 
     },
+    {
+      title: "Care-Givers Advocate",
+      qualifier: "Nurses",
+      description: "Recognizing nurses who go above and beyond in providing care and promoting wellness.",
+    },
+    {
+      title: "Health Care Treatment Advocate",
+      qualifier: "Doctors",
+      description: "Celebrating doctors who are exemplary in patient care and health advocacy.",
+    },
+    {
+      title: "Pharmaceutical Service Champion",
+      qualifier: "Pharmacy",
+      description: "Awarded to a pharmacy for outstanding service and contribution to community health.",
+    },
+    {
+      title: "Pharmaceutical Service Champion",
+      qualifier: "Pharmacist (Staff)",
+      description: "Honoring an individual pharmacist for their excellent service and patient care.",
+    },
+    {
+      title: "Physiotherapist of the Year",
+      qualifier: "",
+      description: "Recognizing a physiotherapist for their exceptional contribution to patient rehabilitation and well-being.",
+    },
     { 
       title: "Life Champion Award - Overcomers series", 
       qualifier: "",

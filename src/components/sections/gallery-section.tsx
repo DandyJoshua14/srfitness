@@ -14,6 +14,7 @@ interface GalleryImage {
     alt: string;
     dataAiHint: string;
     objectPosition?: string;
+    objectFit?: 'cover' | 'contain';
 }
 
 const galleryImages: GalleryImage[] = [
@@ -23,7 +24,7 @@ const galleryImages: GalleryImage[] = [
     { src: "/b1.jpeg", alt: "Bootcamp participants doing pushups", dataAiHint: "group fitness pushups" },
     { src: "/b2.jpeg", alt: "Fitness trainer motivating the class", dataAiHint: "fitness trainer motivation" },
     { src: "/gal32.jpg", alt: "Personal training session in progress", dataAiHint: "trainer client workout" },
-    { src: "/gal31.jpg", alt: "View of the gym floor", dataAiHint: "gym floor", objectPosition: "center center" },
+    { src: "/gal31.jpg", alt: "View of the gym floor", dataAiHint: "gym floor", objectFit: "contain", objectPosition: "center center" },
     { src: "/gal34.jpg", alt: "Fitness class in session", dataAiHint: "fitness class" },
 ];
 
@@ -78,7 +79,7 @@ export default function GallerySection() {
                                           src={image.src}
                                           alt={image.alt}
                                           layout="fill"
-                                          objectFit="cover"
+                                          objectFit={image.objectFit || 'cover'}
                                           objectPosition={image.objectPosition || 'center'}
                                           className="transform transition-transform duration-500 group-hover:scale-105"
                                           data-ai-hint={image.dataAiHint}

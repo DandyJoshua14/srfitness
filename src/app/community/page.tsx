@@ -4,8 +4,8 @@ import CommunityFeedClient from '@/components/features/community/community-feed-
 import { Rss } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'SR Fitness Blog - News & Announcements',
-  description: 'Stay up-to-date with the latest news, announcements, and articles from the SR Fitness team.',
+  title: 'The SR Fitness Wellness Hub - Blog & News',
+  description: 'The official blog for SR Fitness. Explore articles, news, and announcements from our admin team.',
 };
 
 export default function CommunityPage() {
@@ -15,7 +15,7 @@ export default function CommunityPage() {
             <div className="text-center mb-12 md:mb-16">
                 <Rss className="h-16 w-16 text-primary mx-auto mb-4" />
                 <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl font-bold text-primary mb-4">
-                News & Announcements
+                The SR Fitness Wellness Hub
                 </h1>
                 <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
                 The official blog for SR Fitness. All posts are from our admin team.

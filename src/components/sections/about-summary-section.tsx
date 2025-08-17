@@ -36,7 +36,7 @@ export default function AboutSummarySection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <motion.div variants={itemVariants}>
-            <div className="relative aspect-video rounded-lg shadow-2xl overflow-hidden group">
+            <div className="relative aspect-video rounded-lg shadow-2xl overflow-hidden group, aspect-[5/3] relative">
               <Image
                 src="/Frame 1.png"
                 alt="SR Fitness facility interior"

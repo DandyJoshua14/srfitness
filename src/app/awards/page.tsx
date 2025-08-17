@@ -60,7 +60,7 @@ export default function AwardsPage() {
       description: "Recognizing nurses who go above and beyond in providing care and promoting wellness.",
     },
     {
-      title: "Health Care Treatment Advocate",
+      title: "Health Care Advocate",
       qualifier: "Doctors",
       description: "Celebrating doctors who are exemplary in patient care and health advocacy.",
     },
@@ -76,7 +76,7 @@ export default function AwardsPage() {
     },
     {
       title: "Physiotherapist of the Year",
-      qualifier: "",
+      qualifier: "Physiotherapist",
       description: "Recognizing a physiotherapist for their exceptional contribution to patient rehabilitation and well-being.",
     },
     { 
@@ -103,6 +103,11 @@ export default function AwardsPage() {
       title: "Fitness Event Of The Year",
       qualifier: "Clubs",
       description: "Recognizing the single best fitness event that brought the community together, promoted health, and created a memorable experience for all." 
+    },
+    { 
+      title: "Corperate Social Responsibility Champion",
+      qualifier: "Organizations",
+      description: "Awarded to major brands and organisations that support, promote and inspire through the power of fitness."
     },
   ];
 
@@ -178,7 +183,7 @@ export default function AwardsPage() {
             <div className="text-center mb-12">
               <h2 className="font-headline text-4xl text-foreground font-semibold flex items-center justify-center gap-3">
                 <Trophy className="h-9 w-9 text-primary" />
-                This Year's Award Categories
+                This Year's Award & Recognition Categories
               </h2>
             </div>
             <Card className="max-w-3xl mx-auto bg-card border-border shadow-xl">

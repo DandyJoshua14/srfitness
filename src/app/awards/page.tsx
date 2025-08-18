@@ -8,6 +8,7 @@ import { Trophy, Sunrise, Sunset, Award as AwardIcon, Camera } from 'lucide-reac
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Autoplay from "embla-carousel-autoplay";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
 
 
 export default function AwardsPage() {
@@ -20,7 +21,7 @@ export default function AwardsPage() {
   const ceremonyPhotos = [
     { src: '/gl.jpeg', alt: 'Awards ceremony highlight 1', dataAiHint: 'award ceremony winner' },
     { src: '/gl2.jpeg', alt: 'Awards ceremony highlight 2', dataAiHint: 'award winner portrait' },
-    { src: '/gl3.jpeg', alt: 'Awards ceremony highlight 3', dataAiHint: 'audience applause conference' },
+    { src: '/gl3.jpeg', alt: 'Audience applause conference', dataAiHint: 'audience applause conference' },
   ];
 
   const awardCategories = [
@@ -190,7 +191,7 @@ export default function AwardsPage() {
               <CardContent className="p-6">
                 <Accordion type="single" collapsible className="w-full">
                   {awardCategories.map((category, index) => (
-                    <AccordionItem value={`item-${index}`} key={index} className="border-b last:border-b-0">
+                    <AccordionItem value={`item-${index}`} key={index} className="border-b-0">
                       <AccordionTrigger className="font-headline text-lg text-left hover:text-primary hover:no-underline">
                         <div className="flex flex-col items-start text-left">
                             <span>{category.title}</span>
@@ -198,7 +199,12 @@ export default function AwardsPage() {
                         </div>
                       </AccordionTrigger>
                       <AccordionContent className="text-muted-foreground pl-2 pr-2 pb-4">
-                        {category.description}
+                        <div className="space-y-4">
+                            <p>{category.description}</p>
+                            {category.title === "Fitness Trainer/Coach of the Year" && (
+                                <Button>Vote Now</Button>
+                            )}
+                        </div>
                       </AccordionContent>
                     </AccordionItem>
                   ))}

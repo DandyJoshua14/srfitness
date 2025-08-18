@@ -45,9 +45,9 @@ export default function Footer() {
 
   const mainLinks = [
     { label: 'Home', href: '/' },
-    { label: 'Personal Training', href: '/personal-training' },
-    { label: 'Bootcamp', href: '/burn-off-bootcamp' },
     { label: 'Awards', href: '/awards' },
+    { label: 'Bootcamp', href: '/burn-off-bootcamp' },
+    { label: 'Personal Training', href: '/personal-training' },
   ];
   const exploreLinks = [
     { label: 'Blog', href: '/community' },

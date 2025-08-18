@@ -190,11 +190,11 @@ export default function AwardsPage() {
               <CardContent className="p-6">
                 <Accordion type="single" collapsible className="w-full">
                   {awardCategories.map((category, index) => (
-                    <AccordionItem value={`item-${index}`} key={index} className="border-b-0">
-                      <AccordionTrigger className="font-headline text-lg text-left hover:text-primary">
-                        <div className="flex items-center flex-wrap">
-                            <span className="mr-2">{category.title}</span>
-                            {category.qualifier && <span className="text-sm text-muted-foreground font-body font-normal whitespace-nowrap">({category.qualifier})</span>}
+                    <AccordionItem value={`item-${index}`} key={index} className="border-b last:border-b-0">
+                      <AccordionTrigger className="font-headline text-lg text-left hover:text-primary hover:no-underline">
+                        <div className="flex flex-col items-start text-left">
+                            <span>{category.title}</span>
+                            {category.qualifier && <span className="text-sm text-muted-foreground font-body font-normal mt-1">({category.qualifier})</span>}
                         </div>
                       </AccordionTrigger>
                       <AccordionContent className="text-muted-foreground pl-2 pr-2 pb-4">

@@ -111,7 +111,7 @@ export default function ContactLocationSection() {
                   <Mail className="h-8 w-8 text-primary mt-1 shrink-0" />
                   <div>
                     <p className="font-semibold text-foreground text-lg">Email Us</p>
-                    <a href="mailto:contact@srfitness.com" className="hover:text-primary transition-colors text-base">srfitness@gmail.com</a>
+                    <a href="mailto:contact@srfitness.com" className="hover:text-primary transition-colors text-base">srfitness247@gmail.com</a>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 p-3 rounded-md transition-colors hover:bg-muted/30">

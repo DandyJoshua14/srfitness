@@ -50,11 +50,11 @@ export default function Footer() {
     { label: 'Awards', href: '/awards' },
   ];
   const exploreLinks = [
-    { label: 'Magazine', href: '/lifestyle-magazine' },
-    { label: 'Corporate Wellness', href: '/corporate-wellness' },
-    { label: 'Public Speaking', href: '/public-speaking' },
-    { label: 'Equipment Solutions', href: '/equipment-services' },
     { label: 'Blog', href: '/community' },
+    { label: 'Magazine', href: '/lifestyle-magazine' },
+    { label: 'Public Speaking', href: '/public-speaking' },
+    { label: 'Corporate Wellness', href: '/corporate-wellness' },
+    { label: 'Equipment Solutions', href: '/equipment-services' },
   ];
 
   const contactLinks = [

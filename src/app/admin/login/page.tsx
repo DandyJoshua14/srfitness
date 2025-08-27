@@ -8,14 +8,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { KeyRound, LogIn } from 'lucide-react';
+import { KeyRound, LogIn, Mail } from 'lucide-react';
 import Image from 'next/image';
 
 // IMPORTANT: This is a conceptual, insecure login for demonstration purposes.
 // In a real application, use a proper authentication provider.
-const ADMIN_PASSWORD = "password"; 
+const ADMIN_EMAIL = "srfitness247@gmail.com";
+const ADMIN_PASSWORD = "iamfit247";
 
 export default function AdminLoginPage() {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -25,7 +27,7 @@ export default function AdminLoginPage() {
     e.preventDefault();
     setIsLoading(true);
 
-    if (password === ADMIN_PASSWORD) {
+    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
       toast({
         title: "Login Successful",
         description: "Welcome to the Admin Dashboard.",
@@ -44,7 +46,7 @@ export default function AdminLoginPage() {
     } else {
       toast({
         title: "Login Failed",
-        description: "The password you entered is incorrect.",
+        description: "The email or password you entered is incorrect.",
         variant: "destructive",
       });
       setIsLoading(false);
@@ -57,10 +59,25 @@ export default function AdminLoginPage() {
         <CardHeader className="text-center">
             <Image src="/SR.jpg" alt="SR Fitness Logo" width={80} height={80} className="mx-auto rounded-full mb-4" />
           <CardTitle className="font-headline text-3xl text-primary">Admin Access</CardTitle>
-          <CardDescription>Please enter the password to manage the site.</CardDescription>
+          <CardDescription>Please enter your credentials to manage the site.</CardDescription>
         </CardHeader>
         <form onSubmit={handleLogin}>
             <CardContent className="space-y-4">
+            <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                 <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                        id="email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        className="pl-10"
+                        placeholder="admin@example.com"
+                    />
+                </div>
+            </div>
             <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <div className="relative">

@@ -8,20 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Newspaper, Utensils, HeartPulse, Brain, ArrowRight } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
-
-interface Article {
-  id: string;
-  title: string;
-  category: "Nutrition" | "Wellness" | "Fitness Tips" | "Motivation" | string;
-  image: string;
-  dataAiHint: string;
-  excerpt: string;
-}
-
-const initialArticles: Article[] = [
-    { id: '1', title: "Top 5 Nutrition Myths Debunked for Peak Performance", category: "Nutrition", image: "https://placehold.co/600x400.png", dataAiHint: "healthy food bowl", excerpt: "Cut through the confusion and learn the truth about common nutrition beliefs to optimize your diet and fuel your workouts effectively." },
-    { id: '2', title: "Mindful Movement: The Key to Consistent & Joyful Workouts", category: "Wellness", image: "https://placehold.co/600x400.png", dataAiHint: "yoga meditation park", excerpt: "Discover how incorporating mindfulness into your exercise routine can enhance focus, reduce stress, and foster a sustainable love for fitness." },
-];
+import { getArticles, Article } from '@/services/firestore';
 
 const categoryIcons: { [key: string]: React.ReactElement } = {
   "Nutrition": <Utensils className="h-5 w-5 text-primary" />,
@@ -36,20 +23,19 @@ export default function LifestyleMagazinePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      const storedArticles = localStorage.getItem('sr-fitness-magazine-articles');
-      if (storedArticles) {
-        setArticles(JSON.parse(storedArticles));
-      } else {
-        setArticles(initialArticles);
-        localStorage.setItem('sr-fitness-magazine-articles', JSON.stringify(initialArticles));
-      }
-    } catch (e) {
-      console.error("Failed to load magazine articles, using initial data.", e);
-      setArticles(initialArticles);
-    } finally {
-      setLoading(false);
-    }
+    const fetchArticles = async () => {
+        setLoading(true);
+        try {
+            const fetchedArticles = await getArticles();
+            setArticles(fetchedArticles);
+        } catch (e) {
+            console.error("Failed to load magazine articles from Firestore.", e);
+            // Optionally set an error state and show a toast
+        } finally {
+            setLoading(false);
+        }
+    };
+    fetchArticles();
   }, []);
 
   return (
@@ -99,8 +85,8 @@ export default function LifestyleMagazinePage() {
                 </CardHeader>
                 <CardContent className="p-6 pt-0">
                   <Skeleton className="h-4 w-full mb-1" />
-                  <Skeleton className="h-4 w-5/6" />
-                  <Skeleton className="h-10 w-32 mt-6" />
+                  <Skeleton className="h-4 w-5/6 mb-4" />
+                  <Skeleton className="h-10 w-32 mt-auto" />
                 </CardContent>
               </Card>
             ))}

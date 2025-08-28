@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import Image from 'next/image';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -11,17 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ShoppingCart, Star, Search, Filter, Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useCart } from '@/contexts/cart-context';
-
-const mockProducts = [
-  { id: 'prod1', name: 'SR Pro-Grip Dumbbell Set', category: 'Equipment', price: 129.99, image: 'https://placehold.co/600x600.png', dataAiHint: 'dumbbell set', rating: 5, isNew: true },
-  { id: 'prod2', name: 'SR Hydro-Flow Water Bottle', category: 'Accessories', price: 24.99, image: 'https://placehold.co/600x600.png', dataAiHint: 'water bottle gym', rating: 4 },
-  { id: 'prod3', name: 'Men\'s Performance Tee', category: 'Apparel', price: 45.00, image: 'https://placehold.co/600x600.png', dataAiHint: 'men fitness shirt', rating: 5 },
-  { id: 'prod4', name: 'Women\'s Flex Leggings', category: 'Apparel', price: 65.00, image: 'https://placehold.co/600x600.png', dataAiHint: 'women leggings gym', rating: 5 },
-  { id: 'prod5', name: 'SR Elite Yoga Mat', category: 'Equipment', price: 79.99, image: 'https://placehold.co/600x600.png', dataAiHint: 'yoga mat', rating: 4 },
-  { id: 'prod6', name: 'SR-21 Pre-Workout Fuel', category: 'Supplements', price: 39.99, image: 'https://placehold.co/600x600.png', dataAiHint: 'supplement powder tub', rating: 4, isNew: true },
-  { id: 'prod7', name: 'Gym-Ready Duffel Bag', category: 'Accessories', price: 55.00, image: 'https://placehold.co/600x600.png', dataAiHint: 'gym bag', rating: 5 },
-  { id: 'prod8', name: 'Women\'s Aero-Tank', category: 'Apparel', price: 35.00, image: 'https://placehold.co/600x600.png', dataAiHint: 'women fitness tanktop', rating: 4 },
-];
+import { getProducts, Product } from '@/services/firestore';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const categories = ['All', 'Equipment', 'Apparel', 'Accessories', 'Supplements'];
 const sortOptions = [
@@ -32,13 +23,31 @@ const sortOptions = [
 ];
 
 export default function MarketplacePage() {
+  const [allProducts, setAllProducts] = React.useState<Product[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
   const [searchTerm, setSearchTerm] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState('All');
   const [sortOption, setSortOption] = React.useState('newest');
   const { addToCart } = useCart();
 
+  React.useEffect(() => {
+    const fetchProducts = async () => {
+      setIsLoading(true);
+      try {
+        const products = await getProducts();
+        setAllProducts(products);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+        // Optionally show a toast message here
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
   const filteredAndSortedProducts = React.useMemo(() => {
-    let products = mockProducts.filter(p => 
+    let products = allProducts.filter(p => 
       p.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (selectedCategory === 'All' || p.category === selectedCategory)
     );
@@ -59,11 +68,11 @@ export default function MarketplacePage() {
         break;
     }
     return products;
-  }, [searchTerm, selectedCategory, sortOption]);
+  }, [searchTerm, selectedCategory, sortOption, allProducts]);
   
-  const handleAddToCart = (product: Omit<typeof mockProducts[0], 'rating' | 'isNew' | 'category'>) => {
+  const handleAddToCart = (product: Product) => {
     addToCart({
-      id: product.id,
+      id: product.id!,
       name: product.name,
       price: product.price,
       image: product.image,
@@ -135,59 +144,76 @@ export default function MarketplacePage() {
         </Card>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
-          {filteredAndSortedProducts.map((product, index) => (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.05 }}
-            >
-              <Card className="h-full flex flex-col overflow-hidden group transition-all duration-300 ease-in-out transform hover:-translate-y-2 hover:shadow-2xl hover:border-primary/50">
-                <CardHeader className="p-0 relative">
-                  <div className="aspect-square w-full relative overflow-hidden">
-                    <Image 
-                      src={product.image}
-                      alt={product.name}
-                      layout="fill"
-                      objectFit="cover"
-                      className="transition-transform duration-500 group-hover:scale-110"
-                      data-ai-hint={product.dataAiHint}
-                    />
-                  </div>
-                  {product.isNew && <Badge className="absolute top-3 right-3 bg-primary text-primary-foreground">NEW</Badge>}
-                </CardHeader>
+        {isLoading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
+            {[...Array(8)].map((_, i) => (
+              <Card key={i} className="h-full flex flex-col overflow-hidden">
+                <Skeleton className="aspect-square w-full" />
                 <CardContent className="p-4 flex-grow">
-                  <Badge variant="secondary" className="mb-2 text-xs bg-muted text-muted-foreground">{product.category}</Badge>
-                  <CardTitle className="text-base sm:text-lg font-semibold text-foreground leading-snug group-hover:text-primary transition-colors">{product.name}</CardTitle>
+                  <Skeleton className="h-4 w-1/3 mb-2" />
+                  <Skeleton className="h-5 w-4/5" />
                 </CardContent>
-                <CardFooter className="p-4 pt-0 flex flex-col sm:flex-row justify-between items-start sm:items-center">
-                  <div className="mb-2 sm:mb-0">
-                    <p className="text-lg sm:text-xl font-bold text-primary">${product.price.toFixed(2)}</p>
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className={`h-4 w-4 ${i < product.rating ? 'text-amber-400 fill-amber-400' : 'text-muted-foreground/30'}`} />
-                      ))}
-                    </div>
-                  </div>
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    className="group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-colors self-end sm:self-center"
-                    onClick={() => handleAddToCart(product)}
-                    aria-label={`Add ${product.name} to cart`}
-                  >
-                    <Plus className="h-5 w-5" />
-                  </Button>
+                <CardFooter className="p-4 pt-0 flex justify-between items-center">
+                  <Skeleton className="h-6 w-1/3" />
+                  <Skeleton className="h-8 w-8 rounded-full" />
                 </CardFooter>
               </Card>
-            </motion.div>
-          ))}
-        </div>
-        {filteredAndSortedProducts.length === 0 && (
-          <div className="text-center py-16 col-span-full">
+            ))}
+          </div>
+        ) : filteredAndSortedProducts.length === 0 ? (
+           <div className="text-center py-16 col-span-full">
             <h3 className="text-2xl font-semibold text-muted-foreground">No products found</h3>
             <p className="text-muted-foreground mt-2">Try adjusting your search or filter.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
+            {filteredAndSortedProducts.map((product, index) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.05 }}
+              >
+                <Card className="h-full flex flex-col overflow-hidden group transition-all duration-300 ease-in-out transform hover:-translate-y-2 hover:shadow-2xl hover:border-primary/50">
+                  <CardHeader className="p-0 relative">
+                    <div className="aspect-square w-full relative overflow-hidden">
+                      <Image 
+                        src={product.image}
+                        alt={product.name}
+                        layout="fill"
+                        objectFit="cover"
+                        className="transition-transform duration-500 group-hover:scale-110"
+                        data-ai-hint={product.dataAiHint}
+                      />
+                    </div>
+                    {product.isNew && <Badge className="absolute top-3 right-3 bg-primary text-primary-foreground">NEW</Badge>}
+                  </CardHeader>
+                  <CardContent className="p-4 flex-grow">
+                    <Badge variant="secondary" className="mb-2 text-xs bg-muted text-muted-foreground">{product.category}</Badge>
+                    <CardTitle className="text-base sm:text-lg font-semibold text-foreground leading-snug group-hover:text-primary transition-colors">{product.name}</CardTitle>
+                  </CardContent>
+                  <CardFooter className="p-4 pt-0 flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                    <div className="mb-2 sm:mb-0">
+                      <p className="text-lg sm:text-xl font-bold text-primary">${product.price.toFixed(2)}</p>
+                      <div className="flex items-center">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className={`h-4 w-4 ${i < product.rating ? 'text-amber-400 fill-amber-400' : 'text-muted-foreground/30'}`} />
+                        ))}
+                      </div>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="icon" 
+                      className="group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-colors self-end sm:self-center"
+                      onClick={() => handleAddToCart(product)}
+                      aria-label={`Add ${product.name} to cart`}
+                    >
+                      <Plus className="h-5 w-5" />
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </motion.div>
+            ))}
           </div>
         )}
       </main>

@@ -3,18 +3,25 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow public read access to blog posts
+  
+    // For this prototype, allow public read access but restrict writes.
+    // In a production app, you would have more granular rules.
+    // For example, only authenticated users can write to certain collections,
+    // and only admins can write to the 'blogPosts' collection.
+    
     match /blogPosts/{postId} {
       allow read: if true;
-      // Secure write access - only allow authenticated admins in a real app
-      // For this demo, we are keeping it open for the admin panel to work without auth.
-      // In production, you MUST restrict this. e.g., allow write: if request.auth.uid != null;
-      allow write: if true; 
+      allow write: if false; // Lock down writes for now. Change to `if request.auth != null;` for logged-in users.
     }
 
-    // Default deny all other collections
-    match /{document=**} {
-      allow read, write: if false;
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if false; 
+    }
+
+    match /magazineArticles/{articleId} {
+      allow read: if true;
+      allow write: if false;
     }
   }
 }

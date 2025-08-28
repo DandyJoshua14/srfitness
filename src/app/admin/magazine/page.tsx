@@ -7,28 +7,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { SendHorizonal, Newspaper, Image as ImageIcon, Trash2, List, Tag } from 'lucide-react';
+import { SendHorizonal, Newspaper, Image as ImageIcon, Trash2, List, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-
-interface Article {
-  id: string;
-  title: string;
-  category: string;
-  image: string;
-  dataAiHint: string;
-  excerpt: string;
-  timestamp: string;
-}
-
-const initialArticles = [
-    { id: '1', title: "Top 5 Nutrition Myths Debunked", category: "Nutrition", image: "https://placehold.co/600x400.png", dataAiHint: "healthy food bowl", excerpt: "Cut through the confusion and learn the truth about common nutrition beliefs...", timestamp: new Date().toLocaleDateString() },
-    { id: '2', title: "Mindful Movement: The Key to Joyful Workouts", category: "Wellness", image: "https://placehold.co/600x400.png", dataAiHint: "yoga meditation park", excerpt: "Discover how incorporating mindfulness into your exercise routine can enhance focus...", timestamp: new Date().toLocaleDateString() },
-];
-
+import { addArticle, getArticles, deleteArticle, Article } from '@/services/firestore';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function AdminMagazineManagerPage() {
   const { toast } = useToast();
@@ -39,24 +25,23 @@ export default function AdminMagazineManagerPage() {
   const [imageUrl, setImageUrl] = useState('');
   const [dataAiHint, setDataAiHint] = useState('');
   const [articles, setArticles] = useState<Article[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isPublishing, setIsPublishing] = useState(false);
 
-  const loadArticles = useCallback(() => {
+  const loadArticles = useCallback(async () => {
+    setIsLoading(true);
     try {
-      const storedArticles = localStorage.getItem('sr-fitness-magazine-articles');
-      if (storedArticles) {
-        setArticles(JSON.parse(storedArticles));
-      } else {
-        // Pre-populate with initial articles if none are found
-        localStorage.setItem('sr-fitness-magazine-articles', JSON.stringify(initialArticles));
-        setArticles(initialArticles);
-      }
+      const fetchedArticles = await getArticles();
+      setArticles(fetchedArticles);
     } catch (error) {
-      console.error("Could not load articles from localStorage", error);
+      console.error("Could not load articles from Firestore", error);
       toast({
         title: "Error Loading Articles",
-        description: "Could not retrieve articles from storage.",
+        description: "Could not retrieve articles from the database.",
         variant: "destructive",
       });
+    } finally {
+        setIsLoading(false);
     }
   }, [toast]);
 
@@ -78,25 +63,23 @@ export default function AdminMagazineManagerPage() {
   };
 
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
     if (!title.trim() || !excerpt.trim() || !category.trim()) {
       toast({ title: "Cannot Publish", description: "Please provide a title, excerpt, and category.", variant: "destructive" });
       return;
     }
+    setIsPublishing(true);
 
     try {
-      const newArticle: Article = {
-        id: String(Date.now()),
+      const newArticle = {
         title,
         category,
         excerpt,
         image: imageUrl || `https://placehold.co/600x400.png`,
         dataAiHint: dataAiHint || 'fitness lifestyle',
-        timestamp: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       };
       
-      const updatedArticles = [newArticle, ...articles];
-      localStorage.setItem('sr-fitness-magazine-articles', JSON.stringify(updatedArticles));
+      await addArticle(newArticle);
 
       toast({ title: "Article Published!", description: "Your new article is now live on the magazine page." });
 
@@ -110,14 +93,15 @@ export default function AdminMagazineManagerPage() {
     } catch (error) {
         console.error("Failed to publish article:", error);
         toast({ title: "Publishing Failed", description: "Could not save the article.", variant: "destructive" });
+    } finally {
+        setIsPublishing(false);
     }
   };
   
-  const handleDeleteArticle = (articleId: string) => {
+  const handleDeleteArticle = async (articleId: string) => {
     try {
-      const updatedArticles = articles.filter(a => a.id !== articleId);
-      localStorage.setItem('sr-fitness-magazine-articles', JSON.stringify(updatedArticles));
-      setArticles(updatedArticles);
+      await deleteArticle(articleId);
+      setArticles(articles.filter(a => a.id !== articleId));
       toast({ title: "Article Deleted", description: "The article has been successfully removed." });
     } catch (error) {
       console.error("Failed to delete article:", error);
@@ -186,8 +170,9 @@ export default function AdminMagazineManagerPage() {
                   </div>
                 </CardContent>
                 <CardFooter>
-                    <Button size="lg" className="w-full sm:w-auto ml-auto" onClick={handlePublish} disabled={!title || !excerpt || !category}>
-                      <SendHorizonal className="mr-2 h-5 w-5" /> Publish Article
+                    <Button size="lg" className="w-full sm:w-auto ml-auto" onClick={handlePublish} disabled={isPublishing ||!title || !excerpt || !category}>
+                      {isPublishing ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <SendHorizonal className="mr-2 h-5 w-5" /> }
+                      {isPublishing ? 'Publishing...' : 'Publish Article'}
                     </Button>
                 </CardFooter>
             </Card>
@@ -202,7 +187,19 @@ export default function AdminMagazineManagerPage() {
                 </CardHeader>
                 <CardContent>
                     <div className="max-h-[80vh] overflow-y-auto pr-2 space-y-4">
-                        {articles.length === 0 ? (
+                        {isLoading ? (
+                            <div className="space-y-4">
+                                {[...Array(3)].map((_, i) => (
+                                    <div key={i} className="flex items-center space-x-4">
+                                        <div className="space-y-2 flex-grow">
+                                            <Skeleton className="h-4 w-4/5" />
+                                            <Skeleton className="h-3 w-1/3" />
+                                        </div>
+                                        <Skeleton className="h-8 w-8 rounded-full" />
+                                    </div>
+                                ))}
+                            </div>
+                        ) : articles.length === 0 ? (
                             <p className="text-muted-foreground text-center py-8">No articles found.</p>
                         ) : (
                             articles.map((article, index) => (
@@ -212,10 +209,10 @@ export default function AdminMagazineManagerPage() {
                                             <p className="font-semibold truncate text-foreground">{article.title}</p>
                                             <div className="text-xs text-muted-foreground">
                                                 <Badge variant="secondary" className="mr-2">{article.category}</Badge>
-                                                {article.timestamp}
+                                                {article.timestamp.toString()}
                                             </div>
                                         </div>
-                                        <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10 shrink-0" onClick={() => handleDeleteArticle(article.id)} aria-label={`Delete article titled ${article.title}`}>
+                                        <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10 shrink-0" onClick={() => handleDeleteArticle(article.id!)} aria-label={`Delete article titled ${article.title}`}>
                                             <Trash2 className="h-4 w-4" />
                                         </Button>
                                     </div>

@@ -2,7 +2,8 @@
 import { db } from '@/lib/firebase/config';
 import { collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, serverTimestamp } from 'firebase/firestore';
 
-// Define the structure of a Post for type safety
+// --------- Blog Post Types and Functions ---------
+
 interface Post {
   id?: string;
   author: { name: string; avatar: string; dataAiHint: string; };
@@ -19,21 +20,18 @@ interface Post {
 
 const postsCollectionRef = collection(db, 'blogPosts');
 
-// Function to add a new post
 export const addPost = async (postData: Omit<Post, 'id' | 'timestamp'>) => {
   try {
-    const docRef = await addDoc(postsCollectionRef, {
+    await addDoc(postsCollectionRef, {
       ...postData,
-      timestamp: serverTimestamp(), // Use server timestamp for consistency
+      timestamp: serverTimestamp(),
     });
-    return docRef.id;
   } catch (error) {
     console.error("Error adding document: ", error);
     throw new Error("Could not add post to Firestore.");
   }
 };
 
-// Function to get all posts, ordered by timestamp
 export const getPosts = async (): Promise<Post[]> => {
   try {
     const q = query(postsCollectionRef, orderBy('timestamp', 'desc'));
@@ -43,7 +41,6 @@ export const getPosts = async (): Promise<Post[]> => {
         return {
             id: doc.id,
             ...data,
-            // Convert Firestore Timestamp to a simple Date string for client-side usage
             timestamp: data.timestamp?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) || new Date().toLocaleDateString(),
         } as Post;
     });
@@ -53,12 +50,117 @@ export const getPosts = async (): Promise<Post[]> => {
   }
 };
 
-// Function to delete a post
 export const deletePost = async (postId: string) => {
   try {
     await deleteDoc(doc(db, 'blogPosts', postId));
   } catch (error) {
     console.error("Error deleting document: ", error);
     throw new Error("Could not delete post from Firestore.");
+  }
+};
+
+
+// --------- Product Types and Functions ---------
+
+export interface Product {
+    id?: string;
+    name: string;
+    category: string;
+    price: number;
+    image: string;
+    dataAiHint: string;
+    rating: number;
+    isNew: boolean;
+    timestamp: any;
+}
+
+const productsCollectionRef = collection(db, 'products');
+
+export const addProduct = async (productData: Omit<Product, 'id' | 'timestamp'>) => {
+    try {
+        await addDoc(productsCollectionRef, {
+            ...productData,
+            timestamp: serverTimestamp(),
+        });
+    } catch (error) {
+        console.error("Error adding product: ", error);
+        throw new Error("Could not add product to Firestore.");
+    }
+};
+
+export const getProducts = async (): Promise<Product[]> => {
+    try {
+        const q = query(productsCollectionRef, orderBy('timestamp', 'desc'));
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+        } as Product));
+    } catch (error) {
+        console.error("Error getting products: ", error);
+        throw new Error("Could not fetch products from Firestore.");
+    }
+};
+
+export const deleteProduct = async (productId: string) => {
+    try {
+        await deleteDoc(doc(db, 'products', productId));
+    } catch (error) {
+        console.error("Error deleting product: ", error);
+        throw new Error("Could not delete product from Firestore.");
+    }
+};
+
+
+// --------- Magazine Article Types and Functions ---------
+
+export interface Article {
+  id?: string;
+  title: string;
+  category: string;
+  image: string;
+  dataAiHint: string;
+  excerpt: string;
+  timestamp: any;
+}
+
+const articlesCollectionRef = collection(db, 'magazineArticles');
+
+export const addArticle = async (articleData: Omit<Article, 'id' | 'timestamp'>) => {
+  try {
+    await addDoc(articlesCollectionRef, {
+        ...articleData,
+        timestamp: serverTimestamp()
+    });
+  } catch (error) {
+    console.error("Error adding article: ", error);
+    throw new Error("Could not add article to Firestore.");
+  }
+};
+
+export const getArticles = async (): Promise<Article[]> => {
+  try {
+    const q = query(articlesCollectionRef, orderBy('timestamp', 'desc'));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        timestamp: data.timestamp?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) || new Date().toLocaleDateString(),
+      } as Article;
+    });
+  } catch (error) {
+    console.error("Error getting articles: ", error);
+    throw new Error("Could not fetch articles from Firestore.");
+  }
+};
+
+export const deleteArticle = async (articleId: string) => {
+  try {
+    await deleteDoc(doc(db, 'magazineArticles', articleId));
+  } catch (error) {
+    console.error("Error deleting article: ", error);
+    throw new Error("Could not delete article from Firestore.");
   }
 };

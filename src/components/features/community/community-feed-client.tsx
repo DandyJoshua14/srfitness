@@ -14,6 +14,8 @@ import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { getPosts } from '@/services/firestore';
+import { Skeleton } from '@/components/ui/skeleton';
 
 // Helper for X/Twitter Icon
 const TwitterIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -43,89 +45,37 @@ interface Post {
     showComments?: boolean; // To toggle comment section
 }
 
-const initialPosts: Post[] = [
-  {
-    id: 'announcement-1',
-    author: { name: 'SR Fitness Admin', avatar: '/logo.png', dataAiHint: 'brand logo' },
-    timestamp: '1 day ago',
-    title: '📢 Exciting News: New Spin Class Schedule!',
-    content: 'Our new Spin Class schedule is out now with more morning and evening slots. Get ready to sweat! Book your spot via the app or at the front desk. Let\'s ride! 🔥🚴‍♀️',
-    image: 'https://placehold.co/1280x720.png',
-    dataAiHint: 'spin class bikes',
-    likes: 102,
-    comments: [],
-    isAnnouncement: true,
-    category: "Announcements"
-  },
-  {
-    id: '1',
-    author: { name: 'SR Fitness Admin', avatar: '/logo.png', dataAiHint: 'brand logo' },
-    timestamp: '2 hours ago',
-    title: 'Crushed My Squat PB Today!',
-    content: 'Just hit a new personal best on squats! Feeling absolutely amazing and stronger than ever. Huge thanks to the SR Fitness trainers for their guidance and the supportive community here. #legday #gains #SRFitnessJourney',
-    image: 'https://placehold.co/1280x720.png',
-    dataAiHint: 'gym squat rack',
-    likes: 25,
-    comments: [{ id: 'c1-1', author: { name: 'Jane D.', avatar: 'https://placehold.co/40x40.png?text=JD' }, text: 'Awesome work! So inspiring!'}],
-    isAnnouncement: true,
-    category: "Member Stories"
-  },
-  {
-    id: '2',
-    author: { name: 'SR Fitness Admin', avatar: '/logo.png', dataAiHint: 'brand logo' },
-    timestamp: '5 hours ago',
-    title: 'Morning Run Fuelled by the New Meal Plan',
-    content: 'Early morning run with a stunning view. The new AI meal plan is definitely making a difference in my energy levels. Consistency is key to progress!',
-    image: "https://placehold.co/1280x720.png",
-    dataAiHint: "sunrise run park",
-    likes: 18,
-    comments: [],
-    isAnnouncement: true,
-    category: "Fitness Tips"
-  },
-];
-
-
 export default function CommunityFeedClient() {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [newCommentText, setNewCommentText] = useState<Record<string, string>>({});
   const { toast } = useToast();
 
-  const loadPosts = useCallback(() => {
+  const loadPosts = useCallback(async () => {
+    setIsLoading(true);
     try {
-      const storedPosts = localStorage.getItem('sr-fitness-blog-posts');
-      const postsToLoad = storedPosts ? JSON.parse(storedPosts) : initialPosts;
-      
-      const processedPosts = postsToLoad.map((p: any) => ({
+      const fetchedPosts = await getPosts();
+      const processedPosts = fetchedPosts.map((p: any) => ({
          ...p,
-         isAnnouncement: true,
-         author: { name: 'SR Fitness Admin', avatar: '/logo.png', dataAiHint: 'brand logo' },
          comments: p.comments || [],
          isLiked: p.isLiked || false,
          showComments: p.showComments || false,
       }));
       setPosts(processedPosts);
-
-      if (!storedPosts) {
-        localStorage.setItem('sr-fitness-blog-posts', JSON.stringify(initialPosts));
-      }
-
     } catch (error) {
-      console.error("Could not load posts from localStorage", error);
+      console.error("Could not load posts from Firestore", error);
+      toast({
+        title: "Error Loading Feed",
+        description: "Could not retrieve the latest posts.",
+        variant: "destructive",
+      });
+    } finally {
+        setIsLoading(false);
     }
-  }, []);
+  }, [toast]);
   
   useEffect(() => {
     loadPosts();
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === 'sr-fitness-blog-posts') {
-        loadPosts();
-      }
-    };
-    window.addEventListener('storage', handleStorageChange);
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
   }, [loadPosts]);
 
 
@@ -188,10 +138,38 @@ export default function CommunityFeedClient() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <main className="max-w-2xl mx-auto w-full space-y-6">
+        {[...Array(3)].map((_, i) => (
+          <Card key={i} className="shadow-lg bg-card border-border">
+            <CardHeader>
+              <div className="flex items-center space-x-3">
+                <Skeleton className="h-11 w-11 rounded-full" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-[150px]" />
+                  <Skeleton className="h-3 w-[100px]" />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-5 w-3/4 mb-3" />
+              <Skeleton className="h-4 w-full mb-1" />
+              <Skeleton className="h-4 w-5/6 mb-4" />
+              <Skeleton className="aspect-video w-full rounded-lg" />
+            </CardContent>
+            <CardFooter className="p-2">
+              <Skeleton className="h-8 w-full" />
+            </CardFooter>
+          </Card>
+        ))}
+      </main>
+    );
+  }
 
   return (
     <main className="max-w-2xl mx-auto w-full space-y-6">
-        {posts.length === 0 && (
+        {posts.length === 0 && !isLoading && (
             <Card className="text-center py-16 shadow-lg">
                 <CardHeader>
                     <Rss className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
@@ -230,7 +208,7 @@ export default function CommunityFeedClient() {
                 <p className="text-sm text-muted-foreground whitespace-pre-line mb-4">{post.content}</p>
                   {post.image && (
                     <div className="aspect-video relative overflow-hidden rounded-lg border border-border mt-4">
-                    <Image src={post.image} alt={post.title || "Blog post image"} layout="fill" objectFit="cover" data-ai-hint={post.dataAiHint || 'blog image'} />
+                    <Image src={post.image} alt={post.title || "Blog post image"} fill objectFit="cover" data-ai-hint={post.dataAiHint || 'blog image'} />
                     </div>
                 )}
               </CardContent>
@@ -318,17 +296,13 @@ export default function CommunityFeedClient() {
                                     <Send className="h-4 w-4" />
                                 </Button>
                             </div>
-                            <p className="text-center text-muted-foreground text-xs mt-2">Comments are temporary and will reset on page refresh.</p>
+                            <p className="text-center text-muted-foreground text-xs mt-2">Comments are temporary and for demonstration only.</p>
                         </div>
                     </motion.div>
                 )}
-            </AnimatePresence>
+              </AnimatePresence>
             </Card>
           )})}
-        
-        <p className="text-center text-muted-foreground text-xs mt-8">
-            This is a read-only blog. All posts are from the SR Fitness team.
-        </p>
     </main>
   );
 }

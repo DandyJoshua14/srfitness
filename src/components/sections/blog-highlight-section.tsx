@@ -10,24 +10,14 @@ import { motion } from 'framer-motion';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Autoplay from "embla-carousel-autoplay";
 import * as React from "react";
+import { getPosts } from '@/services/firestore';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const initialHighlightedPosts = [
-  {
-    id: 'announcement-1',
-    title: 'New Spin Class Schedule!',
-    content: 'Our new Spin Class schedule is out now with more morning and evening slots. Get ready to sweat!',
-  },
-  {
-    id: '1',
-    title: 'Crushed My Squat PB Today!',
-    content: 'Just hit a new personal best on squats! Feeling absolutely amazing and stronger than ever.',
-  },
-  {
-    id: '2',
-    title: 'Morning Run Fuelled by the New Meal Plan',
-    content: 'Early morning run with a stunning view. The new AI meal plan is making a difference.',
-  },
-];
+interface Post {
+    id: string;
+    title: string;
+    content: string;
+}
 
 const SINGLE_IMAGE_PLACEHOLDER = 'https://placehold.co/1280x720.png';
 
@@ -36,35 +26,22 @@ export default function BlogHighlightSection() {
       Autoplay({ delay: 5000, stopOnInteraction: true })
     );
 
-    const [highlightedPosts, setHighlightedPosts] = React.useState(initialHighlightedPosts);
+    const [highlightedPosts, setHighlightedPosts] = React.useState<Post[]>([]);
+    const [isLoading, setIsLoading] = React.useState(true);
 
     React.useEffect(() => {
+      const fetchPosts = async () => {
+        setIsLoading(true);
         try {
-            const storedPosts = localStorage.getItem('sr-fitness-blog-posts');
-            if (storedPosts) {
-                const parsedPosts = JSON.parse(storedPosts);
-                if(parsedPosts.length > 0) {
-                    setHighlightedPosts(parsedPosts.slice(0, 3));
-                }
-            } else {
-                localStorage.setItem('sr-fitness-blog-posts', JSON.stringify(initialHighlightedPosts));
-            }
+          const allPosts = await getPosts();
+          setHighlightedPosts(allPosts.slice(0, 3));
         } catch (e) {
-            console.error("Could not load blog posts from localStorage", e);
-            setHighlightedPosts(initialHighlightedPosts);
+          console.error("Could not load blog posts from Firestore", e);
+        } finally {
+          setIsLoading(false);
         }
-
-        const handleStorageChange = (event: StorageEvent) => {
-          if (event.key === 'sr-fitness-blog-posts' && event.newValue) {
-              const updatedPosts = JSON.parse(event.newValue);
-              setHighlightedPosts(updatedPosts.slice(0, 3));
-          }
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-        return () => {
-            window.removeEventListener('storage', handleStorageChange);
-        };
+      };
+      fetchPosts();
     }, []);
   
   return (
@@ -92,6 +69,21 @@ export default function BlogHighlightSection() {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, delay: 0.2 }}
         >
+          {isLoading ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[...Array(3)].map((_, i) => (
+                <Card key={i} className="h-full flex flex-col overflow-hidden">
+                  <Skeleton className="aspect-video w-full" />
+                  <CardContent className="p-6 flex-grow flex flex-col">
+                    <Skeleton className="h-5 w-4/5 mb-2" />
+                    <Skeleton className="h-4 w-full mb-1" />
+                    <Skeleton className="h-4 w-5/6 mb-4" />
+                    <Skeleton className="h-9 w-28 mt-auto" />
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
             <Carousel
                 plugins={[plugin.current]}
                 className="w-full max-w-4xl mx-auto"
@@ -111,7 +103,7 @@ export default function BlogHighlightSection() {
                                     <Image 
                                     src={SINGLE_IMAGE_PLACEHOLDER}
                                     alt={post.title}
-                                    layout="fill"
+                                    fill
                                     objectFit="cover"
                                     className="transition-transform duration-500 group-hover:scale-110"
                                     data-ai-hint="fitness blog"
@@ -137,6 +129,7 @@ export default function BlogHighlightSection() {
                 <CarouselPrevious className="absolute left-[-20px] sm:left-[-50px] top-1/2 -translate-y-1/2" />
                 <CarouselNext className="absolute right-[-20px] sm:right-[-50px] top-1/2 -translate-y-1/2" />
               </Carousel>
+          )}
         </motion.div>
       </div>
     </section>

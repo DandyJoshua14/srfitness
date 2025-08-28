@@ -7,10 +7,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { SendHorizonal, Newspaper, Image as ImageIcon, Trash2, List } from 'lucide-react';
+import { SendHorizonal, Newspaper, Image as ImageIcon, Trash2, List, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
 import { Separator } from '@/components/ui/separator';
+import { addPost, getPosts, deletePost } from '@/services/firestore';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface Post {
   id: string;
@@ -33,20 +35,23 @@ export default function AdminBlogManagerPage() {
   const [imageUrl, setImageUrl] = useState('');
   const [content, setContent] = useState('');
   const [posts, setPosts] = useState<Post[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isPublishing, setIsPublishing] = useState(false);
 
-  const loadPosts = useCallback(() => {
+  const loadPosts = useCallback(async () => {
+    setIsLoading(true);
     try {
-      const storedPosts = localStorage.getItem('sr-fitness-blog-posts');
-      if (storedPosts) {
-        setPosts(JSON.parse(storedPosts));
-      }
+      const fetchedPosts = await getPosts();
+      setPosts(fetchedPosts);
     } catch (error) {
-      console.error("Could not load posts from localStorage", error);
+      console.error("Could not load posts from Firestore", error);
       toast({
         title: "Error Loading Posts",
-        description: "Could not retrieve existing posts from storage.",
+        description: "Could not retrieve existing posts from the database.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   }, [toast]);
 
@@ -74,7 +79,7 @@ export default function AdminBlogManagerPage() {
   };
 
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
     if (!title.trim() || !content.trim()) {
       toast({
         title: "Cannot Publish",
@@ -83,13 +88,11 @@ export default function AdminBlogManagerPage() {
       });
       return;
     }
+    setIsPublishing(true);
 
     try {
-      const storedPosts = JSON.parse(localStorage.getItem('sr-fitness-blog-posts') || '[]');
-      const newPost: Post = {
-        id: String(Date.now()),
+      const newPost = {
         author: { name: 'SR Fitness Admin', avatar: '/logo.png', dataAiHint: 'brand logo' },
-        timestamp: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         title: title,
         content: content,
         image: imageUrl || 'https://placehold.co/600x400.png',
@@ -100,8 +103,7 @@ export default function AdminBlogManagerPage() {
         category: "Announcements"
       };
       
-      const updatedPosts = [newPost, ...storedPosts];
-      localStorage.setItem('sr-fitness-blog-posts', JSON.stringify(updatedPosts));
+      await addPost(newPost);
 
       toast({
         title: "Post Published Successfully!",
@@ -115,20 +117,21 @@ export default function AdminBlogManagerPage() {
       loadPosts();
 
     } catch (error) {
-        console.error("Failed to publish post to localStorage:", error);
+        console.error("Failed to publish post to Firestore:", error);
         toast({
             title: "Publishing Failed",
-            description: "Could not save the post. Please check the browser console for errors.",
+            description: "Could not save the post to the database. Please try again.",
             variant: "destructive"
         });
+    } finally {
+      setIsPublishing(false);
     }
   };
   
-  const handleDeletePost = (postId: string) => {
+  const handleDeletePost = async (postId: string) => {
     try {
-      const updatedPosts = posts.filter(p => p.id !== postId);
-      localStorage.setItem('sr-fitness-blog-posts', JSON.stringify(updatedPosts));
-      setPosts(updatedPosts);
+      await deletePost(postId);
+      setPosts(posts.filter(p => p.id !== postId));
       toast({
         title: "Post Deleted",
         description: "The blog post has been successfully removed.",
@@ -137,7 +140,7 @@ export default function AdminBlogManagerPage() {
       console.error("Failed to delete post:", error);
       toast({
         title: "Deletion Failed",
-        description: "Could not delete the post. Please try again.",
+        description: "Could not delete the post from the database. Please try again.",
         variant: "destructive"
       });
     }
@@ -188,7 +191,7 @@ export default function AdminBlogManagerPage() {
                     />
                     {imageUrl && (
                     <div className="mt-4 relative aspect-video rounded-lg overflow-hidden border">
-                        <Image src={imageUrl} alt="Selected preview" layout="fill" objectFit="cover" />
+                        <Image src={imageUrl} alt="Selected preview" fill objectFit="cover" />
                     </div>
                     )}
                 </div>
@@ -209,10 +212,10 @@ export default function AdminBlogManagerPage() {
                         size="lg" 
                         className="w-full sm:w-auto ml-auto bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-lg" 
                         onClick={handlePublish}
-                        disabled={!title || !content}
+                        disabled={!title || !content || isPublishing}
                     >
-                    <SendHorizonal className="mr-2 h-5 w-5" />
-                    Publish Post
+                    {isPublishing ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <SendHorizonal className="mr-2 h-5 w-5" />}
+                    {isPublishing ? 'Publishing...' : 'Publish Post'}
                     </Button>
                 </CardFooter>
             </Card>
@@ -229,7 +232,19 @@ export default function AdminBlogManagerPage() {
                 </CardHeader>
                 <CardContent>
                     <div className="max-h-[80vh] overflow-y-auto pr-2 space-y-4">
-                        {posts.length === 0 ? (
+                        {isLoading ? (
+                            <div className="space-y-4">
+                                {[...Array(3)].map((_, i) => (
+                                    <div key={i} className="flex items-center space-x-4">
+                                        <div className="space-y-2 flex-grow">
+                                            <Skeleton className="h-4 w-4/5" />
+                                            <Skeleton className="h-3 w-1/3" />
+                                        </div>
+                                        <Skeleton className="h-8 w-8 rounded-full" />
+                                    </div>
+                                ))}
+                            </div>
+                        ) : posts.length === 0 ? (
                             <p className="text-muted-foreground text-center py-8">No posts found.</p>
                         ) : (
                             posts.map((post, index) => (

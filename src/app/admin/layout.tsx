@@ -3,16 +3,24 @@
 
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/layout/admin-sidebar';
 import LoadingOverlay from '@/components/common/loading-overlay';
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // If we are already on the login page, don't perform any checks.
+    if (pathname === '/admin/login') {
+      setIsAuthenticated(true); // Allow login page to render
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const authStatus = localStorage.getItem('sr-admin-auth');
       if (authStatus === 'true') {
@@ -26,17 +34,23 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  }, [router]);
+  }, [router, pathname]);
 
   if (isLoading) {
     return <LoadingOverlay />;
   }
 
+  // If on the login page, just render the children (the login page itself)
+  // without the admin sidebar.
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
+  
   if (!isAuthenticated) {
     // This will be shown briefly before the redirect in useEffect completes.
-    // A loading spinner is a good user experience here.
     return <LoadingOverlay />;
   }
+
 
   return (
     <div className="flex min-h-screen bg-muted/40">

@@ -84,9 +84,15 @@ export const addProduct = async (productData: Omit<Product, 'id' | 'timestamp'>)
         });
         
         const newProductDoc = await getDoc(docRef);
-        const newProduct = { id: newProductDoc.id, ...newProductDoc.data() } as Product;
-        // The timestamp will be a server value, for optimistic UI we can just use the spread data
-        return newProduct;
+        if (!newProductDoc.exists()) {
+            throw new Error("Failed to fetch the newly created product.");
+        }
+        const newProductData = newProductDoc.data();
+        return { 
+            id: newProductDoc.id, 
+            ...newProductData,
+            timestamp: newProductData.timestamp // Keep server value
+        } as Product;
     } catch (error) {
         console.error("Error adding product: ", error);
         throw new Error("Could not add product to Firestore.");
@@ -169,3 +175,5 @@ export const deleteArticle = async (articleId: string) => {
     throw new Error("Could not delete article from Firestore.");
   }
 };
+
+    

@@ -81,40 +81,61 @@ export default function AdminStoreManagerPage() {
     }
     setIsPublishing(true);
 
+    const productToAdd: Omit<Product, 'id' | 'timestamp'> = {
+      ...newProduct,
+      price: parseFloat(newProduct.price),
+      image: newProduct.image || 'https://placehold.co/600x600.png',
+      dataAiHint: newProduct.dataAiHint || 'product image',
+      rating: 5, // Default rating
+      isNew: true,
+    };
+
+    // **True Optimistic Update**
+    // 1. Create a temporary product for the UI with a placeholder ID
+    const optimisticProduct: Product = {
+        ...productToAdd,
+        id: `optimistic-${Date.now()}`,
+        timestamp: new Date().toISOString(), // Use ISO string for client-side sorting
+    };
+
+    // 2. Update the UI immediately
+    setProducts(prev => [optimisticProduct, ...prev]);
+    setNewProduct({ name: '', category: '', price: '', image: '', dataAiHint: '' });
+
     try {
-        const productToAdd = {
-          ...newProduct,
-          price: parseFloat(newProduct.price),
-          image: newProduct.image || 'https://placehold.co/600x600.png',
-          dataAiHint: newProduct.dataAiHint || 'product image',
-          rating: 5, // Default rating
-          isNew: true,
-        };
-        
+        // 3. Send the request to the database in the background
         const addedProduct = await addProduct(productToAdd);
 
-        // Optimistic UI update
-        setProducts(prev => [addedProduct, ...prev]);
+        // 4. Once successful, replace the optimistic product with the real one from the server
+        setProducts(prev => prev.map(p => p.id === optimisticProduct.id ? { ...addedProduct, id: addedProduct.id! } : p));
 
         toast({ title: "Product Added", description: `${addedProduct.name} has been added to the store.` });
-        setNewProduct({ name: '', category: '', price: '', image: '', dataAiHint: '' });
 
     } catch (error) {
         console.error("Failed to add product:", error);
         toast({ title: "Failed to Add", description: "Could not save the product. Please try again.", variant: "destructive" });
+        
+        // 5. If it fails, remove the optimistic product from the UI
+        setProducts(prev => prev.filter(p => p.id !== optimisticProduct.id));
     } finally {
         setIsPublishing(false);
     }
   };
   
   const handleDeleteProduct = async (productId: string) => {
+    // Keep original products in case of failure
+    const originalProducts = [...products];
+    // Optimistic UI update
+    setProducts(prev => prev.filter(p => p.id !== productId));
+    
     try {
         await deleteProduct(productId);
-        setProducts(prev => prev.filter(p => p.id !== productId));
         toast({ title: "Product Deleted", description: "The product has been removed from the store." });
     } catch(error) {
         console.error("Failed to delete product:", error);
         toast({ title: "Deletion Failed", description: "Could not delete the product.", variant: "destructive" });
+        // Revert UI on failure
+        setProducts(originalProducts);
     }
   };
 
@@ -244,3 +265,5 @@ export default function AdminStoreManagerPage() {
     </div>
   );
 }
+
+    

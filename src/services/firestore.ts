@@ -1,6 +1,6 @@
 
 import { db } from '@/lib/firebase/config';
-import { collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, serverTimestamp, getDoc } from 'firebase/firestore';
 
 // --------- Blog Post Types and Functions ---------
 
@@ -76,12 +76,17 @@ export interface Product {
 
 const productsCollectionRef = collection(db, 'products');
 
-export const addProduct = async (productData: Omit<Product, 'id' | 'timestamp'>) => {
+export const addProduct = async (productData: Omit<Product, 'id' | 'timestamp'>): Promise<Product> => {
     try {
-        await addDoc(productsCollectionRef, {
+        const docRef = await addDoc(productsCollectionRef, {
             ...productData,
             timestamp: serverTimestamp(),
         });
+        
+        const newProductDoc = await getDoc(docRef);
+        const newProduct = { id: newProductDoc.id, ...newProductDoc.data() } as Product;
+        // The timestamp will be a server value, for optimistic UI we can just use the spread data
+        return newProduct;
     } catch (error) {
         console.error("Error adding product: ", error);
         throw new Error("Could not add product to Firestore.");

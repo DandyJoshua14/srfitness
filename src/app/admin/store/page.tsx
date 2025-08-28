@@ -90,11 +90,14 @@ export default function AdminStoreManagerPage() {
           rating: 5, // Default rating
           isNew: true,
         };
-        await addProduct(productToAdd);
+        
+        const addedProduct = await addProduct(productToAdd);
 
-        toast({ title: "Product Added", description: `${productToAdd.name} has been added to the store.` });
+        // Optimistic UI update
+        setProducts(prev => [addedProduct, ...prev]);
+
+        toast({ title: "Product Added", description: `${addedProduct.name} has been added to the store.` });
         setNewProduct({ name: '', category: '', price: '', image: '', dataAiHint: '' });
-        loadProducts();
 
     } catch (error) {
         console.error("Failed to add product:", error);

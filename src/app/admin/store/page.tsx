@@ -81,42 +81,27 @@ export default function AdminStoreManagerPage() {
     }
     setIsPublishing(true);
 
-    const productToAdd: Omit<Product, 'id' | 'timestamp'> = {
-      ...newProduct,
-      price: parseFloat(newProduct.price),
-      image: newProduct.image || 'https://placehold.co/600x600.png',
-      dataAiHint: newProduct.dataAiHint || 'product image',
-      rating: 5, // Default rating
-      isNew: true,
-    };
-
-    // **True Optimistic Update**
-    // 1. Create a temporary product for the UI with a placeholder ID
-    const optimisticProduct: Product = {
-        ...productToAdd,
-        id: `optimistic-${Date.now()}`,
-        timestamp: new Date().toISOString(), // Use ISO string for client-side sorting
-    };
-
-    // 2. Update the UI immediately
-    setProducts(prev => [optimisticProduct, ...prev]);
-    setNewProduct({ name: '', category: '', price: '', image: '', dataAiHint: '' });
-
     try {
-        // 3. Send the request to the database in the background
-        const addedProduct = await addProduct(productToAdd);
+      const productToAdd: Omit<Product, 'id' | 'timestamp'> = {
+        ...newProduct,
+        price: parseFloat(newProduct.price),
+        image: newProduct.image || 'https://placehold.co/600x600.png',
+        dataAiHint: newProduct.dataAiHint || 'product image',
+        rating: 5, // Default rating
+        isNew: true,
+      };
 
-        // 4. Once successful, replace the optimistic product with the real one from the server
-        setProducts(prev => prev.map(p => p.id === optimisticProduct.id ? { ...addedProduct, id: addedProduct.id! } : p));
+      await addProduct(productToAdd);
 
-        toast({ title: "Product Added", description: `${addedProduct.name} has been added to the store.` });
+      toast({ title: "Product Added", description: `${newProduct.name} has been added to the store.` });
+
+      // Clear the form and reload the products from Firestore
+      setNewProduct({ name: '', category: '', price: '', image: '', dataAiHint: '' });
+      loadProducts();
 
     } catch (error) {
         console.error("Failed to add product:", error);
         toast({ title: "Failed to Add", description: "Could not save the product. Please try again.", variant: "destructive" });
-        
-        // 5. If it fails, remove the optimistic product from the UI
-        setProducts(prev => prev.filter(p => p.id !== optimisticProduct.id));
     } finally {
         setIsPublishing(false);
     }
@@ -266,4 +251,5 @@ export default function AdminStoreManagerPage() {
   );
 }
 
+    
     

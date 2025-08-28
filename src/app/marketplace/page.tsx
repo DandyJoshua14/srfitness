@@ -64,7 +64,7 @@ export default function MarketplacePage() {
         break;
       case 'newest':
       default:
-        products.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+        products.sort((a, b) => b.timestamp - a.timestamp);
         break;
     }
     return products;
@@ -220,3 +220,5 @@ export default function MarketplacePage() {
     </div>
   );
 }
+
+    

@@ -76,23 +76,12 @@ export interface Product {
 
 const productsCollectionRef = collection(db, 'products');
 
-export const addProduct = async (productData: Omit<Product, 'id' | 'timestamp'>): Promise<Product> => {
+export const addProduct = async (productData: Omit<Product, 'id' | 'timestamp'>) => {
     try {
-        const docRef = await addDoc(productsCollectionRef, {
+        await addDoc(productsCollectionRef, {
             ...productData,
             timestamp: serverTimestamp(),
         });
-        
-        const newProductDoc = await getDoc(docRef);
-        if (!newProductDoc.exists()) {
-            throw new Error("Failed to fetch the newly created product.");
-        }
-        const newProductData = newProductDoc.data();
-        return { 
-            id: newProductDoc.id, 
-            ...newProductData,
-            timestamp: newProductData.timestamp // Keep server value
-        } as Product;
     } catch (error) {
         console.error("Error adding product: ", error);
         throw new Error("Could not add product to Firestore.");
@@ -176,4 +165,5 @@ export const deleteArticle = async (articleId: string) => {
   }
 };
 
+    
     

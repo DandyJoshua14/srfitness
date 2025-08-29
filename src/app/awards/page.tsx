@@ -51,10 +51,10 @@ export default function AwardsPage() {
     { title: "Corporate Social Responsibility Champion", qualifier: "Organizations", description: "Awarded to major brands and organisations that support, promote and inspire through the power of fitness." },
   ];
 
-  const renderCategoryAccordion = (categories: any[]) => (
+  const renderCategoryAccordion = (categories: any[], accordionId: string) => (
     <Accordion type="single" collapsible className="w-full">
       {categories.map((category, index) => (
-        <AccordionItem value={`item-${index}`} key={index} className="border-b-0">
+        <AccordionItem value={`${accordionId}-${index}`} key={index} className="border-b-0">
           <AccordionTrigger className="font-headline text-lg text-left hover:text-primary hover:no-underline">
             <div className="flex flex-col items-start text-left">
                 <span>{category.title}</span>
@@ -151,13 +151,15 @@ export default function AwardsPage() {
             <Card className="max-w-3xl mx-auto bg-card border-border shadow-xl">
               <CardContent className="p-6">
                  <h3 className="font-headline text-2xl text-primary mb-4 text-center">General Awards</h3>
-                 {renderCategoryAccordion(generalCategories)}
+                 {renderCategoryAccordion(generalCategories, 'general')}
+
                 <Separator className="my-6" />
                 <h3 className="font-headline text-2xl text-primary mb-4 text-center">Professionals</h3>
-                 {renderCategoryAccordion(professionalCategories)}
-                 <Separator className="my-6" />
+                {renderCategoryAccordion(professionalCategories, 'professionals')}
+                
+                <Separator className="my-6" />
                 <h3 className="font-headline text-2xl text-primary mb-4 text-center">Organizations</h3>
-                 {renderCategoryAccordion(organizationsCategories)}
+                 {renderCategoryAccordion(organizationsCategories, 'organizations')}
               </CardContent>
             </Card>
           </section>

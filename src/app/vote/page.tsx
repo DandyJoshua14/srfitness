@@ -80,27 +80,18 @@ export default function VotePage() {
         router.push(`/checkout?${query}`);
     };
 
-    const professionalCategoryTitles = professionalCategories.map(c => c.title);
-    const organizationsCategoryTitles = organizationsCategories.map(c => c.title);
-
     const filteredContestants = useMemo(() => {
         if (selectedCategory === "All Categories") {
             return contestants;
         }
-        if (selectedCategory === "Professionals") {
-            return contestants.filter(c => professionalCategoryTitles.includes(c.category));
-        }
-        if (selectedCategory === "Organizations") {
-            return contestants.filter(c => organizationsCategoryTitles.includes(c.category));
-        }
         return contestants.filter(c => c.category === selectedCategory);
-    }, [selectedCategory, professionalCategoryTitles, organizationsCategoryTitles]);
+    }, [selectedCategory]);
 
     const filterButtons = [
         { title: "All Categories" },
         ...generalCategories,
-        { title: "Professionals" },
-        { title: "Organizations" },
+        ...professionalCategories,
+        ...organizationsCategories,
     ];
 
     return (

@@ -2,9 +2,10 @@
 "use client";
 
 import React, { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Copy } from 'lucide-react';
+import { Copy, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ContestantCard, { Contestant } from '@/components/features/vote/contestant-card';
 import { cn } from '@/lib/utils';
@@ -39,6 +40,7 @@ const contestants: Contestant[] = [
 
 export default function VotePage() {
     const { toast } = useToast();
+    const router = useRouter();
     const [selectedContestant, setSelectedContestant] = useState<Contestant | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
 
@@ -52,6 +54,20 @@ export default function VotePage() {
             title: `${label} Copied!`,
             description: `${text} has been copied to your clipboard.`,
         });
+    };
+
+    const handleProceedToVote = () => {
+        if (!selectedContestant) {
+            toast({
+                title: "No Contestant Selected",
+                description: "Please select a contestant before proceeding.",
+                variant: "destructive"
+            });
+            return;
+        }
+        const { id, name, category } = selectedContestant;
+        const query = new URLSearchParams({ id, name, category }).toString();
+        router.push(`/checkout?${query}`);
     };
 
     const filteredContestants = useMemo(() => {
@@ -81,7 +97,7 @@ export default function VotePage() {
                         <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
                             <CardHeader>
                                 <CardTitle className="font-headline text-4xl text-amber-400">Vote for a Contestant</CardTitle>
-                                <CardDescription className="text-zinc-400">Select a category, then choose a contestant below.</CardDescription>
+                                <CardDescription className="text-zinc-400">1. Select a category, then choose a contestant below.</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <div className="mb-6">
@@ -124,47 +140,34 @@ export default function VotePage() {
                         <div className="space-y-8 sticky top-24">
                              <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
                                 <CardHeader>
-                                    <CardTitle className="font-headline text-4xl text-amber-400">How to Vote</CardTitle>
-                                     <div className="text-center py-2">
-                                        <p className="font-headline text-5xl text-amber-400">N100</p>
-                                        <p className="text-lg text-zinc-300">PER VOTE</p>
-                                    </div>
+                                    <CardTitle className="font-headline text-4xl text-amber-400">2. Complete Your Vote</CardTitle>
+                                     <CardDescription className="text-zinc-400">
+                                        After selecting a contestant, click the button below to proceed.
+                                     </CardDescription>
                                 </CardHeader>
-                                <CardContent className="space-y-6">
-                                    <div className="space-y-4 text-center">
-                                        <div>
-                                            <div className="font-bold text-amber-400 text-lg font-headline tracking-wider">STEP 1: PAY</div>
-                                            <p className="text-zinc-300">Pay or transfer to the account below:</p>
-                                            <div className="bg-zinc-800 p-3 rounded-lg mt-2 flex items-center justify-between">
-                                                <div className="text-left">
-                                                    <p className="font-mono text-xl">{accountNumber}</p>
-                                                    <p className="text-sm text-zinc-400">SR FITNESS - {bankName}</p>
-                                                </div>
-                                                <Button variant="ghost" size="icon" onClick={() => copyToClipboard(accountNumber, 'Account Number')}>
-                                                    <Copy className="h-5 w-5 text-amber-400" />
-                                                </Button>
-                                            </div>
+                                <CardContent>
+                                    {selectedContestant ? (
+                                        <div className="bg-zinc-800/70 p-4 rounded-lg text-center">
+                                            <p className="text-zinc-300 mb-1">You have selected:</p>
+                                            <p className="font-bold text-amber-300 text-xl">{selectedContestant.name}</p>
+                                            <p className="text-xs text-zinc-400">{selectedContestant.category}</p>
                                         </div>
-                                        <div>
-                                            <div className="font-bold text-amber-400 text-lg font-headline tracking-wider">STEP 2: CONFIRM</div>
-                                            <p className="text-zinc-300">Send SMS with your name, amount, and contestant's name to:</p>
-                                             <div className="bg-zinc-800 p-3 rounded-lg mt-2 flex items-center justify-between">
-                                                <p className="font-mono text-xl">{smsNumber}</p>
-                                                <Button variant="ghost" size="icon" onClick={() => copyToClipboard(smsNumber, 'Phone Number')}>
-                                                    <Copy className="h-5 w-5 text-amber-400" />
-                                                </Button>
-                                            </div>
-                                             {selectedContestant && (
-                                                <p className="text-xs text-amber-300 mt-2 p-2 bg-amber-500/10 rounded-md">
-                                                    Example SMS: <br /> <span className="font-medium">John Doe, N500, {selectedContestant.name}</span>
-                                                </p>
-                                             )}
+                                    ) : (
+                                        <div className="bg-zinc-800/50 p-4 rounded-lg text-center h-24 flex items-center justify-center">
+                                            <p className="text-zinc-400">Please select a contestant to vote for.</p>
                                         </div>
-                                        <div>
-                                            <div className="font-bold text-amber-400 text-lg font-headline tracking-wider">STEP 3: DONE</div>
-                                            <p className="text-zinc-300">You will receive a confirmatory text. You can vote as many times as possible.</p>
-                                        </div>
-                                    </div>
+                                    )}
+                                     <Button
+                                        size="lg"
+                                        className="w-full mt-6 bg-amber-500 text-black font-bold text-lg hover:bg-amber-400 disabled:bg-zinc-600 disabled:text-zinc-400 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105"
+                                        onClick={handleProceedToVote}
+                                        disabled={!selectedContestant}
+                                    >
+                                        Proceed to Vote <ArrowRight className="ml-2 h-5 w-5" />
+                                    </Button>
+                                    <p className="text-xs text-zinc-500 mt-4 text-center">
+                                        You will be taken to a final confirmation page with payment details.
+                                    </p>
                                 </CardContent>
                             </Card>
                         </div>

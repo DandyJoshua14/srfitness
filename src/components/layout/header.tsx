@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, Wrench, ShieldAlert, Lightbulb, Award, CalendarDays, Users, Briefcase, ShoppingCart, Vote } from 'lucide-react';
+import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, Wrench, ShieldAlert, Lightbulb, Award, CalendarDays, Users, Briefcase, ShoppingCart, Vote, CreditCard } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -46,6 +46,7 @@ const productsDropdownItems = [
 const blogNavItem = { label: 'Blog', href: '/community' };
 const voteNavItem = { label: 'Vote', href: '/vote' };
 const contactNavItem = { label: 'Contact', href: '#contact' };
+const checkoutNavItem = { label: 'Checkout', href: '/checkout' };
 
 
 export default function Header() {
@@ -165,6 +166,7 @@ export default function Header() {
     { label: 'Products', href: '#category-toggle-products', isCategory: true, subItems: productsDropdownItems, icon: <ShoppingCart /> },
     { ...blogNavItem, icon: <CommunityIcon /> },
     { ...voteNavItem, icon: <Vote />},
+    {...checkoutNavItem, icon: <CreditCard />},
     contactNavItem,
   ];
   

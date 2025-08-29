@@ -3,25 +3,24 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-  
-    // For this prototype, allow public read access but restrict writes.
-    // In a production app, you would have more granular rules.
-    // For example, only authenticated users can write to certain collections,
-    // and only admins can write to the 'blogPosts' collection.
-    
+
+    // Allow public read and write access for now.
+    // In a production app, you would restrict writes to authenticated admins.
     match /blogPosts/{postId} {
-      allow read: if true;
-      allow write: if false; // Lock down writes for now. Change to `if request.auth != null;` for logged-in users.
+      allow read, write: if true;
     }
 
     match /products/{productId} {
-      allow read: if true;
-      allow write: if false; 
+      allow read, write: if true;
+    }
+    
+    match /magazineArticles/{articleId} {
+      allow read, write: if true;
     }
 
-    match /magazineArticles/{articleId} {
-      allow read: if true;
-      allow write: if false;
+    // Default deny all other access.
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

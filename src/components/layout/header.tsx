@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, Wrench, ShieldAlert, Lightbulb, Award, CalendarDays, Users, Briefcase, ShoppingCart } from 'lucide-react';
+import { ChevronDown, Dumbbell, Sparkles, Newspaper, Mic, Menu, X, NotebookText, ScanLine, Globe, Users as CommunityIcon, Wrench, ShieldAlert, Lightbulb, Award, CalendarDays, Users, Briefcase, ShoppingCart, Vote } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,6 +44,7 @@ const productsDropdownItems = [
 ];
 
 const blogNavItem = { label: 'Blog', href: '/community' };
+const voteNavItem = { label: 'Vote', href: '/vote' };
 const contactNavItem = { label: 'Contact', href: '#contact' };
 
 
@@ -163,6 +164,7 @@ export default function Header() {
     { label: 'Events', href: '#category-toggle-events', isCategory: true, subItems: eventsDropdownItems, icon: <CalendarDays /> },
     { label: 'Products', href: '#category-toggle-products', isCategory: true, subItems: productsDropdownItems, icon: <ShoppingCart /> },
     { ...blogNavItem, icon: <CommunityIcon /> },
+    { ...voteNavItem, icon: <Vote />},
     contactNavItem,
   ];
   
@@ -266,6 +268,9 @@ export default function Header() {
               </DropdownMenu>
               <Link href={blogNavItem.href} onClick={() => handleLinkClick(blogNavItem.href)} className={navLinkClasses(isLinkActive(blogNavItem.href))}>
                   {blogNavItem.label}
+              </Link>
+              <Link href={voteNavItem.href} onClick={() => handleLinkClick(voteNavItem.href)} className={navLinkClasses(isLinkActive(voteNavItem.href))}>
+                {voteNavItem.label}
               </Link>
               <Link href={contactNavItem.href} onClick={() => handleLinkClick(contactNavItem.href, contactNavItem.href.startsWith('/#') || contactNavItem.href.startsWith('#'))} className={navLinkClasses(isLinkActive(contactNavItem.href))}>
                 {contactNavItem.label}

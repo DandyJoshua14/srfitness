@@ -1,16 +1,16 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Copy } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ContestantCard, { Contestant } from '@/components/features/vote/contestant-card';
+import { cn } from '@/lib/utils';
 
 const awardCategories = [
+    { title: "All Categories" },
     { title: "Community Fitness Hero of the Year" },
     { title: "Fitness Trainer/Coach of the Year" },
     { title: "Inspirational Weight-Loss Journey" },
@@ -40,6 +40,7 @@ const contestants: Contestant[] = [
 export default function VotePage() {
     const { toast } = useToast();
     const [selectedContestant, setSelectedContestant] = useState<Contestant | null>(null);
+    const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
 
     const accountNumber = "1228863712";
     const bankName = "Zenith Bank";
@@ -52,6 +53,13 @@ export default function VotePage() {
             description: `${text} has been copied to your clipboard.`,
         });
     };
+
+    const filteredContestants = useMemo(() => {
+        if (selectedCategory === "All Categories") {
+            return contestants;
+        }
+        return contestants.filter(c => c.category === selectedCategory);
+    }, [selectedCategory]);
 
     return (
         <div className="bg-black text-white min-h-screen" style={{
@@ -73,18 +81,42 @@ export default function VotePage() {
                         <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
                             <CardHeader>
                                 <CardTitle className="font-headline text-4xl text-amber-400">Vote for a Contestant</CardTitle>
-                                <CardDescription className="text-zinc-400">Select a contestant below to see voting instructions.</CardDescription>
+                                <CardDescription className="text-zinc-400">Select a category, then choose a contestant below.</CardDescription>
                             </CardHeader>
                             <CardContent>
+                                <div className="mb-6">
+                                    <p className="font-semibold text-zinc-300 mb-3">Filter by Category:</p>
+                                    <div className="flex flex-wrap gap-2">
+                                        {awardCategories.map(cat => (
+                                            <Button
+                                                key={cat.title}
+                                                variant="outline"
+                                                onClick={() => setSelectedCategory(cat.title)}
+                                                className={cn(
+                                                    "border-amber-400/30 text-amber-300 hover:bg-amber-400/10 hover:text-amber-200",
+                                                    selectedCategory === cat.title && "bg-amber-400/20 ring-2 ring-amber-400 text-amber-200"
+                                                )}
+                                            >
+                                                {cat.title}
+                                            </Button>
+                                        ))}
+                                    </div>
+                                </div>
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                    {contestants.map(c => (
-                                        <ContestantCard 
-                                            key={c.id} 
-                                            contestant={c}
-                                            isSelected={selectedContestant?.id === c.id}
-                                            onSelect={() => setSelectedContestant(c)}
-                                        />
-                                    ))}
+                                    {filteredContestants.length > 0 ? (
+                                        filteredContestants.map(c => (
+                                            <ContestantCard 
+                                                key={c.id} 
+                                                contestant={c}
+                                                isSelected={selectedContestant?.id === c.id}
+                                                onSelect={() => setSelectedContestant(c)}
+                                            />
+                                        ))
+                                    ) : (
+                                        <div className="col-span-full text-center py-8">
+                                            <p className="text-zinc-400">No contestants found for this category.</p>
+                                        </div>
+                                    )}
                                 </div>
                             </CardContent>
                         </Card>

@@ -3,6 +3,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Copy, ArrowRight } from 'lucide-react';
@@ -92,6 +93,18 @@ export default function VotePage() {
                             IDENTIFY, RECOGNIZE & CELEBRATE FITNESS INDUSTRY EXCELLENCE
                         </p>
                     </header>
+
+                    <div className="mb-12 md:mb-16 flex justify-center">
+                        <Image
+                            src="/vote-guide.png"
+                            alt="SR Fitness Awards Voting Guide with pricing"
+                            width={800}
+                            height={800}
+                            className="rounded-lg shadow-2xl shadow-amber-500/20 max-w-full sm:max-w-lg md:max-w-xl"
+                            data-ai-hint="voting guide"
+                            priority
+                        />
+                    </div>
 
                     <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-start">
                         <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">

@@ -6,10 +6,11 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Copy, ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ContestantCard, { Contestant } from '@/components/features/vote/contestant-card';
 import { cn } from '@/lib/utils';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 const generalCategories = [
     { title: "Community Fitness Hero of the Year" },
@@ -58,14 +59,6 @@ export default function VotePage() {
     const [selectedContestant, setSelectedContestant] = useState<Contestant | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
 
-    const copyToClipboard = (text: string, label: string) => {
-        navigator.clipboard.writeText(text);
-        toast({
-            title: `${label} Copied!`,
-            description: `${text} has been copied to your clipboard.`,
-        });
-    };
-
     const handleProceedToVote = () => {
         if (!selectedContestant) {
             toast({
@@ -87,12 +80,36 @@ export default function VotePage() {
         return contestants.filter(c => c.category === selectedCategory);
     }, [selectedCategory]);
 
-    const filterButtons = [
-        { title: "All Categories" },
-        ...generalCategories,
-        ...professionalCategories,
-        ...organizationsCategories,
-    ];
+    const isCategoryActive = (mainCategory: string, subCategories: {title: string}[]) => {
+        if (selectedCategory === mainCategory) return true;
+        return subCategories.some(sub => sub.title === selectedCategory);
+    };
+
+    const renderDropdown = (mainTitle: string, subItems: {title: string}[]) => {
+        const isActive = isCategoryActive(mainTitle, subItems);
+        return (
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button
+                        variant="outline"
+                        className={cn(
+                            "border-amber-400/30 text-amber-300 hover:bg-amber-400/10 hover:text-amber-200",
+                            isActive && "bg-amber-400/20 ring-2 ring-amber-400 text-amber-200"
+                        )}
+                    >
+                        {mainTitle} <ChevronDown className="ml-2 h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-zinc-900 border-amber-400/30 text-amber-300">
+                    {subItems.map(item => (
+                         <DropdownMenuItem key={item.title} onSelect={() => setSelectedCategory(item.title)} className="cursor-pointer hover:!bg-amber-400/20 focus:!bg-amber-400/20">
+                            {item.title}
+                        </DropdownMenuItem>
+                    ))}
+                </DropdownMenuContent>
+            </DropdownMenu>
+        );
+    };
 
     return (
         <div className="bg-black text-white min-h-screen" style={{
@@ -132,19 +149,19 @@ export default function VotePage() {
                                 <div className="mb-6">
                                     <p className="font-semibold text-zinc-300 mb-3">Filter by Category:</p>
                                     <div className="flex flex-wrap gap-2">
-                                        {filterButtons.map(cat => (
-                                            <Button
-                                                key={cat.title}
-                                                variant="outline"
-                                                onClick={() => setSelectedCategory(cat.title)}
-                                                className={cn(
-                                                    "border-amber-400/30 text-amber-300 hover:bg-amber-400/10 hover:text-amber-200",
-                                                    selectedCategory === cat.title && "bg-amber-400/20 ring-2 ring-amber-400 text-amber-200"
-                                                )}
-                                            >
-                                                {cat.title}
-                                            </Button>
-                                        ))}
+                                        <Button
+                                            variant="outline"
+                                            onClick={() => setSelectedCategory("All Categories")}
+                                            className={cn(
+                                                "border-amber-400/30 text-amber-300 hover:bg-amber-400/10 hover:text-amber-200",
+                                                selectedCategory === "All Categories" && "bg-amber-400/20 ring-2 ring-amber-400 text-amber-200"
+                                            )}
+                                        >
+                                            All Categories
+                                        </Button>
+                                        {renderDropdown("General", generalCategories)}
+                                        {renderDropdown("Professionals", professionalCategories)}
+                                        {renderDropdown("Organizations", organizationsCategories)}
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">

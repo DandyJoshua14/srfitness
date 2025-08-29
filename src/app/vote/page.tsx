@@ -10,14 +10,31 @@ import { Copy } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ContestantCard, { Contestant } from '@/components/features/vote/contestant-card';
 
+const awardCategories = [
+    { title: "Community Fitness Hero of the Year" },
+    { title: "Fitness Trainer/Coach of the Year" },
+    { title: "Inspirational Weight-Loss Journey" },
+    { title: "Corporate Wellness Champion" },
+    { title: "Foundation Fitness Award" },
+    { title: "Mental Health & Wellness Advocate" },
+    { title: "Care-Givers Advocate" },
+    { title: "Health Care Treatment Advocate" },
+    { title: "Pharmaceutical Service Champion" },
+    { title: "Physiotherapist of the Year" },
+    { title: "Life Champion Award - Overcomers series" },
+    { title: "Foundation Fitness Hero Award" },
+    { title: "Educators Recognition series" },
+    { title: "Fitness Event Of The Year" },
+    { title: "Corperate Social Responsibility Champion" },
+];
+
 const contestants: Contestant[] = [
-    // Placeholder data - this would come from Firestore in a real app
-    { id: '1', name: 'Alex Morgan', category: 'Fitness Trainer of the Year', image: 'https://placehold.co/400x500.png?text=Alex+M' },
-    { id: '2', name: 'Samantha Kerr', category: 'Fitness Trainer of the Year', image: 'https://placehold.co/400x500.png?text=Sam+K' },
-    { id: '3', name: 'Chris Bumstead', category: 'Fitness Trainer of the Year', image: 'https://placehold.co/400x500.png?text=Chris+B' },
+    { id: '1', name: 'Alex Morgan', category: 'Fitness Trainer/Coach of the Year', image: 'https://placehold.co/400x500.png?text=Alex+M' },
+    { id: '2', name: 'Samantha Kerr', category: 'Fitness Trainer/Coach of the Year', image: 'https://placehold.co/400x500.png?text=Sam+K' },
+    { id: '3', name: 'Chris Bumstead', category: 'Fitness Trainer/Coach of the Year', image: 'https://placehold.co/400x500.png?text=Chris+B' },
     { id: '4', name: 'Victoria U', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x500.png?text=Vicky+U' },
     { id: '5', name: 'Tracy S', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x500.png?text=Tracy+S' },
-    { id: '6', name: 'David L', category: 'Community Fitness Hero', image: 'https://placehold.co/400x500.png?text=David+L' },
+    { id: '6', name: 'David L', category: 'Community Fitness Hero of the Year', image: 'https://placehold.co/400x500.png?text=David+L' },
 ];
 
 export default function VotePage() {

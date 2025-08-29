@@ -9,6 +9,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import Autoplay from "embla-carousel-autoplay";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 
 export default function AwardsPage() {
@@ -201,9 +202,9 @@ export default function AwardsPage() {
                       <AccordionContent className="text-muted-foreground pl-2 pr-2 pb-4">
                         <div className="space-y-4">
                             <p>{category.description}</p>
-                            {category.title === "Fitness Trainer/Coach of the Year" && (
-                                <Button>Vote Now</Button>
-                            )}
+                            <Button asChild>
+                                <Link href="/vote">Vote Now</Link>
+                            </Button>
                         </div>
                       </AccordionContent>
                     </AccordionItem>

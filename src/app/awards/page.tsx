@@ -29,7 +29,6 @@ export default function AwardsPage() {
     { title: "Community Fitness Hero of the Year", qualifier: "Male & Female", description: "Recognizing individuals who have inspired and motivated others within the fitness community through their dedication and positive influence." },
     { title: "Fitness Trainer/Coach of the Year", qualifier: "", description: "Honoring the trainer who has demonstrated exceptional skill, knowledge, and commitment to their clients' success and well-being." },
     { title: "Inspirational Weight-Loss Journey", qualifier: "Male & Female", description: "Celebrating individuals who have achieved remarkable weight-loss transformations through perseverance, dedication, and a healthy lifestyle." },
-    { title: "Corporate Wellness Champion", qualifier: "", description: "Awarded to a company or brand that supports and promotes a culture of health and wellness in the workplace and in the community." },
     { title: "Foundation Fitness Award", qualifier: "Schools", description: "Recognizing a school that has shown outstanding commitment to promoting physical education and healthy habits among its students." },
     { title: "Mental Health & Wellness Advocate", qualifier: "", description: "Honoring an individual who has championed the importance of mental well-being as an important component of overall fitness." },
     { title: "Life Champion Award - Overcomers series", qualifier: "", description: "A special recognition for individuals who have overcome significant personal challenges and used fitness as a tool for recovery and empowerment." },
@@ -37,7 +36,6 @@ export default function AwardsPage() {
     { title: "Educators Recognition series", qualifier: "", description: "A tribute to our unsung fitness heroes, educators who go above and beyond to promote wellness through positive learning, and motivating the students to stay active and engage in physical activity." },
     { title: "Fitness Event Of The Year", qualifier: "Coaches", description: "Awarded to the coach or team of coaches who organized and executed the most impactful and engaging fitness event of the year." },
     { title: "Fitness Event Of The Year", qualifier: "Clubs", description: "Recognizing the single best fitness event that brought the community together, promoted health, and created a memorable experience for all." },
-    { title: "Corperate Social Responsibility Champion", qualifier: "Organizations", description: "Awarded to major brands and organisations that support, promote and inspire through the power of fitness." },
   ];
 
   const professionalCategories = [
@@ -47,6 +45,34 @@ export default function AwardsPage() {
       { title: "Pharmaceutical Service Champion", qualifier: "Pharmacy", description: "Awarded to a pharmacy for outstanding service and contribution to community health." },
       { title: "Physiotherapist of the Year", qualifier: "Physiotherapist", description: "Recognizing a physiotherapist for their exceptional contribution to patient rehabilitation and well-being." },
   ];
+
+  const organizationsCategories = [
+    { title: "Corporate Wellness Champion", qualifier: "", description: "Awarded to a company or brand that supports and promotes a culture of health and wellness in the workplace and in the community." },
+    { title: "Corporate Social Responsibility Champion", qualifier: "Organizations", description: "Awarded to major brands and organisations that support, promote and inspire through the power of fitness." },
+  ];
+
+  const renderCategoryAccordion = (categories: any[]) => (
+    <Accordion type="single" collapsible className="w-full">
+      {categories.map((category, index) => (
+        <AccordionItem value={`item-${index}`} key={index} className="border-b-0">
+          <AccordionTrigger className="font-headline text-lg text-left hover:text-primary hover:no-underline">
+            <div className="flex flex-col items-start text-left">
+                <span>{category.title}</span>
+                {category.qualifier && <span className="text-sm text-muted-foreground font-body font-normal mt-1">({category.qualifier})</span>}
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="text-muted-foreground pl-2 pr-2 pb-4">
+            <div className="space-y-4">
+                <p>{category.description}</p>
+                <Button asChild>
+                    <Link href="/vote">Vote Now</Link>
+                </Button>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      ))}
+    </Accordion>
+  );
 
   return (
     <div className="bg-background text-foreground">
@@ -125,48 +151,13 @@ export default function AwardsPage() {
             <Card className="max-w-3xl mx-auto bg-card border-border shadow-xl">
               <CardContent className="p-6">
                  <h3 className="font-headline text-2xl text-primary mb-4 text-center">General Awards</h3>
-                <Accordion type="single" collapsible className="w-full">
-                  {generalCategories.map((category, index) => (
-                    <AccordionItem value={`item-${index}`} key={index} className="border-b-0">
-                      <AccordionTrigger className="font-headline text-lg text-left hover:text-primary hover:no-underline">
-                        <div className="flex flex-col items-start text-left">
-                            <span>{category.title}</span>
-                            {category.qualifier && <span className="text-sm text-muted-foreground font-body font-normal mt-1">({category.qualifier})</span>}
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent className="text-muted-foreground pl-2 pr-2 pb-4">
-                        <div className="space-y-4">
-                            <p>{category.description}</p>
-                            <Button asChild>
-                                <Link href="/vote">Vote Now</Link>
-                            </Button>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
+                 {renderCategoryAccordion(generalCategories)}
                 <Separator className="my-6" />
                 <h3 className="font-headline text-2xl text-primary mb-4 text-center">Professionals</h3>
-                 <Accordion type="single" collapsible className="w-full">
-                  {professionalCategories.map((category, index) => (
-                    <AccordionItem value={`prof-item-${index}`} key={index} className="border-b-0">
-                      <AccordionTrigger className="font-headline text-lg text-left hover:text-primary hover:no-underline">
-                        <div className="flex flex-col items-start text-left">
-                            <span>{category.title}</span>
-                            {category.qualifier && <span className="text-sm text-muted-foreground font-body font-normal mt-1">({category.qualifier})</span>}
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent className="text-muted-foreground pl-2 pr-2 pb-4">
-                        <div className="space-y-4">
-                            <p>{category.description}</p>
-                            <Button asChild>
-                                <Link href="/vote">Vote Now</Link>
-                            </Button>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
+                 {renderCategoryAccordion(professionalCategories)}
+                 <Separator className="my-6" />
+                <h3 className="font-headline text-2xl text-primary mb-4 text-center">Organizations</h3>
+                 {renderCategoryAccordion(organizationsCategories)}
               </CardContent>
             </Card>
           </section>

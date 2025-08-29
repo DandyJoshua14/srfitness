@@ -15,14 +15,12 @@ const generalCategories = [
     { title: "Community Fitness Hero of the Year" },
     { title: "Fitness Trainer/Coach of the Year" },
     { title: "Inspirational Weight-Loss Journey" },
-    { title: "Corporate Wellness Champion" },
     { title: "Foundation Fitness Award" },
     { title: "Mental Health & Wellness Advocate" },
     { title: "Life Champion Award - Overcomers series" },
     { title: "Foundation Fitness Hero Award" },
     { title: "Educators Recognition series" },
     { title: "Fitness Event Of The Year" },
-    { title: "Corperate Social Responsibility Champion" },
 ];
 
 const professionalCategories = [
@@ -30,6 +28,11 @@ const professionalCategories = [
       { title: "Health Care Treatment Advocate" }, // Doctors
       { title: "Pharmaceutical Service Champion" }, // Pharmacy / Pharmacist
       { title: "Physiotherapist of the Year" },
+];
+
+const organizationsCategories = [
+    { title: "Corporate Wellness Champion" },
+    { title: "Corporate Social Responsibility Champion" },
 ];
 
 const contestants: Contestant[] = [
@@ -44,6 +47,9 @@ const contestants: Contestant[] = [
     { id: '8', name: 'Dr. Mike', category: 'Health Care Treatment Advocate', image: 'https://placehold.co/400x500.png?text=Dr+M' },
     { id: '9', name: 'PharmaPlus', category: 'Pharmaceutical Service Champion', image: 'https://placehold.co/400x500.png?text=Rx+' },
     { id: '10', name: 'Sarah Lee, RPT', category: 'Physiotherapist of the Year', image: 'https://placehold.co/400x500.png?text=SL' },
+    // Organizations
+    { id: '11', name: 'Wellness Inc.', category: 'Corporate Wellness Champion', image: 'https://placehold.co/400x500.png?text=W+Inc' },
+    { id: '12', name: 'GoodWorks LLC', category: 'Corporate Social Responsibility Champion', image: 'https://placehold.co/400x500.png?text=GW+LLC' },
 ];
 
 export default function VotePage() {
@@ -75,6 +81,7 @@ export default function VotePage() {
     };
 
     const professionalCategoryTitles = professionalCategories.map(c => c.title);
+    const organizationsCategoryTitles = organizationsCategories.map(c => c.title);
 
     const filteredContestants = useMemo(() => {
         if (selectedCategory === "All Categories") {
@@ -83,13 +90,17 @@ export default function VotePage() {
         if (selectedCategory === "Professionals") {
             return contestants.filter(c => professionalCategoryTitles.includes(c.category));
         }
+        if (selectedCategory === "Organizations") {
+            return contestants.filter(c => organizationsCategoryTitles.includes(c.category));
+        }
         return contestants.filter(c => c.category === selectedCategory);
-    }, [selectedCategory, professionalCategoryTitles]);
+    }, [selectedCategory, professionalCategoryTitles, organizationsCategoryTitles]);
 
     const filterButtons = [
         { title: "All Categories" },
         ...generalCategories,
         { title: "Professionals" },
+        { title: "Organizations" },
     ];
 
     return (
@@ -110,7 +121,7 @@ export default function VotePage() {
 
                     <div className="mb-12 md:mb-16 flex justify-center">
                         <Image
-                            src="/vote.jpg"
+                            src="/vote-guide.png"
                             alt="SR Fitness Awards Voting Guide with pricing"
                             width={800}
                             height={800}

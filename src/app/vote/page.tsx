@@ -11,23 +11,25 @@ import { useToast } from '@/hooks/use-toast';
 import ContestantCard, { Contestant } from '@/components/features/vote/contestant-card';
 import { cn } from '@/lib/utils';
 
-const awardCategories = [
-    { title: "All Categories" },
+const generalCategories = [
     { title: "Community Fitness Hero of the Year" },
     { title: "Fitness Trainer/Coach of the Year" },
     { title: "Inspirational Weight-Loss Journey" },
     { title: "Corporate Wellness Champion" },
     { title: "Foundation Fitness Award" },
     { title: "Mental Health & Wellness Advocate" },
-    { title: "Care-Givers Advocate" },
-    { title: "Health Care Treatment Advocate" },
-    { title: "Pharmaceutical Service Champion" },
-    { title: "Physiotherapist of the Year" },
     { title: "Life Champion Award - Overcomers series" },
     { title: "Foundation Fitness Hero Award" },
     { title: "Educators Recognition series" },
     { title: "Fitness Event Of The Year" },
     { title: "Corperate Social Responsibility Champion" },
+];
+
+const professionalCategories = [
+      { title: "Care-Givers Advocate" }, // Nurses
+      { title: "Health Care Treatment Advocate" }, // Doctors
+      { title: "Pharmaceutical Service Champion" }, // Pharmacy / Pharmacist
+      { title: "Physiotherapist of the Year" },
 ];
 
 const contestants: Contestant[] = [
@@ -37,6 +39,11 @@ const contestants: Contestant[] = [
     { id: '4', name: 'Victoria U', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x500.png?text=Vicky+U' },
     { id: '5', name: 'Tracy S', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x500.png?text=Tracy+S' },
     { id: '6', name: 'David L', category: 'Community Fitness Hero of the Year', image: 'https://placehold.co/400x500.png?text=David+L' },
+    // Professionals
+    { id: '7', name: 'Nurse Joy', category: 'Care-Givers Advocate', image: 'https://placehold.co/400x500.png?text=Nurse+J' },
+    { id: '8', name: 'Dr. Mike', category: 'Health Care Treatment Advocate', image: 'https://placehold.co/400x500.png?text=Dr+M' },
+    { id: '9', name: 'PharmaPlus', category: 'Pharmaceutical Service Champion', image: 'https://placehold.co/400x500.png?text=Rx+' },
+    { id: '10', name: 'Sarah Lee, RPT', category: 'Physiotherapist of the Year', image: 'https://placehold.co/400x500.png?text=SL' },
 ];
 
 export default function VotePage() {
@@ -44,10 +51,6 @@ export default function VotePage() {
     const router = useRouter();
     const [selectedContestant, setSelectedContestant] = useState<Contestant | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
-
-    const accountNumber = "1228863712";
-    const bankName = "Zenith Bank";
-    const smsNumber = "07056717597";
 
     const copyToClipboard = (text: string, label: string) => {
         navigator.clipboard.writeText(text);
@@ -71,12 +74,23 @@ export default function VotePage() {
         router.push(`/checkout?${query}`);
     };
 
+    const professionalCategoryTitles = professionalCategories.map(c => c.title);
+
     const filteredContestants = useMemo(() => {
         if (selectedCategory === "All Categories") {
             return contestants;
         }
+        if (selectedCategory === "Professionals") {
+            return contestants.filter(c => professionalCategoryTitles.includes(c.category));
+        }
         return contestants.filter(c => c.category === selectedCategory);
-    }, [selectedCategory]);
+    }, [selectedCategory, professionalCategoryTitles]);
+
+    const filterButtons = [
+        { title: "All Categories" },
+        ...generalCategories,
+        { title: "Professionals" },
+    ];
 
     return (
         <div className="bg-black text-white min-h-screen" style={{
@@ -96,7 +110,7 @@ export default function VotePage() {
 
                     <div className="mb-12 md:mb-16 flex justify-center">
                         <Image
-                            src="/vote-guide.png"
+                            src="/vote.jpg"
                             alt="SR Fitness Awards Voting Guide with pricing"
                             width={800}
                             height={800}
@@ -116,7 +130,7 @@ export default function VotePage() {
                                 <div className="mb-6">
                                     <p className="font-semibold text-zinc-300 mb-3">Filter by Category:</p>
                                     <div className="flex flex-wrap gap-2">
-                                        {awardCategories.map(cat => (
+                                        {filterButtons.map(cat => (
                                             <Button
                                                 key={cat.title}
                                                 variant="outline"

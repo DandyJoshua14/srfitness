@@ -15,6 +15,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 const generalCategories = [
     { title: "Community Fitness Hero of the Year" },
     { title: "Fitness Trainer/Coach of the Year" },
+    { title: "Fitness Club Coach of the Year" },
     { title: "Inspirational Weight-Loss Journey" },
     { title: "Foundation Fitness Award" },
     { title: "Mental Health & Wellness Advocate" },
@@ -34,6 +35,7 @@ const professionalCategories = [
 const organizationsCategories = [
     { title: "Corporate Wellness Champion" },
     { title: "Corporate Social Responsibility Champion" },
+    { title: "Gym of the Year" },
 ];
 
 const contestants: Contestant[] = [
@@ -51,6 +53,12 @@ const contestants: Contestant[] = [
     // Organizations
     { id: '11', name: 'Wellness Inc.', category: 'Corporate Wellness Champion', image: 'https://placehold.co/400x500.png?text=W+Inc' },
     { id: '12', name: 'GoodWorks LLC', category: 'Corporate Social Responsibility Champion', image: 'https://placehold.co/400x500.png?text=GW+LLC' },
+    // New contestants
+    { id: '13', name: 'Coach Tunde', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x500.png?text=CT' },
+    { id: '14', name: 'Coach Aisha', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x500.png?text=CA' },
+    { id: '15', name: "Victor's Fitness", category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=VF' },
+    { id: '16', name: "Romaan Fitness", category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=RF' },
+    { id: '17', name: "Hogis Fitness", category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=HF' },
 ];
 
 export default function VotePage() {

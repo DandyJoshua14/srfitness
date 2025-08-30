@@ -28,6 +28,7 @@ export default function AwardsPage() {
   const generalCategories = [
     { title: "Community Fitness Hero of the Year", qualifier: "Male & Female", description: "Recognizing individuals who have inspired and motivated others within the fitness community through their dedication and positive influence." },
     { title: "Fitness Trainer/Coach of the Year", qualifier: "", description: "Honoring the trainer who has demonstrated exceptional skill, knowledge, and commitment to their clients' success and well-being." },
+    { title: "Fitness Club Coach of the Year", qualifier: "", description: "Awarded to the coach who has shown outstanding leadership and delivered exceptional results within a fitness club setting." },
     { title: "Inspirational Weight-Loss Journey", qualifier: "Male & Female", description: "Celebrating individuals who have achieved remarkable weight-loss transformations through perseverance, dedication, and a healthy lifestyle." },
     { title: "Foundation Fitness Award", qualifier: "Schools", description: "Recognizing a school that has shown outstanding commitment to promoting physical education and healthy habits among its students." },
     { title: "Mental Health & Wellness Advocate", qualifier: "", description: "Honoring an individual who has championed the importance of mental well-being as an important component of overall fitness." },
@@ -49,6 +50,7 @@ export default function AwardsPage() {
   const organizationsCategories = [
     { title: "Corporate Wellness Champion", qualifier: "", description: "Awarded to a company or brand that supports and promotes a culture of health and wellness in the workplace and in the community." },
     { title: "Corporate Social Responsibility Champion", qualifier: "Organizations", description: "Awarded to major brands and organisations that support, promote and inspire through the power of fitness." },
+    { title: "Gym of the Year", qualifier: "", description: "Recognizing the gym that has provided outstanding facilities, services, and community support throughout the year." },
   ];
 
   const renderCategoryAccordion = (categories: any[], accordionId: string) => (

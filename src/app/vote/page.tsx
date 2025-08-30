@@ -1,14 +1,14 @@
 
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowRight, ChevronDown, Award as AwardIcon } from 'lucide-react';
+import { ArrowRight, ChevronDown, Award as AwardIcon, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ContestantCard, { Contestant } from '@/components/features/vote/contestant-card';
 import { cn } from '@/lib/utils';
@@ -18,6 +18,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { sendNominationEmail } from '@/app/actions';
 
 const generalCategories = [
     { title: "Community Fitness Hero of the Year" },
@@ -88,6 +89,7 @@ const nominationFormSchema = z.object({
 export default function VotePage() {
     const { toast } = useToast();
     const router = useRouter();
+    const [isPending, startTransition] = useTransition();
     const [selectedContestant, setSelectedContestant] = useState<Contestant | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
 
@@ -104,12 +106,22 @@ export default function VotePage() {
     });
 
     const handleNominationSubmit = (values: z.infer<typeof nominationFormSchema>) => {
-        console.log("Nomination Submitted:", values);
-        toast({
-            title: "Nomination Submitted!",
-            description: "Thank you for nominating. We will review your submission.",
+        startTransition(async () => {
+            const result = await sendNominationEmail(values);
+            if (result.success) {
+                toast({
+                    title: "Nomination Submitted!",
+                    description: "Thank you for nominating. We will review your submission.",
+                });
+                form.reset();
+            } else {
+                toast({
+                    title: "Submission Failed",
+                    description: result.error,
+                    variant: "destructive"
+                });
+            }
         });
-        form.reset();
     };
 
     const handleProceedToVote = () => {
@@ -382,7 +394,10 @@ export default function VotePage() {
                                                     />
                                                  </div>
                                             </div>
-                                            <Button type="submit" size="lg" className="w-full md:w-auto bg-amber-500 text-black font-bold hover:bg-amber-400">Submit Nomination</Button>
+                                            <Button type="submit" size="lg" className="w-full md:w-auto bg-amber-500 text-black font-bold hover:bg-amber-400 disabled:opacity-75" disabled={isPending}>
+                                                {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                                                {isPending ? 'Submitting...' : 'Submit Nomination'}
+                                            </Button>
                                         </form>
                                     </Form>
                                 </CardContent>

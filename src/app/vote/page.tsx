@@ -59,6 +59,7 @@ const contestants: Contestant[] = [
     { id: '15', name: "Victor's Fitness", category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=VF' },
     { id: '16', name: "Romaan Fitness", category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=RF' },
     { id: '17', name: "Hogis Fitness", category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=HF' },
+    { id: '18', name: '1480 AZ GYM (NAVY GYM)', category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=AZG' },
 ];
 
 export default function VotePage() {

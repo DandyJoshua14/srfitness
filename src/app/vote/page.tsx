@@ -6,11 +6,18 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, ChevronDown } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { ArrowRight, ChevronDown, Award as AwardIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ContestantCard, { Contestant } from '@/components/features/vote/contestant-card';
 import { cn } from '@/lib/utils';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
 const generalCategories = [
     { title: "Community Fitness Hero of the Year" },
@@ -38,6 +45,12 @@ const organizationsCategories = [
     { title: "Gym of the Year" },
 ];
 
+const allAwardCategories = [
+    ...generalCategories,
+    ...professionalCategories,
+    ...organizationsCategories
+].map(c => c.title);
+
 const contestants: Contestant[] = [
     { id: '1', name: 'Alex Morgan', category: 'Fitness Trainer/Coach of the Year', image: 'https://placehold.co/400x500.png?text=Alex+M' },
     { id: '2', name: 'Samantha Kerr', category: 'Fitness Trainer/Coach of the Year', image: 'https://placehold.co/400x500.png?text=Sam+K' },
@@ -62,11 +75,42 @@ const contestants: Contestant[] = [
     { id: '18', name: '1480 AZ GYM (NAVY GYM)', category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=AZG' },
 ];
 
+const nominationFormSchema = z.object({
+  category: z.string().min(1, "Please select an award category."),
+  nomineeName: z.string().min(2, "Nominee name must be at least 2 characters."),
+  nomineePhone: z.string().min(10, "Please enter a valid phone number."),
+  nominationReason: z.string().min(10, "Please provide a reason for the nomination."),
+  nominatorName: z.string().min(2, "Please enter your name."),
+  nominatorPhone: z.string().min(10, "Please enter your phone number."),
+});
+
+
 export default function VotePage() {
     const { toast } = useToast();
     const router = useRouter();
     const [selectedContestant, setSelectedContestant] = useState<Contestant | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
+
+    const form = useForm<z.infer<typeof nominationFormSchema>>({
+        resolver: zodResolver(nominationFormSchema),
+        defaultValues: {
+            category: "",
+            nomineeName: "",
+            nomineePhone: "",
+            nominationReason: "",
+            nominatorName: "",
+            nominatorPhone: "",
+        },
+    });
+
+    const handleNominationSubmit = (values: z.infer<typeof nominationFormSchema>) => {
+        console.log("Nomination Submitted:", values);
+        toast({
+            title: "Nomination Submitted!",
+            description: "Thank you for nominating. We will review your submission.",
+        });
+        form.reset();
+    };
 
     const handleProceedToVote = () => {
         if (!selectedContestant) {
@@ -138,7 +182,7 @@ export default function VotePage() {
 
                     <div className="mb-12 md:mb-16 flex justify-center">
                         <Image
-                            src="/vote-guide.png"
+                            src="/vote.jpg"
                             alt="SR Fitness Awards Voting Guide with pricing"
                             width={800}
                             height={800}
@@ -147,86 +191,204 @@ export default function VotePage() {
                             priority
                         />
                     </div>
-
-                    <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-start">
-                        <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
-                            <CardHeader>
-                                <CardTitle className="font-headline text-4xl text-amber-400">Vote for a Contestant</CardTitle>
-                                <CardDescription className="text-zinc-400">1. Select a category, then choose a contestant below.</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="mb-6">
-                                    <p className="font-semibold text-zinc-300 mb-3">Filter by Category:</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        <Button
-                                            variant="outline"
-                                            onClick={() => setSelectedCategory("All Categories")}
-                                            className={cn(
-                                                "border-amber-400/30 text-amber-300 hover:bg-amber-400/10 hover:text-amber-200",
-                                                selectedCategory === "All Categories" && "bg-amber-400/20 ring-2 ring-amber-400 text-amber-200"
-                                            )}
-                                        >
-                                            All Categories
-                                        </Button>
-                                        {renderDropdown("General", generalCategories)}
-                                        {renderDropdown("Professionals", professionalCategories)}
-                                        {renderDropdown("Organizations", organizationsCategories)}
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                    {filteredContestants.length > 0 ? (
-                                        filteredContestants.map(c => (
-                                            <ContestantCard 
-                                                key={c.id} 
-                                                contestant={c}
-                                                isSelected={selectedContestant?.id === c.id}
-                                                onSelect={() => setSelectedContestant(c)}
-                                            />
-                                        ))
-                                    ) : (
-                                        <div className="col-span-full text-center py-8">
-                                            <p className="text-zinc-400">No contestants found for this category.</p>
+                    
+                    <main className="space-y-16">
+                        {/* --- Voting Section --- */}
+                        <section id="vote">
+                            <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-start">
+                                <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
+                                    <CardHeader>
+                                        <CardTitle className="font-headline text-4xl text-amber-400">Vote for a Contestant</CardTitle>
+                                        <CardDescription className="text-zinc-400">1. Select a category, then choose a contestant below.</CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="mb-6">
+                                            <p className="font-semibold text-zinc-300 mb-3">Filter by Category:</p>
+                                            <div className="flex flex-wrap gap-2">
+                                                <Button
+                                                    variant="outline"
+                                                    onClick={() => setSelectedCategory("All Categories")}
+                                                    className={cn(
+                                                        "border-amber-400/30 text-amber-300 hover:bg-amber-400/10 hover:text-amber-200",
+                                                        selectedCategory === "All Categories" && "bg-amber-400/20 ring-2 ring-amber-400 text-amber-200"
+                                                    )}
+                                                >
+                                                    All Categories
+                                                </Button>
+                                                {renderDropdown("General", generalCategories)}
+                                                {renderDropdown("Professionals", professionalCategories)}
+                                                {renderDropdown("Organizations", organizationsCategories)}
+                                            </div>
                                         </div>
-                                    )}
-                                </div>
-                            </CardContent>
-                        </Card>
+                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                            {filteredContestants.length > 0 ? (
+                                                filteredContestants.map(c => (
+                                                    <ContestantCard 
+                                                        key={c.id} 
+                                                        contestant={c}
+                                                        isSelected={selectedContestant?.id === c.id}
+                                                        onSelect={() => setSelectedContestant(c)}
+                                                    />
+                                                ))
+                                            ) : (
+                                                <div className="col-span-full text-center py-8">
+                                                    <p className="text-zinc-400">No contestants found for this category.</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </CardContent>
+                                </Card>
 
-                        <div className="space-y-8 sticky top-24">
+                                <div className="space-y-8 sticky top-24">
+                                    <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
+                                        <CardHeader>
+                                            <CardTitle className="font-headline text-4xl text-amber-400">2. Complete Your Vote</CardTitle>
+                                            <CardDescription className="text-zinc-400">
+                                                After selecting a contestant, click the button below to proceed.
+                                            </CardDescription>
+                                        </CardHeader>
+                                        <CardContent>
+                                            {selectedContestant ? (
+                                                <div className="bg-zinc-800/70 p-4 rounded-lg text-center">
+                                                    <p className="text-zinc-300 mb-1">You have selected:</p>
+                                                    <p className="font-bold text-amber-300 text-xl">{selectedContestant.name}</p>
+                                                    <p className="text-xs text-zinc-400">{selectedContestant.category}</p>
+                                                </div>
+                                            ) : (
+                                                <div className="bg-zinc-800/50 p-4 rounded-lg text-center h-24 flex items-center justify-center">
+                                                    <p className="text-zinc-400">Please select a contestant to vote for.</p>
+                                                </div>
+                                            )}
+                                            <Button
+                                                size="lg"
+                                                className="w-full mt-6 bg-amber-500 text-black font-bold text-lg hover:bg-amber-400 disabled:bg-zinc-600 disabled:text-zinc-400 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105"
+                                                onClick={handleProceedToVote}
+                                                disabled={!selectedContestant}
+                                            >
+                                                Proceed to Vote <ArrowRight className="ml-2 h-5 w-5" />
+                                            </Button>
+                                            <p className="text-xs text-zinc-500 mt-4 text-center">
+                                                You will be taken to a final confirmation page with payment details.
+                                            </p>
+                                        </CardContent>
+                                    </Card>
+                                </div>
+                            </div>
+                        </section>
+                        
+                        {/* --- Nomination Section --- */}
+                        <section id="nominate">
                              <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
                                 <CardHeader>
-                                    <CardTitle className="font-headline text-4xl text-amber-400">2. Complete Your Vote</CardTitle>
-                                     <CardDescription className="text-zinc-400">
-                                        After selecting a contestant, click the button below to proceed.
-                                     </CardDescription>
+                                    <div className="flex items-center gap-4">
+                                        <AwardIcon className="h-10 w-10 text-amber-400" />
+                                        <div>
+                                            <CardTitle className="font-headline text-4xl text-amber-400">Online Nomination Form</CardTitle>
+                                            <CardDescription className="text-zinc-400">Think someone deserves an award? Nominate them here!</CardDescription>
+                                        </div>
+                                    </div>
                                 </CardHeader>
                                 <CardContent>
-                                    {selectedContestant ? (
-                                        <div className="bg-zinc-800/70 p-4 rounded-lg text-center">
-                                            <p className="text-zinc-300 mb-1">You have selected:</p>
-                                            <p className="font-bold text-amber-300 text-xl">{selectedContestant.name}</p>
-                                            <p className="text-xs text-zinc-400">{selectedContestant.category}</p>
-                                        </div>
-                                    ) : (
-                                        <div className="bg-zinc-800/50 p-4 rounded-lg text-center h-24 flex items-center justify-center">
-                                            <p className="text-zinc-400">Please select a contestant to vote for.</p>
-                                        </div>
-                                    )}
-                                     <Button
-                                        size="lg"
-                                        className="w-full mt-6 bg-amber-500 text-black font-bold text-lg hover:bg-amber-400 disabled:bg-zinc-600 disabled:text-zinc-400 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105"
-                                        onClick={handleProceedToVote}
-                                        disabled={!selectedContestant}
-                                    >
-                                        Proceed to Vote <ArrowRight className="ml-2 h-5 w-5" />
-                                    </Button>
-                                    <p className="text-xs text-zinc-500 mt-4 text-center">
-                                        You will be taken to a final confirmation page with payment details.
-                                    </p>
+                                    <Form {...form}>
+                                        <form onSubmit={form.handleSubmit(handleNominationSubmit)} className="space-y-6">
+                                            <div className="grid md:grid-cols-2 gap-6">
+                                                <FormField
+                                                    control={form.control}
+                                                    name="category"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-zinc-300">Award Category</FormLabel>
+                                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                                <FormControl>
+                                                                    <SelectTrigger className="bg-zinc-800 border-zinc-700 focus:ring-amber-400">
+                                                                        <SelectValue placeholder="Select an award to nominate for" />
+                                                                    </SelectTrigger>
+                                                                </FormControl>
+                                                                <SelectContent className="bg-zinc-900 border-amber-400/30 text-amber-300">
+                                                                    {allAwardCategories.map(cat => (
+                                                                        <SelectItem key={cat} value={cat} className="cursor-pointer hover:!bg-amber-400/20 focus:!bg-amber-400/20">{cat}</SelectItem>
+                                                                    ))}
+                                                                </SelectContent>
+                                                            </Select>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                 <FormField
+                                                    control={form.control}
+                                                    name="nomineeName"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-zinc-300">Nominee's Full Name</FormLabel>
+                                                            <FormControl>
+                                                                <Input placeholder="e.g., John Doe" {...field} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <FormField
+                                                    control={form.control}
+                                                    name="nomineePhone"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-zinc-300">Nominee's Phone Number</FormLabel>
+                                                            <FormControl>
+                                                                <Input placeholder="e.g., 08012345678" {...field} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <FormField
+                                                    control={form.control}
+                                                    name="nominationReason"
+                                                    render={({ field }) => (
+                                                        <FormItem className="md:col-span-2">
+                                                            <FormLabel className="text-zinc-300">Reason for Nomination</FormLabel>
+                                                            <FormControl>
+                                                                <Textarea placeholder="Briefly explain why they deserve this award..." {...field} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400" rows={4}/>
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                 <div className="md:col-span-2 border-t border-zinc-700 pt-6 space-y-6">
+                                                     <FormField
+                                                        control={form.control}
+                                                        name="nominatorName"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel className="text-zinc-300">Your Name (Nominator)</FormLabel>
+                                                                <FormControl>
+                                                                    <Input placeholder="Your full name" {...field} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                     <FormField
+                                                        control={form.control}
+                                                        name="nominatorPhone"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel className="text-zinc-300">Your Phone Number</FormLabel>
+                                                                <FormControl>
+                                                                    <Input placeholder="Your contact phone number" {...field} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                 </div>
+                                            </div>
+                                            <Button type="submit" size="lg" className="w-full md:w-auto bg-amber-500 text-black font-bold hover:bg-amber-400">Submit Nomination</Button>
+                                        </form>
+                                    </Form>
                                 </CardContent>
                             </Card>
-                        </div>
-                    </div>
+                        </section>
+                    </main>
                 </div>
             </div>
         </div>

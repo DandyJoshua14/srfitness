@@ -86,7 +86,7 @@ const nominationFormSchema = z.object({
   nominatorPhone: z.string().min(10, "Please enter your phone number."),
 });
 
-const voteOptions = [10, 15, 20, 25, 30, 35, 40, 45, 50];
+const voteOptions = [20, 50, 100, 500, 1200];
 
 
 export default function VotePage() {
@@ -428,5 +428,7 @@ export default function VotePage() {
         </div>
     );
 }
+
+    
 
     

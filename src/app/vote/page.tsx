@@ -243,7 +243,13 @@ export default function VotePage() {
                                                         key={c.id} 
                                                         contestant={c}
                                                         isSelected={selectedContestant?.id === c.id}
-                                                        onSelect={() => setSelectedContestant(c)}
+                                                        onSelect={() => {
+                                                            if (selectedContestant?.id === c.id) {
+                                                                setSelectedContestant(null);
+                                                            } else {
+                                                                setSelectedContestant(c);
+                                                            }
+                                                        }}
                                                     />
                                                 ))
                                             ) : (

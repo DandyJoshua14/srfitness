@@ -2,6 +2,7 @@
 'use server';
 
 import { z } from 'zod';
+import { addVote } from '@/services/firestore';
 // import { Resend } from 'resend';
 
 const nominationFormSchema = z.object({
@@ -11,6 +12,13 @@ const nominationFormSchema = z.object({
   nominationReason: z.string(),
   nominatorName: z.string(),
   nominatorPhone: z.string(),
+});
+
+const voteSchema = z.object({
+  contestantId: z.string(),
+  contestantName: z.string(),
+  contestantCategory: z.string(),
+  numberOfVotes: z.number().int().positive(),
 });
 
 // Example using Resend. You would install it with `npm install resend`
@@ -74,6 +82,28 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
     return {
       success: false,
       error: 'Sorry, we couldn\'t submit your nomination at this time.',
+    };
+  }
+}
+
+export async function recordVote(voteData: z.infer<typeof voteSchema>) {
+  const validatedFields = voteSchema.safeParse(voteData);
+
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      error: 'Invalid vote data provided.',
+    };
+  }
+
+  try {
+    await addVote(validatedFields.data);
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to record vote in Server Action: ", error);
+    return {
+      success: false,
+      error: 'There was an error recording your vote to the database.'
     };
   }
 }

@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Newspaper, Store, BookOpen } from 'lucide-react';
+import { Newspaper, Store, BookOpen, Vote } from 'lucide-react';
 
 const features = [
     {
@@ -24,6 +24,12 @@ const features = [
         href: "/admin/magazine",
         icon: <BookOpen className="h-8 w-8 text-primary" />,
     },
+    {
+        title: "Vote Tracker",
+        description: "View and monitor real-time voting results.",
+        href: "/admin/votes",
+        icon: <Vote className="h-8 w-8 text-primary" />,
+    }
 ];
 
 export default function AdminDashboardPage() {

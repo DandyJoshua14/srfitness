@@ -1,20 +1,24 @@
 
 "use client";
 
-import { Suspense } from 'react';
+import { Suspense, useTransition } from 'react';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Copy, ArrowLeft } from 'lucide-react';
+import { Copy, ArrowLeft, Loader2, PartyPopper } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
+import { recordVote } from '@/app/actions';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const VOTE_COST_PER_VOTE = 100;
 
 function CheckoutView() {
     const searchParams = useSearchParams();
+    const router = useRouter();
     const { toast } = useToast();
+    const [isPending, startTransition] = useTransition();
 
     const contestantId = searchParams.get('id');
     const contestantName = searchParams.get('name') || 'the selected contestant';
@@ -33,6 +37,33 @@ function CheckoutView() {
         toast({
             title: `${label} Copied!`,
             description: `${text} has been copied to your clipboard.`,
+        });
+    };
+    
+    const handleConfirmVote = () => {
+        if (!contestantId) return;
+
+        startTransition(async () => {
+            const result = await recordVote({
+                contestantId,
+                contestantName,
+                contestantCategory,
+                numberOfVotes,
+            });
+
+            if (result.success) {
+                toast({
+                    title: "Vote Recorded Successfully!",
+                    description: `${numberOfVotes} votes for ${contestantName} have been logged.`,
+                });
+                router.push('/vote');
+            } else {
+                 toast({
+                    title: "Recording Failed",
+                    description: result.error,
+                    variant: "destructive",
+                });
+            }
         });
     };
 
@@ -106,16 +137,19 @@ function CheckoutView() {
                                 Example SMS: <br /> <span className="font-medium">John Doe, N{totalVoteCost.toFixed(2)}, {contestantName}</span>
                             </p>
                         </div>
-                        <div>
-                            <div className="font-bold text-amber-400 text-lg font-headline tracking-wider">STEP 3: DONE</div>
-                            <p className="text-zinc-300">You will receive a confirmatory text. You can vote multiple times by repeating these steps.</p>
-                        </div>
                     </div>
-                     <Button asChild className="w-full mt-6 bg-amber-500 text-black hover:bg-amber-400">
-                        <Link href="/vote">
-                            <ArrowLeft className="mr-2 h-4 w-4" /> Go Back to Change Selection
-                        </Link>
-                    </Button>
+                     <div className="border-t border-amber-500/20 pt-4 mt-4 space-y-3">
+                         <Alert variant="default" className="border-amber-400/30 text-amber-300 bg-amber-400/10">
+                            <PartyPopper className="h-4 w-4 text-amber-300" />
+                            <AlertDescription>
+                            This button is for demonstration. It simulates a successful payment and records the vote for the admin to see.
+                            </AlertDescription>
+                        </Alert>
+                        <Button onClick={handleConfirmVote} disabled={isPending} className="w-full bg-green-600 hover:bg-green-500 text-white font-bold">
+                            {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                            {isPending ? 'Recording...' : 'Confirm & Record Vote (Admin Demo)'}
+                        </Button>
+                    </div>
                 </CardContent>
             </Card>
         </div>

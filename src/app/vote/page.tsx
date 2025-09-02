@@ -28,6 +28,7 @@ const generalCategories = [
     { title: "Inspirational Weight-Loss Journey" },
     { title: "Foundation Fitness Award" },
     { title: "Mental Health & Wellness Advocate" },
+    { title: "Art and Wellness Advocate" },
     { title: "Life Champion Award - Overcomers series" },
     { title: "Foundation Fitness Hero Award" },
     { title: "Educators Recognition series" },
@@ -75,6 +76,7 @@ const contestants: Contestant[] = [
     { id: '16', name: "Romaan Fitness", category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=RF' },
     { id: '17', name: "Hogis Fitness", category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=HF' },
     { id: '18', name: '1480 AZ GYM (NAVY GYM)', category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=AZG' },
+    { id: '19', name: 'Vincent van Gogh', category: 'Art and Wellness Advocate', image: 'https://placehold.co/400x500.png?text=VVG' },
 ];
 
 const nominationFormSchema = z.object({
@@ -438,4 +440,5 @@ export default function VotePage() {
     
 
     
+
 

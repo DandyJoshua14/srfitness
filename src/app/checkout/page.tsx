@@ -10,6 +10,8 @@ import { Copy, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 
+const VOTE_COST_PER_VOTE = 100;
+
 function CheckoutView() {
     const searchParams = useSearchParams();
     const { toast } = useToast();
@@ -17,12 +19,14 @@ function CheckoutView() {
     const contestantId = searchParams.get('id');
     const contestantName = searchParams.get('name') || 'the selected contestant';
     const contestantCategory = searchParams.get('category') || 'their category';
+    const numberOfVotes = parseInt(searchParams.get('votes') || '1', 10);
+    const totalVoteCost = VOTE_COST_PER_VOTE * numberOfVotes;
+
     const contestantImage = `https://placehold.co/400x500.png?text=${encodeURIComponent(contestantName.split(' ').map(n => n[0]).join(''))}`;
 
     const accountNumber = "1228863712";
     const bankName = "Zenith Bank";
     const smsNumber = "07056717597";
-    const voteCost = 100;
 
     const copyToClipboard = (text: string, label: string) => {
         navigator.clipboard.writeText(text);
@@ -59,11 +63,12 @@ function CheckoutView() {
                         <div>
                             <h3 className="text-2xl font-bold text-white">{contestantName}</h3>
                             <p className="text-amber-300">{contestantCategory}</p>
+                            <p className="text-sm text-zinc-300 mt-1">Number of Votes: <span className="font-bold">{numberOfVotes}</span></p>
                         </div>
                     </div>
                     <div className="mt-6 border-t border-zinc-700 pt-4 flex justify-between items-center text-xl">
-                        <span className="text-zinc-300">Vote Cost:</span>
-                        <span className="font-bold text-amber-400">N{voteCost.toFixed(2)}</span>
+                        <span className="text-zinc-300">Total Cost:</span>
+                        <span className="font-bold text-amber-400">N{totalVoteCost.toFixed(2)}</span>
                     </div>
                 </CardContent>
             </Card>
@@ -77,7 +82,7 @@ function CheckoutView() {
                     <div className="space-y-4 text-center">
                         <div>
                             <div className="font-bold text-amber-400 text-lg font-headline tracking-wider">STEP 1: PAY</div>
-                            <p className="text-zinc-300">Pay or transfer N{voteCost} to the account below:</p>
+                            <p className="text-zinc-300">Pay or transfer <span className="font-bold text-amber-300">N{totalVoteCost.toFixed(2)}</span> to the account below:</p>
                             <div className="bg-zinc-800 p-3 rounded-lg mt-2 flex items-center justify-between">
                                 <div className="text-left">
                                     <p className="font-mono text-xl">{accountNumber}</p>
@@ -98,7 +103,7 @@ function CheckoutView() {
                                 </Button>
                             </div>
                             <p className="text-xs text-amber-300 mt-2 p-2 bg-amber-500/10 rounded-md">
-                                Example SMS: <br /> <span className="font-medium">John Doe, N{voteCost}, {contestantName}</span>
+                                Example SMS: <br /> <span className="font-medium">John Doe, N{totalVoteCost.toFixed(2)}, {contestantName}</span>
                             </p>
                         </div>
                         <div>

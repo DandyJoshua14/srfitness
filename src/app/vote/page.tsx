@@ -85,6 +85,8 @@ const nominationFormSchema = z.object({
   nominatorPhone: z.string().min(10, "Please enter your phone number."),
 });
 
+const voteOptions = [10, 15, 20, 25, 30, 35, 40, 45, 50];
+
 
 export default function VotePage() {
     const { toast } = useToast();
@@ -92,6 +94,7 @@ export default function VotePage() {
     const [isPending, startTransition] = useTransition();
     const [selectedContestant, setSelectedContestant] = useState<Contestant | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
+    const [numberOfVotes, setNumberOfVotes] = useState<string>(voteOptions[0].toString());
 
     const form = useForm<z.infer<typeof nominationFormSchema>>({
         resolver: zodResolver(nominationFormSchema),
@@ -134,7 +137,7 @@ export default function VotePage() {
             return;
         }
         const { id, name, category } = selectedContestant;
-        const query = new URLSearchParams({ id, name, category }).toString();
+        const query = new URLSearchParams({ id, name, category, votes: numberOfVotes }).toString();
         router.push(`/checkout?${query}`);
     };
 
@@ -256,15 +259,30 @@ export default function VotePage() {
                                         <CardHeader>
                                             <CardTitle className="font-headline text-4xl text-amber-400">2. Complete Your Vote</CardTitle>
                                             <CardDescription className="text-zinc-400">
-                                                After selecting a contestant, click the button below to proceed.
+                                                After selecting a contestant, confirm the number of votes and click below.
                                             </CardDescription>
                                         </CardHeader>
                                         <CardContent>
                                             {selectedContestant ? (
-                                                <div className="bg-zinc-800/70 p-4 rounded-lg text-center">
-                                                    <p className="text-zinc-300 mb-1">You have selected:</p>
-                                                    <p className="font-bold text-amber-300 text-xl">{selectedContestant.name}</p>
-                                                    <p className="text-xs text-zinc-400">{selectedContestant.category}</p>
+                                                <div className="bg-zinc-800/70 p-4 rounded-lg space-y-4">
+                                                    <div className="text-center">
+                                                        <p className="text-zinc-300 mb-1">You have selected:</p>
+                                                        <p className="font-bold text-amber-300 text-xl">{selectedContestant.name}</p>
+                                                        <p className="text-xs text-zinc-400">{selectedContestant.category}</p>
+                                                    </div>
+                                                     <div>
+                                                        <Label className="text-zinc-300 font-semibold mb-2 block text-center">Number of Votes:</Label>
+                                                        <Select onValueChange={setNumberOfVotes} defaultValue={numberOfVotes}>
+                                                            <SelectTrigger className="bg-zinc-800 border-zinc-700 focus:ring-amber-400 w-full">
+                                                                <SelectValue placeholder="Select number of votes" />
+                                                            </SelectTrigger>
+                                                            <SelectContent className="bg-zinc-900 border-amber-400/30 text-amber-300">
+                                                                {voteOptions.map(v => (
+                                                                    <SelectItem key={v} value={String(v)} className="cursor-pointer hover:!bg-amber-400/20 focus:!bg-amber-400/20">{v} Votes</SelectItem>
+                                                                ))}
+                                                            </SelectContent>
+                                                        </Select>
+                                                    </div>
                                                 </div>
                                             ) : (
                                                 <div className="bg-zinc-800/50 p-4 rounded-lg text-center h-24 flex items-center justify-center">

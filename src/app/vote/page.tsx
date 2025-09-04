@@ -32,7 +32,8 @@ const generalCategories = [
     { title: "Life Champion Award - Overcomers series" },
     { title: "Foundation Fitness Hero Award" },
     { title: "Educators Recognition series" },
-    { title: "Fitness Event Of The Year" },
+    { title: "Fitness Event Of The Year (Coaches)" },
+    { title: "Fitness Event Of The Year (Clubs)" },
 ];
 
 const professionalCategories = [
@@ -62,6 +63,7 @@ const contestants: Contestant[] = [
     { id: '23', name: 'Coach Collins', category: 'Fitness Trainer/Coach of the Year', image: '/collins.jpg' },
     { id: '4', name: 'Victoria U', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x500.png?text=Vicky+U' },
     { id: '5', name: 'Tracy S', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x500.png?text=Tracy+S' },
+    { id: '40', name: 'Inspiree One', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x500.png?text=Inspiree+1' },
     { id: '6', name: 'David L', category: 'Community Fitness Hero of the Year', image: 'https://placehold.co/400x500.png?text=David+L' },
     { id: '24', name: 'Jane F.', category: 'Community Fitness Hero of the Year', image: 'https://placehold.co/400x500.png?text=Jane+F' },
     { id: '25', name: 'Mike R.', category: 'Community Fitness Hero of the Year', image: 'https://placehold.co/400x500.png?text=Mike+R' },
@@ -88,13 +90,21 @@ const contestants: Contestant[] = [
     // New contestants
     { id: '13', name: 'Coach Tunde', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x500.png?text=CT' },
     { id: '14', name: 'Coach Aisha', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x500.png?text=CA' },
-    { id: '15', name: "Victor's Fitness", category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=VF' },
-    { id: '16', name: "Romaan Fitness", category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=RF' },
-    { id: '17', name: "Hogis Fitness", category: 'Gym of the Year', image: '/hogis.png' },
+    { id: '41', name: 'Coach Bola', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x500.png?text=CB' },
+    { id: '15', name: 'Victor\'s Fitness', category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=VF' },
+    { id: '16', name: 'Romaan Fitness', category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=RF' },
+    { id: '17', name: 'Hogis Fitness', category: 'Gym of the Year', image: '/hogis.png' },
     { id: '18', name: '1480 AZ GYM (NAVY GYM)', category: 'Gym of the Year', image: '/az.jpg', objectPosition: 'center 20%' },
     { id: '19', name: 'Esther Richard', category: 'Art and Wellness Advocate', image: '/esta richards.jpg' },
     { id: '20', name: 'Lifeclinicng', category: 'Art and Wellness Advocate', image: '/dr ken.jpg' },
     { id: '21', name: 'Hannah Bassey-Duke', category: 'Art and Wellness Advocate', image: 'https://placehold.co/400x500.png?text=HBD' },
+    { id: '42', name: 'Event Coach A', category: 'Fitness Event Of The Year (Coaches)', image: 'https://placehold.co/400x500.png?text=EC-A' },
+    { id: '43', name: 'Event Coach B', category: 'Fitness Event Of The Year (Coaches)', image: 'https://placehold.co/400x500.png?text=EC-B' },
+    { id: '44', name: 'Event Coach C', category: 'Fitness Event Of The Year (Coaches)', image: 'https://placehold.co/400x500.png?text=EC-C' },
+    { id: '45', name: 'Club Event X', category: 'Fitness Event Of The Year (Clubs)', image: 'https://placehold.co/400x500.png?text=CE-X' },
+    { id: '46', name: 'Club Event Y', category: 'Fitness Event Of The Year (Clubs)', image: 'https://placehold.co/400x500.png?text=CE-Y' },
+    { id: '47', name: 'Club Event Z', category: 'Fitness Event Of The Year (Clubs)', image: 'https://placehold.co/400x500.png?text=CE-Z' },
+    
 ];
 
 const nominationFormSchema = z.object({
@@ -458,6 +468,7 @@ export default function VotePage() {
     
 
     
+
 
 
 

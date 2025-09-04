@@ -36,8 +36,8 @@ export default function AwardsPage() {
     { title: "Life Champion Award - Overcomers series", qualifier: "", description: "A special recognition for individuals who have overcome significant personal challenges and used fitness as a tool for recovery and empowerment." },
     { title: "Foundation Fitness Hero Award", qualifier: "Male & Female", description: "Celebrating individual student who consistently embody the spirit and values of our fitness community and by doing so has inspired others to adopt a healthy lifestyle." },
     { title: "Educators Recognition series", qualifier: "", description: "A tribute to our unsung fitness heroes, educators who go above and beyond to promote wellness through positive learning, and motivating the students to stay active and engage in physical activity." },
-    { title: "Fitness Event Of The Year", qualifier: "Coaches", description: "Awarded to the coach or team of coaches who organized and executed the most impactful and engaging fitness event of the year." },
-    { title: "Fitness Event Of The Year", qualifier: "Clubs", description: "Recognizing the single best fitness event that brought the community together, promoted health, and created a memorable experience for all." },
+    { title: "Fitness Event Of The Year (Coaches)", qualifier: "Coaches", description: "Awarded to the coach or team of coaches who organized and executed the most impactful and engaging fitness event of the year." },
+    { title: "Fitness Event Of The Year (Clubs)", qualifier: "Clubs", description: "Recognizing the single best fitness event that brought the community together, promoted health, and created a memorable experience for all." },
   ];
 
   const professionalCategories = [

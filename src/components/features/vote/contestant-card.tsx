@@ -12,6 +12,7 @@ export interface Contestant {
     category: string;
     image: string;
     objectPosition?: string;
+    objectFit?: 'cover' | 'contain';
 }
 
 interface ContestantCardProps {
@@ -34,7 +35,7 @@ export default function ContestantCard({ contestant, isSelected, onSelect }: Con
                     src={contestant.image}
                     alt={contestant.name}
                     layout="fill"
-                    objectFit="cover"
+                    objectFit={contestant.objectFit || 'cover'}
                     className="transition-transform duration-300 group-hover:scale-110"
                     style={{ objectPosition: contestant.objectPosition || 'center' }}
                 />

@@ -74,8 +74,8 @@ const contestants: Contestant[] = [
     { id: '14', name: 'Coach Aisha', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x500.png?text=CA' },
     { id: '15', name: "Victor's Fitness", category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=VF' },
     { id: '16', name: "Romaan Fitness", category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=RF' },
-    { id: '17', name: "Hogis Fitness", category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=HF' },
-    { id: '18', name: '1480 AZ GYM (NAVY GYM)', category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=AZG' },
+    { id: '17', name: "Hogis Fitness", category: 'Gym of the Year', image: '/hogis.png' },
+    { id: '18', name: '1480 AZ GYM (NAVY GYM)', category: 'Gym of the Year', image: '/az.jpg', objectPosition: 'center 20%' },
     { id: '19', name: 'Esther Richard', category: 'Art and Wellness Advocate', image: '/esta richards.jpg' },
     { id: '20', name: 'Lifeclinicng', category: 'Art and Wellness Advocate', image: 'https://placehold.co/400x500.png?text=VVG' },
     { id: '21', name: 'Vincent van Gogh', category: 'Art and Wellness Advocate', image: 'https://placehold.co/400x500.png?text=VVG' },
@@ -442,5 +442,6 @@ export default function VotePage() {
     
 
     
+
 
 

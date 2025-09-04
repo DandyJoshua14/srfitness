@@ -55,9 +55,11 @@ const allAwardCategories = [
 ].map(c => c.title);
 
 const contestants: Contestant[] = [
-    { id: '1', name: 'Alex Morgan', category: 'Fitness Trainer/Coach of the Year', image: 'https://placehold.co/400x500.png?text=Alex+M' },
-    { id: '2', name: 'Samantha Kerr', category: 'Fitness Trainer/Coach of the Year', image: 'https://placehold.co/400x500.png?text=Sam+K' },
-    { id: '3', name: 'Chris Bumstead', category: 'Fitness Trainer/Coach of the Year', image: 'https://placehold.co/400x500.png?text=Chris+B' },
+    { id: '1', name: 'Coach NTB', category: 'Fitness Trainer/Coach of the Year', image: '/NTB.jpg' },
+    { id: '2', name: 'Coach Tawani', category: 'Fitness Trainer/Coach of the Year', image: '/Tawani.jpg' },
+    { id: '3', name: 'Body Quest', category: 'Fitness Trainer/Coach of the Year', image: '/bodyq.jpg' },
+    { id: '22', name: 'Coach George', category: 'Fitness Trainer/Coach of the Year', image: 'https://placehold.co/400x500.png?text=CG' },
+    { id: '23', name: 'Coach Collins', category: 'Fitness Trainer/Coach of the Year', image: 'https://placehold.co/400x500.png?text=CC' },
     { id: '4', name: 'Victoria U', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x500.png?text=Vicky+U' },
     { id: '5', name: 'Tracy S', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x500.png?text=Tracy+S' },
     { id: '6', name: 'David L', category: 'Community Fitness Hero of the Year', image: 'https://placehold.co/400x500.png?text=David+L' },
@@ -77,8 +79,8 @@ const contestants: Contestant[] = [
     { id: '17', name: "Hogis Fitness", category: 'Gym of the Year', image: '/hogis.png' },
     { id: '18', name: '1480 AZ GYM (NAVY GYM)', category: 'Gym of the Year', image: '/az.jpg', objectPosition: 'center 20%' },
     { id: '19', name: 'Esther Richard', category: 'Art and Wellness Advocate', image: '/esta richards.jpg' },
-    { id: '20', name: 'Lifeclinicng', category: 'Art and Wellness Advocate', image: 'https://placehold.co/400x500.png?text=VVG' },
-    { id: '21', name: 'Vincent van Gogh', category: 'Art and Wellness Advocate', image: 'https://placehold.co/400x500.png?text=VVG' },
+    { id: '20', name: 'Lifeclinicng', category: 'Art and Wellness Advocate', image: '/dr ken.jpg' },
+    { id: '21', name: 'Hannah Bassey-Duke', category: 'Art and Wellness Advocate', image: 'https://placehold.co/400x500.png?text=VVG' },
 ];
 
 const nominationFormSchema = z.object({
@@ -442,6 +444,7 @@ export default function VotePage() {
     
 
     
+
 
 
 

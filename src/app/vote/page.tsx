@@ -92,6 +92,9 @@ const contestants: Contestant[] = [
     { id: '13', name: 'Coach Tunde', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x400/orange/white?text=CT' },
     { id: '14', name: 'Coach Aisha', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x400/orange/white?text=CA' },
     { id: '41', name: 'Coach Bola', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x400/orange/white?text=CB' },
+    { id: '48', name: 'Coach Ifiok', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x400/orange/white?text=CI' },
+    { id: '49', name: 'Coach Ofonime', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x400/orange/white?text=CO' },
+    { id: '50', name: 'Coach Bigname', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x400/orange/white?text=CBN' },
     { id: '15', name: 'Victor\'s Fitness', category: 'Gym of the Year', image: 'https://placehold.co/400x400/orange/white?text=VF' },
     { id: '16', name: 'Romaan Fitness', category: 'Gym of the Year', image: 'https://placehold.co/400x400/orange/white?text=RF' },
     { id: '17', name: 'Hogis Fitness', category: 'Gym of the Year', image: '/hogis.png' },
@@ -100,7 +103,7 @@ const contestants: Contestant[] = [
     { id: '20', name: 'Lifeclinicng', category: 'Art and Wellness Advocate', image: '/dr ken.jpg' },
     { id: '21', name: 'Hannah Bassey-Duke', category: 'Art and Wellness Advocate', image: '/han.jpg' },
     { id: '42', name: '300 Tawani Fitness Day-Out', category: 'Fitness Event Of The Year (Coaches)', image: '/tawani.JPG' },
-    { id: '43', name: 'Event Coach B', category: 'Fitness Event Of The Year (Coaches)', image: 'https://placehold.co/400x400/orange/white?text=EC-B' },
+    { id: '43', name: 'The Exclusive Workout Exibition', category: 'Fitness Event Of The Year (Coaches)', image: '/dbb.png' },
     { id: '44', name: 'Event Coach C', category: 'Fitness Event Of The Year (Coaches)', image: 'https://placehold.co/400x400/orange/white?text=EC-C' },
     { id: '45', name: 'Calabar Walkhathon', category: 'Fitness Event Of The Year (Clubs)', image: '/walk2.png', objectFit: 'contain' },
     { id: '46', name: 'Pro Fitness', category: 'Fitness Event Of The Year (Clubs)', image: '/pro fitness.jpg', objectFit: 'contain' },
@@ -506,6 +509,7 @@ export default function VotePage() {
 
 
     
+
 
 
 

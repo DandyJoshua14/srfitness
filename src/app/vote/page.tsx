@@ -146,7 +146,7 @@ export default function VotePage() {
         },
     });
 
-    const handleNominationSubmit = (values: z.infer<typeof nominationFormSchema>>) => {
+    const handleNominationSubmit = (values: z.infer<typeof nominationFormSchema>) => {
         startTransition(async () => {
             const result = await sendNominationEmail(values);
             if (result.success) {
@@ -506,5 +506,6 @@ export default function VotePage() {
 
 
     
+
 
 

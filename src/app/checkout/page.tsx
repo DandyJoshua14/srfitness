@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { Suspense, useTransition } from 'react';
@@ -24,7 +25,13 @@ function CheckoutView() {
     const contestantName = searchParams.get('name') || 'the selected contestant';
     const contestantCategory = searchParams.get('category') || 'their category';
     const numberOfVotes = parseInt(searchParams.get('votes') || '1', 10);
-    const totalVoteCost = VOTE_COST_PER_VOTE * numberOfVotes;
+    const totalVoteCost = VOTE_COST_PER_VOTE * (numberOfVotes - (
+        numberOfVotes === 12 ? 2 :
+        numberOfVotes === 53 ? 3 :
+        numberOfVotes === 105 ? 5 :
+        numberOfVotes === 510 ? 10 :
+        numberOfVotes === 1020 ? 20 : 0
+    ));
 
     const contestantImage = `https://placehold.co/400x500.png?text=${encodeURIComponent(contestantName.split(' ').map(n => n[0]).join(''))}`;
 

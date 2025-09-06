@@ -62,7 +62,7 @@ const contestants: Contestant[] = [
     { id: '3', name: 'Body Quest', category: 'Fitness Trainer/Coach of the Year', image: '/bodyq.jpg' },
     { id: '22', name: 'Coach George', category: 'Fitness Trainer/Coach of the Year', image: '/george.jpg' },
     { id: '23', name: 'Coach Collins', category: 'Fitness Trainer/Coach of the Year', image: '/collins.jpg' },
-    { id: '4', name: 'Pharm. Mrs. Onwudiwe Blessing', category: 'Inspirational Weight-Loss Journey', image: '/bles.JPG', objectPosition: 'center 70%' },
+    { id: '4', name: 'Pharm. Mrs. Onwudiwe Blessing', category: 'Inspirational Weight-Loss Journey', image: '/bles.JPG', objectPosition: 'center 25%' },
     { id: '5', name: 'Tracy S', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x400/orange/white?text=Tracy+S' },
     { id: '40', name: 'Inspiree One', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x400/orange/white?text=Inspiree+1' },
     { id: '6', name: 'David L', category: 'Community Fitness Hero of the Year', image: 'https://placehold.co/400x400/orange/white?text=David+L' },
@@ -96,10 +96,10 @@ const contestants: Contestant[] = [
     { id: '16', name: 'Romaan Fitness', category: 'Gym of the Year', image: 'https://placehold.co/400x400/orange/white?text=RF' },
     { id: '17', name: 'Hogis Fitness', category: 'Gym of the Year', image: '/hogis.png' },
     { id: '18', name: '1480 AZ GYM (NAVY GYM)', category: 'Gym of the Year', image: '/az.jpg', objectPosition: 'center 20%' },
-    { id: '19', name: 'Esta Richard', category: 'Art and Wellness Advocate', image: '/esta richards.jpg' },
+    { id: '19', name: 'Oma', category: 'Art and Wellness Advocate', image: 'https://placehold.co/400x400/orange/white?text=OMA' },
     { id: '20', name: 'Lifeclinicng', category: 'Art and Wellness Advocate', image: '/dr ken.jpg' },
-    { id: '21', name: 'Hannah Bassey-Duke', category: 'Art and Wellness Advocate', image: 'https://placehold.co/400x400/orange/white?text=HBD' },
-    { id: '42', name: 'Event Coach A', category: 'Fitness Event Of The Year (Coaches)', image: 'https://placehold.co/400x400/orange/white?text=EC-A' },
+    { id: '21', name: 'Hannah Bassey-Duke', category: 'Art and Wellness Advocate', image: '/han.jpg' },
+    { id: '42', name: '300 Tawani Fitness Day-Out', category: 'Fitness Event Of The Year (Coaches)', image: '/tawani.JPG' },
     { id: '43', name: 'Event Coach B', category: 'Fitness Event Of The Year (Coaches)', image: 'https://placehold.co/400x400/orange/white?text=EC-B' },
     { id: '44', name: 'Event Coach C', category: 'Fitness Event Of The Year (Coaches)', image: 'https://placehold.co/400x400/orange/white?text=EC-C' },
     { id: '45', name: 'Calabar Walkhathon', category: 'Fitness Event Of The Year (Clubs)', image: '/walk2.png', objectFit: 'contain' },
@@ -117,7 +117,13 @@ const nominationFormSchema = z.object({
   nominatorPhone: z.string().min(10, "Please enter your phone number."),
 });
 
-const voteOptions = [20, 50, 100, 500, 1200];
+const voteOptions = [
+    { base: 10, free: 2, label: "10 Votes + 2 Free" },
+    { base: 50, free: 3, label: "50 Votes + 3 Free" },
+    { base: 100, free: 5, label: "100 Votes + 5 Free" },
+    { base: 500, free: 10, label: "500 Votes + 10 Free" },
+    { base: 1000, free: 20, label: "1000 Votes + 20 Bonus" },
+];
 
 
 export default function VotePage() {
@@ -126,7 +132,7 @@ export default function VotePage() {
     const [isPending, startTransition] = useTransition();
     const [selectedContestant, setSelectedContestant] = useState<Contestant | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
-    const [numberOfVotes, setNumberOfVotes] = useState<string>(voteOptions[0].toString());
+    const [numberOfVotes, setNumberOfVotes] = useState<string>(String(voteOptions[0].base));
 
     const form = useForm<z.infer<typeof nominationFormSchema>>({
         resolver: zodResolver(nominationFormSchema),
@@ -140,7 +146,7 @@ export default function VotePage() {
         },
     });
 
-    const handleNominationSubmit = (values: z.infer<typeof nominationFormSchema>) => {
+    const handleNominationSubmit = (values: z.infer<typeof nominationFormSchema>>) => {
         startTransition(async () => {
             const result = await sendNominationEmail(values);
             if (result.success) {
@@ -168,8 +174,20 @@ export default function VotePage() {
             });
             return;
         }
+        
+        const selectedVoteOption = voteOptions.find(o => o.base === parseInt(numberOfVotes));
+        if (!selectedVoteOption) {
+            toast({
+                title: "Invalid Vote Amount",
+                description: "Please select a valid number of votes.",
+                variant: "destructive"
+            });
+            return;
+        }
+
+        const totalVotes = selectedVoteOption.base + selectedVoteOption.free;
         const { id, name, category } = selectedContestant;
-        const query = new URLSearchParams({ id, name, category, votes: numberOfVotes }).toString();
+        const query = new URLSearchParams({ id, name, category, votes: String(totalVotes) }).toString();
         router.push(`/checkout?${query}`);
     };
 
@@ -324,7 +342,7 @@ export default function VotePage() {
                                                             </SelectTrigger>
                                                             <SelectContent className="bg-zinc-900 border-amber-400/30 text-amber-300">
                                                                 {voteOptions.map(v => (
-                                                                    <SelectItem key={v} value={String(v)} className="cursor-pointer hover:!bg-amber-400/20 focus:!bg-amber-400/20">{v} Votes</SelectItem>
+                                                                    <SelectItem key={v.base} value={String(v.base)} className="cursor-pointer hover:!bg-amber-400/20 focus:!bg-amber-400/20">{v.label}</SelectItem>
                                                                 ))}
                                                             </SelectContent>
                                                         </Select>
@@ -488,4 +506,5 @@ export default function VotePage() {
 
 
     
+
 

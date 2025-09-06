@@ -221,7 +221,15 @@ export default function VotePage() {
             <div className="bg-black/80 backdrop-blur-sm min-h-screen">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
                     <header className="text-center mb-12 md:mb-16">
-                        <img src="/SR.jpg" alt="SR Fitness Awards Logo" className="h-24 w-auto mx-auto mb-4" data-ai-hint="awards logo" />
+                        <Image
+                            src="/SR.jpg"
+                            alt="SR Fitness Awards Logo"
+                            width={96}
+                            height={96}
+                            className="h-24 w-24 mx-auto mb-4 rounded-full"
+                            data-ai-hint="awards logo"
+                            priority
+                        />
                         <p className="font-headline text-2xl text-amber-400 tracking-wider">
                             IDENTIFY, RECOGNIZE & CELEBRATE FITNESS INDUSTRY EXCELLENCE
                         </p>

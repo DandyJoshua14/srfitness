@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import React, { useState, useMemo, useTransition } from 'react';
@@ -61,49 +62,49 @@ const contestants: Contestant[] = [
     { id: '3', name: 'Body Quest', category: 'Fitness Trainer/Coach of the Year', image: '/bodyq.jpg' },
     { id: '22', name: 'Coach George', category: 'Fitness Trainer/Coach of the Year', image: '/george.jpg' },
     { id: '23', name: 'Coach Collins', category: 'Fitness Trainer/Coach of the Year', image: '/collins.jpg' },
-    { id: '4', name: 'Victoria U', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x500.png?text=Vicky+U' },
-    { id: '5', name: 'Tracy S', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x500.png?text=Tracy+S' },
-    { id: '40', name: 'Inspiree One', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x500.png?text=Inspiree+1' },
-    { id: '6', name: 'David L', category: 'Community Fitness Hero of the Year', image: 'https://placehold.co/400x500.png?text=David+L' },
-    { id: '24', name: 'Jane F.', category: 'Community Fitness Hero of the Year', image: 'https://placehold.co/400x500.png?text=Jane+F' },
-    { id: '25', name: 'Mike R.', category: 'Community Fitness Hero of the Year', image: 'https://placehold.co/400x500.png?text=Mike+R' },
+    { id: '4', name: 'Victoria U', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x400/orange/white?text=Vicky+U' },
+    { id: '5', name: 'Tracy S', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x400/orange/white?text=Tracy+S' },
+    { id: '40', name: 'Inspiree One', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x400/orange/white?text=Inspiree+1' },
+    { id: '6', name: 'David L', category: 'Community Fitness Hero of the Year', image: 'https://placehold.co/400x400/orange/white?text=David+L' },
+    { id: '24', name: 'Jane F.', category: 'Community Fitness Hero of the Year', image: 'https://placehold.co/400x400/orange/white?text=Jane+F' },
+    { id: '25', name: 'Mike R.', category: 'Community Fitness Hero of the Year', image: 'https://placehold.co/400x400/orange/white?text=Mike+R' },
     // Professionals
-    { id: '7', name: 'Nurse Joy', category: 'Care-Givers Advocate', image: 'https://placehold.co/400x500.png?text=Nurse+J' },
-    { id: '26', name: 'Nurse Michael', category: 'Care-Givers Advocate', image: 'https://placehold.co/400x500.png?text=Nurse+M' },
-    { id: '27', name: 'Nurse Ada', category: 'Care-Givers Advocate', image: 'https://placehold.co/400x500.png?text=Nurse+A' },
-    { id: '8', name: 'Dr. Mike', category: 'Health Care Treatment Advocate', image: 'https://placehold.co/400x500.png?text=Dr+M' },
-    { id: '28', name: 'Dr. Chen', category: 'Health Care Treatment Advocate', image: 'https://placehold.co/400x500.png?text=Dr+C' },
-    { id: '29', name: 'Dr. Okonjo', category: 'Health Care Treatment Advocate', image: 'https://placehold.co/400x500.png?text=Dr+O' },
-    { id: '9', name: 'PharmaPlus', category: 'Pharmaceutical Service Champion', image: 'https://placehold.co/400x500.png?text=Rx+' },
-    { id: '30', name: 'HealthFirst Pharmacy', category: 'Pharmaceutical Service Champion', image: 'https://placehold.co/400x500.png?text=HF+Rx' },
-    { id: '31', name: 'Care Pharmacy', category: 'Pharmaceutical Service Champion', image: 'https://placehold.co/400x500.png?text=Care+Rx' },
-    { id: '10', name: 'Sarah Lee, RPT', category: 'Physiotherapist of the Year', image: 'https://placehold.co/400x500.png?text=SL' },
-    { id: '32', name: 'Femi Ade, RPT', category: 'Physiotherapist of the Year', image: 'https://placehold.co/400x500.png?text=FA' },
-    { id: '33', name: 'Chioma Obi, RPT', category: 'Physiotherapist of the Year', image: 'https://placehold.co/400x500.png?text=CO' },
+    { id: '7', name: 'Nurse Joy', category: 'Care-Givers Advocate', image: 'https://placehold.co/400x400/orange/white?text=Nurse+J' },
+    { id: '26', name: 'Nurse Michael', category: 'Care-Givers Advocate', image: 'https://placehold.co/400x400/orange/white?text=Nurse+M' },
+    { id: '27', name: 'Nurse Ada', category: 'Care-Givers Advocate', image: 'https://placehold.co/400x400/orange/white?text=Nurse+A' },
+    { id: '8', name: 'Dr. Mike', category: 'Health Care Treatment Advocate', image: 'https://placehold.co/400x400/orange/white?text=Dr+M' },
+    { id: '28', name: 'Dr. Chen', category: 'Health Care Treatment Advocate', image: 'https://placehold.co/400x400/orange/white?text=Dr+C' },
+    { id: '29', name: 'Dr. Okonjo', category: 'Health Care Treatment Advocate', image: 'https://placehold.co/400x400/orange/white?text=Dr+O' },
+    { id: '9', name: 'PharmaPlus', category: 'Pharmaceutical Service Champion', image: 'https://placehold.co/400x400/orange/white?text=Rx+' },
+    { id: '30', name: 'HealthFirst Pharmacy', category: 'Pharmaceutical Service Champion', image: 'https://placehold.co/400x400/orange/white?text=HF+Rx' },
+    { id: '31', name: 'Care Pharmacy', category: 'Pharmaceutical Service Champion', image: 'https://placehold.co/400x400/orange/white?text=Care+Rx' },
+    { id: '10', name: 'Sarah Lee, RPT', category: 'Physiotherapist of the Year', image: 'https://placehold.co/400x400/orange/white?text=SL' },
+    { id: '32', name: 'Femi Ade, RPT', category: 'Physiotherapist of the Year', image: 'https://placehold.co/400x400/orange/white?text=FA' },
+    { id: '33', name: 'Chioma Obi, RPT', category: 'Physiotherapist of the Year', image: 'https://placehold.co/400x400/orange/white?text=CO' },
     // Organizations
-    { id: '11', name: 'Wellness Inc.', category: 'Corporate Wellness Champion', image: 'https://placehold.co/400x500.png?text=W+Inc' },
-    { id: '34', name: 'HealthyCo', category: 'Corporate Wellness Champion', image: 'https://placehold.co/400x500.png?text=HC' },
-    { id: '35', name: 'TeamUp Corp', category: 'Corporate Wellness Champion', image: 'https://placehold.co/400x500.png?text=TU' },
-    { id: '12', name: 'GoodWorks LLC', category: 'Corporate Social Responsibility Champion', image: 'https://placehold.co/400x500.png?text=GW+LLC' },
-    { id: '36', name: 'Community First', category: 'Corporate Social Responsibility Champion', image: 'https://placehold.co/400x500.png?text=CF' },
-    { id: '37', name: 'GiveBack Inc', category: 'Corporate Social Responsibility Champion', image: 'https://placehold.co/400x500.png?text=GB' },
+    { id: '11', name: 'Wellness Inc.', category: 'Corporate Wellness Champion', image: 'https://placehold.co/400x400/orange/white?text=W+Inc' },
+    { id: '34', name: 'HealthyCo', category: 'Corporate Wellness Champion', image: 'https://placehold.co/400x400/orange/white?text=HC' },
+    { id: '35', name: 'TeamUp Corp', category: 'Corporate Wellness Champion', image: 'https://placehold.co/400x400/orange/white?text=TU' },
+    { id: '12', name: 'GoodWorks LLC', category: 'Corporate Social Responsibility Champion', image: 'https://placehold.co/400x400/orange/white?text=GW+LLC' },
+    { id: '36', name: 'Community First', category: 'Corporate Social Responsibility Champion', image: 'https://placehold.co/400x400/orange/white?text=CF' },
+    { id: '37', name: 'GiveBack Inc', category: 'Corporate Social Responsibility Champion', image: 'https://placehold.co/400x400/orange/white?text=GB' },
     // New contestants
-    { id: '13', name: 'Coach Tunde', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x500.png?text=CT' },
-    { id: '14', name: 'Coach Aisha', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x500.png?text=CA' },
-    { id: '41', name: 'Coach Bola', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x500.png?text=CB' },
-    { id: '15', name: 'Victor\'s Fitness', category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=VF' },
-    { id: '16', name: 'Romaan Fitness', category: 'Gym of the Year', image: 'https://placehold.co/400x500.png?text=RF' },
+    { id: '13', name: 'Coach Tunde', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x400/orange/white?text=CT' },
+    { id: '14', name: 'Coach Aisha', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x400/orange/white?text=CA' },
+    { id: '41', name: 'Coach Bola', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x400/orange/white?text=CB' },
+    { id: '15', name: 'Victor\'s Fitness', category: 'Gym of the Year', image: 'https://placehold.co/400x400/orange/white?text=VF' },
+    { id: '16', name: 'Romaan Fitness', category: 'Gym of the Year', image: 'https://placehold.co/400x400/orange/white?text=RF' },
     { id: '17', name: 'Hogis Fitness', category: 'Gym of the Year', image: '/hogis.png' },
     { id: '18', name: '1480 AZ GYM (NAVY GYM)', category: 'Gym of the Year', image: '/az.jpg', objectPosition: 'center 20%' },
-    { id: '19', name: 'Esther Richard', category: 'Art and Wellness Advocate', image: '/esta richards.jpg' },
+    { id: '19', name: 'Esta Richard', category: 'Art and Wellness Advocate', image: '/esta richards.jpg' },
     { id: '20', name: 'Lifeclinicng', category: 'Art and Wellness Advocate', image: '/dr ken.jpg' },
-    { id: '21', name: 'Hannah Bassey-Duke', category: 'Art and Wellness Advocate', image: 'https://placehold.co/400x500.png?text=HBD' },
-    { id: '42', name: 'Event Coach A', category: 'Fitness Event Of The Year (Coaches)', image: 'https://placehold.co/400x500.png?text=EC-A' },
-    { id: '43', name: 'Event Coach B', category: 'Fitness Event Of The Year (Coaches)', image: 'https://placehold.co/400x500.png?text=EC-B' },
-    { id: '44', name: 'Event Coach C', category: 'Fitness Event Of The Year (Coaches)', image: 'https://placehold.co/400x500.png?text=EC-C' },
+    { id: '21', name: 'Hannah Bassey-Duke', category: 'Art and Wellness Advocate', image: 'https://placehold.co/400x400/orange/white?text=HBD' },
+    { id: '42', name: 'Event Coach A', category: 'Fitness Event Of The Year (Coaches)', image: 'https://placehold.co/400x400/orange/white?text=EC-A' },
+    { id: '43', name: 'Event Coach B', category: 'Fitness Event Of The Year (Coaches)', image: 'https://placehold.co/400x400/orange/white?text=EC-B' },
+    { id: '44', name: 'Event Coach C', category: 'Fitness Event Of The Year (Coaches)', image: 'https://placehold.co/400x400/orange/white?text=EC-C' },
     { id: '45', name: 'Calabar Walkhathon', category: 'Fitness Event Of The Year (Clubs)', image: '/walk2.png', objectFit: 'contain' },
     { id: '46', name: 'Pro Fitness', category: 'Fitness Event Of The Year (Clubs)', image: '/pro fitness.jpg', objectFit: 'contain' },
-    { id: '47', name: 'Club Event Z', category: 'Fitness Event Of The Year (Clubs)', image: 'https://placehold.co/400x500.png?text=CE-Z' },
+    { id: '47', name: 'Club Event Z', category: 'Fitness Event Of The Year (Clubs)', image: 'https://placehold.co/400x400/orange/white?text=CE-Z' },
     
 ];
 
@@ -476,3 +477,6 @@ export default function VotePage() {
 
 
 
+
+
+    

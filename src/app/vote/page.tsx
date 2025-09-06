@@ -229,7 +229,7 @@ export default function VotePage() {
 
                     <div className="mb-12 md:mb-16 flex justify-center">
                         <Image
-                            src="/vote-guide.png"
+                            src="/vote.jpg"
                             alt="SR Fitness Awards Voting Guide with pricing"
                             width={800}
                             height={800}

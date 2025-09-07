@@ -3,7 +3,6 @@
 
 import { z } from 'zod';
 import { addVote } from '@/services/firestore';
-import crypto from 'crypto';
 
 const nominationFormSchema = z.object({
   category: z.string(),
@@ -94,58 +93,55 @@ export async function createOpayPayment(paymentData: z.infer<typeof opayPaymentS
 
     const { amount, contestantName, contestantId, contestantCategory, numberOfVotes } = validatedFields.data;
 
-    const OpayUrl = "https://testapi.opaycheckout.com/api/v1/international/cashier/create";
+    const opayUrl = "https://testapi.opaycheckout.com/api/v1/international/cashier/create";
     const merchantId = process.env.OPAY_MERCHANT_ID;
-    const secretKey = process.env.OPAY_SECRET_KEY;
+    const publicKey = process.env.OPAY_PUBLIC_KEY;
 
-    if (!merchantId || !secretKey) {
+    if (!merchantId || !publicKey) {
         console.error("OPay credentials are not set in environment variables.");
         return { success: false, error: "Payment gateway is not configured." };
     }
 
     const reference = `SRVOTE_${contestantId}_${Date.now()}`;
-
+    
+    // This payload is structured based on the provided working example
     const payload = {
         amount: {
             total: amount,
             currency: "NGN"
         },
-        reference,
+        reference: reference,
         country: "NG",
         returnUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/vote?payment=success&ref=${reference}`,
         cancelUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/vote?payment=cancelled`,
-        callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/opay-webhook`, // Needs a webhook handler
-        customer: {
-            name: "SR Fitness Voter",
-            email: "voter@example.com"
-        },
-        products: [{
+        callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/opay-webhook`,
+        expireAt: 300,
+        product: {
             name: `Vote for ${contestantName}`,
             description: `${numberOfVotes} votes for ${contestantCategory}`,
-            price: amount,
-            quantity: 1
-        }]
+        },
+        userInfo: {
+            userId: `voter_${Date.now()}`,
+            userName: "SR Fitness Voter",
+            userEmail: "voter@example.com",
+            userMobile: "9999999999"
+        }
     };
     
-    const payloadString = JSON.stringify(payload);
-    const signature = crypto.createHmac('sha512', secretKey).update(payloadString).digest('hex');
-
     try {
-        const response = await fetch(OpayUrl, {
+        const response = await fetch(opayUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${secretKey}`,
+                'Authorization': `Bearer ${publicKey}`,
                 'MerchantId': merchantId
             },
-            body: payloadString
+            body: JSON.stringify(payload)
         });
 
         const result = await response.json();
 
         if (result.code === "00000" && result.data?.cashierUrl) {
-            // Before returning, let's also record the vote optimistically
-            // In a real app, you'd wait for the webhook confirmation
             await recordVote({ contestantId, contestantName, contestantCategory, numberOfVotes });
             
             return { success: true, checkoutUrl: result.data.cashierUrl };

@@ -92,9 +92,9 @@ const contestants: Contestant[] = [
     { id: '13', name: 'Coach Tunde', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x400/orange/white?text=CT' },
     { id: '14', name: 'Coach Aisha', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x400/orange/white?text=CA' },
     { id: '41', name: 'Coach Bola', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x400/orange/white?text=CB' },
-    { id: '48', name: 'Coach Ifiok', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x400/orange/white?text=CI' },
-    { id: '49', name: 'Coach Ofonime', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x400/orange/white?text=CO' },
-    { id: '50', name: 'Coach Bigname', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x400/orange/white?text=CBN' },
+    { id: '48', name: 'Coach Ifiok', category: 'Fitness Club Coach of the Year', image: '/ifiok.jpg' },
+    { id: '49', name: 'Coach Ofonime', category: 'Fitness Club Coach of the Year', image: '/ofon.JPG' },
+    { id: '50', name: 'Coach Bigname', category: 'Fitness Club Coach of the Year', image: '/Bigname.jpg' },
     { id: '15', name: 'Victor\'s Fitness', category: 'Gym of the Year', image: 'https://placehold.co/400x400/orange/white?text=VF' },
     { id: '16', name: 'Romaan Fitness', category: 'Gym of the Year', image: 'https://placehold.co/400x400/orange/white?text=RF' },
     { id: '17', name: 'Hogis Fitness', category: 'Gym of the Year', image: '/hogis.png' },
@@ -258,7 +258,7 @@ export default function VotePage() {
 
                     <div className="mb-12 md:mb-16 flex justify-center">
                         <Image
-                            src="/vote.jpg"
+                            src="/VOTEG.png"
                             alt="SR Fitness Awards Voting Guide with pricing"
                             width={800}
                             height={800}
@@ -509,6 +509,7 @@ export default function VotePage() {
 
 
     
+
 
 
 

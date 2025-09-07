@@ -280,7 +280,7 @@ export default function VotePage() {
                                     <CardContent>
                                         <div className="mb-6">
                                             <p className="font-semibold text-zinc-300 mb-3">Filter by Category:</p>
-                                            <div className="flex flex-wrap gap-2">
+                                            <div className="flex flex-wrap items-center gap-2">
                                                 <Button
                                                     variant="outline"
                                                     onClick={() => setSelectedCategory("All Categories")}
@@ -291,8 +291,11 @@ export default function VotePage() {
                                                 >
                                                     All Categories
                                                 </Button>
+                                                <div className="h-6 w-px bg-amber-400/30"></div>
                                                 {renderDropdown("General", generalCategories)}
+                                                <div className="h-6 w-px bg-amber-400/30"></div>
                                                 {renderDropdown("Professionals", professionalCategories)}
+                                                <div className="h-6 w-px bg-amber-400/30"></div>
                                                 {renderDropdown("Organizations", organizationsCategories)}
                                             </div>
                                         </div>
@@ -509,6 +512,7 @@ export default function VotePage() {
 
 
     
+
 
 
 

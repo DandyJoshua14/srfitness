@@ -250,6 +250,3 @@ export default function AdminStoreManagerPage() {
     </div>
   );
 }
-
-    
-    

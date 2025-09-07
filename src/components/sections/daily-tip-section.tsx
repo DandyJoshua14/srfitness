@@ -6,30 +6,35 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Lightbulb, AlertTriangle, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
+import { generateFitnessTip, GenerateFitnessTipOutput } from '@/ai/flows/generate-fitness-tip-flow';
 
-interface TipData {
-  tip: string;
-  category: string;
-}
 
 export default function DailyTipSection() {
-  const [tipData, setTipData] = useState<TipData | null>(null);
+  const [tipData, setTipData] = useState<GenerateFitnessTipOutput | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Set a hardcoded tip instead of fetching from the AI
-    const staticTip = {
-      tip: "Stay hydrated! Drinking enough water throughout the day is key to a great workout and overall health.",
-      category: "Hydration",
-    };
-    
-    // Simulate a brief loading period
-    setTimeout(() => {
-        setTipData(staticTip);
+    const fetchTip = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const tip = await generateFitnessTip();
+        setTipData(tip);
+      } catch (e) {
+        console.error("Failed to fetch daily tip:", e);
+        setError("Could not load the tip right now. Please check back later.");
+        // Fallback tip in case of error
+        setTipData({
+            tip: "Stay hydrated! Drinking enough water throughout the day is key to a great workout and overall health.",
+            category: "Hydration",
+        });
+      } finally {
         setIsLoading(false);
-    }, 500);
+      }
+    };
 
+    fetchTip();
   }, []);
 
   return (
@@ -67,14 +72,14 @@ export default function DailyTipSection() {
                 <p className="text-sm">{error}</p>
               </div>
             )}
-            {tipData && !isLoading && !error && (
+            {tipData && !isLoading && (
               <div className="text-center">
                 <p className="text-lg md:text-xl leading-relaxed text-foreground mb-4">
                   "{tipData.tip}"
                 </p>
                 {tipData.category && (
                   <Badge variant="secondary" className="font-medium bg-primary/10 text-primary border-primary/30">
-                    SR Fitness
+                    {tipData.category}
                   </Badge>
                 )}
               </div>

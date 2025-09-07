@@ -146,7 +146,8 @@ export async function createOpayPayment(paymentData: z.infer<typeof opayPaymentS
         const result = await response.json();
 
         if (result.code === "00000" && result.data?.cashierUrl) {
-            await recordVote({ contestantId, contestantName, contestantCategory, numberOfVotes });
+            // The vote should be recorded in the webhook after successful payment, not here.
+            // await recordVote({ contestantId, contestantName, contestantCategory, numberOfVotes });
             
             return { success: true, checkoutUrl: result.data.cashierUrl };
         } else {

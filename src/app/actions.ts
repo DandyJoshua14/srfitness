@@ -4,6 +4,12 @@
 import { z } from 'zod';
 import { addVote } from '@/services/firestore';
 
+// Explicitly read environment variables at the top level
+const OPAY_MERCHANT_ID = process.env.OPAY_MERCHANT_ID;
+const OPAY_PUBLIC_KEY = process.env.OPAY_PUBLIC_KEY;
+const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
+
 const nominationFormSchema = z.object({
   category: z.string(),
   nomineeName: z.string(),
@@ -94,10 +100,8 @@ export async function createOpayPayment(paymentData: z.infer<typeof opayPaymentS
     const { amount, contestantName, contestantId, contestantCategory, numberOfVotes } = validatedFields.data;
 
     const opayUrl = "https://testapi.opaycheckout.com/api/v1/international/cashier/create";
-    const merchantId = process.env.OPAY_MERCHANT_ID;
-    const publicKey = process.env.OPAY_PUBLIC_KEY;
 
-    if (!merchantId || !publicKey) {
+    if (!OPAY_MERCHANT_ID || !OPAY_PUBLIC_KEY) {
         console.error("OPay credentials are not set in environment variables.");
         return { success: false, error: "Payment gateway is not configured." };
     }
@@ -112,9 +116,9 @@ export async function createOpayPayment(paymentData: z.infer<typeof opayPaymentS
         },
         reference: reference,
         country: "NG",
-        returnUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/vote?payment=success&ref=${reference}`,
-        cancelUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/vote?payment=cancelled`,
-        callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/opay-webhook`,
+        returnUrl: `${NEXT_PUBLIC_BASE_URL}/vote?payment=success&ref=${reference}`,
+        cancelUrl: `${NEXT_PUBLIC_BASE_URL}/vote?payment=cancelled`,
+        callbackUrl: `${NEXT_PUBLIC_BASE_URL}/api/opay-webhook`,
         expireAt: 300,
         product: {
             name: `Vote for ${contestantName}`,
@@ -133,8 +137,8 @@ export async function createOpayPayment(paymentData: z.infer<typeof opayPaymentS
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${publicKey}`,
-                'MerchantId': merchantId
+                'Authorization': `Bearer ${OPAY_PUBLIC_KEY}`,
+                'MerchantId': OPAY_MERCHANT_ID
             },
             body: JSON.stringify(payload)
         });

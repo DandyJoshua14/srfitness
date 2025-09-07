@@ -137,7 +137,7 @@ export async function createOpayPayment(paymentData: z.infer<typeof opayPaymentS
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Signature': `Bearer ${OPAY_PUBLIC_KEY}`,
+                'Authorization': `Bearer ${OPAY_PUBLIC_KEY}`,
                 'MerchantId': OPAY_MERCHANT_ID
             },
             body: JSON.stringify(payload)

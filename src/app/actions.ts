@@ -137,7 +137,7 @@ export async function createOpayPayment(paymentData: z.infer<typeof opayPaymentS
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${OPAY_PUBLIC_KEY}`,
+                'Signature': `Bearer ${OPAY_PUBLIC_KEY}`,
                 'MerchantId': OPAY_MERCHANT_ID
             },
             body: JSON.stringify(payload)
@@ -146,9 +146,6 @@ export async function createOpayPayment(paymentData: z.infer<typeof opayPaymentS
         const result = await response.json();
 
         if (result.code === "00000" && result.data?.cashierUrl) {
-            // The vote should be recorded in the webhook after successful payment, not here.
-            // await recordVote({ contestantId, contestantName, contestantCategory, numberOfVotes });
-            
             return { success: true, checkoutUrl: result.data.cashierUrl };
         } else {
             console.error("OPay API Error:", result);

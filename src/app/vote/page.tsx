@@ -73,7 +73,7 @@ const contestants: Contestant[] = [
     { id: '26', name: 'Nurse Michael', category: 'Care-Givers Advocate', image: 'https://placehold.co/400x400.png?text=Nurse+M' },
     { id: '27', name: 'Nurse Ada', category: 'Care-Givers Advocate', image: 'https://placehold.co/400x400.png?text=Nurse+A' },
     { id: '8', name: 'Dr. Mike', category: 'Health Care Treatment Advocate', image: 'https://placehold.co/400x400.png?text=Dr+M' },
-    { id_1: '28', name: 'Dr. Chen', category: 'Health Care Treatment Advocate', image: 'https://placehold.co/400x400.png?text=Dr+C' },
+    { id: '28', name: 'Dr. Chen', category: 'Health Care Treatment Advocate', image: 'https://placehold.co/400x400.png?text=Dr+C' },
     { id: '29', name: 'Dr. Okonjo', category: 'Health Care Treatment Advocate', image: 'https://placehold.co/400x400.png?text=Dr+O' },
     { id: '9', name: 'PharmaPlus', category: 'Pharmaceutical Service Champion', image: 'https://placehold.co/400x400.png?text=Rx+' },
     { id: '30', name: 'HealthFirst Pharmacy', category: 'Pharmaceutical Service Champion', image: 'https://placehold.co/400x400.png?text=HF+Rx' },
@@ -106,7 +106,7 @@ const contestants: Contestant[] = [
     { id: '43', name: 'The Exclusive Workout Exibition', category: 'Fitness Event Of The Year (Coaches)', image: '/dbb.png' },
     { id: '44', name: 'Event Coach C', category: 'Fitness Event Of The Year (Coaches)', image: 'https://placehold.co/400x400.png?text=EC-C' },
     { id: '45', name: 'Calabar Walkhathon', category: 'Fitness Event Of The Year (Clubs)', image: '/walk2.png', objectFit: 'contain' },
-    { id: '46', name: 'Pro Fitness', category: 'Fitness Event Of The Year (Clubs)', image: '/pro fitness.jpg', objectFit: 'contain' },
+    { id: '46', name: 'Pro Fitness', category: 'Fitness Event Of The Year (Clubs)', image: '/profitness.jpg', objectFit: 'contain' },
     { id: '47', name: 'Club Event Z', category: 'Fitness Event Of The Year (Clubs)', image: 'https://placehold.co/400x400.png?text=CE-Z' },
     
 ];
@@ -534,6 +534,7 @@ export default function VotePage() {
 
 
     
+
 
 
 

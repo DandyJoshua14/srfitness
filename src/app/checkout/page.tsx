@@ -2,16 +2,15 @@
 
 "use client";
 
-import { Suspense, useTransition } from 'react';
+import { Suspense, useTransition, useEffect } from 'react';
 import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Copy, ArrowLeft, Loader2, PartyPopper } from 'lucide-react';
+import { ArrowLeft, Loader2, PartyPopper } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { recordVote } from '@/app/actions';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { createOpayPayment } from '@/app/actions';
 
 const VOTE_COST_PER_VOTE = 100;
 
@@ -34,45 +33,42 @@ function CheckoutView() {
     ));
 
     const contestantImage = `https://placehold.co/400x500.png?text=${encodeURIComponent(contestantName.split(' ').map(n => n[0]).join(''))}`;
-
-    const accountNumber = "1228863712";
-    const bankName = "Zenith Bank";
-    const smsNumber = "07056717597";
-
-    const copyToClipboard = (text: string, label: string) => {
-        navigator.clipboard.writeText(text);
-        toast({
-            title: `${label} Copied!`,
-            description: `${text} has been copied to your clipboard.`,
-        });
-    };
     
     const handleConfirmVote = () => {
         if (!contestantId) return;
 
         startTransition(async () => {
-            const result = await recordVote({
+            const result = await createOpayPayment({
+                amount: totalVoteCost,
                 contestantId,
                 contestantName,
                 contestantCategory,
                 numberOfVotes,
             });
 
-            if (result.success) {
+            if (result.success && result.checkoutUrl) {
                 toast({
-                    title: "Vote Recorded Successfully!",
-                    description: `${numberOfVotes} votes for ${contestantName} have been logged.`,
+                    title: "Redirecting to Payment",
+                    description: "You will now be redirected to OPay to complete your payment.",
                 });
-                router.push('/vote');
+                // Redirect user to OPay's checkout page
+                window.location.href = result.checkoutUrl;
             } else {
                  toast({
-                    title: "Recording Failed",
-                    description: result.error,
+                    title: "Payment Error",
+                    description: result.error || "Could not initiate payment. Please try again.",
                     variant: "destructive",
                 });
             }
         });
     };
+    
+    // Automatically trigger the payment process on component mount
+    useEffect(() => {
+        handleConfirmVote();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
 
     if (!contestantId) {
         return (
@@ -89,77 +85,31 @@ function CheckoutView() {
     }
 
     return (
-        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-start">
-            <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
-                <CardHeader>
-                    <CardTitle className="font-headline text-3xl text-amber-400">Your Vote</CardTitle>
-                    <CardDescription className="text-zinc-400">You are about to vote for:</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex items-center space-x-4">
-                        <Image src={contestantImage} alt={contestantName} width={100} height={125} className="rounded-lg border-2 border-amber-400/50" />
-                        <div>
-                            <h3 className="text-2xl font-bold text-white">{contestantName}</h3>
-                            <p className="text-amber-300">{contestantCategory}</p>
-                            <p className="text-sm text-zinc-300 mt-1">Number of Votes: <span className="font-bold">{numberOfVotes}</span></p>
-                        </div>
+        <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
+            <CardHeader>
+                <CardTitle className="font-headline text-3xl text-amber-400">Finalizing Your Vote</CardTitle>
+                <CardDescription className="text-zinc-400">Please wait while we prepare the secure payment page.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="flex items-center space-x-4">
+                    <Image src={contestantImage} alt={contestantName} width={100} height={125} className="rounded-lg border-2 border-amber-400/50" />
+                    <div>
+                        <h3 className="text-2xl font-bold text-white">{contestantName}</h3>
+                        <p className="text-amber-300">{contestantCategory}</p>
+                        <p className="text-sm text-zinc-300 mt-1">Number of Votes: <span className="font-bold">{numberOfVotes}</span></p>
                     </div>
-                    <div className="mt-6 border-t border-zinc-700 pt-4 flex justify-between items-center text-xl">
-                        <span className="text-zinc-300">Total Cost:</span>
-                        <span className="font-bold text-amber-400">N{totalVoteCost.toFixed(2)}</span>
-                    </div>
-                </CardContent>
-            </Card>
-
-            <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
-                <CardHeader>
-                    <CardTitle className="font-headline text-3xl text-amber-400">Final Steps: Payment</CardTitle>
-                    <CardDescription className="text-zinc-400">Complete the payment and send the confirmation SMS to cast your vote.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                    <div className="space-y-4 text-center">
-                        <div>
-                            <div className="font-bold text-amber-400 text-lg font-headline tracking-wider">STEP 1: PAY</div>
-                            <p className="text-zinc-300">Pay or transfer <span className="font-bold text-amber-300">N{totalVoteCost.toFixed(2)}</span> to the account below:</p>
-                            <div className="bg-zinc-800 p-3 rounded-lg mt-2 flex items-center justify-between">
-                                <div className="text-left">
-                                    <p className="font-mono text-xl">{accountNumber}</p>
-                                    <p className="text-sm text-zinc-400">SR FITNESS - {bankName}</p>
-                                </div>
-                                <Button variant="ghost" size="icon" onClick={() => copyToClipboard(accountNumber, 'Account Number')}>
-                                    <Copy className="h-5 w-5 text-amber-400" />
-                                </Button>
-                            </div>
-                        </div>
-                        <div>
-                            <div className="font-bold text-amber-400 text-lg font-headline tracking-wider">STEP 2: CONFIRM</div>
-                            <p className="text-zinc-300">Send SMS with your name, amount paid, and contestant's name to:</p>
-                            <div className="bg-zinc-800 p-3 rounded-lg mt-2 flex items-center justify-between">
-                                <p className="font-mono text-xl">{smsNumber}</p>
-                                <Button variant="ghost" size="icon" onClick={() => copyToClipboard(smsNumber, 'Phone Number')}>
-                                    <Copy className="h-5 w-5 text-amber-400" />
-                                </Button>
-                            </div>
-                            <p className="text-xs text-amber-300 mt-2 p-2 bg-amber-500/10 rounded-md">
-                                Example SMS: <br /> <span className="font-medium">John Doe, N{totalVoteCost.toFixed(2)}, {contestantName}</span>
-                            </p>
-                        </div>
-                    </div>
-                     <div className="border-t border-amber-500/20 pt-4 mt-4 space-y-3">
-                         <Alert variant="default" className="border-amber-400/30 text-amber-300 bg-amber-400/10">
-                            <PartyPopper className="h-4 w-4 text-amber-300" />
-                            <AlertDescription>
-                            This button is for demonstration. It simulates a successful payment and records the vote for the admin to see.
-                            </AlertDescription>
-                        </Alert>
-                        <Button onClick={handleConfirmVote} disabled={isPending} className="w-full bg-green-600 hover:bg-green-500 text-white font-bold">
-                            {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                            {isPending ? 'Recording...' : 'Confirm & Record Vote (Admin Demo)'}
-                        </Button>
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
+                </div>
+                <div className="mt-6 border-t border-zinc-700 pt-4 flex justify-between items-center text-xl">
+                    <span className="text-zinc-300">Total Cost:</span>
+                    <span className="font-bold text-amber-400">N{totalVoteCost.toFixed(2)}</span>
+                </div>
+                <div className="mt-8 text-center">
+                    <Loader2 className="h-10 w-10 mx-auto text-amber-400 animate-spin" />
+                    <p className="text-zinc-300 mt-2">Redirecting to OPay...</p>
+                    <p className="text-xs text-zinc-500 mt-1">If you are not redirected automatically, please refresh the page.</p>
+                </div>
+            </CardContent>
+        </Card>
     );
 }
 

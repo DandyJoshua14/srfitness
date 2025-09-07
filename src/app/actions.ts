@@ -3,7 +3,7 @@
 
 import { z } from 'zod';
 import { addVote } from '@/services/firestore';
-// import { Resend } from 'resend';
+import crypto from 'crypto';
 
 const nominationFormSchema = z.object({
   category: z.string(),
@@ -21,9 +21,13 @@ const voteSchema = z.object({
   numberOfVotes: z.number().int().positive(),
 });
 
-// Example using Resend. You would install it with `npm install resend`
-// const resend = new Resend(process.env.RESEND_API_KEY);
-// const YOUR_EMAIL = process.env.NOTIFICATION_EMAIL; // The email you want to receive nominations at
+const opayPaymentSchema = z.object({
+  amount: z.number(),
+  contestantName: z.string(),
+  contestantId: z.string(),
+  contestantCategory: z.string(),
+  numberOfVotes: z.number().int().positive(),
+});
 
 export async function sendNominationEmail(formData: z.infer<typeof nominationFormSchema>) {
   
@@ -49,34 +53,8 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
     nominatorPhone,
   });
 
-  // 3. Send the email (this part is commented out until you set up an email provider)
   try {
-    //  if (!YOUR_EMAIL) {
-    //      console.error("Email sending is not configured. Missing NOTIFICATION_EMAIL in .env file.");
-    //      // We still return success to the user because the data was logged.
-    //      return { success: true };
-    //  }
-    //
-    //  await resend.emails.send({
-    //      from: 'SR Fitness Awards <noreply@yourdomain.com>', // Needs a verified domain in Resend
-    //      to: YOUR_EMAIL,
-    //      subject: `New Award Nomination: ${nomineeName} for ${category}`,
-    //      html: `
-    //          <h1>New Award Nomination</h1>
-    //          <p><strong>Category:</strong> ${category}</p>
-    //          <p><strong>Nominee Name:</strong> ${nomineeName}</p>
-    //          <p><strong>Nominee Phone:</strong> ${nomineePhone}</p>
-    //          <hr>
-    //          <h2>Reason for Nomination:</h2>
-    //          <p>${nominationReason}</p>
-    //          <hr>
-    //          <p><strong>Nominated By:</strong> ${nominatorName}</p>
-    //          <p><strong>Nominator's Phone:</strong> ${nominatorPhone}</p>
-    //      `
-    //  });
-
     return { success: true };
-
   } catch (error) {
     console.error('Email sending failed:', error);
     return {
@@ -106,4 +84,78 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
       error: 'There was an error recording your vote to the database.'
     };
   }
+}
+
+export async function createOpayPayment(paymentData: z.infer<typeof opayPaymentSchema>) {
+    const validatedFields = opayPaymentSchema.safeParse(paymentData);
+    if (!validatedFields.success) {
+        return { success: false, error: 'Invalid payment data' };
+    }
+
+    const { amount, contestantName, contestantId, contestantCategory, numberOfVotes } = validatedFields.data;
+
+    const OpayUrl = "https://testapi.opaycheckout.com/api/v1/international/cashier/create";
+    const merchantId = process.env.OPAY_MERCHANT_ID;
+    const secretKey = process.env.OPAY_SECRET_KEY;
+
+    if (!merchantId || !secretKey) {
+        console.error("OPay credentials are not set in environment variables.");
+        return { success: false, error: "Payment gateway is not configured." };
+    }
+
+    const reference = `SRVOTE_${contestantId}_${Date.now()}`;
+
+    const payload = {
+        amount: {
+            total: amount,
+            currency: "NGN"
+        },
+        reference,
+        country: "NG",
+        returnUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/vote?payment=success&ref=${reference}`,
+        cancelUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/vote?payment=cancelled`,
+        callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/opay-webhook`, // Needs a webhook handler
+        customer: {
+            name: "SR Fitness Voter",
+            email: "voter@example.com"
+        },
+        products: [{
+            name: `Vote for ${contestantName}`,
+            description: `${numberOfVotes} votes for ${contestantCategory}`,
+            price: amount,
+            quantity: 1
+        }]
+    };
+    
+    const payloadString = JSON.stringify(payload);
+    const signature = crypto.createHmac('sha512', secretKey).update(payloadString).digest('hex');
+
+    try {
+        const response = await fetch(OpayUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${secretKey}`,
+                'MerchantId': merchantId
+            },
+            body: payloadString
+        });
+
+        const result = await response.json();
+
+        if (result.code === "00000" && result.data?.cashierUrl) {
+            // Before returning, let's also record the vote optimistically
+            // In a real app, you'd wait for the webhook confirmation
+            await recordVote({ contestantId, contestantName, contestantCategory, numberOfVotes });
+            
+            return { success: true, checkoutUrl: result.data.cashierUrl };
+        } else {
+            console.error("OPay API Error:", result);
+            return { success: false, error: result.message || 'Failed to create payment link.' };
+        }
+
+    } catch (error) {
+        console.error("Error calling OPay API:", error);
+        return { success: false, error: "Could not connect to the payment gateway." };
+    }
 }

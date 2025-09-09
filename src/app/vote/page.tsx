@@ -57,13 +57,13 @@ const allAwardCategories = [
 ].map(c => c.title);
 
 const contestants: Contestant[] = [
-    { id: '1', name: 'Coach NTB', category: 'Fitness Trainer/Coach of the Year', image: '/NTB.jpg' },
+    { id: '1', name: 'Coach NTB', category: 'Fitness Trainer/Coach of the Year', image: '/ntb2.JPG' },
     { id: '2', name: 'Coach Tawani', category: 'Fitness Trainer/Coach of the Year', image: '/Tawani.jpg' },
     { id: '3', name: 'Body Quest', category: 'Fitness Trainer/Coach of the Year', image: '/bodyq.jpg' },
     { id: '22', name: 'Coach George', category: 'Fitness Trainer/Coach of the Year', image: '/george.jpg' },
     { id: '23', name: 'Coach Collins', category: 'Fitness Trainer/Coach of the Year', image: '/collins.jpg' },
     { id: '4', name: 'Pharm. Mrs. Onwudiwe Blessing', category: 'Inspirational Weight-Loss Journey', image: '/bles.JPG', objectPosition: 'center 25%' },
-    { id: '5', name: 'Tracy S', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x400.png?text=Tracy+S' },
+    { id: '5', name: 'Mrs Virtue Michael Okoi', category: 'Inspirational Weight-Loss Journey', image: '/okoi.JPG' },
     { id: '40', name: 'Inspiree One', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x400.png?text=Inspiree+1' },
     { id: '6', name: 'David L', category: 'Community Fitness Hero of the Year', image: 'https://placehold.co/400x400.png?text=David+L' },
     { id: '24', name: 'Jane F.', category: 'Community Fitness Hero of the Year', image: 'https://placehold.co/400x400.png?text=Jane+F' },
@@ -107,7 +107,7 @@ const contestants: Contestant[] = [
     { id: '44', name: 'Event Coach C', category: 'Fitness Event Of The Year (Coaches)', image: 'https://placehold.co/400x400.png?text=EC-C' },
     { id: '45', name: 'Calabar Walkhathon', category: 'Fitness Event Of The Year (Clubs)', image: '/walk2.png', objectFit: 'contain' },
     { id: '46', name: 'Pro Fitness', category: 'Fitness Event Of The Year (Clubs)', image: '/profitness.jpg', objectFit: 'contain' },
-    { id: '47', name: 'Club Event Z', category: 'Fitness Event Of The Year (Clubs)', image: 'https://placehold.co/400x400.png?text=CE-Z' },
+    { id: '47', name: 'Micki Fitness', category: 'Fitness Event Of The Year (Clubs)', image: '/miki.jpeg' },
     
 ];
 

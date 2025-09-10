@@ -47,7 +47,7 @@ export default function AdminSidebar() {
           href="/"
           className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base mb-4 md:self-start md:px-4 md:w-auto"
         >
-          <Image src="/SR.jpg" alt="SR Fitness Logo" width={24} height={24} className="h-6 w-6 transition-all group-hover:scale-110" />
+          <Image src="/SR.jpg" alt="SR Fitness Logo" width={24} height={24} className="h-6 w-6 rounded-full transition-all group-hover:scale-110" />
           <span className="hidden md:inline">SR Fitness</span>
           <span className="sr-only">SR Fitness</span>
         </Link>

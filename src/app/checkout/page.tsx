@@ -52,7 +52,7 @@ function CheckoutView() {
                     description: "You will now be redirected to OPay to complete your payment.",
                 });
                 // Redirect user to OPay's checkout page
-                window.location.href = result.checkoutUrl;
+                // window.location.href = result.checkoutUrl;
             } else {
                  toast({
                     title: "Payment Error",
@@ -133,7 +133,7 @@ export default function CheckoutPage() {
             <div className="bg-black/80 backdrop-blur-sm min-h-screen flex items-center justify-center">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
                      <header className="text-center mb-12">
-                        <img src="/SR.jpg" alt="SR Fitness Awards Logo" className="h-24 w-auto mx-auto mb-4" data-ai-hint="awards logo" />
+                        <img src="/SR.jpg" alt="SR Fitness Awards Logo" className="h-24 w-24 object-cover rounded-full mx-auto mb-4" data-ai-hint="awards logo" />
                         <h1 className="font-headline text-5xl text-amber-400">Vote Checkout</h1>
                     </header>
                     <main>

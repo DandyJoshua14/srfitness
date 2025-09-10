@@ -64,10 +64,10 @@ function CheckoutView() {
     };
     
     // Automatically trigger the payment process on component mount
-    useEffect(() => {
-        handleConfirmVote();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // useEffect(() => {
+    //     handleConfirmVote();
+    // // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
 
 
     if (!contestantId) {
@@ -87,8 +87,8 @@ function CheckoutView() {
     return (
         <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
             <CardHeader>
-                <CardTitle className="font-headline text-3xl text-amber-400">Finalizing Your Vote</CardTitle>
-                <CardDescription className="text-zinc-400">Please wait while we prepare the secure payment page.</CardDescription>
+                <CardTitle className="font-headline text-3xl text-amber-400">Confirm Your Vote</CardTitle>
+                <CardDescription className="text-zinc-400">Please review the details below before proceeding.</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="flex items-center space-x-4">
@@ -104,9 +104,18 @@ function CheckoutView() {
                     <span className="font-bold text-amber-400">N{totalVoteCost.toFixed(2)}</span>
                 </div>
                 <div className="mt-8 text-center">
-                    <Loader2 className="h-10 w-10 mx-auto text-amber-400 animate-spin" />
-                    <p className="text-zinc-300 mt-2">Redirecting to OPay...</p>
-                    <p className="text-xs text-zinc-500 mt-1">If you are not redirected automatically, please refresh the page.</p>
+                    <Button
+                        size="lg"
+                        className="w-full mt-6 bg-amber-500 text-black font-bold text-lg hover:bg-amber-400 disabled:bg-zinc-600 disabled:text-zinc-400 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105"
+                        onClick={handleConfirmVote}
+                        disabled={isPending}
+                    >
+                         {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                         {isPending ? 'Processing...' : 'Proceed to Payment'}
+                    </Button>
+                    <p className="text-xs text-zinc-500 mt-4 text-center">
+                        You will be redirected to OPay to complete your purchase securely.
+                    </p>
                 </div>
             </CardContent>
         </Card>

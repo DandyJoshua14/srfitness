@@ -194,12 +194,17 @@ export default function VotePage() {
         router.push(`/checkout?${query}`);
     };
 
+    const votableContestants = useMemo(() => {
+        const professionalCategoryTitles = new Set(professionalCategories.map(c => c.title));
+        return contestants.filter(c => !professionalCategoryTitles.has(c.category));
+    }, []);
+
     const filteredContestants = useMemo(() => {
         if (selectedCategory === "All Categories") {
-            return contestants;
+            return votableContestants;
         }
-        return contestants.filter(c => c.category === selectedCategory);
-    }, [selectedCategory]);
+        return votableContestants.filter(c => c.category === selectedCategory);
+    }, [selectedCategory, votableContestants]);
 
     const isCategoryActive = (mainCategory: string, subCategories: {title: string}[]) => {
         if (selectedCategory === mainCategory) return true;
@@ -209,11 +214,11 @@ export default function VotePage() {
     const categoriesToDisplay = useMemo(() => {
         if (selectedCategory === "All Categories") {
             // Get a unique list of all categories that have contestants
-            const categoriesWithContestants = new Set(contestants.map(c => c.category));
+            const categoriesWithContestants = new Set(votableContestants.map(c => c.category));
             return allAwardCategories.filter(cat => categoriesWithContestants.has(cat));
         }
         return [selectedCategory];
-    }, [selectedCategory]);
+    }, [selectedCategory, votableContestants]);
 
     const renderDropdown = (mainTitle: string, subItems: {title: string}[]) => {
         const isActive = isCategoryActive(mainTitle, subItems);
@@ -300,11 +305,11 @@ export default function VotePage() {
                                                 >
                                                     All Categories
                                                 </Button>
-                                                <div className="h-6 w-px bg-amber-400/30"></div>
+                                                <div className="h-6 w-px bg-amber-400/30" />
                                                 {renderDropdown("General", generalCategories)}
-                                                <div className="h-6 w-px bg-amber-400/30"></div>
+                                                <div className="h-6 w-px bg-amber-400/30" />
                                                 {renderDropdown("Professionals", professionalCategories)}
-                                                <div className="h-6 w-px bg-amber-400/30"></div>
+                                                <div className="h-6 w-px bg-amber-400/30" />
                                                 {renderDropdown("Organizations", organizationsCategories)}
                                             </div>
                                         </div>
@@ -542,3 +547,6 @@ export default function VotePage() {
 
 
 
+
+
+    

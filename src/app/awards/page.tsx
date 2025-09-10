@@ -54,7 +54,7 @@ export default function AwardsPage() {
     { title: "Gym of the Year", qualifier: "", description: "Recognizing the gym that has provided outstanding facilities, services, and community support throughout the year." },
   ];
 
-  const renderCategoryAccordion = (categories: any[], accordionId: string) => (
+  const renderCategoryAccordion = (categories: any[], accordionId: string, showVoteButton: boolean = true) => (
     <Accordion type="single" collapsible className="w-full">
       {categories.map((category, index) => (
         <AccordionItem value={`${accordionId}-${index}`} key={index} className="border-b-0">
@@ -67,9 +67,11 @@ export default function AwardsPage() {
           <AccordionContent className="text-muted-foreground pl-2 pr-2 pb-4">
             <div className="space-y-4">
                 <p>{category.description}</p>
-                <Button asChild>
-                    <Link href="/vote">Vote Now</Link>
-                </Button>
+                {showVoteButton && (
+                    <Button asChild>
+                        <Link href="/vote">Vote Now</Link>
+                    </Button>
+                )}
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -158,7 +160,7 @@ export default function AwardsPage() {
 
                 <Separator className="my-6" />
                 <h3 className="font-headline text-2xl text-primary mb-4 text-center">Professionals</h3>
-                {renderCategoryAccordion(professionalCategories, 'professionals')}
+                {renderCategoryAccordion(professionalCategories, 'professionals', false)}
                 
                 <Separator className="my-6" />
                 <h3 className="font-headline text-2xl text-primary mb-4 text-center">Organizations</h3>

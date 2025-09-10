@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import React, { useState, useMemo, useTransition } from 'react';
@@ -10,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { ArrowRight, ChevronDown, Award as AwardIcon, Loader2 } from 'lucide-react';
+import { ArrowRight, ChevronDown, Award as AwardIcon, Loader2, Star } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ContestantCard, { Contestant } from '@/components/features/vote/contestant-card';
 import { cn } from '@/lib/utils';
@@ -194,10 +193,16 @@ export default function VotePage() {
         router.push(`/checkout?${query}`);
     };
 
+    const professionalCategoryTitles = useMemo(() => new Set(professionalCategories.map(c => c.title)), []);
+    
     const votableContestants = useMemo(() => {
-        const professionalCategoryTitles = new Set(professionalCategories.map(c => c.title));
         return contestants.filter(c => !professionalCategoryTitles.has(c.category));
-    }, []);
+    }, [professionalCategoryTitles]);
+
+    const recognitionContestants = useMemo(() => {
+        return contestants.filter(c => professionalCategoryTitles.has(c.category));
+    }, [professionalCategoryTitles]);
+
 
     const filteredContestants = useMemo(() => {
         if (selectedCategory === "All Categories") {
@@ -213,7 +218,6 @@ export default function VotePage() {
     
     const categoriesToDisplay = useMemo(() => {
         if (selectedCategory === "All Categories") {
-            // Get a unique list of all categories that have contestants
             const categoriesWithContestants = new Set(votableContestants.map(c => c.category));
             return allAwardCategories.filter(cat => categoriesWithContestants.has(cat));
         }
@@ -308,21 +312,12 @@ export default function VotePage() {
                                                 <div className="h-6 w-px bg-amber-400/30" />
                                                 {renderDropdown("General", generalCategories)}
                                                 <div className="h-6 w-px bg-amber-400/30" />
-                                                {renderDropdown("Professionals", professionalCategories)}
-                                                <div className="h-6 w-px bg-amber-400/30" />
                                                 {renderDropdown("Organizations", organizationsCategories)}
                                             </div>
                                         </div>
                                          <div className="space-y-8">
                                             {categoriesToDisplay.map((category) => {
                                                 const contestantsForCategory = filteredContestants.filter(c => c.category === category);
-                                                if (contestantsForCategory.length === 0 && selectedCategory !== 'All Categories') {
-                                                    return (
-                                                         <div key={category} className="col-span-full text-center py-8">
-                                                            <p className="text-zinc-400">No contestants found for this category.</p>
-                                                        </div>
-                                                    )
-                                                }
                                                 if (contestantsForCategory.length === 0) return null;
 
                                                 return (
@@ -333,6 +328,7 @@ export default function VotePage() {
                                                                 <ContestantCard 
                                                                     key={c.id} 
                                                                     contestant={c}
+                                                                    isVotable={true}
                                                                     isSelected={selectedContestant?.id === c.id}
                                                                     onSelect={() => {
                                                                         if (selectedContestant?.id === c.id) {
@@ -401,6 +397,44 @@ export default function VotePage() {
                                     </Card>
                                 </div>
                             </div>
+                        </section>
+
+                         {/* --- Professional Recognition Section --- */}
+                        <section id="recognition">
+                            <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
+                                <CardHeader>
+                                    <div className="flex items-center gap-4">
+                                        <Star className="h-10 w-10 text-amber-400" />
+                                        <div>
+                                            <CardTitle className="font-headline text-4xl text-amber-400">Professional Recognition</CardTitle>
+                                            <CardDescription className="text-zinc-400">Honoring excellence in specialized fields. These categories are for recognition only and are not part of the public vote.</CardDescription>
+                                        </div>
+                                    </div>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="space-y-8">
+                                        {professionalCategories.map((category) => {
+                                            const contestantsForCategory = recognitionContestants.filter(c => c.category === category.title);
+                                            if (contestantsForCategory.length === 0) return null;
+
+                                            return (
+                                                <div key={category.title}>
+                                                    <h3 className="font-headline text-2xl text-amber-300 mb-4 pb-2 border-b border-amber-400/20">{category.title}</h3>
+                                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                                        {contestantsForCategory.map(c => (
+                                                            <ContestantCard 
+                                                                key={c.id} 
+                                                                contestant={c}
+                                                                isVotable={false}
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                </CardContent>
+                            </Card>
                         </section>
                         
                         {/* --- Nomination Section --- */}
@@ -524,29 +558,3 @@ export default function VotePage() {
         </div>
     );
 }
-
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-    

@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import Image from 'next/image';
@@ -18,26 +17,31 @@ export interface Contestant {
 
 interface ContestantCardProps {
     contestant: Contestant;
-    isSelected: boolean;
-    onSelect: () => void;
+    isVotable: boolean;
+    isSelected?: boolean;
+    onSelect?: () => void;
 }
 
-export default function ContestantCard({ contestant, isSelected, onSelect }: ContestantCardProps) {
+export default function ContestantCard({ contestant, isVotable, isSelected, onSelect }: ContestantCardProps) {
+    const cardProps = {
+        onClick: isVotable ? onSelect : undefined,
+        className: cn(
+            "overflow-hidden bg-zinc-800 border-2 transition-all duration-200 ease-in-out relative group",
+            isVotable && "cursor-pointer hover:border-amber-400/50 hover:scale-105",
+            isSelected ? "border-amber-400 scale-105 shadow-lg shadow-amber-400/20" : "border-transparent",
+            !isVotable && "border-zinc-700"
+        ),
+    };
+
     return (
-        <Card
-            onClick={onSelect}
-            className={cn(
-                "cursor-pointer overflow-hidden bg-zinc-800 border-2 transition-all duration-200 ease-in-out relative group",
-                isSelected ? "border-amber-400 scale-105 shadow-lg shadow-amber-400/20" : "border-transparent hover:border-amber-400/50 hover:scale-105"
-            )}
-        >
+        <Card {...cardProps}>
             <CardContent className="p-0 aspect-square relative">
                 <Image
                     src={contestant.image}
                     alt={contestant.name}
                     layout="fill"
                     objectFit={contestant.objectFit || 'cover'}
-                    className="transition-transform duration-300 group-hover:scale-110"
+                    className={cn("transition-transform duration-300", isVotable && "group-hover:scale-110")}
                     style={{ objectPosition: contestant.objectPosition || 'center' }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
@@ -56,5 +60,3 @@ export default function ContestantCard({ contestant, isSelected, onSelect }: Con
         </Card>
     );
 }
-
-    

@@ -26,7 +26,6 @@ export default function AwardsPage() {
   ];
 
   const generalCategories = [
-    { title: "Community Fitness Hero of the Year", qualifier: "Male & Female", description: "Recognizing individuals who have inspired and motivated others within the fitness community through their dedication and positive influence." },
     { title: "Fitness Trainer/Coach of the Year", qualifier: "", description: "Honoring the trainer who has demonstrated exceptional skill, knowledge, and commitment to their clients' success and well-being." },
     { title: "Fitness Club Coach of the Year", qualifier: "", description: "Awarded to the coach who has shown outstanding leadership and delivered exceptional results within a fitness club setting." },
     { title: "Inspirational Weight-Loss Journey", qualifier: "Male & Female", description: "Celebrating individuals who have achieved remarkable weight-loss transformations through perseverance, dedication, and a healthy lifestyle." },
@@ -41,6 +40,7 @@ export default function AwardsPage() {
   ];
 
   const professionalCategories = [
+      { title: "Community Fitness Hero of the Year", qualifier: "Male & Female", description: "Recognizing individuals who have inspired and motivated others within the fitness community through their dedication and positive influence." },
       { title: "Care-Givers Advocate", qualifier: "Nurses", description: "Recognizing nurses who go above and beyond in providing care and promoting wellness." },
       { title: "Health Care Treatment Advocate", qualifier: "Doctors", description: "Celebrating doctors who are exemplary in patient care and health advocacy." },
       { title: "Pharmaceutical Service Champion", qualifier: "Pharmacist", description: "Honoring an individual pharmacist for their excellent service and patient care." },
@@ -159,7 +159,7 @@ export default function AwardsPage() {
                  {renderCategoryAccordion(generalCategories, 'general')}
 
                 <Separator className="my-6" />
-                <h3 className="font-headline text-2xl text-primary mb-4 text-center">Professionals</h3>
+                <h3 className="font-headline text-2xl text-primary mb-4 text-center">Recognition Awards</h3>
                 {renderCategoryAccordion(professionalCategories, 'professionals', false)}
                 
                 <Separator className="my-6" />

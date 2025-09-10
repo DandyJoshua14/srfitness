@@ -22,7 +22,6 @@ import { z } from 'zod';
 import { sendNominationEmail } from '@/app/actions';
 
 const generalCategories = [
-    { title: "Community Fitness Hero of the Year" },
     { title: "Fitness Trainer/Coach of the Year" },
     { title: "Fitness Club Coach of the Year" },
     { title: "Inspirational Weight-Loss Journey" },
@@ -36,7 +35,8 @@ const generalCategories = [
     { title: "Fitness Event Of The Year (Clubs)" },
 ];
 
-const professionalCategories = [
+const recognitionCategories = [
+      { title: "Community Fitness Hero of the Year" },
       { title: "Care-Givers Advocate" }, // Nurses
       { title: "Health Care Treatment Advocate" }, // Doctors
       { title: "Pharmaceutical Service Champion" }, // Pharmacy / Pharmacist
@@ -51,7 +51,7 @@ const organizationsCategories = [
 
 const allAwardCategories = [
     ...generalCategories,
-    ...professionalCategories,
+    ...recognitionCategories,
     ...organizationsCategories
 ].map(c => c.title);
 
@@ -193,15 +193,15 @@ export default function VotePage() {
         router.push(`/checkout?${query}`);
     };
 
-    const professionalCategoryTitles = useMemo(() => new Set(professionalCategories.map(c => c.title)), []);
+    const recognitionCategoryTitles = useMemo(() => new Set(recognitionCategories.map(c => c.title)), []);
     
     const votableContestants = useMemo(() => {
-        return contestants.filter(c => !professionalCategoryTitles.has(c.category));
-    }, [professionalCategoryTitles]);
+        return contestants.filter(c => !recognitionCategoryTitles.has(c.category));
+    }, [recognitionCategoryTitles]);
 
     const recognitionContestants = useMemo(() => {
-        return contestants.filter(c => professionalCategoryTitles.has(c.category));
-    }, [professionalCategoryTitles]);
+        return contestants.filter(c => recognitionCategoryTitles.has(c.category));
+    }, [recognitionCategoryTitles]);
 
 
     const filteredContestants = useMemo(() => {
@@ -219,7 +219,9 @@ export default function VotePage() {
     const categoriesToDisplay = useMemo(() => {
         if (selectedCategory === "All Categories") {
             const categoriesWithContestants = new Set(votableContestants.map(c => c.category));
-            return allAwardCategories.filter(cat => categoriesWithContestants.has(cat));
+            return [...generalCategories, ...organizationsCategories]
+                .map(c => c.title)
+                .filter(cat => categoriesWithContestants.has(cat));
         }
         return [selectedCategory];
     }, [selectedCategory, votableContestants]);
@@ -406,14 +408,14 @@ export default function VotePage() {
                                     <div className="flex items-center gap-4">
                                         <Star className="h-10 w-10 text-amber-400" />
                                         <div>
-                                            <CardTitle className="font-headline text-4xl text-amber-400">Professional Recognition</CardTitle>
+                                            <CardTitle className="font-headline text-4xl text-amber-400">Recognition Awards</CardTitle>
                                             <CardDescription className="text-zinc-400">Honoring excellence in specialized fields. These categories are for recognition only and are not part of the public vote.</CardDescription>
                                         </div>
                                     </div>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-8">
-                                        {professionalCategories.map((category) => {
+                                        {recognitionCategories.map((category) => {
                                             const contestantsForCategory = recognitionContestants.filter(c => c.category === category.title);
                                             if (contestantsForCategory.length === 0) return null;
 

@@ -2,10 +2,12 @@
 import HeroSection from '@/components/sections/hero-section';
 import AboutSummarySection from '@/components/sections/about-summary-section';
 import KeyFeaturesSection from '@/components/sections/key-features-section';
+import ServicesHighlightSection from '@/components/sections/services-highlight-section';
 import BlogHighlightSection from '@/components/sections/blog-highlight-section';
 import MarketplaceHighlightSection from '@/components/sections/marketplace-highlight-section';
 import OurImpactSection from '@/components/sections/our-impact-section';
 import DailyTipSection from '@/components/sections/daily-tip-section';
+import GallerySection from '@/components/sections/gallery-section';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -22,6 +24,8 @@ export default function HomePage() {
       <HeroSection />
       <AboutSummarySection />
       <KeyFeaturesSection />
+      <ServicesHighlightSection />
+      <GallerySection />
       <BlogHighlightSection />
       <MarketplaceHighlightSection />
       <OurImpactSection />

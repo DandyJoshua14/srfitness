@@ -129,6 +129,9 @@ export default function Footer() {
                 <a href="https://www.instagram.com/agqcube?igsh=Mnd0bDR6Mzh2eGl1" target="_blank" rel="noopener noreferrer" className="flex items-center group">
                     <Image src="/allur.jpg" alt="Allur Logo" width={32} height={32} className="rounded-full transition-transform duration-300 group-hover:scale-110" data-ai-hint="company logo" />
                 </a>
+                <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center group">
+                    <Image src="/defaro.webp" alt="Defaro Logo" width={32} height={32} className="rounded-full transition-transform duration-300 group-hover:scale-110" data-ai-hint="company logo" />
+                </a>
               </div>
           </div>
 

@@ -27,7 +27,7 @@ const galleryImages: GalleryImage[] = [
     { src: "/gal34.jpg", alt: "Fitness class in session", dataAiHint: "fitness class" },
     { src: "/stad.jpg", alt: "Fitness class in session", dataAiHint: "fitness class" },
     { src: "/wak.jpg", alt: "Fitness class in session", dataAiHint: "fitness class" },
-    { src: "/wak2.jpg", alt: "Fitness class in session", dataAiHint: "fitness class", objectPosition: "center 20%" },
+    { src: "/wak2.jpg", alt: "Fitness class", dataAiHint: "fitness class", objectPosition: "center 20%" },
 ];
 
 

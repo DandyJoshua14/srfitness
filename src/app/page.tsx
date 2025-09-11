@@ -5,7 +5,6 @@ import KeyFeaturesSection from '@/components/sections/key-features-section';
 import BlogHighlightSection from '@/components/sections/blog-highlight-section';
 import MarketplaceHighlightSection from '@/components/sections/marketplace-highlight-section';
 import OurImpactSection from '@/components/sections/our-impact-section';
-import GallerySection from '@/components/sections/gallery-section';
 import DailyTipSection from '@/components/sections/daily-tip-section';
 import type { Metadata } from 'next';
 
@@ -22,7 +21,6 @@ export default function HomePage() {
     <>
       <HeroSection />
       <AboutSummarySection />
-      <GallerySection />
       <KeyFeaturesSection />
       <BlogHighlightSection />
       <MarketplaceHighlightSection />

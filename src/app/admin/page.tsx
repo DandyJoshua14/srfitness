@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Newspaper, Store, BookOpen, Vote } from 'lucide-react';
+import { Newspaper, Store, BookOpen, Vote, Handshake } from 'lucide-react';
 
 const features = [
     {
@@ -29,6 +29,12 @@ const features = [
         description: "View and monitor real-time voting results.",
         href: "/admin/votes",
         icon: <Vote className="h-8 w-8 text-primary" />,
+    },
+    {
+        title: "Nominations",
+        description: "View all submitted award nominations.",
+        href: "/admin/nominations",
+        icon: <Handshake className="h-8 w-8 text-primary" />,
     }
 ];
 

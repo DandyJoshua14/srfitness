@@ -208,3 +208,48 @@ export const getVotes = async (): Promise<Vote[]> => {
         throw new Error("Could not fetch votes from Firestore.");
     }
 };
+
+// --------- Nomination Types and Functions ---------
+
+export interface Nomination {
+  id?: string;
+  category: string;
+  nomineeName: string;
+  nomineePhone: string;
+  nominationReason: string;
+  nominatorName: string;
+  nominatorPhone: string;
+  timestamp: any;
+}
+
+const nominationsCollectionRef = collection(db, 'nominations');
+
+export const addNomination = async (nominationData: Omit<Nomination, 'id' | 'timestamp'>) => {
+    try {
+        await addDoc(nominationsCollectionRef, {
+            ...nominationData,
+            timestamp: serverTimestamp(),
+        });
+    } catch (error) {
+        console.error("Error adding nomination: ", error);
+        throw new Error("Could not add nomination to Firestore.");
+    }
+};
+
+export const getNominations = async (): Promise<Nomination[]> => {
+    try {
+        const q = query(nominationsCollectionRef, orderBy('timestamp', 'desc'));
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                id: doc.id,
+                ...data,
+                timestamp: data.timestamp?.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) || 'N/A',
+            } as Nomination;
+        });
+    } catch (error) {
+        console.error("Error getting nominations: ", error);
+        throw new Error("Could not fetch nominations from Firestore.");
+    }
+};

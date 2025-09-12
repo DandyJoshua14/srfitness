@@ -2,7 +2,7 @@
 'use server';
 
 import { z } from 'zod';
-import { addVote } from '@/services/firestore';
+import { addVote, addNomination } from '@/services/firestore';
 import { Resend } from 'resend';
 
 // Explicitly read environment variables at the top level
@@ -70,11 +70,6 @@ const remitaRrrValidationSchema = z.object({
 
 export async function sendNominationEmail(formData: z.infer<typeof nominationFormSchema>) {
   
-  if (!RESEND_API_KEY) {
-    console.error('Resend API key is not configured.');
-    return { success: false, error: 'The email service is not configured.' };
-  }
-
   const validatedFields = nominationFormSchema.safeParse(formData);
   if (!validatedFields.success) {
     return {
@@ -82,9 +77,24 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
       error: 'Invalid form data.',
     };
   }
-
-  const { category, nomineeName, nomineePhone, nominationReason, nominatorName, nominatorPhone } = validatedFields.data;
   
+  const { category, nomineeName, nomineePhone, nominationReason, nominatorName, nominatorPhone } = validatedFields.data;
+
+  // 1. Save to Firestore
+  try {
+    await addNomination(validatedFields.data);
+  } catch (error) {
+    console.error("Failed to save nomination to Firestore: ", error);
+    return { success: false, error: 'Could not save your nomination. Please try again.' };
+  }
+
+  // 2. Send email notification
+  if (!RESEND_API_KEY) {
+    console.warn('Resend API key is not configured. Skipping email notification.');
+    // Still return success because the nomination was saved to the DB.
+    return { success: true, message: 'Nomination saved successfully. Email notification was skipped.' };
+  }
+
   const resend = new Resend(RESEND_API_KEY);
 
   try {
@@ -114,15 +124,17 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
 
     if (error) {
         console.error('Resend API Error:', error);
-        return { success: false, error: 'Failed to send nomination email.' };
+        // Don't fail the whole operation if email fails, nomination is already in DB.
+        return { success: true, message: 'Nomination saved, but failed to send email notification.' };
     }
 
     return { success: true };
   } catch (error) {
     console.error('Email sending failed:', error);
+    // Don't fail the whole operation if email fails.
     return {
-      success: false,
-      error: 'Sorry, we couldn\'t submit your nomination at this time.',
+      success: true,
+      message: 'Nomination saved, but email sending failed.',
     };
   }
 }
@@ -440,5 +452,3 @@ export async function validateRemitaRrr(validationData: z.infer<typeof remitaRrr
         return { success: false, error: "Could not connect to the Remita payment gateway to validate RRR." };
     }
 }
-    
-    

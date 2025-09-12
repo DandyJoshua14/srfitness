@@ -69,28 +69,25 @@ const remitaRrrValidationSchema = z.object({
 
 
 export async function sendNominationEmail(formData: z.infer<typeof nominationFormSchema>) {
+  const validatedFields = nominationFormSchema.safeParse(formData);
+  if (!validatedFields.success) {
+    return { success: false, error: 'Invalid form data.' };
+  }
+
+  const { category, nomineeName, nomineePhone, nominationReason, nominatorName, nominatorPhone } = validatedFields.data;
+
+  // 1. Send email notification first
+  if (!RESEND_API_KEY) {
+    console.error('Resend API key is not configured.');
+    // Fail gracefully if Resend isn't set up, but still save the nomination
+    await addNomination(validatedFields.data);
+    return { success: true, message: 'Nomination submitted successfully! Email notification is currently disabled.' };
+  }
+  
   try {
-    const validatedFields = nominationFormSchema.safeParse(formData);
-    if (!validatedFields.success) {
-      return {
-        success: false,
-        error: 'Invalid form data.',
-      };
-    }
-
-    const { category, nomineeName, nomineePhone, nominationReason, nominatorName, nominatorPhone } = validatedFields.data;
-
-    // 1. Send email notification first
-    if (!RESEND_API_KEY) {
-      console.error('Resend API key is not configured.');
-      // Fail gracefully if Resend isn't set up, but still save the nomination
-      await addNomination(validatedFields.data);
-      return { success: true, message: 'Nomination submitted successfully! Email notification is currently disabled.' };
-    }
-
     const resend = new Resend(RESEND_API_KEY);
 
-    const { data, error: emailError } = await resend.emails.send({
+    const { data, error } = await resend.emails.send({
       from: 'SR Fitness Awards <noreply@srfitness.com.ng>',
       to: ['sampson07@outlook.com', 'srfitness247@gmail.com'],
       subject: 'New Award Nomination Received!',
@@ -114,9 +111,9 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
       `,
     });
 
-    if (emailError) {
-        console.error('Resend API Error:', emailError);
-        return { success: false, error: 'Failed to send nomination email. Please try again.' };
+    if (error) {
+      console.error('Resend API Error:', error);
+      return { success: false, error: 'Failed to send nomination email. Please try again.' };
     }
 
     // 2. If email is successful, save to Firestore

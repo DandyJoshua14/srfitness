@@ -2,24 +2,35 @@
 
 "use client";
 
-import { Suspense, useTransition, useEffect, useState } from 'react';
+import { Suspense, useTransition, useState } from 'react';
 import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Loader2, PartyPopper, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Loader2, CheckCircle, ShieldCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { createWemaAlatPayment } from '@/app/actions';
+import { createWemaAlatPayment, recordVote, validateWemaAlatPayment } from '@/app/actions';
+import { Input } from '@/components/ui/input';
 
 const VOTE_COST_PER_VOTE = 100;
+
+interface PaymentData {
+    platformTransactionReference: string;
+    transactionReference: string;
+    channelId: string;
+}
 
 function CheckoutView() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
-    const [paymentSuccess, setPaymentSuccess] = useState(false);
+    const [isConfirmingOtp, startOtpTransition] = useTransition();
+
+    const [view, setView] = useState<'confirm' | 'otp' | 'success'>('confirm');
+    const [otp, setOtp] = useState('');
+    const [paymentData, setPaymentData] = useState<PaymentData | null>(null);
 
     const contestantId = searchParams.get('id');
     const contestantName = searchParams.get('name') || 'the selected contestant';
@@ -35,7 +46,7 @@ function CheckoutView() {
 
     const contestantImage = `https://placehold.co/400x500.png?text=${encodeURIComponent(contestantName.split(' ').map(n => n[0]).join(''))}`;
     
-    const handleConfirmVote = () => {
+    const handleInitialPayment = () => {
         if (!contestantId) return;
 
         startTransition(async () => {
@@ -47,12 +58,13 @@ function CheckoutView() {
                 numberOfVotes,
             });
 
-            if (result.success) {
+            if (result.success && result.data) {
                 toast({
-                    title: "Vote Successful!",
-                    description: "Your payment has been processed and your vote has been recorded.",
+                    title: "Awaiting Confirmation",
+                    description: "Please enter the OTP sent to you to complete the vote.",
                 });
-                setPaymentSuccess(true);
+                setPaymentData(result.data);
+                setView('otp');
             } else {
                  toast({
                     title: "Payment Error",
@@ -62,6 +74,41 @@ function CheckoutView() {
             }
         });
     };
+
+    const handleOtpValidation = () => {
+        if (!paymentData || !otp || !contestantId) return;
+
+        startOtpTransition(async () => {
+            const validationResult = await validateWemaAlatPayment({
+                ...paymentData,
+                otp,
+            });
+            
+            if (validationResult.success) {
+                 // After successful OTP validation, record the vote
+                 const voteRecordResult = await recordVote({ contestantId, contestantName, contestantCategory, numberOfVotes });
+                 if (voteRecordResult.success) {
+                    toast({
+                        title: "Vote Successful!",
+                        description: "Your payment has been processed and your vote has been recorded.",
+                    });
+                    setView('success');
+                 } else {
+                    toast({
+                        title: "Vote Recording Failed",
+                        description: voteRecordResult.error || "Payment was successful but we couldn't save your vote. Please contact support.",
+                        variant: "destructive"
+                    });
+                 }
+            } else {
+                toast({
+                    title: "OTP Validation Failed",
+                    description: validationResult.error || "The OTP you entered is incorrect. Please try again.",
+                    variant: "destructive"
+                });
+            }
+        });
+    }
 
     if (!contestantId) {
         return (
@@ -77,7 +124,7 @@ function CheckoutView() {
         );
     }
     
-    if (paymentSuccess) {
+    if (view === 'success') {
       return (
         <Card className="bg-zinc-900/50 border-green-400/30 text-white shadow-2xl shadow-green-500/10 text-center">
             <CardHeader>
@@ -98,6 +145,42 @@ function CheckoutView() {
         </Card>
       )
     }
+
+     if (view === 'otp') {
+        return (
+            <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
+                <CardHeader>
+                     <div className="mx-auto bg-amber-500 text-black rounded-full h-16 w-16 flex items-center justify-center mb-4">
+                        <ShieldCheck className="h-10 w-10" />
+                    </div>
+                    <CardTitle className="font-headline text-3xl text-amber-400 text-center">Enter Your OTP</CardTitle>
+                    <CardDescription className="text-zinc-400 text-center">A One-Time Password has been sent to you. Please enter it below to complete your transaction.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Input
+                        type="text"
+                        placeholder="Enter OTP"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        className="bg-zinc-800 border-zinc-700 focus:ring-amber-400 text-center text-lg h-12"
+                        maxLength={6}
+                    />
+                </CardContent>
+                <CardFooter>
+                    <Button
+                        size="lg"
+                        className="w-full mt-4 bg-amber-500 text-black font-bold text-lg hover:bg-amber-400 disabled:bg-zinc-600"
+                        onClick={handleOtpValidation}
+                        disabled={isConfirmingOtp || otp.length < 4}
+                    >
+                        {isConfirmingOtp ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                        {isConfirmingOtp ? 'Confirming...' : 'Validate & Complete Vote'}
+                    </Button>
+                </CardFooter>
+            </Card>
+        )
+    }
+
 
     return (
         <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
@@ -122,14 +205,14 @@ function CheckoutView() {
                     <Button
                         size="lg"
                         className="w-full mt-6 bg-amber-500 text-black font-bold text-lg hover:bg-amber-400 disabled:bg-zinc-600 disabled:text-zinc-400 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105"
-                        onClick={handleConfirmVote}
+                        onClick={handleInitialPayment}
                         disabled={isPending}
                     >
                          {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                          {isPending ? 'Processing Payment...' : 'Confirm & Pay'}
                     </Button>
                     <p className="text-xs text-zinc-500 mt-4 text-center">
-                        Clicking "Confirm & Pay" will initiate the payment process.
+                        You will be asked to enter an OTP in the next step.
                     </p>
                 </div>
             </CardContent>
@@ -161,3 +244,5 @@ export default function CheckoutPage() {
         </div>
     );
 }
+
+    

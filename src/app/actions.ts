@@ -40,6 +40,14 @@ const wemaPaymentRequestSchema = z.object({
   numberOfVotes: z.number(),
 });
 
+const wemaPaymentValidationSchema = z.object({
+  channelId: z.string(),
+  transactionReference: z.string(),
+  platformTransactionReference: z.string(),
+  otp: z.string(),
+});
+
+
 export async function sendNominationEmail(formData: z.infer<typeof nominationFormSchema>) {
   
   // 1. Validate the data on the server
@@ -137,10 +145,23 @@ export async function createWemaAlatPayment(paymentData: z.infer<typeof wemaPaym
     console.log("Wema Alat transfer-fund-request response body:", responseText);
 
     if (response.ok) {
-      // Assuming a successful response means the payment was initiated.
-      // Now, record the vote in Firestore.
-      await recordVote({ contestantId, contestantName, contestantCategory, numberOfVotes });
-      return { success: true, message: "Payment initiated and vote recorded successfully.", data: responseText };
+        try {
+            const data = JSON.parse(responseText);
+            // Assuming the platformTransactionReference is in the response body.
+            // This may need adjustment based on the actual API response structure.
+            return {
+                success: true,
+                message: "Payment initiated. Please enter OTP.",
+                data: {
+                    platformTransactionReference: data.platformTransactionReference, // Adjust this key based on actual response
+                    transactionReference: transactionReference,
+                    channelId: WEMA_ALAT_CHANNEL_ID,
+                }
+            };
+        } catch (e) {
+            console.error("Failed to parse JSON from Wema Alat response", e);
+             return { success: false, error: "Received an unreadable response from payment gateway." };
+        }
     } else {
        return { success: false, error: `Payment initiation failed: ${responseText}`, status: response.status };
     }
@@ -149,6 +170,53 @@ export async function createWemaAlatPayment(paymentData: z.infer<typeof wemaPaym
     console.error("Error calling Wema Alat API:", error);
     return { success: false, error: "Could not connect to the payment gateway." };
   }
+}
+
+export async function validateWemaAlatPayment(validationData: z.infer<typeof wemaPaymentValidationSchema>) {
+    const validatedFields = wemaPaymentValidationSchema.safeParse(validationData);
+    if (!validatedFields.success) {
+        return { success: false, error: 'Invalid validation data provided.' };
+    }
+
+    if (!WEMA_ALAT_SUBSCRIPTION_KEY) {
+        console.error("Wema Alat subscription key is not set.");
+        return { success: false, error: "Payment gateway is not configured correctly." };
+    }
+
+    const { channelId, transactionReference, platformTransactionReference, otp } = validatedFields.data;
+
+    const body = {
+        channelId,
+        transactionReference,
+        platformTransactionReference,
+        otp,
+    };
+
+    try {
+        const response = await fetch('https://wema-alatdev-apimgt.azure-api.net/alat-pay/api/EcommerceTransfer/transfer-fund-validation', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json',
+                'Cache-Control': 'no-cache',
+                'Ocp-Apim-Subscription-Key': WEMA_ALAT_SUBSCRIPTION_KEY,
+            }
+        });
+
+        const responseText = await response.text();
+        console.log("Wema Alat transfer-fund-validation response status:", response.status);
+        console.log("Wema Alat transfer-fund-validation response body:", responseText);
+        
+        if(response.ok) {
+            return { success: true, message: "Payment validated successfully!" };
+        } else {
+            return { success: false, error: `OTP validation failed: ${responseText}` };
+        }
+
+    } catch(error) {
+        console.error("Error calling Wema Alat validation API:", error);
+        return { success: false, error: "Could not connect to the payment gateway for validation." };
+    }
 }
 
 
@@ -193,3 +261,5 @@ export async function checkWemaAlatTransactionStatus(statusData: z.infer<typeof 
         return { success: false, error: "Could not connect to the payment gateway." };
     }
 }
+
+    

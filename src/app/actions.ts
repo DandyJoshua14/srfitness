@@ -76,67 +76,67 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
       error: 'Invalid form data.',
     };
   }
-  
+
   const { category, nomineeName, nomineePhone, nominationReason, nominatorName, nominatorPhone } = validatedFields.data;
 
-  // 1. Save to Firestore
-  try {
-    await addNomination(validatedFields.data);
-  } catch (error) {
-    console.error("Failed to save nomination to Firestore: ", error);
-    return { success: false, error: 'Could not save your nomination. Please try again.' };
-  }
-
-  // 2. Send email notification
+  // 1. Send email notification first
   if (!RESEND_API_KEY) {
-    console.warn('Resend API key is not configured. Skipping email notification.');
-    return { success: true, message: 'Nomination saved successfully. Email notification was skipped as RESEND_API_KEY is not configured.' };
+    console.error('Resend API key is not configured.');
+    return { success: false, error: 'The email service is not configured. Please contact support.' };
   }
 
   const resend = new Resend(RESEND_API_KEY);
 
   try {
-    const { data, error } = await resend.emails.send({
-        from: 'SR Fitness Awards <noreply@srfitness.com.ng>',
-        to: ['sampson07@outlook.com', 'srfitness247@gmail.com'],
-        subject: 'New Award Nomination Received!',
-        html: `
-            <h1>New SR Fitness Award Nomination</h1>
-            <p>A new nomination has been submitted. Here are the details:</p>
-            <h2>Nominee Details:</h2>
-            <ul>
-                <li><strong>Category:</strong> ${category}</li>
-                <li><strong>Name:</strong> ${nomineeName}</li>
-                <li><strong>Phone:</strong> ${nomineePhone}</li>
-            </ul>
-            <h2>Reason for Nomination:</h2>
-            <p>${nominationReason}</p>
-            <hr />
-            <h2>Nominator Details:</h2>
-            <ul>
-                <li><strong>Name:</strong> ${nominatorName}</li>
-                <li><strong>Phone:</strong> ${nominatorPhone}</li>
-            </ul>
-        `,
+    const { error } = await resend.emails.send({
+      from: 'SR Fitness Awards <noreply@srfitness.com.ng>',
+      to: ['sampson07@outlook.com', 'srfitness247@gmail.com'],
+      subject: 'New Award Nomination Received!',
+      html: `
+          <h1>New SR Fitness Award Nomination</h1>
+          <p>A new nomination has been submitted. Here are the details:</p>
+          <h2>Nominee Details:</h2>
+          <ul>
+              <li><strong>Category:</strong> ${category}</li>
+              <li><strong>Name:</strong> ${nomineeName}</li>
+              <li><strong>Phone:</strong> ${nomineePhone}</li>
+          </ul>
+          <h2>Reason for Nomination:</h2>
+          <p>${nominationReason}</p>
+          <hr />
+          <h2>Nominator Details:</h2>
+          <ul>
+              <li><strong>Name:</strong> ${nominatorName}</li>
+              <li><strong>Phone:</strong> ${nominatorPhone}</li>
+          </ul>
+      `,
     });
 
     if (error) {
-        // The Resend API returned an error object.
-        console.error('Resend API Error:', error);
-        return { success: true, message: 'Nomination saved, but failed to send email notification due to an API error.' };
+      console.error('Resend API Error:', error);
+      return { success: false, error: 'Failed to send nomination email. Please try again.' };
     }
 
-    // Email was sent successfully.
-    return { success: true, message: 'Nomination submitted and notification email sent successfully!' };
-
   } catch (error) {
-    // An unexpected error occurred during the fetch call itself.
     console.error('Email sending process failed:', error);
     return {
-      success: true, // The core action (saving nomination) was successful.
-      message: 'Nomination saved, but the email sending process failed unexpectedly.',
+      success: false,
+      error: 'The email sending process failed unexpectedly.',
     };
   }
+  
+  // 2. If email is successful, save to Firestore
+  try {
+    await addNomination(validatedFields.data);
+  } catch (error) {
+    console.error("Failed to save nomination to Firestore: ", error);
+    // Important: The email was sent, but saving failed. This is a critical state to log.
+    // We return success to the user but log the failure for admin intervention.
+    return { success: true, message: 'Nomination sent but failed to save. Please contact support.' };
+  }
+
+  // Both email and Firestore save were successful
+  return { success: true, message: 'Nomination submitted and notification email sent successfully!' };
 }
 
 export async function recordVote(voteData: z.infer<typeof voteSchema>) {

@@ -57,6 +57,10 @@ const remitaPaymentRequestSchema = z.object({
     description: z.string(),
 });
 
+const remitaReceiptSchema = z.object({
+  rrr: z.string(),
+});
+
 
 export async function sendNominationEmail(formData: z.infer<typeof nominationFormSchema>) {
   
@@ -336,3 +340,42 @@ export async function createRemitaPayment(paymentData: z.infer<typeof remitaPaym
         return { success: false, error: "Could not connect to the Remita payment gateway." };
     }
 }
+
+export async function printRemitaReceipt(receiptData: z.infer<typeof remitaReceiptSchema>) {
+    const validatedFields = remitaReceiptSchema.safeParse(receiptData);
+    if (!validatedFields.success) {
+        return { success: false, error: "Invalid Remita receipt data." };
+    }
+
+    const { rrr } = validatedFields.data;
+
+    const remitaUrl = `https://wema-alatdev-apimgt.azure-api.net/remita-payments/api/RemitaPayment/PrintRemitaReceipt/${rrr}`;
+
+    try {
+        const response = await fetch(remitaUrl, {
+            method: 'GET',
+            headers: {
+                'Cache-Control': 'no-cache',
+            }
+        });
+
+        const responseText = await response.text();
+        console.log("Remita PrintRemitaReceipt response status:", response.status);
+        console.log("Remita PrintRemitaReceipt response body:", responseText);
+        
+        if (response.ok) {
+            // Depending on what the API returns (e.g., HTML, a URL to a PDF),
+            // this response will need to be handled by the client.
+            // For now, we'll just return the text content.
+            return { success: true, receiptData: responseText };
+        } else {
+            return { success: false, error: `Failed to fetch Remita receipt: ${responseText}` };
+        }
+
+    } catch(error) {
+        console.error("Error calling Remita PrintRemitaReceipt API:", error);
+        return { success: false, error: "Could not connect to the Remita payment gateway to print receipt." };
+    }
+}
+
+    

@@ -47,6 +47,16 @@ const wemaPaymentValidationSchema = z.object({
   otp: z.string(),
 });
 
+const remitaPaymentRequestSchema = z.object({
+    amount: z.number(),
+    charge: z.number(),
+    transactionReference: z.string(),
+    customerEmail: z.string().email(),
+    customerName: z.string(),
+    customerPhoneNumber: z.string(),
+    description: z.string(),
+});
+
 
 export async function sendNominationEmail(formData: z.infer<typeof nominationFormSchema>) {
   
@@ -148,7 +158,7 @@ export async function createWemaAlatPayment(paymentData: z.infer<typeof wemaPaym
         try {
             const data = JSON.parse(responseText);
             // Assuming the platformTransactionReference is in the response body.
-            // This may need adjustment based on the actual API response structure.
+            // This may need to adjustment based on the actual API response structure.
             return {
                 success: true,
                 message: "Payment initiated. Please enter OTP.",
@@ -262,4 +272,67 @@ export async function checkWemaAlatTransactionStatus(statusData: z.infer<typeof 
     }
 }
 
-    
+
+export async function createRemitaPayment(paymentData: z.infer<typeof remitaPaymentRequestSchema>) {
+    const validatedFields = remitaPaymentRequestSchema.safeParse(paymentData);
+    if (!validatedFields.success) {
+        return { success: false, error: "Invalid Remita payment data." };
+    }
+
+    // NOTE: This endpoint does not seem to require the Ocp-Apim-Subscription-Key based on the user's snippet.
+    // This may need to be adjusted.
+
+    const { amount, charge, transactionReference, customerEmail, customerName, customerPhoneNumber, description } = validatedFields.data;
+
+    // NOTE: Many fields are missing from the input and are hardcoded as placeholders.
+    // This function will need to be updated with real data.
+    const body = {
+        channelId: "string", // Placeholder
+        cif: "string", // Placeholder
+        customerAccount: "string", // Placeholder
+        amount: amount,
+        charge: charge,
+        transactionReference: transactionReference,
+        customerEmail: customerEmail,
+        customerPhoneNumber: customerPhoneNumber,
+        customerName: customerName,
+        rrr: "string", // Placeholder
+        payerEmail: customerEmail, // Assuming payer is the customer
+        payerName: customerName, // Assuming payer is the customer
+        payerNumber: customerPhoneNumber, // Assuming payer is the customer
+        description: description,
+        billAuthOptions: {
+            pin: "string", // Placeholder
+            otp: "string", // Placeholder
+            biometricPolicy: "string", // Placeholder
+            biometricToken: "string", // Placeholder
+            platformTransactionReference: "string", // Placeholder
+            authenticationType: 0 // Placeholder
+        }
+    };
+
+    try {
+        const response = await fetch('https://wema-alatdev-apimgt.azure-api.net/remita-payments/api/RemitaPayment/PayRemitaBill', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json',
+                'Cache-Control': 'no-cache',
+            }
+        });
+
+        const responseText = await response.text();
+        console.log("Remita PayRemitaBill response status:", response.status);
+        console.log("Remita PayRemitaBill response body:", responseText);
+        
+        if (response.ok) {
+            return { success: true, message: "Remita payment processed successfully.", data: JSON.parse(responseText) };
+        } else {
+            return { success: false, error: `Remita payment failed: ${responseText}` };
+        }
+
+    } catch(error) {
+        console.error("Error calling Remita PayRemitaBill API:", error);
+        return { success: false, error: "Could not connect to the Remita payment gateway." };
+    }
+}

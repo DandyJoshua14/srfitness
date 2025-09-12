@@ -63,7 +63,6 @@ const contestants: Contestant[] = [
     { id: '23', name: 'Coach Collins', category: 'Fitness Trainer/Coach of the Year', image: '/collins.jpg' },
     { id: '4', name: 'Pharm. Mrs. Onwudiwe Blessing', category: 'Inspirational Weight-Loss Journey', image: '/bles.JPG', objectPosition: 'center 25%' },
     { id: '5', name: 'Mrs Virtue Michael Okoi', category: 'Inspirational Weight-Loss Journey', image: '/okoi.JPG' },
-    { id: '40', name: 'Inspiree One', category: 'Inspirational Weight-Loss Journey', image: 'https://placehold.co/400x400.png?text=Inspiree+1' },
     { id: '6', name: 'David L', category: 'Community Fitness Hero of the Year', image: 'https://placehold.co/400x400.png?text=David+L' },
     { id: '24', name: 'Jane F.', category: 'Community Fitness Hero of the Year', image: 'https://placehold.co/400x400.png?text=Jane+F' },
     { id: '25', name: 'Mike R.', category: 'Community Fitness Hero of the Year', image: 'https://placehold.co/400x400.png?text=Mike+R' },
@@ -82,11 +81,7 @@ const contestants: Contestant[] = [
     { id: '33', name: 'Chioma Obi, RPT', category: 'Physiotherapist of the Year', image: 'https://placehold.co/400x400.png?text=CO' },
     // Organizations
     { id: '11', name: 'Wellness Inc.', category: 'Corporate Wellness Champion', image: 'https://placehold.co/400x400.png?text=W+Inc' },
-    { id: '34', name: 'HealthyCo', category: 'Corporate Wellness Champion', image: 'https://placehold.co/400x400.png?text=HC' },
-    { id: '35', name: 'TeamUp Corp', category: 'Corporate Wellness Champion', image: 'https://placehold.co/400x400.png?text=TU' },
     { id: '12', name: 'GoodWorks LLC', category: 'Corporate Social Responsibility Champion', image: 'https://placehold.co/400x400.png?text=GW+LLC' },
-    { id: '36', name: 'Community First', category: 'Corporate Social Responsibility Champion', image: 'https://placehold.co/400x400.png?text=CF' },
-    { id: '37', name: 'GiveBack Inc', category: 'Corporate Social Responsibility Champion', image: 'https://placehold.co/400x400.png?text=GB' },
     // New contestants
     { id: '48', name: 'Coach Ifiok', category: 'Fitness Club Coach of the Year', image: '/ifiok.jpg' },
     { id: '49', name: 'Coach Ofonime', category: 'Fitness Club Coach of the Year', image: '/ofon.JPG' },

@@ -76,15 +76,15 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
 
   const { category, nomineeName, nomineePhone, nominationReason, nominatorName, nominatorPhone } = validatedFields.data;
 
-  // 1. Send email notification first
-  if (!RESEND_API_KEY) {
-    console.error('Resend API key is not configured.');
-    // Fail gracefully if Resend isn't set up, but still save the nomination
-    await addNomination(validatedFields.data);
-    return { success: true, message: 'Nomination submitted successfully! Email notification is currently disabled.' };
-  }
-  
+  // Wrap the entire operation in a single try/catch block for robust error handling
   try {
+    if (!RESEND_API_KEY) {
+      console.error('Resend API key is not configured.');
+      // Still save the nomination if email is not configured, but notify the user.
+      await addNomination(validatedFields.data);
+      return { success: true, message: 'Nomination submitted! Email notification is currently disabled.' };
+    }
+    
     const resend = new Resend(RESEND_API_KEY);
 
     const { data, error } = await resend.emails.send({
@@ -111,18 +111,21 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
       `,
     });
 
+    // Explicitly check for the error object from Resend's response
     if (error) {
       console.error('Resend API Error:', error);
+      // Return a specific error message without trying to save to DB
       return { success: false, error: 'Failed to send nomination email. Please try again.' };
     }
 
-    // 2. If email is successful, save to Firestore
+    // Only if the email is sent successfully, save to Firestore
     await addNomination(validatedFields.data);
     
-    // 3. Return success response
+    // Return a success response
     return { success: true, message: 'Nomination submitted and notification email sent successfully!' };
 
   } catch (error) {
+    // This will catch any other unexpected errors (e.g., network issues, Firestore errors)
     console.error('An unexpected error occurred in sendNominationEmail:', error);
     return {
       success: false,
@@ -444,6 +447,8 @@ export async function validateRemitaRrr(validationData: z.infer<typeof remitaRrr
         return { success: false, error: "Could not connect to the Remita payment gateway to validate RRR." };
     }
 }
+
+    
 
     
 

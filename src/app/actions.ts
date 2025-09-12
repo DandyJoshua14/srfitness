@@ -179,7 +179,7 @@ export async function createWemaAlatPayment(paymentData: z.infer<typeof wemaPaym
             };
         } catch (e) {
             console.error("Failed to parse JSON from Wema Alat response", e);
-             return { success: false, error: "Received an unreadable response from payment gateway." };
+             return { success: false, error: `Received an unreadable response from payment gateway: ${responseText}` };
         }
     } else {
        return { success: false, error: `Payment initiation failed: ${responseText}`, status: response.status };
@@ -288,13 +288,13 @@ export async function createRemitaPayment(paymentData: z.infer<typeof remitaPaym
         return { success: false, error: "Invalid Remita payment data." };
     }
 
-    // NOTE: This endpoint does not seem to require the Ocp-Apim-Subscription-Key based on the user's snippet.
-    // This may need to be adjusted.
+    if (!WEMA_ALAT_SUBSCRIPTION_KEY) {
+        console.error("Remita subscription key is not set.");
+        return { success: false, error: "Payment gateway is not configured correctly." };
+    }
 
     const { amount, charge, transactionReference, customerEmail, customerName, customerPhoneNumber, description } = validatedFields.data;
 
-    // NOTE: Many fields are missing from the input and are hardcoded as placeholders.
-    // This function will need to be updated with real data.
     const body = {
         channelId: "string", // Placeholder
         cif: "string", // Placeholder
@@ -306,17 +306,17 @@ export async function createRemitaPayment(paymentData: z.infer<typeof remitaPaym
         customerPhoneNumber: customerPhoneNumber,
         customerName: customerName,
         rrr: "string", // Placeholder
-        payerEmail: customerEmail, // Assuming payer is the customer
-        payerName: customerName, // Assuming payer is the customer
-        payerNumber: customerPhoneNumber, // Assuming payer is the customer
+        payerEmail: customerEmail,
+        payerName: customerName,
+        payerNumber: customerPhoneNumber,
         description: description,
         billAuthOptions: {
-            pin: "string", // Placeholder
-            otp: "string", // Placeholder
-            biometricPolicy: "string", // Placeholder
-            biometricToken: "string", // Placeholder
-            platformTransactionReference: "string", // Placeholder
-            authenticationType: 0 // Placeholder
+            pin: "string",
+            otp: "string",
+            biometricPolicy: "string",
+            biometricToken: "string",
+            platformTransactionReference: "string",
+            authenticationType: 0
         }
     };
 
@@ -327,6 +327,7 @@ export async function createRemitaPayment(paymentData: z.infer<typeof remitaPaym
             headers: {
                 'Content-Type': 'application/json',
                 'Cache-Control': 'no-cache',
+                'Ocp-Apim-Subscription-Key': WEMA_ALAT_SUBSCRIPTION_KEY,
             }
         });
 
@@ -337,6 +338,9 @@ export async function createRemitaPayment(paymentData: z.infer<typeof remitaPaym
         if (response.ok) {
             return { success: true, message: "Remita payment processed successfully.", data: JSON.parse(responseText) };
         } else {
+             if (response.status === 500) {
+                 return { success: false, error: `Remita payment failed due to an internal server error on the gateway. Please try again later or contact support.` };
+             }
             return { success: false, error: `Remita payment failed: ${responseText}` };
         }
 
@@ -417,4 +421,5 @@ export async function validateRemitaRrr(validationData: z.infer<typeof remitaRrr
         return { success: false, error: "Could not connect to the Remita payment gateway to validate RRR." };
     }
 }
+    
     

@@ -83,12 +83,14 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
     // 1. Send email notification first
     if (!RESEND_API_KEY) {
       console.error('Resend API key is not configured.');
-      return { success: false, error: 'The email service is not configured. Please contact support.' };
+      // Fail gracefully if Resend isn't set up, but still save the nomination
+      await addNomination(validatedFields.data);
+      return { success: true, message: 'Nomination submitted successfully! Email notification is currently disabled.' };
     }
 
     const resend = new Resend(RESEND_API_KEY);
 
-    const { error: emailError } = await resend.emails.send({
+    const { data, error: emailError } = await resend.emails.send({
       from: 'SR Fitness Awards <noreply@srfitness.com.ng>',
       to: ['sampson07@outlook.com', 'srfitness247@gmail.com'],
       subject: 'New Award Nomination Received!',
@@ -445,5 +447,7 @@ export async function validateRemitaRrr(validationData: z.infer<typeof remitaRrr
         return { success: false, error: "Could not connect to the Remita payment gateway to validate RRR." };
     }
 }
+
+    
 
     

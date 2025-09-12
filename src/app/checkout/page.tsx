@@ -7,11 +7,13 @@ import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Loader2, CheckCircle, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Loader2, CheckCircle, ShieldCheck, CreditCard, Banknote } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { createWemaAlatPayment, recordVote, validateWemaAlatPayment } from '@/app/actions';
+import { createWemaAlatPayment, recordVote, validateWemaAlatPayment, createRemitaPayment } from '@/app/actions';
 import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Label } from '@/components/ui/label';
 
 const VOTE_COST_PER_VOTE = 100;
 
@@ -31,6 +33,12 @@ function CheckoutView() {
     const [view, setView] = useState<'confirm' | 'otp' | 'success'>('confirm');
     const [otp, setOtp] = useState('');
     const [paymentData, setPaymentData] = useState<PaymentData | null>(null);
+    
+    // Remita form state
+    const [remitaName, setRemitaName] = useState('');
+    const [remitaEmail, setRemitaEmail] = useState('');
+    const [remitaPhone, setRemitaPhone] = useState('');
+
 
     const contestantId = searchParams.get('id');
     const contestantName = searchParams.get('name') || 'the selected contestant';
@@ -69,6 +77,42 @@ function CheckoutView() {
                  toast({
                     title: "Payment Error",
                     description: result.error || "Could not process payment. Please try again.",
+                    variant: "destructive",
+                });
+            }
+        });
+    };
+    
+    const handleRemitaPayment = () => {
+        if (!contestantId || !remitaName || !remitaEmail || !remitaPhone) {
+            toast({ title: "Missing Information", description: "Please fill out all fields for the Remita payment.", variant: "destructive"});
+            return;
+        }
+
+        startTransition(async () => {
+            const transactionReference = `SRF-VOTE-REMITA-${contestantId}-${Date.now()}`;
+            const result = await createRemitaPayment({
+                amount: totalVoteCost,
+                charge: 0, // Assuming no extra charge for now
+                transactionReference,
+                customerEmail: remitaEmail,
+                customerName: remitaName,
+                customerPhoneNumber: remitaPhone,
+                description: `Vote for ${contestantName}`
+            });
+
+             if (result.success) {
+                toast({
+                    title: "Remita Payment Successful (Conceptual)",
+                    description: "Your payment has been processed. We will verify the transaction shortly.",
+                });
+                // In a real scenario, you might redirect to a Remita page or handle their response.
+                // For now, we'll go to the success view.
+                setView('success');
+            } else {
+                toast({
+                    title: "Remita Payment Failed",
+                    description: result.error || "Could not process Remita payment. Please try again.",
                     variant: "destructive",
                 });
             }
@@ -186,10 +230,10 @@ function CheckoutView() {
         <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
             <CardHeader>
                 <CardTitle className="font-headline text-3xl text-amber-400">Confirm Your Vote</CardTitle>
-                <CardDescription className="text-zinc-400">Please review the details below before proceeding.</CardDescription>
+                <CardDescription className="text-zinc-400">Please review the details below and choose a payment method.</CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-4 mb-6">
                     <Image src={contestantImage} alt={contestantName} width={100} height={125} className="rounded-lg border-2 border-amber-400/50" />
                     <div>
                         <h3 className="text-2xl font-bold text-white">{contestantName}</h3>
@@ -197,24 +241,60 @@ function CheckoutView() {
                         <p className="text-sm text-zinc-300 mt-1">Number of Votes: <span className="font-bold">{numberOfVotes}</span></p>
                     </div>
                 </div>
-                <div className="mt-6 border-t border-zinc-700 pt-4 flex justify-between items-center text-xl">
+                <div className="border-t border-zinc-700 pt-4 flex justify-between items-center text-xl">
                     <span className="text-zinc-300">Total Cost:</span>
                     <span className="font-bold text-amber-400">N{totalVoteCost.toFixed(2)}</span>
                 </div>
-                <div className="mt-8 text-center">
-                    <Button
-                        size="lg"
-                        className="w-full mt-6 bg-amber-500 text-black font-bold text-lg hover:bg-amber-400 disabled:bg-zinc-600 disabled:text-zinc-400 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105"
-                        onClick={handleInitialPayment}
-                        disabled={isPending}
-                    >
-                         {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                         {isPending ? 'Processing Payment...' : 'Confirm & Pay'}
-                    </Button>
-                    <p className="text-xs text-zinc-500 mt-4 text-center">
-                        You will be asked to enter an OTP in the next step.
-                    </p>
-                </div>
+                
+                <Tabs defaultValue="alat" className="w-full mt-8">
+                    <TabsList className="grid w-full grid-cols-2 bg-zinc-800/50">
+                        <TabsTrigger value="alat" className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-300 text-zinc-400"><Banknote className="mr-2 h-4 w-4"/> Wema ALAT</TabsTrigger>
+                        <TabsTrigger value="remita" className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-300 text-zinc-400"><CreditCard className="mr-2 h-4 w-4"/> Remita</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="alat" className="mt-4">
+                        <p className="text-xs text-zinc-500 mb-4 text-center">
+                            Pay via direct bank transfer. You will be asked to enter an OTP in the next step.
+                        </p>
+                         <Button
+                            size="lg"
+                            className="w-full bg-amber-500 text-black font-bold text-lg hover:bg-amber-400 disabled:bg-zinc-600 disabled:text-zinc-400 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105"
+                            onClick={handleInitialPayment}
+                            disabled={isPending}
+                        >
+                             {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                             {isPending ? 'Processing...' : 'Pay with ALAT'}
+                        </Button>
+                    </TabsContent>
+                    <TabsContent value="remita" className="mt-4 space-y-4">
+                        <p className="text-xs text-zinc-500 mb-2 text-center">
+                            Pay using Remita. Please fill out your details below.
+                        </p>
+                         <div className="space-y-2">
+                            <Label htmlFor="remitaName" className="text-zinc-400">Full Name</Label>
+                            <Input id="remitaName" placeholder="Your Full Name" value={remitaName} onChange={e => setRemitaName(e.target.value)} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
+                        </div>
+                        <div className="space-y-2">
+                             <Label htmlFor="remitaEmail" className="text-zinc-400">Email Address</Label>
+                            <Input id="remitaEmail" type="email" placeholder="your.email@example.com" value={remitaEmail} onChange={e => setRemitaEmail(e.target.value)} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
+                        </div>
+                         <div className="space-y-2">
+                             <Label htmlFor="remitaPhone" className="text-zinc-400">Phone Number</Label>
+                            <Input id="remitaPhone" placeholder="Your Phone Number" value={remitaPhone} onChange={e => setRemitaPhone(e.target.value)} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
+                        </div>
+                        <Button
+                            size="lg"
+                            className="w-full bg-amber-500 text-black font-bold text-lg hover:bg-amber-400 disabled:bg-zinc-600"
+                            onClick={handleRemitaPayment}
+                            disabled={isPending}
+                        >
+                             {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                             {isPending ? 'Processing...' : 'Pay with Remita'}
+                        </Button>
+                        <p className="text-xs text-zinc-500 mt-2 text-center italic">
+                            Note: The Remita payment flow is currently conceptual and has placeholder values.
+                        </p>
+                    </TabsContent>
+                </Tabs>
             </CardContent>
         </Card>
     );
@@ -244,5 +324,3 @@ export default function CheckoutPage() {
         </div>
     );
 }
-
-    

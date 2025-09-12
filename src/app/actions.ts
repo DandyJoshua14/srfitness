@@ -5,8 +5,7 @@ import { z } from 'zod';
 import { addVote } from '@/services/firestore';
 
 // Explicitly read environment variables at the top level
-const OPAY_MERCHANT_ID = process.env.OPAY_MERCHANT_ID;
-const OPAY_PUBLIC_KEY = process.env.OPAY_PUBLIC_KEY;
+const WEMA_ALAT_SUBSCRIPTION_KEY = process.env.WEMA_ALAT_SUBSCRIPTION_KEY;
 const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 
@@ -26,12 +25,9 @@ const voteSchema = z.object({
   numberOfVotes: z.number().int().positive(),
 });
 
-const opayPaymentSchema = z.object({
-  amount: z.number(),
-  contestantName: z.string(),
-  contestantId: z.string(),
-  contestantCategory: z.string(),
-  numberOfVotes: z.number().int().positive(),
+const wemaPaymentStatusSchema = z.object({
+  channelId: z.string(),
+  transactionReference: z.string(),
 });
 
 export async function sendNominationEmail(formData: z.infer<typeof nominationFormSchema>) {
@@ -91,69 +87,44 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
   }
 }
 
-export async function createOpayPayment(paymentData: z.infer<typeof opayPaymentSchema>) {
-    const validatedFields = opayPaymentSchema.safeParse(paymentData);
+export async function checkWemaAlatTransactionStatus(statusData: z.infer<typeof wemaPaymentStatusSchema>) {
+    const validatedFields = wemaPaymentStatusSchema.safeParse(statusData);
     if (!validatedFields.success) {
-        return { success: false, error: 'Invalid payment data' };
+        return { success: false, error: 'Invalid transaction data' };
     }
 
-    const { amount, contestantName, contestantId, contestantCategory, numberOfVotes } = validatedFields.data;
+    const { channelId, transactionReference } = validatedFields.data;
 
-    const opayUrl = "https://testapi.opaycheckout.com/api/v1/international/cashier/create";
+    const wemaAlatUrl = `https://wema-alatdev-apimgt.azure-api.net/alat-pay/api/EcommerceTransfer/CheckTransactionStatus/${channelId}/${transactionReference}`;
 
-    if (!OPAY_MERCHANT_ID || !OPAY_PUBLIC_KEY) {
-        console.error("OPay credentials are not set in environment variables.");
+    if (!WEMA_ALAT_SUBSCRIPTION_KEY) {
+        console.error("Wema Alat subscription key is not set in environment variables.");
         return { success: false, error: "Payment gateway is not configured." };
     }
-
-    const reference = `SRVOTE_${contestantId}_${Date.now()}`;
-    
-    // This payload is structured based on the provided working example
-    const payload = {
-        amount: {
-            total: amount,
-            currency: "NGN"
-        },
-        reference: reference,
-        country: "NG",
-        returnUrl: `${NEXT_PUBLIC_BASE_URL}/vote?payment=success&ref=${reference}`,
-        cancelUrl: `${NEXT_PUBLIC_BASE_URL}/vote?payment=cancelled`,
-        callbackUrl: `${NEXT_PUBLIC_BASE_URL}/api/opay-webhook`,
-        expireAt: 300,
-        product: {
-            name: `Vote for ${contestantName}`,
-            description: `${numberOfVotes} votes for ${contestantCategory}`,
-        },
-        userInfo: {
-            userId: `voter_${Date.now()}`,
-            userName: "SR Fitness Voter",
-            userEmail: "voter@example.com",
-            userMobile: "9999999999"
-        }
-    };
     
     try {
-        const response = await fetch(opayUrl, {
-            method: 'POST',
+        const response = await fetch(wemaAlatUrl, {
+            method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${OPAY_PUBLIC_KEY}`,
-                'MerchantId': OPAY_MERCHANT_ID
-            },
-            body: JSON.stringify(payload)
+                'Cache-Control': 'no-cache',
+                'Ocp-Apim-Subscription-Key': WEMA_ALAT_SUBSCRIPTION_KEY,
+            }
         });
 
-        const result = await response.json();
+        const resultText = await response.text();
+        const resultStatus = response.status;
+        console.log('Wema Alat Status:', resultStatus);
+        console.log('Wema Alat Response:', resultText);
 
-        if (result.code === "00000" && result.data?.cashierUrl) {
-            return { success: true, checkoutUrl: result.data.cashierUrl };
+        if (response.ok) {
+            // Assuming a 200 OK response means success. You might need to adjust based on the actual API response content.
+            return { success: true, status: resultStatus, data: resultText };
         } else {
-            console.error("OPay API Error:", result);
-            return { success: false, error: result.message || 'Failed to create payment link.' };
+            return { success: false, error: `Failed to check transaction status: ${resultText}`, status: resultStatus };
         }
 
     } catch (error) {
-        console.error("Error calling OPay API:", error);
+        console.error("Error calling Wema Alat API:", error);
         return { success: false, error: "Could not connect to the payment gateway." };
     }
 }

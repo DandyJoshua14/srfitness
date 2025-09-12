@@ -2,15 +2,15 @@
 
 "use client";
 
-import { Suspense, useTransition, useEffect } from 'react';
+import { Suspense, useTransition, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Loader2, PartyPopper } from 'lucide-react';
+import { ArrowLeft, Loader2, PartyPopper, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { createOpayPayment } from '@/app/actions';
+import { createWemaAlatPayment } from '@/app/actions';
 
 const VOTE_COST_PER_VOTE = 100;
 
@@ -19,6 +19,7 @@ function CheckoutView() {
     const router = useRouter();
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
+    const [paymentSuccess, setPaymentSuccess] = useState(false);
 
     const contestantId = searchParams.get('id');
     const contestantName = searchParams.get('name') || 'the selected contestant';
@@ -38,7 +39,7 @@ function CheckoutView() {
         if (!contestantId) return;
 
         startTransition(async () => {
-            const result = await createOpayPayment({
+            const result = await createWemaAlatPayment({
                 amount: totalVoteCost,
                 contestantId,
                 contestantName,
@@ -46,29 +47,21 @@ function CheckoutView() {
                 numberOfVotes,
             });
 
-            if (result.success && result.checkoutUrl) {
+            if (result.success) {
                 toast({
-                    title: "Redirecting to Payment",
-                    description: "You will now be redirected to OPay to complete your payment.",
+                    title: "Vote Successful!",
+                    description: "Your payment has been processed and your vote has been recorded.",
                 });
-                // Redirect user to OPay's checkout page
-                // window.location.href = result.checkoutUrl;
+                setPaymentSuccess(true);
             } else {
                  toast({
                     title: "Payment Error",
-                    description: result.error || "Could not initiate payment. Please try again.",
+                    description: result.error || "Could not process payment. Please try again.",
                     variant: "destructive",
                 });
             }
         });
     };
-    
-    // Automatically trigger the payment process on component mount
-    // useEffect(() => {
-    //     handleConfirmVote();
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, []);
-
 
     if (!contestantId) {
         return (
@@ -82,6 +75,28 @@ function CheckoutView() {
                 </Button>
             </div>
         );
+    }
+    
+    if (paymentSuccess) {
+      return (
+        <Card className="bg-zinc-900/50 border-green-400/30 text-white shadow-2xl shadow-green-500/10 text-center">
+            <CardHeader>
+                <div className="mx-auto bg-green-500 text-black rounded-full h-16 w-16 flex items-center justify-center mb-4">
+                    <CheckCircle className="h-10 w-10" />
+                </div>
+                <CardTitle className="font-headline text-3xl text-green-400">Payment Successful!</CardTitle>
+                <CardDescription className="text-zinc-300">Your vote for <span className="font-bold text-white">{contestantName}</span> has been confirmed.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                 <p className="text-zinc-400 mb-6">Thank you for participating in the SR Fitness Awards!</p>
+                 <Button asChild className="bg-amber-500 text-black hover:bg-amber-400">
+                    <Link href="/vote">
+                        Vote Again
+                    </Link>
+                </Button>
+            </CardContent>
+        </Card>
+      )
     }
 
     return (
@@ -111,10 +126,10 @@ function CheckoutView() {
                         disabled={isPending}
                     >
                          {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                         {isPending ? 'Processing...' : 'Proceed to Payment'}
+                         {isPending ? 'Processing Payment...' : 'Confirm & Pay'}
                     </Button>
                     <p className="text-xs text-zinc-500 mt-4 text-center">
-                        You will be redirected to OPay to complete your purchase securely.
+                        Clicking "Confirm & Pay" will initiate the payment process.
                     </p>
                 </div>
             </CardContent>
@@ -133,7 +148,7 @@ export default function CheckoutPage() {
             <div className="bg-black/80 backdrop-blur-sm min-h-screen flex items-center justify-center">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
                      <header className="text-center mb-12">
-                        <img src="/SR.jpg" alt="SR Fitness Awards Logo" className="h-24 w-24 object-cover rounded-full mx-auto mb-4" data-ai-hint="awards logo" />
+                        <Image src="/SR.jpg" alt="SR Fitness Awards Logo" width={96} height={96} className="h-24 w-24 mx-auto mb-4 rounded-full" data-ai-hint="awards logo" />
                         <h1 className="font-headline text-5xl text-amber-400">Vote Checkout</h1>
                     </header>
                     <main>

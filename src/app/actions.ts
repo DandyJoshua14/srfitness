@@ -6,6 +6,8 @@ import { addVote } from '@/services/firestore';
 
 // Explicitly read environment variables at the top level
 const WEMA_ALAT_SUBSCRIPTION_KEY = process.env.WEMA_ALAT_SUBSCRIPTION_KEY;
+const WEMA_ALAT_SOURCE_ACCOUNT = process.env.WEMA_ALAT_SOURCE_ACCOUNT;
+const WEMA_ALAT_CHANNEL_ID = process.env.WEMA_ALAT_CHANNEL_ID;
 const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 
@@ -28,6 +30,14 @@ const voteSchema = z.object({
 const wemaPaymentStatusSchema = z.object({
   channelId: z.string(),
   transactionReference: z.string(),
+});
+
+const wemaPaymentRequestSchema = z.object({
+  amount: z.number(),
+  contestantId: z.string(),
+  contestantName: z.string(),
+  contestantCategory: z.string(),
+  numberOfVotes: z.number(),
 });
 
 export async function sendNominationEmail(formData: z.infer<typeof nominationFormSchema>) {
@@ -86,6 +96,61 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
     };
   }
 }
+
+export async function createWemaAlatPayment(paymentData: z.infer<typeof wemaPaymentRequestSchema>) {
+  const validatedFields = wemaPaymentRequestSchema.safeParse(paymentData);
+  if (!validatedFields.success) {
+    return { success: false, error: 'Invalid payment data provided.' };
+  }
+  
+  if (!WEMA_ALAT_SUBSCRIPTION_KEY || !WEMA_ALAT_SOURCE_ACCOUNT || !WEMA_ALAT_CHANNEL_ID) {
+    console.error("Wema Alat environment variables are not set.");
+    return { success: false, error: "Payment gateway is not configured correctly." };
+  }
+
+  const { amount, contestantId, contestantName, contestantCategory, numberOfVotes } = validatedFields.data;
+
+  const transactionReference = `SRF-VOTE-${contestantId}-${Date.now()}`;
+  const narration = `Vote for ${contestantName} in ${contestantCategory}`;
+
+  const body = {
+    amount: amount,
+    sourceAccountNumber: WEMA_ALAT_SOURCE_ACCOUNT,
+    channelId: WEMA_ALAT_CHANNEL_ID,
+    narration: narration,
+    transactionReference: transactionReference
+  };
+
+  try {
+    const response = await fetch('https://wema-alatdev-apimgt.azure-api.net/alat-pay/api/EcommerceTransfer/transfer-fund-request', {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+        'Ocp-Apim-Subscription-Key': WEMA_ALAT_SUBSCRIPTION_KEY,
+      }
+    });
+    
+    const responseText = await response.text();
+    console.log("Wema Alat transfer-fund-request response status:", response.status);
+    console.log("Wema Alat transfer-fund-request response body:", responseText);
+
+    if (response.ok) {
+      // Assuming a successful response means the payment was initiated.
+      // Now, record the vote in Firestore.
+      await recordVote({ contestantId, contestantName, contestantCategory, numberOfVotes });
+      return { success: true, message: "Payment initiated and vote recorded successfully.", data: responseText };
+    } else {
+       return { success: false, error: `Payment initiation failed: ${responseText}`, status: response.status };
+    }
+
+  } catch (error) {
+    console.error("Error calling Wema Alat API:", error);
+    return { success: false, error: "Could not connect to the payment gateway." };
+  }
+}
+
 
 export async function checkWemaAlatTransactionStatus(statusData: z.infer<typeof wemaPaymentStatusSchema>) {
     const validatedFields = wemaPaymentStatusSchema.safeParse(statusData);

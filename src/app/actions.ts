@@ -69,7 +69,6 @@ const remitaRrrValidationSchema = z.object({
 
 
 export async function sendNominationEmail(formData: z.infer<typeof nominationFormSchema>) {
-  
   const validatedFields = nominationFormSchema.safeParse(formData);
   if (!validatedFields.success) {
     return {
@@ -91,8 +90,7 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
   // 2. Send email notification
   if (!RESEND_API_KEY) {
     console.warn('Resend API key is not configured. Skipping email notification.');
-    // Still return success because the nomination was saved to the DB.
-    return { success: true, message: 'Nomination saved successfully. Email notification was skipped.' };
+    return { success: true, message: 'Nomination saved successfully. Email notification was skipped as RESEND_API_KEY is not configured.' };
   }
 
   const resend = new Resend(RESEND_API_KEY);
@@ -123,18 +121,20 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
     });
 
     if (error) {
+        // The Resend API returned an error object.
         console.error('Resend API Error:', error);
-        // Don't fail the whole operation if email fails, nomination is already in DB.
-        return { success: true, message: 'Nomination saved, but failed to send email notification.' };
+        return { success: true, message: 'Nomination saved, but failed to send email notification due to an API error.' };
     }
 
-    return { success: true, message: 'Nomination submitted and email sent successfully!' };
+    // Email was sent successfully.
+    return { success: true, message: 'Nomination submitted and notification email sent successfully!' };
+
   } catch (error) {
-    console.error('Email sending failed:', error);
-    // Don't fail the whole operation if email fails.
+    // An unexpected error occurred during the fetch call itself.
+    console.error('Email sending process failed:', error);
     return {
-      success: true,
-      message: 'Nomination saved, but email sending failed.',
+      success: true, // The core action (saving nomination) was successful.
+      message: 'Nomination saved, but the email sending process failed unexpectedly.',
     };
   }
 }
@@ -452,3 +452,5 @@ export async function validateRemitaRrr(validationData: z.infer<typeof remitaRrr
         return { success: false, error: "Could not connect to the Remita payment gateway to validate RRR." };
     }
 }
+
+    

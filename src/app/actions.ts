@@ -128,7 +128,7 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
         return { success: true, message: 'Nomination saved, but failed to send email notification.' };
     }
 
-    return { success: true };
+    return { success: true, message: 'Nomination submitted and email sent successfully!' };
   } catch (error) {
     console.error('Email sending failed:', error);
     // Don't fail the whole operation if email fails.

@@ -26,7 +26,6 @@ const generalCategories = [
     { title: "Fitness Club Coach of the Year" },
     { title: "Foundation Fitness Award" },
     { title: "Mental Health & Wellness Advocate" },
-    { title: "Art and Wellness Advocate" },
     { title: "Life Champion Award - Overcomers series" },
     { title: "Foundation Fitness Hero Award" },
     { title: "Educators Recognition series" },
@@ -36,6 +35,7 @@ const generalCategories = [
 
 const recognitionCategories = [
       { title: "Inspirational Weight-Loss Journey" },
+      { title: "Art and Wellness Advocate" },
       { title: "Community Fitness Hero of the Year" },
       { title: "Care-Givers Advocate" }, // Nurses
       { title: "Health Care Treatment Advocate" }, // Doctors

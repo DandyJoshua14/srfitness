@@ -3,13 +3,14 @@
 
 import { z } from 'zod';
 import { addVote } from '@/services/firestore';
+import { Resend } from 'resend';
 
 // Explicitly read environment variables at the top level
 const WEMA_ALAT_SUBSCRIPTION_KEY = process.env.WEMA_ALAT_SUBSCRIPTION_KEY;
 const WEMA_ALAT_SOURCE_ACCOUNT = process.env.WEMA_ALAT_SOURCE_ACCOUNT;
 const WEMA_ALAT_CHANNEL_ID = process.env.WEMA_ALAT_CHANNEL_ID;
 const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
 const nominationFormSchema = z.object({
   category: z.string(),
@@ -69,7 +70,11 @@ const remitaRrrValidationSchema = z.object({
 
 export async function sendNominationEmail(formData: z.infer<typeof nominationFormSchema>) {
   
-  // 1. Validate the data on the server
+  if (!RESEND_API_KEY) {
+    console.error('Resend API key is not configured.');
+    return { success: false, error: 'The email service is not configured.' };
+  }
+
   const validatedFields = nominationFormSchema.safeParse(formData);
   if (!validatedFields.success) {
     return {
@@ -79,19 +84,39 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
   }
 
   const { category, nomineeName, nomineePhone, nominationReason, nominatorName, nominatorPhone } = validatedFields.data;
-
-  // 2. Log the data to the server console (this will work without any setup)
-  console.log('New Nomination Received:');
-  console.log({
-    category,
-    nomineeName,
-    nomineePhone,
-    nominationReason,
-    nominatorName,
-    nominatorPhone,
-  });
+  
+  const resend = new Resend(RESEND_API_KEY);
 
   try {
+    const { data, error } = await resend.emails.send({
+        from: 'SR Fitness Awards <noreply@srfitness.com.ng>',
+        to: ['sampson07@outlook.com', 'srfitness247@gmail.com'],
+        subject: 'New Award Nomination Received!',
+        html: `
+            <h1>New SR Fitness Award Nomination</h1>
+            <p>A new nomination has been submitted. Here are the details:</p>
+            <h2>Nominee Details:</h2>
+            <ul>
+                <li><strong>Category:</strong> ${category}</li>
+                <li><strong>Name:</strong> ${nomineeName}</li>
+                <li><strong>Phone:</strong> ${nomineePhone}</li>
+            </ul>
+            <h2>Reason for Nomination:</h2>
+            <p>${nominationReason}</p>
+            <hr />
+            <h2>Nominator Details:</h2>
+            <ul>
+                <li><strong>Name:</strong> ${nominatorName}</li>
+                <li><strong>Phone:</strong> ${nominatorPhone}</li>
+            </ul>
+        `,
+    });
+
+    if (error) {
+        console.error('Resend API Error:', error);
+        return { success: false, error: 'Failed to send nomination email.' };
+    }
+
     return { success: true };
   } catch (error) {
     console.error('Email sending failed:', error);
@@ -166,13 +191,11 @@ export async function createWemaAlatPayment(paymentData: z.infer<typeof wemaPaym
     if (response.ok) {
         try {
             const data = JSON.parse(responseText);
-            // Assuming the platformTransactionReference is in the response body.
-            // This may need to adjustment based on the actual API response structure.
             return {
                 success: true,
                 message: "Payment initiated. Please enter OTP.",
                 data: {
-                    platformTransactionReference: data.platformTransactionReference, // Adjust this key based on actual response
+                    platformTransactionReference: data.platformTransactionReference,
                     transactionReference: transactionReference,
                     channelId: WEMA_ALAT_CHANNEL_ID,
                 }
@@ -269,7 +292,6 @@ export async function checkWemaAlatTransactionStatus(statusData: z.infer<typeof 
         console.log('Wema Alat Response:', resultText);
 
         if (response.ok) {
-            // Assuming a 200 OK response means success. You might need to adjust based on the actual API response content.
             return { success: true, status: resultStatus, data: resultText };
         } else {
             return { success: false, error: `Failed to check transaction status: ${resultText}`, status: resultStatus };
@@ -373,9 +395,6 @@ export async function printRemitaReceipt(receiptData: z.infer<typeof remitaRecei
         console.log("Remita PrintRemitaReceipt response body:", responseText);
         
         if (response.ok) {
-            // Depending on what the API returns (e.g., HTML, a URL to a PDF),
-            // this response will need to be handled by the client.
-            // For now, we'll just return the text content.
             return { success: true, receiptData: responseText };
         } else {
             return { success: false, error: `Failed to fetch Remita receipt: ${responseText}` };

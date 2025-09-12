@@ -9,13 +9,17 @@ import Autoplay from "embla-carousel-autoplay";
 import * as React from 'react';
 import { motion } from 'framer-motion';
 
-const galleryImages = [
-    { src: '/wak.jpeg', alt: 'A moment from our community walk', dataAiHint: 'community walk people', objectPosition: 'center 40%' },
-    { src: '/wak2.jpeg', alt: 'Group photo during a fitness event', dataAiHint: 'fitness event group photo', objectPosition: 'center 70%' },
-    { src: '/wak3.jpeg', alt: 'Participants in an outdoor bootcamp', dataAiHint: 'outdoor bootcamp' },
-    { src: '/wak4.jpeg', alt: 'Stretching session with the community', dataAiHint: 'group stretching outdoors' },
-    { src: '/wak5.jpeg', alt: 'Celebrating a milestone together', dataAiHint: 'fitness group celebration' },
-    { src: '/wak6.jpeg', alt: 'Early morning run with the team', dataAiHint: 'running team sunrise' },
+const galleryImages: GalleryImage[] = [
+    { src: "/gal35.jpg", alt: "Modern gym layout", dataAiHint: "modern gym design" },
+    { src: "/gal2.jpeg", alt: "Treadmills in a row", dataAiHint: "gym treadmills", objectPosition: "center top" },
+    { src: "/gal1.jpeg", alt: "Weight rack with various dumbbells", dataAiHint: "gym weight rack" },
+    { src: "/b1.jpeg", alt: "Bootcamp participants doing pushups", dataAiHint: "group fitness pushups" },
+    { src: "/b2.jpeg", alt: "Fitness trainer motivating the class", dataAiHint: "fitness trainer motivation" },
+    { src: "/gal32.jpg", alt: "Personal training session in progress", dataAiHint: "trainer client workout" },
+    { src: "/gal34.jpg", alt: "Fitness class in session", dataAiHint: "fitness class" },
+    { src: "/stad.jpg", alt: "Fitness class in session", dataAiHint: "fitness class" },
+    { src: "/wak.jpg", alt: "Fitness class in session", dataAiHint: "fitness class" },
+    { src: "/wak2.jpg", alt: "Fitness class in session", dataAiHint: "fitness class", objectPosition: "center 20%" },
 ];
 
 export default function GallerySection() {

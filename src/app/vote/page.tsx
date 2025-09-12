@@ -24,7 +24,6 @@ import { sendNominationEmail } from '@/app/actions';
 const generalCategories = [
     { title: "Fitness Trainer/Coach of the Year" },
     { title: "Fitness Club Coach of the Year" },
-    { title: "Inspirational Weight-Loss Journey" },
     { title: "Foundation Fitness Award" },
     { title: "Mental Health & Wellness Advocate" },
     { title: "Art and Wellness Advocate" },
@@ -36,6 +35,7 @@ const generalCategories = [
 ];
 
 const recognitionCategories = [
+      { title: "Inspirational Weight-Loss Journey" },
       { title: "Community Fitness Hero of the Year" },
       { title: "Care-Givers Advocate" }, // Nurses
       { title: "Health Care Treatment Advocate" }, // Doctors
@@ -88,9 +88,6 @@ const contestants: Contestant[] = [
     { id: '36', name: 'Community First', category: 'Corporate Social Responsibility Champion', image: 'https://placehold.co/400x400.png?text=CF' },
     { id: '37', name: 'GiveBack Inc', category: 'Corporate Social Responsibility Champion', image: 'https://placehold.co/400x400.png?text=GB' },
     // New contestants
-    { id: '13', name: 'Coach Tunde', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x400.png?text=CT' },
-    { id: '14', name: 'Coach Aisha', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x400.png?text=CA' },
-    { id: '41', name: 'Coach Bola', category: 'Fitness Club Coach of the Year', image: 'https://placehold.co/400x400.png?text=CB' },
     { id: '48', name: 'Coach Ifiok', category: 'Fitness Club Coach of the Year', image: '/ifiok.jpg' },
     { id: '49', name: 'Coach Ofonime', category: 'Fitness Club Coach of the Year', image: '/ofon.JPG' },
     { id: '50', name: 'Coach Bigname', category: 'Fitness Club Coach of the Year', image: '/Bigname.jpg' },

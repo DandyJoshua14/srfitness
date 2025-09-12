@@ -61,6 +61,11 @@ const remitaReceiptSchema = z.object({
   rrr: z.string(),
 });
 
+const remitaRrrValidationSchema = z.object({
+  rrr: z.string(),
+  channelId: z.string(),
+});
+
 
 export async function sendNominationEmail(formData: z.infer<typeof nominationFormSchema>) {
   
@@ -378,4 +383,38 @@ export async function printRemitaReceipt(receiptData: z.infer<typeof remitaRecei
     }
 }
 
+
+export async function validateRemitaRrr(validationData: z.infer<typeof remitaRrrValidationSchema>) {
+    const validatedFields = remitaRrrValidationSchema.safeParse(validationData);
+    if (!validatedFields.success) {
+        return { success: false, error: "Invalid Remita RRR validation data." };
+    }
+
+    const { rrr, channelId } = validatedFields.data;
+
+    const remitaUrl = `https://wema-alatdev-apimgt.azure-api.net/remita-payments/api/RemitaPayment/ValidateRrr/${rrr}/${channelId}`;
+
+    try {
+        const response = await fetch(remitaUrl, {
+            method: 'GET',
+            headers: {
+                'Cache-Control': 'no-cache',
+            }
+        });
+
+        const responseText = await response.text();
+        console.log("Remita ValidateRrr response status:", response.status);
+        console.log("Remita ValidateRrr response body:", responseText);
+        
+        if (response.ok) {
+            return { success: true, message: "Remita RRR validated successfully.", data: JSON.parse(responseText) };
+        } else {
+            return { success: false, error: `Failed to validate Remita RRR: ${responseText}` };
+        }
+
+    } catch(error) {
+        console.error("Error calling Remita ValidateRrr API:", error);
+        return { success: false, error: "Could not connect to the Remita payment gateway to validate RRR." };
+    }
+}
     

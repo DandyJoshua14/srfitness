@@ -26,17 +26,19 @@ function VerificationStatus() {
 
         const verify = async () => {
             const result = await verifyPaystackPayment(reference);
+            setStatus(result.status as 'success' | 'failed' | 'error');
+            setMessage(result.message || result.error || 'An unknown error occurred.');
+
             if (result.success) {
-                setStatus('success');
-                setMessage(result.message || 'Your payment was successful and your vote has been recorded!');
-            } else {
-                setStatus('failed');
-                setMessage(result.error || 'Payment verification failed. Your vote was not recorded.');
+                // On success, redirect back to the vote page after a short delay
+                setTimeout(() => {
+                    router.push('/vote');
+                }, 3000); // 3-second delay
             }
         };
 
         verify();
-    }, [reference]);
+    }, [reference, router]);
 
     const statusIcons = {
         verifying: <Loader2 className="h-16 w-16 animate-spin text-amber-400" />,
@@ -51,6 +53,13 @@ function VerificationStatus() {
         failed: 'Payment Failed',
         error: 'An Error Occurred',
     };
+    
+    const statusDescriptions = {
+        verifying: 'Please wait while we confirm your payment with Paystack...',
+        success: 'Thank you! Your vote has been recorded. Redirecting you back to the vote page...',
+        failed: 'There was an issue with your payment. Please try again.',
+        error: 'An unexpected error occurred during verification.'
+    }
 
     return (
         <Card className="bg-zinc-900/50 border-zinc-700 text-white shadow-2xl shadow-amber-500/10 text-center max-w-lg mx-auto">
@@ -59,12 +68,14 @@ function VerificationStatus() {
                 <CardTitle className="font-headline text-3xl text-amber-400">{statusTitles[status]}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-                <CardDescription className="text-zinc-300 text-lg">{message}</CardDescription>
-                <Button asChild size="lg" className="bg-amber-500 text-black hover:bg-amber-400">
-                    <Link href="/vote">
-                        {status === 'success' ? 'Vote Again' : 'Go Back to Vote Page'}
-                    </Link>
-                </Button>
+                <CardDescription className="text-zinc-300 text-lg">{message || statusDescriptions[status]}</CardDescription>
+                 {status !== 'success' && (
+                    <Button asChild size="lg" className="bg-amber-500 text-black hover:bg-amber-400">
+                        <Link href="/vote">
+                            Go Back to Vote Page
+                        </Link>
+                    </Button>
+                 )}
             </CardContent>
         </Card>
     );

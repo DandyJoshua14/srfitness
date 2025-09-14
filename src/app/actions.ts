@@ -160,6 +160,7 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
   const validatedFields = voteSchema.safeParse(voteData);
 
   if (!validatedFields.success) {
+    console.error("Invalid vote data for Firestore:", validatedFields.error);
     return {
       success: false,
       error: 'Invalid vote data provided.',
@@ -168,6 +169,7 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
 
   try {
     await addVote(validatedFields.data);
+    console.log("Vote successfully recorded in Firestore for:", voteData.contestantName);
     return { success: true, message: "Vote successfully recorded." };
   } catch (error) {
     console.error("Failed to record vote in Server Action: ", error);
@@ -229,12 +231,12 @@ export async function createPaystackPayment(paymentData: z.infer<typeof paystack
 
 export async function verifyPaystackPayment(reference: string) {
     if (!reference) {
-        return { success: false, error: 'No payment reference provided.' };
+        return { success: false, error: 'No payment reference provided.', status: 'error' };
     }
 
     if (!PAYSTACK_SECRET_KEY) {
         console.error("Paystack secret key is not configured.");
-        return { success: false, error: "Payment gateway is not configured correctly." };
+        return { success: false, error: "Payment gateway is not configured correctly.", status: 'error' };
     }
 
     try {
@@ -249,32 +251,40 @@ export async function verifyPaystackPayment(reference: string) {
 
         if (data.status && data.data.status === 'success') {
             const { contestantId, contestantName, contestantCategory, numberOfVotes } = data.data.metadata;
-            const voteData: z.infer<typeof voteSchema> = {
+            
+            // This is where the vote is recorded after successful Paystack payment verification.
+            const voteRecordResult = await recordVote({
                 contestantId,
                 contestantName,
                 contestantCategory,
                 numberOfVotes: Number(numberOfVotes),
-            };
-            
-            // This is where the vote is recorded after successful Paystack payment verification.
-            await recordVote(voteData);
+            });
 
-            return { 
-                success: true, 
-                message: 'Payment verified and vote recorded successfully!',
-                status: 'success',
-            };
+            if (voteRecordResult.success) {
+                return { 
+                    success: true, 
+                    message: 'Payment verified and vote recorded successfully!',
+                    status: 'success',
+                };
+            } else {
+                 return { 
+                    success: false, 
+                    error: `Payment was successful, but vote recording failed. Please contact support. Error: ${voteRecordResult.error}`,
+                    status: 'error',
+                };
+            }
+            
         } else {
             return { 
                 success: false, 
                 error: `Payment verification failed: ${data.data.gateway_response}`,
-                status: data.data.status,
+                status: data.data.status || 'failed',
             };
         }
 
     } catch (error) {
         console.error("Error verifying Paystack payment:", error);
-        return { success: false, error: "Could not connect to the payment gateway for verification." };
+        return { success: false, error: "Could not connect to the payment gateway for verification.", status: 'error' };
     }
 }
 

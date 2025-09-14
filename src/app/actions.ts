@@ -168,7 +168,10 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
   }
 
   try {
-    await addVote(validatedFields.data);
+    await addDoc(collection(db, 'votes'), {
+        ...validatedFields.data,
+        timestamp: new Date(),
+    });
     console.log("Vote successfully recorded in Firestore for:", voteData.contestantName);
     return { success: true, message: "Vote successfully recorded." };
   } catch (error) {
@@ -252,7 +255,6 @@ export async function verifyPaystackPayment(reference: string) {
         if (data.status && data.data.status === 'success') {
             const { contestantId, contestantName, contestantCategory, numberOfVotes } = data.data.metadata;
             
-            // This is where the vote is recorded after successful Paystack payment verification.
             const voteRecordResult = await recordVote({
                 contestantId,
                 contestantName,
@@ -395,10 +397,8 @@ export async function validateWemaAlatPayment(validationData: z.infer<typeof wem
         console.log("Wema Alat transfer-fund-validation response body:", responseText);
         
         if(response.ok) {
-            // This is where the vote is recorded after successful Wema OTP validation.
             const voteRecordResult = await recordVote({ contestantId, contestantName, contestantCategory, numberOfVotes });
             if (!voteRecordResult.success) {
-                // If vote recording fails, we should still tell the user payment was OK but to contact support.
                 return { success: true, message: `Payment validated, but failed to record vote: ${voteRecordResult.error}` };
             }
             return { success: true, message: "Payment validated and vote recorded successfully!" };
@@ -509,7 +509,6 @@ export async function createRemitaPayment(paymentData: z.infer<typeof remitaPaym
         console.log("Remita PayRemitaBill response body:", responseText);
         
         if (response.ok) {
-            // CONCEPTUAL: This is where the vote would be recorded after a successful Remita payment.
             const voteData = { contestantId, contestantName, contestantCategory, numberOfVotes };
             await recordVote(voteData);
             return { success: true, message: "Remita payment processed and vote recorded successfully.", data: JSON.parse(responseText) };
@@ -594,3 +593,5 @@ export async function validateRemitaRrr(validationData: z.infer<typeof remitaRrr
         return { success: false, error: "Could not connect to the Remita payment gateway to validate RRR." };
     }
 }
+
+    

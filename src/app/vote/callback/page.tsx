@@ -29,11 +29,10 @@ function VerificationStatus() {
             setStatus(result.status as 'success' | 'failed' | 'error');
             setMessage(result.message || result.error || 'An unknown error occurred.');
 
-            if (result.success) {
-                // On success, redirect back to the vote page after a short delay
+            if (result.status === 'success') {
                 setTimeout(() => {
                     router.push('/vote');
-                }, 3000); // 3-second delay
+                }, 3000); 
             }
         };
 
@@ -69,7 +68,7 @@ function VerificationStatus() {
             </CardHeader>
             <CardContent className="space-y-6">
                 <CardDescription className="text-zinc-300 text-lg">{message || statusDescriptions[status]}</CardDescription>
-                 {status !== 'success' && (
+                 {status !== 'success' && status !== 'verifying' && (
                     <Button asChild size="lg" className="bg-amber-500 text-black hover:bg-amber-400">
                         <Link href="/vote">
                             Go Back to Vote Page
@@ -102,3 +101,5 @@ export default function VoteCallbackPage() {
         </div>
     );
 }
+
+    

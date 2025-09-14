@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Loader2, CheckCircle, ShieldCheck, CreditCard, Banknote } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { createWemaAlatPayment, recordVote, validateWemaAlatPayment, createRemitaPayment } from '@/app/actions';
+import { createWemaAlatPayment, recordVote, validateWemaAlatPayment, createRemitaPayment, createPaystackPayment } from '@/app/actions';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
@@ -34,10 +34,10 @@ function CheckoutView() {
     const [otp, setOtp] = useState('');
     const [paymentData, setPaymentData] = useState<PaymentData | null>(null);
     
-    // Remita form state
-    const [remitaName, setRemitaName] = useState('');
-    const [remitaEmail, setRemitaEmail] = useState('');
-    const [remitaPhone, setRemitaPhone] = useState('');
+    // Form state for Paystack and Remita
+    const [customerName, setCustomerName] = useState('');
+    const [customerEmail, setCustomerEmail] = useState('');
+    const [customerPhone, setCustomerPhone] = useState('');
 
 
     const contestantId = searchParams.get('id');
@@ -54,6 +54,37 @@ function CheckoutView() {
 
     const contestantImage = `https://placehold.co/400x500.png?text=${encodeURIComponent(contestantName.split(' ').map(n => n[0]).join(''))}`;
     
+    const handlePaystackPayment = () => {
+        if (!contestantId || !customerEmail) {
+            toast({ title: "Email is required", description: "Please enter your email address to pay with Paystack.", variant: "destructive"});
+            return;
+        }
+
+        startTransition(async () => {
+            const result = await createPaystackPayment({
+                email: customerEmail,
+                amount: totalVoteCost,
+                metadata: {
+                    contestantId,
+                    contestantName,
+                    contestantCategory,
+                    numberOfVotes
+                }
+            });
+
+            if (result.success && result.authorizationUrl) {
+                // Redirect to Paystack's payment page
+                router.push(result.authorizationUrl);
+            } else {
+                toast({
+                    title: "Paystack Error",
+                    description: result.error || "Could not initiate Paystack payment. Please try again.",
+                    variant: "destructive",
+                });
+            }
+        });
+    };
+
     const handleInitialPayment = () => {
         if (!contestantId) return;
 
@@ -84,7 +115,7 @@ function CheckoutView() {
     };
     
     const handleRemitaPayment = () => {
-        if (!contestantId || !remitaName || !remitaEmail || !remitaPhone) {
+        if (!contestantId || !customerName || !customerEmail || !customerPhone) {
             toast({ title: "Missing Information", description: "Please fill out all fields for the Remita payment.", variant: "destructive"});
             return;
         }
@@ -95,9 +126,9 @@ function CheckoutView() {
                 amount: totalVoteCost,
                 charge: 0, // Assuming no extra charge for now
                 transactionReference,
-                customerEmail: remitaEmail,
-                customerName: remitaName,
-                customerPhoneNumber: remitaPhone,
+                customerEmail: customerEmail,
+                customerName: customerName,
+                customerPhoneNumber: customerPhone,
                 description: `Vote for ${contestantName}`
             });
 
@@ -246,11 +277,34 @@ function CheckoutView() {
                     <span className="font-bold text-amber-400">N{totalVoteCost.toFixed(2)}</span>
                 </div>
                 
-                <Tabs defaultValue="alat" className="w-full mt-8">
-                    <TabsList className="grid w-full grid-cols-2 bg-zinc-800/50">
+                <Tabs defaultValue="paystack" className="w-full mt-8">
+                    <TabsList className="grid w-full grid-cols-3 bg-zinc-800/50">
+                        <TabsTrigger value="paystack" className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-300 text-zinc-400">
+                             <Image src="https://files.paystack.co/assets/payment-channel/logo/card.png" width={20} height={20} alt="Paystack" className="mr-2"/> Paystack
+                        </TabsTrigger>
                         <TabsTrigger value="alat" className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-300 text-zinc-400"><Banknote className="mr-2 h-4 w-4"/> Wema ALAT</TabsTrigger>
                         <TabsTrigger value="remita" className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-300 text-zinc-400"><CreditCard className="mr-2 h-4 w-4"/> Remita</TabsTrigger>
                     </TabsList>
+
+                    <TabsContent value="paystack" className="mt-4 space-y-4">
+                        <p className="text-xs text-zinc-500 mb-2 text-center">
+                            Securely pay with Card, Bank, USSD, etc. via Paystack.
+                        </p>
+                        <div className="space-y-2">
+                             <Label htmlFor="customerEmail" className="text-zinc-400">Email Address</Label>
+                            <Input id="customerEmail" type="email" placeholder="your.email@example.com" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
+                        </div>
+                        <Button
+                            size="lg"
+                            className="w-full bg-amber-500 text-black font-bold text-lg hover:bg-amber-400 disabled:bg-zinc-600"
+                            onClick={handlePaystackPayment}
+                            disabled={isPending || !customerEmail}
+                        >
+                             {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                             {isPending ? 'Processing...' : 'Pay with Paystack'}
+                        </Button>
+                    </TabsContent>
+
                     <TabsContent value="alat" className="mt-4">
                         <p className="text-xs text-zinc-500 mb-4 text-center">
                             Pay via direct bank transfer. You will be asked to enter an OTP in the next step.
@@ -270,16 +324,16 @@ function CheckoutView() {
                             Pay using Remita. Please fill out your details below.
                         </p>
                          <div className="space-y-2">
-                            <Label htmlFor="remitaName" className="text-zinc-400">Full Name</Label>
-                            <Input id="remitaName" placeholder="Your Full Name" value={remitaName} onChange={e => setRemitaName(e.target.value)} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
+                            <Label htmlFor="customerName" className="text-zinc-400">Full Name</Label>
+                            <Input id="customerName" placeholder="Your Full Name" value={customerName} onChange={e => setCustomerName(e.target.value)} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
                         </div>
                         <div className="space-y-2">
-                             <Label htmlFor="remitaEmail" className="text-zinc-400">Email Address</Label>
-                            <Input id="remitaEmail" type="email" placeholder="your.email@example.com" value={remitaEmail} onChange={e => setRemitaEmail(e.target.value)} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
+                             <Label htmlFor="customerEmailRemita" className="text-zinc-400">Email Address</Label>
+                            <Input id="customerEmailRemita" type="email" placeholder="your.email@example.com" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
                         </div>
                          <div className="space-y-2">
-                             <Label htmlFor="remitaPhone" className="text-zinc-400">Phone Number</Label>
-                            <Input id="remitaPhone" placeholder="Your Phone Number" value={remitaPhone} onChange={e => setRemitaPhone(e.target.value)} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
+                             <Label htmlFor="customerPhone" className="text-zinc-400">Phone Number</Label>
+                            <Input id="customerPhone" placeholder="Your Phone Number" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
                         </div>
                         <Button
                             size="lg"

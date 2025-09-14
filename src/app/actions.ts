@@ -4,13 +4,15 @@
 import { z } from 'zod';
 import { addVote, addNomination } from '@/services/firestore';
 import { Resend } from 'resend';
+import { redirect } from 'next/navigation';
 
 // Explicitly read environment variables at the top level
 const WEMA_ALAT_SUBSCRIPTION_KEY = process.env.WEMA_ALAT_SUBSCRIPTION_KEY;
 const WEMA_ALAT_SOURCE_ACCOUNT = process.env.WEMA_ALAT_SOURCE_ACCOUNT;
 const WEMA_ALAT_CHANNEL_ID = process.env.WEMA_ALAT_CHANNEL_ID;
-const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
 
 const nominationFormSchema = z.object({
   category: z.string(),
@@ -67,6 +69,17 @@ const remitaRrrValidationSchema = z.object({
   channelId: z.string(),
 });
 
+const paystackPaymentRequestSchema = z.object({
+  email: z.string().email(),
+  amount: z.number(),
+  metadata: z.object({
+    contestantId: z.string(),
+    contestantName: z.string(),
+    contestantCategory: z.string(),
+    numberOfVotes: z.number(),
+  }),
+});
+
 
 export async function sendNominationEmail(formData: z.infer<typeof nominationFormSchema>) {
   const validatedFields = nominationFormSchema.safeParse(formData);
@@ -76,12 +89,11 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
 
   const { category, nomineeName, nomineePhone, nominationReason, nominatorName, nominatorPhone } = validatedFields.data;
 
-  // Wrap the entire operation in a single try/catch block for robust error handling
   try {
     if (!RESEND_API_KEY) {
-      console.error('Resend API key is not configured.');
-      // Return an error as the primary action (sending email) cannot be completed.
-      return { success: false, error: 'Email service is not configured. Nomination could not be sent.' };
+      console.warn('Resend API key is not configured. Skipping email but saving nomination.');
+      await addNomination(validatedFields.data);
+      return { success: true, message: 'Nomination submitted successfully! (Email notification skipped)' };
     }
     
     const resend = new Resend(RESEND_API_KEY);
@@ -110,21 +122,16 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
       `,
     });
 
-    // Explicitly check for the error object from Resend's response
     if (error) {
       console.error('Resend API Error:', error);
-      // Return a specific error message
       return { success: false, error: 'Failed to send nomination email. Please try again.' };
     }
 
-    // Only if the email is sent successfully, save to Firestore
     await addNomination(validatedFields.data);
     
-    // Return a success response
     return { success: true, message: 'Nomination submitted and notification email sent successfully!' };
 
   } catch (error) {
-    // This will catch any other unexpected errors (e.g., network issues, Firestore errors)
     console.error('An unexpected error occurred in sendNominationEmail:', error);
     return {
       success: false,
@@ -154,6 +161,106 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
     };
   }
 }
+
+
+export async function createPaystackPayment(paymentData: z.infer<typeof paystackPaymentRequestSchema>) {
+    const validatedFields = paystackPaymentRequestSchema.safeParse(paymentData);
+    if (!validatedFields.success) {
+        return { success: false, error: 'Invalid payment data provided.' };
+    }
+
+    if (!PAYSTACK_SECRET_KEY) {
+        console.error("Paystack secret key is not configured.");
+        return { success: false, error: "Payment gateway is not configured correctly." };
+    }
+
+    const { email, amount, metadata } = validatedFields.data;
+
+    const body = {
+        email,
+        amount: amount * 100, // Paystack expects amount in kobo
+        callback_url: `${NEXT_PUBLIC_BASE_URL}/vote/callback`,
+        metadata,
+    };
+
+    try {
+        const response = await fetch('https://api.paystack.co/transaction/initialize', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`,
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.status) {
+            return {
+                success: true,
+                authorizationUrl: data.data.authorization_url,
+            };
+        } else {
+            console.error("Paystack API error:", data.message);
+            return { success: false, error: data.message || 'Payment initiation failed.' };
+        }
+
+    } catch (error) {
+        console.error("Error calling Paystack API:", error);
+        return { success: false, error: "Could not connect to the payment gateway." };
+    }
+}
+
+export async function verifyPaystackPayment(reference: string) {
+    if (!reference) {
+        return { success: false, error: 'No payment reference provided.' };
+    }
+
+    if (!PAYSTACK_SECRET_KEY) {
+        console.error("Paystack secret key is not configured.");
+        return { success: false, error: "Payment gateway is not configured correctly." };
+    }
+
+    try {
+        const response = await fetch(`https://api.paystack.co/transaction/verify/${reference}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`,
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.status && data.data.status === 'success') {
+            const { contestantId, contestantName, contestantCategory, numberOfVotes } = data.data.metadata;
+            const voteData: z.infer<typeof voteSchema> = {
+                contestantId,
+                contestantName,
+                contestantCategory,
+                numberOfVotes: Number(numberOfVotes),
+            };
+
+            await recordVote(voteData);
+
+            return { 
+                success: true, 
+                message: 'Payment verified and vote recorded successfully!',
+                status: 'success',
+            };
+        } else {
+            return { 
+                success: false, 
+                error: `Payment verification failed: ${data.data.gateway_response}`,
+                status: data.data.status,
+            };
+        }
+
+    } catch (error) {
+        console.error("Error verifying Paystack payment:", error);
+        return { success: false, error: "Could not connect to the payment gateway for verification." };
+    }
+}
+
 
 export async function createWemaAlatPayment(paymentData: z.infer<typeof wemaPaymentRequestSchema>) {
   const validatedFields = wemaPaymentRequestSchema.safeParse(paymentData);

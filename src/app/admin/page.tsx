@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Newspaper, Store, BookOpen, Vote, Handshake } from 'lucide-react';
+import { Newspaper, Store, BookOpen, Vote, Handshake, Zap } from 'lucide-react';
 
 const features = [
     {
@@ -35,6 +35,12 @@ const features = [
         description: "View all submitted award nominations.",
         href: "/admin/nominations",
         icon: <Handshake className="h-8 w-8 text-primary" />,
+    },
+    {
+        title: "Integrations",
+        description: "Connect your app to other services with Zapier.",
+        href: "/admin/integrations",
+        icon: <Zap className="h-8 w-8 text-primary" />,
     }
 ];
 

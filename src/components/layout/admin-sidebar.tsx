@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { Newspaper, Home, LayoutDashboard, Store, BookOpen, LogOut, Vote, Handshake } from 'lucide-react';
+import { Newspaper, Home, LayoutDashboard, Store, BookOpen, LogOut, Vote, Handshake, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Tooltip,
@@ -22,6 +22,7 @@ const navItems = [
   { href: '/admin/magazine', label: 'Magazine Manager', icon: BookOpen },
   { href: '/admin/votes', label: 'Vote Tracker', icon: Vote },
   { href: '/admin/nominations', label: 'Nominations', icon: Handshake },
+  { href: '/admin/integrations', label: 'Integrations', icon: Zap },
 ];
 
 export default function AdminSidebar() {

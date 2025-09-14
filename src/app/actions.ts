@@ -83,6 +83,7 @@ const paystackPaymentRequestSchema = z.object({
 
 export async function sendNominationEmail(formData: z.infer<typeof nominationFormSchema>) {
   const validatedFields = nominationFormSchema.safeParse(formData);
+
   if (!validatedFields.success) {
     return { success: false, error: 'Invalid form data.' };
   }
@@ -95,7 +96,7 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
       await addNomination(validatedFields.data);
       return { success: true, message: 'Nomination submitted successfully! (Email notification skipped)' };
     }
-    
+
     const resend = new Resend(RESEND_API_KEY);
 
     const { data, error } = await resend.emails.send({
@@ -127,6 +128,7 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
       return { success: false, error: 'Failed to send nomination email. Please try again.' };
     }
 
+    // Only add to Firestore if email sends successfully
     await addNomination(validatedFields.data);
     
     return { success: true, message: 'Nomination submitted and notification email sent successfully!' };

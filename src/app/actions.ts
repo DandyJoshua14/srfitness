@@ -13,6 +13,7 @@ const WEMA_ALAT_CHANNEL_ID = process.env.WEMA_ALAT_CHANNEL_ID;
 const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
+const ZAPIER_VOTE_WEBHOOK_URL = process.env.ZAPIER_VOTE_WEBHOOK_URL;
 
 const nominationFormSchema = z.object({
   category: z.string(),
@@ -152,7 +153,7 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
 }
 
 /**
- * Records a vote in the Firestore database.
+ * Records a vote in the Firestore database and triggers a Zapier webhook if configured.
  * This is the crucial step that updates the admin vote tracker.
  * It should be called ONLY after a payment is successfully verified.
  */
@@ -168,12 +169,31 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
   }
 
   try {
-    await addDoc(collection(db, 'votes'), {
-        ...validatedFields.data,
-        timestamp: new Date(),
-    });
+    // Step 1: Save the vote to Firestore.
+    await addVote(validatedFields.data);
     console.log("Vote successfully recorded in Firestore for:", voteData.contestantName);
+
+    // Step 2: If a Zapier webhook URL is configured, send the data.
+    if (ZAPIER_VOTE_WEBHOOK_URL) {
+      try {
+        await fetch(ZAPIER_VOTE_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...validatedFields.data,
+            timestamp: new Date().toISOString(), // Add a human-readable timestamp for Zapier
+          }),
+        });
+        console.log("Successfully triggered Zapier webhook for new vote.");
+      } catch (zapierError) {
+        // Log the error but don't fail the entire transaction if the webhook fails.
+        // This ensures the vote is still counted even if Zapier is down.
+        console.error("Failed to trigger Zapier webhook:", zapierError);
+      }
+    }
+
     return { success: true, message: "Vote successfully recorded." };
+
   } catch (error) {
     console.error("Failed to record vote in Server Action: ", error);
     return {
@@ -255,6 +275,7 @@ export async function verifyPaystackPayment(reference: string) {
         if (data.status && data.data.status === 'success') {
             const { contestantId, contestantName, contestantCategory, numberOfVotes } = data.data.metadata;
             
+            // This is the crucial step: record the vote only after successful verification.
             const voteRecordResult = await recordVote({
                 contestantId,
                 contestantName,
@@ -399,6 +420,7 @@ export async function validateWemaAlatPayment(validationData: z.infer<typeof wem
         if(response.ok) {
             const voteRecordResult = await recordVote({ contestantId, contestantName, contestantCategory, numberOfVotes });
             if (!voteRecordResult.success) {
+                // Payment succeeded, but DB failed. Important to notify user/admin.
                 return { success: true, message: `Payment validated, but failed to record vote: ${voteRecordResult.error}` };
             }
             return { success: true, message: "Payment validated and vote recorded successfully!" };
@@ -510,7 +532,7 @@ export async function createRemitaPayment(paymentData: z.infer<typeof remitaPaym
         
         if (response.ok) {
             const voteData = { contestantId, contestantName, contestantCategory, numberOfVotes };
-            await recordVote(voteData);
+            await recordVote(voteData); // Record vote on success
             return { success: true, message: "Remita payment processed and vote recorded successfully.", data: JSON.parse(responseText) };
         } else {
              if (response.status === 500) {
@@ -593,5 +615,3 @@ export async function validateRemitaRrr(validationData: z.infer<typeof remitaRrr
         return { success: false, error: "Could not connect to the Remita payment gateway to validate RRR." };
     }
 }
-
-    

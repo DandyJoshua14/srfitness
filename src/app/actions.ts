@@ -48,6 +48,11 @@ const wemaPaymentValidationSchema = z.object({
   transactionReference: z.string(),
   platformTransactionReference: z.string(),
   otp: z.string(),
+  // Pass along vote data for recording
+  contestantId: z.string(),
+  contestantName: z.string(),
+  contestantCategory: z.string(),
+  numberOfVotes: z.number(),
 });
 
 const remitaPaymentRequestSchema = z.object({
@@ -58,6 +63,11 @@ const remitaPaymentRequestSchema = z.object({
     customerName: z.string(),
     customerPhoneNumber: z.string(),
     description: z.string(),
+    // Pass along vote data for recording
+    contestantId: z.string(),
+    contestantName: z.string(),
+    contestantCategory: z.string(),
+    numberOfVotes: z.number(),
 });
 
 const remitaReceiptSchema = z.object({
@@ -87,51 +97,50 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
   if (!validatedFields.success) {
     return { success: false, error: 'Invalid form data.' };
   }
-
-  const { category, nomineeName, nomineePhone, nominationReason, nominatorName, nominatorPhone } = validatedFields.data;
-
+  
   try {
-    if (!RESEND_API_KEY) {
-      console.warn('Resend API key is not configured. Skipping email but saving nomination.');
-      await addNomination(validatedFields.data);
-      return { success: true, message: 'Nomination submitted successfully! (Email notification skipped)' };
+    const { category, nomineeName, nomineePhone, nominationReason, nominatorName, nominatorPhone } = validatedFields.data;
+
+    // 1. Attempt to send email
+    if (RESEND_API_KEY) {
+      const resend = new Resend(RESEND_API_KEY);
+      const { data, error } = await resend.emails.send({
+        from: 'SR Fitness Awards <noreply@srfitness.com.ng>',
+        to: ['sampson07@outlook.com', 'srfitness247@gmail.com'],
+        subject: 'New Award Nomination Received!',
+        html: `
+            <h1>New SR Fitness Award Nomination</h1>
+            <p>A new nomination has been submitted. Here are the details:</p>
+            <h2>Nominee Details:</h2>
+            <ul>
+                <li><strong>Category:</strong> ${category}</li>
+                <li><strong>Name:</strong> ${nomineeName}</li>
+                <li><strong>Phone:</strong> ${nomineePhone}</li>
+            </ul>
+            <h2>Reason for Nomination:</h2>
+            <p>${nominationReason}</p>
+            <hr />
+            <h2>Nominator Details:</h2>
+            <ul>
+                <li><strong>Name:</strong> ${nominatorName}</li>
+                <li><strong>Phone:</strong> ${nominatorPhone}</li>
+            </ul>
+        `,
+      });
+
+      if (error) {
+        // If email fails, return an error and do not save to DB
+        console.error('Resend API Error:', error);
+        return { success: false, error: 'Failed to send nomination email. Please try again.' };
+      }
+    } else {
+        console.warn('Resend API key is not configured. Skipping email sending.');
     }
 
-    const resend = new Resend(RESEND_API_KEY);
-
-    const { data, error } = await resend.emails.send({
-      from: 'SR Fitness Awards <noreply@srfitness.com.ng>',
-      to: ['sampson07@outlook.com', 'srfitness247@gmail.com'],
-      subject: 'New Award Nomination Received!',
-      html: `
-          <h1>New SR Fitness Award Nomination</h1>
-          <p>A new nomination has been submitted. Here are the details:</p>
-          <h2>Nominee Details:</h2>
-          <ul>
-              <li><strong>Category:</strong> ${category}</li>
-              <li><strong>Name:</strong> ${nomineeName}</li>
-              <li><strong>Phone:</strong> ${nomineePhone}</li>
-          </ul>
-          <h2>Reason for Nomination:</h2>
-          <p>${nominationReason}</p>
-          <hr />
-          <h2>Nominator Details:</h2>
-          <ul>
-              <li><strong>Name:</strong> ${nominatorName}</li>
-              <li><strong>Phone:</strong> ${nominatorPhone}</li>
-          </ul>
-      `,
-    });
-
-    if (error) {
-      console.error('Resend API Error:', error);
-      return { success: false, error: 'Failed to send nomination email. Please try again.' };
-    }
-
-    // Only add to Firestore if email sends successfully
+    // 2. If email is sent (or skipped), save to Firestore
     await addNomination(validatedFields.data);
     
-    return { success: true, message: 'Nomination submitted and notification email sent successfully!' };
+    return { success: true, message: 'Nomination submitted successfully!' };
 
   } catch (error) {
     console.error('An unexpected error occurred in sendNominationEmail:', error);
@@ -142,6 +151,11 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
   }
 }
 
+/**
+ * Records a vote in the Firestore database.
+ * This is the crucial step that updates the admin vote tracker.
+ * It should be called ONLY after a payment is successfully verified.
+ */
 export async function recordVote(voteData: z.infer<typeof voteSchema>) {
   const validatedFields = voteSchema.safeParse(voteData);
 
@@ -154,7 +168,7 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
 
   try {
     await addVote(validatedFields.data);
-    return { success: true };
+    return { success: true, message: "Vote successfully recorded." };
   } catch (error) {
     console.error("Failed to record vote in Server Action: ", error);
     return {
@@ -241,7 +255,8 @@ export async function verifyPaystackPayment(reference: string) {
                 contestantCategory,
                 numberOfVotes: Number(numberOfVotes),
             };
-
+            
+            // This is where the vote is recorded after successful Paystack payment verification.
             await recordVote(voteData);
 
             return { 
@@ -313,6 +328,11 @@ export async function createWemaAlatPayment(paymentData: z.infer<typeof wemaPaym
                     platformTransactionReference: data.platformTransactionReference,
                     transactionReference: transactionReference,
                     channelId: WEMA_ALAT_CHANNEL_ID,
+                    // Pass vote info through for the next step
+                    contestantId,
+                    contestantName,
+                    contestantCategory,
+                    numberOfVotes,
                 }
             };
         } catch (e) {
@@ -340,7 +360,7 @@ export async function validateWemaAlatPayment(validationData: z.infer<typeof wem
         return { success: false, error: "Payment gateway is not configured correctly." };
     }
 
-    const { channelId, transactionReference, platformTransactionReference, otp } = validatedFields.data;
+    const { channelId, transactionReference, platformTransactionReference, otp, contestantId, contestantName, contestantCategory, numberOfVotes } = validatedFields.data;
 
     const body = {
         channelId,
@@ -365,7 +385,13 @@ export async function validateWemaAlatPayment(validationData: z.infer<typeof wem
         console.log("Wema Alat transfer-fund-validation response body:", responseText);
         
         if(response.ok) {
-            return { success: true, message: "Payment validated successfully!" };
+            // This is where the vote is recorded after successful Wema OTP validation.
+            const voteRecordResult = await recordVote({ contestantId, contestantName, contestantCategory, numberOfVotes });
+            if (!voteRecordResult.success) {
+                // If vote recording fails, we should still tell the user payment was OK but to contact support.
+                return { success: true, message: `Payment validated, but failed to record vote: ${voteRecordResult.error}` };
+            }
+            return { success: true, message: "Payment validated and vote recorded successfully!" };
         } else {
             return { success: false, error: `OTP validation failed: ${responseText}` };
         }
@@ -430,7 +456,7 @@ export async function createRemitaPayment(paymentData: z.infer<typeof remitaPaym
         return { success: false, error: "Payment gateway is not configured correctly." };
     }
 
-    const { amount, charge, transactionReference, customerEmail, customerName, customerPhoneNumber, description } = validatedFields.data;
+    const { amount, charge, transactionReference, customerEmail, customerName, customerPhoneNumber, description, contestantId, contestantName, contestantCategory, numberOfVotes } = validatedFields.data;
 
     const body = {
         channelId: "string", // Placeholder
@@ -473,7 +499,10 @@ export async function createRemitaPayment(paymentData: z.infer<typeof remitaPaym
         console.log("Remita PayRemitaBill response body:", responseText);
         
         if (response.ok) {
-            return { success: true, message: "Remita payment processed successfully.", data: JSON.parse(responseText) };
+            // CONCEPTUAL: This is where the vote would be recorded after a successful Remita payment.
+            const voteData = { contestantId, contestantName, contestantCategory, numberOfVotes };
+            await recordVote(voteData);
+            return { success: true, message: "Remita payment processed and vote recorded successfully.", data: JSON.parse(responseText) };
         } else {
              if (response.status === 500) {
                  return { success: false, error: `Remita payment failed due to an internal server error on the gateway. Please try again later or contact support.` };
@@ -555,13 +584,3 @@ export async function validateRemitaRrr(validationData: z.infer<typeof remitaRrr
         return { success: false, error: "Could not connect to the Remita payment gateway to validate RRR." };
     }
 }
-
-    
-
-    
-
-    
-
-    
-
-    

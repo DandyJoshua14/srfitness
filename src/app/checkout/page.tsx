@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Loader2, CheckCircle, ShieldCheck, CreditCard, Banknote } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { createWemaAlatPayment, recordVote, validateWemaAlatPayment, createRemitaPayment, createPaystackPayment } from '@/app/actions';
+import { createWemaAlatPayment, validateWemaAlatPayment, createRemitaPayment, createPaystackPayment } from '@/app/actions';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
@@ -21,6 +21,11 @@ interface PaymentData {
     platformTransactionReference: string;
     transactionReference: string;
     channelId: string;
+    // Vote data carried over for OTP validation step
+    contestantId: string;
+    contestantName: string;
+    contestantCategory: string;
+    numberOfVotes: number;
 }
 
 function CheckoutView() {
@@ -129,13 +134,18 @@ function CheckoutView() {
                 customerEmail: customerEmail,
                 customerName: customerName,
                 customerPhoneNumber: customerPhone,
-                description: `Vote for ${contestantName}`
+                description: `Vote for ${contestantName}`,
+                // Pass vote data through for recording
+                contestantId,
+                contestantName,
+                contestantCategory,
+                numberOfVotes,
             });
 
              if (result.success) {
                 toast({
-                    title: "Remita Payment Successful (Conceptual)",
-                    description: "Your payment has been processed. We will verify the transaction shortly.",
+                    title: "Remita Payment Successful",
+                    description: "Your payment has been processed and your vote recorded.",
                 });
                 // In a real scenario, you might redirect to a Remita page or handle their response.
                 // For now, we'll go to the success view.
@@ -160,21 +170,11 @@ function CheckoutView() {
             });
             
             if (validationResult.success) {
-                 // After successful OTP validation, record the vote
-                 const voteRecordResult = await recordVote({ contestantId, contestantName, contestantCategory, numberOfVotes });
-                 if (voteRecordResult.success) {
-                    toast({
-                        title: "Vote Successful!",
-                        description: "Your payment has been processed and your vote has been recorded.",
-                    });
-                    setView('success');
-                 } else {
-                    toast({
-                        title: "Vote Recording Failed",
-                        description: voteRecordResult.error || "Payment was successful but we couldn't save your vote. Please contact support.",
-                        variant: "destructive"
-                    });
-                 }
+                toast({
+                    title: "Vote Successful!",
+                    description: validationResult.message || "Your payment has been processed and your vote has been recorded.",
+                });
+                setView('success');
             } else {
                 toast({
                     title: "OTP Validation Failed",

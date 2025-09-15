@@ -30,10 +30,10 @@ const transformations = [
         beforeObjectPosition: 'center 6%',
     },
     {
-        name: '.',
+        name: 'Lizie',
         story: '"As a new mom, finding time was hard. The trainers were so flexible and helped me regain my pre-pregnancy fitness safely."',
-        beforeImg: 'https://placehold.co/400x533.png',
-        afterImg: 'https://placehold.co/400x533.png',
+        beforeImg: '/hb4.jpeg',
+        afterImg: '/afta.jpeg',
         beforeHint: 'tired woman portrait',
         afterHint: 'happy woman park'
     },

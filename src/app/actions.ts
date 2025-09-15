@@ -137,7 +137,8 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
       error: 'Invalid vote data provided.',
     };
   }
-
+  
+  // Read the environment variable directly inside the function
   const zapierWebhookUrl = process.env.ZAPIER_VOTE_WEBHOOK_URL;
   
   if (!zapierWebhookUrl) {
@@ -462,7 +463,7 @@ export async function validateRemitaRrr(validationData: z.infer<typeof remitaRrr
         const response = await fetch(remitaUrl, {
             method: 'GET',
             headers: {
-                'Cache-Control': 'no-cache',
+                'Cache-control': 'no-cache',
                 'Ocp-Apim-Subscription-Key': REMITA_SUBSCRIPTION_KEY,
             }
         });
@@ -484,4 +485,6 @@ export async function validateRemitaRrr(validationData: z.infer<typeof remitaRrr
 }
 
     
+    
+
     

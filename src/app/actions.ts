@@ -13,7 +13,7 @@ const WEMA_ALAT_CHANNEL_ID = process.env.WEMA_ALAT_CHANNEL_ID;
 const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
-const ZAPIER_VOTE_WEBHOOK_URL = process.env.ZAPIER_VOTE_WEBHOOK_URL;
+// We will read the Zapier URL inside the function to ensure it's not missed.
 
 const nominationFormSchema = z.object({
   category: z.string(),
@@ -173,10 +173,13 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
     await addVote(validatedFields.data);
     console.log("Vote successfully recorded in Firestore for:", voteData.contestantName);
 
-    // Step 2: If a Zapier webhook URL is configured, send the data. This is a secondary action.
-    if (ZAPIER_VOTE_WEBHOOK_URL) {
+    // Step 2: Read the Zapier webhook URL from environment variables *inside* the function.
+    // This ensures the most current value is used every time the function is called.
+    const zapierWebhookUrl = process.env.ZAPIER_VOTE_WEBHOOK_URL;
+    
+    if (zapierWebhookUrl) {
       try {
-        const response = await fetch(ZAPIER_VOTE_WEBHOOK_URL, {
+        const response = await fetch(zapierWebhookUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -198,6 +201,8 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
         // This ensures the vote is still counted even if Zapier is temporarily unreachable.
         console.error("Failed to trigger Zapier webhook due to a network or fetch error:", zapierError);
       }
+    } else {
+        console.log("ZAPIER_VOTE_WEBHOOK_URL not found, skipping webhook trigger.");
     }
 
     return { success: true, message: "Vote successfully recorded." };

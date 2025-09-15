@@ -169,14 +169,14 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
   }
 
   try {
-    // Step 1: Save the vote to Firestore.
+    // Step 1: Save the vote to Firestore. This is the primary, critical action.
     await addVote(validatedFields.data);
     console.log("Vote successfully recorded in Firestore for:", voteData.contestantName);
 
-    // Step 2: If a Zapier webhook URL is configured, send the data.
+    // Step 2: If a Zapier webhook URL is configured, send the data. This is a secondary action.
     if (ZAPIER_VOTE_WEBHOOK_URL) {
       try {
-        await fetch(ZAPIER_VOTE_WEBHOOK_URL, {
+        const response = await fetch(ZAPIER_VOTE_WEBHOOK_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -184,11 +184,19 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
             timestamp: new Date().toISOString(), // Add a human-readable timestamp for Zapier
           }),
         });
-        console.log("Successfully triggered Zapier webhook for new vote.");
+
+        // Check if the webhook call was successful
+        if (response.ok) {
+            console.log("Successfully triggered Zapier webhook for new vote.");
+        } else {
+            // Log the failure details but do not throw an error, as the vote is already saved.
+            const responseBody = await response.text();
+            console.error(`Zapier webhook call failed with status ${response.status}: ${responseBody}`);
+        }
       } catch (zapierError) {
-        // Log the error but don't fail the entire transaction if the webhook fails.
-        // This ensures the vote is still counted even if Zapier is down.
-        console.error("Failed to trigger Zapier webhook:", zapierError);
+        // Log the network error but don't fail the entire transaction.
+        // This ensures the vote is still counted even if Zapier is temporarily unreachable.
+        console.error("Failed to trigger Zapier webhook due to a network or fetch error:", zapierError);
       }
     }
 

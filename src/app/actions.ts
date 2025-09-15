@@ -153,65 +153,59 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
 }
 
 /**
- * Records a vote in the Firestore database and triggers a Zapier webhook if configured.
- * This is the crucial step that updates the admin vote tracker.
- * It should be called ONLY after a payment is successfully verified.
+ * Sends vote data to a Zapier webhook. This is the primary action after a
+ * payment is successfully verified.
  */
 export async function recordVote(voteData: z.infer<typeof voteSchema>) {
   const validatedFields = voteSchema.safeParse(voteData);
 
   if (!validatedFields.success) {
-    console.error("Invalid vote data for Firestore:", validatedFields.error);
+    console.error("Invalid vote data for Zapier:", validatedFields.error);
     return {
       success: false,
       error: 'Invalid vote data provided.',
     };
   }
 
-  try {
-    // Step 1: Save the vote to Firestore. This is the primary, critical action.
-    await addVote(validatedFields.data);
-    console.log("Vote successfully recorded in Firestore for:", voteData.contestantName);
-
-    // Step 2: Read the Zapier webhook URL from environment variables *inside* the function.
-    // This ensures the most current value is used every time the function is called.
-    const zapierWebhookUrl = process.env.ZAPIER_VOTE_WEBHOOK_URL;
-    
-    if (zapierWebhookUrl) {
-      try {
-        const response = await fetch(zapierWebhookUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ...validatedFields.data,
-            timestamp: new Date().toISOString(), // Add a human-readable timestamp for Zapier
-          }),
-        });
-
-        // Check if the webhook call was successful
-        if (response.ok) {
-            console.log("Successfully triggered Zapier webhook for new vote.");
-        } else {
-            // Log the failure details but do not throw an error, as the vote is already saved.
-            const responseBody = await response.text();
-            console.error(`Zapier webhook call failed with status ${response.status}: ${responseBody}`);
-        }
-      } catch (zapierError) {
-        // Log the network error but don't fail the entire transaction.
-        // This ensures the vote is still counted even if Zapier is temporarily unreachable.
-        console.error("Failed to trigger Zapier webhook due to a network or fetch error:", zapierError);
-      }
-    } else {
-        console.log("ZAPIER_VOTE_WEBHOOK_URL not found, skipping webhook trigger.");
-    }
-
-    return { success: true, message: "Vote successfully recorded." };
-
-  } catch (error) {
-    console.error("Failed to record vote in Server Action: ", error);
+  // Read the Zapier webhook URL from environment variables *inside* the function.
+  // This ensures the most current value is used every time the function is called.
+  const zapierWebhookUrl = process.env.ZAPIER_VOTE_WEBHOOK_URL;
+  
+  if (!zapierWebhookUrl) {
+    console.error("ZAPIER_VOTE_WEBHOOK_URL is not set. Cannot send vote data.");
+    // Since Zapier is the only destination, this is now a critical failure.
     return {
       success: false,
-      error: 'There was an error recording your vote to the database.'
+      error: 'Integration endpoint is not configured. Please contact support.',
+    };
+  }
+
+  try {
+    const response = await fetch(zapierWebhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...validatedFields.data,
+        timestamp: new Date().toISOString(),
+      }),
+    });
+
+    if (response.ok) {
+        console.log("Successfully sent vote data to Zapier.");
+        return { success: true, message: "Vote successfully recorded." };
+    } else {
+        const responseBody = await response.text();
+        console.error(`Zapier webhook call failed with status ${response.status}: ${responseBody}`);
+        return {
+          success: false,
+          error: 'Failed to send vote data to the tracking system.',
+        };
+    }
+  } catch (error) {
+    console.error("Failed to trigger Zapier webhook due to a network or fetch error:", error);
+    return {
+      success: false,
+      error: 'Could not connect to the vote tracking system.',
     };
   }
 }

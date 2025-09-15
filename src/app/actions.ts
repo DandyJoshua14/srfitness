@@ -125,11 +125,9 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
 }
 
 /**
- * Sends vote data to a Zapier webhook. This is the primary action after a
- * payment is successfully verified.
+ * Sends vote data to a Zapier webhook.
  */
 export async function recordVote(voteData: z.infer<typeof voteSchema>) {
-  console.log("`recordVote` function triggered.");
   const validatedFields = voteSchema.safeParse(voteData);
 
   if (!validatedFields.success) {
@@ -140,13 +138,10 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
     };
   }
 
-  // Read the Zapier webhook URL from environment variables *inside* the function.
-  // This ensures the most current value is used every time the function is called.
   const zapierWebhookUrl = process.env.ZAPIER_VOTE_WEBHOOK_URL;
   
   if (!zapierWebhookUrl) {
     console.error("ZAPIER_VOTE_WEBHOOK_URL is not set. Cannot send vote data.");
-    // Since Zapier is the only destination, this is now a critical failure.
     return {
       success: false,
       error: 'Integration endpoint is not configured. Please contact support.',
@@ -158,7 +153,7 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
     timestamp: new Date().toISOString(),
   };
   
-  console.log("Attempting to send data to Zapier webhook:", payload);
+  console.log("`recordVote` triggered. Attempting to send data to Zapier webhook:", payload);
 
   try {
     const response = await fetch(zapierWebhookUrl, {
@@ -175,7 +170,7 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
         console.error(`Zapier webhook call failed with status ${response.status}: ${responseBody}`);
         return {
           success: false,
-          error: 'Failed to send vote data to the tracking system.',
+          error: `Failed to send vote data to the tracking system. Status: ${response.status}`,
         };
     }
   } catch (error) {
@@ -243,6 +238,32 @@ export async function verifyPaystackPayment(reference: string) {
     if (!reference) {
         return { success: false, error: 'No payment reference provided.', status: 'error' };
     }
+    
+    // --- TEMPORARY TEST BLOCK ---
+    if (reference === 'test-zapier') {
+        console.log('--- ZAPIER TEST MODE ACTIVATED ---');
+        const testVoteData = {
+            contestantId: 'test-001',
+            contestantName: 'Test Contestant',
+            contestantCategory: 'Test Category',
+            numberOfVotes: 5,
+        };
+        const voteRecordResult = await recordVote(testVoteData);
+        if (voteRecordResult.success) {
+            return { 
+                success: true, 
+                message: 'TEST: Zapier webhook triggered successfully!',
+                status: 'success',
+            };
+        } else {
+            return { 
+                success: false, 
+                error: `TEST FAILED: ${voteRecordResult.error}`,
+                status: 'error',
+            };
+        }
+    }
+    // --- END TEMPORARY TEST BLOCK ---
 
     if (!PAYSTACK_SECRET_KEY) {
         console.error("Paystack secret key is not configured.");
@@ -287,7 +308,7 @@ export async function verifyPaystackPayment(reference: string) {
         } else {
             return { 
                 success: false, 
-                error: `Payment verification failed: ${data.data.gateway_response}`,
+                error: `Payment verification failed: ${data.data.gateway_response || 'Unknown reason.'}`,
                 status: data.data.status || 'failed',
             };
         }

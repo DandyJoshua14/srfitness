@@ -1,0 +1,38 @@
+{
+  "node": {
+    "40d4ef3f17cac6671f3ce0fae5b2a708376fff0fbf": {
+      "workers": {
+        "app/admin/content-studio/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/content-studio/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/generate-voice-response-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/generate-speech-audio-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/generate-content-flow.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/admin/content-studio/page": "action-browser"
+      }
+    },
+    "40f3233a4d6b07c47e7e48dcd2d0a4954be17da116": {
+      "workers": {
+        "app/admin/content-studio/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/content-studio/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/generate-voice-response-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/generate-speech-audio-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/generate-content-flow.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/admin/content-studio/page": "action-browser"
+      }
+    },
+    "40a51c681a9badef9745d2a41a3406e73fd6e78e10": {
+      "workers": {
+        "app/admin/content-studio/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/content-studio/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/generate-voice-response-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/generate-speech-audio-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/generate-content-flow.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/admin/content-studio/page": "action-browser"
+      }
+    }
+  },
+  "edge": {}
+}

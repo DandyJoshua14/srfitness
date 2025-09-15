@@ -193,11 +193,15 @@ export async function createPaystackPayment(paymentData: z.infer<typeof paystack
     }
 
     const { email, amount, metadata } = validatedFields.data;
+    
+    // Ensure the callback URL is correctly formed.
+    const callbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002'}/vote/callback`;
+
 
     const body = {
         email,
         amount: amount * 100, // Paystack expects amount in kobo
-        callback_url: `${NEXT_PUBLIC_BASE_URL}/vote/callback`,
+        callback_url: callbackUrl,
         metadata,
     };
 

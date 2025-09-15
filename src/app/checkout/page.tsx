@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { Suspense, useTransition, useState } from 'react';
@@ -7,7 +6,7 @@ import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Loader2, CheckCircle, ShieldCheck, CreditCard, Banknote } from 'lucide-react';
+import { ArrowLeft, Loader2, CheckCircle, ShieldCheck, CreditCard } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { createRemitaPayment, createPaystackPayment } from '@/app/actions';
@@ -23,13 +22,10 @@ function CheckoutView() {
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
 
-    const [view, setView] = useState<'confirm' | 'success'>('confirm');
-    
     // Form state for Paystack and Remita
     const [customerName, setCustomerName] = useState('');
     const [customerEmail, setCustomerEmail] = useState('');
     const [customerPhone, setCustomerPhone] = useState('');
-
 
     const contestantId = searchParams.get('id');
     const contestantName = searchParams.get('name') || 'the selected contestant';
@@ -43,7 +39,7 @@ function CheckoutView() {
         numberOfVotes === 1020 ? 20 : 0
     ));
 
-    const contestantImage = `https://placehold.co/400x500.png?text=${encodeURIComponent(contestantName.split(' ').map(n => n[0]).join(''))}`;
+    const contestantImage = contestantName ? `https://placehold.co/400x500.png?text=${encodeURIComponent(contestantName.split(' ').map(n => n[0]).join(''))}` : '/SR.jpg';
     
     const handlePaystackPayment = () => {
         if (!contestantId || !customerEmail) {
@@ -65,7 +61,7 @@ function CheckoutView() {
 
             if (result.success && result.authorizationUrl) {
                 // Redirect to Paystack's payment page
-                router.push(result.authorizationUrl);
+                window.location.href = result.authorizationUrl;
             } else {
                 toast({
                     title: "Paystack Error",
@@ -106,7 +102,7 @@ function CheckoutView() {
                 });
                 // In a real scenario, you might redirect to a Remita page or handle their response.
                 // For now, we'll go to the success view.
-                setView('success');
+                router.push(`/vote/callback?status=success&ref=${transactionReference}`);
             } else {
                 toast({
                     title: "Remita Payment Failed",
@@ -117,42 +113,27 @@ function CheckoutView() {
         });
     };
 
-    if (!contestantId) {
+    if (!contestantId || !contestantName || !contestantCategory) {
         return (
-            <div className="text-center text-white">
-                <h2 className="text-2xl font-bold text-amber-400">Invalid Selection</h2>
-                <p className="text-zinc-300 mt-2">No contestant was selected. Please go back and choose a nominee to vote for.</p>
-                <Button asChild className="mt-6 bg-amber-500 text-black hover:bg-amber-400">
-                    <Link href="/vote">
-                        <ArrowLeft className="mr-2 h-4 w-4" /> Go Back to Vote
-                    </Link>
-                </Button>
-            </div>
+            <Card className="bg-zinc-900/50 border-destructive/50 text-white shadow-2xl shadow-destructive/10 text-center">
+                <CardHeader>
+                    <CardTitle className="font-headline text-3xl text-destructive">Invalid Vote Details</CardTitle>
+                    <CardDescription className="text-zinc-300">
+                        The contestant information is missing or incomplete.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-zinc-400 mb-6">Please go back to the voting page and select a contestant again.</p>
+                     <Button asChild className="bg-amber-500 text-black hover:bg-amber-400">
+                        <Link href="/vote">
+                            <ArrowLeft className="mr-2 h-4 w-4" /> Go Back to Vote
+                        </Link>
+                    </Button>
+                </CardContent>
+            </Card>
         );
     }
     
-    if (view === 'success') {
-      return (
-        <Card className="bg-zinc-900/50 border-green-400/30 text-white shadow-2xl shadow-green-500/10 text-center">
-            <CardHeader>
-                <div className="mx-auto bg-green-500 text-black rounded-full h-16 w-16 flex items-center justify-center mb-4">
-                    <CheckCircle className="h-10 w-10" />
-                </div>
-                <CardTitle className="font-headline text-3xl text-green-400">Payment Successful!</CardTitle>
-                <CardDescription className="text-zinc-300">Your vote for <span className="font-bold text-white">{contestantName}</span> has been confirmed.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                 <p className="text-zinc-400 mb-6">Thank you for participating in the SR Fitness Awards!</p>
-                 <Button asChild className="bg-amber-500 text-black hover:bg-amber-400">
-                    <Link href="/vote">
-                        Vote Again
-                    </Link>
-                </Button>
-            </CardContent>
-        </Card>
-      )
-    }
-
     return (
         <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
             <CardHeader>
@@ -178,7 +159,7 @@ function CheckoutView() {
                         <TabsTrigger value="paystack" className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-300 text-zinc-400">
                              <Image src="https://files.paystack.co/assets/payment-channel/logo/card.png" width={20} height={20} alt="Paystack" className="mr-2"/> Paystack
                         </TabsTrigger>
-                        <TabsTrigger value="remita" className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-300 text-zinc-400"><CreditCard className="mr-2 h-4 w-4"/> Remita</TabsTrigger>
+                        <TabsTrigger value="remita" className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-300 text-zinc-400" disabled><CreditCard className="mr-2 h-4 w-4"/> Remita (Soon)</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="paystack" className="mt-4 space-y-4">
@@ -201,33 +182,9 @@ function CheckoutView() {
                     </TabsContent>
 
                     <TabsContent value="remita" className="mt-4 space-y-4">
-                        <p className="text-xs text-zinc-500 mb-2 text-center">
-                            Pay using Remita. Please fill out your details below.
-                        </p>
-                         <div className="space-y-2">
-                            <Label htmlFor="customerName" className="text-zinc-400">Full Name</Label>
-                            <Input id="customerName" placeholder="Your Full Name" value={customerName} onChange={e => setCustomerName(e.target.value)} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
-                        </div>
-                        <div className="space-y-2">
-                             <Label htmlFor="customerEmailRemita" className="text-zinc-400">Email Address</Label>
-                            <Input id="customerEmailRemita" type="email" placeholder="your.email@example.com" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
-                        </div>
-                         <div className="space-y-2">
-                             <Label htmlFor="customerPhone" className="text-zinc-400">Phone Number</Label>
-                            <Input id="customerPhone" placeholder="Your Phone Number" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
-                        </div>
-                        <Button
-                            size="lg"
-                            className="w-full bg-amber-500 text-black font-bold text-lg hover:bg-amber-400 disabled:bg-zinc-600"
-                            onClick={handleRemitaPayment}
-                            disabled={isPending}
-                        >
-                             {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                             {isPending ? 'Processing...' : 'Pay with Remita'}
-                        </Button>
-                        <p className="text-xs text-zinc-500 mt-2 text-center italic">
-                            Note: The Remita payment flow is currently conceptual and has placeholder values.
-                        </p>
+                       <div className="text-center text-zinc-500 p-4">
+                        Remita payment option will be available soon.
+                       </div>
                     </TabsContent>
                 </Tabs>
             </CardContent>
@@ -250,7 +207,11 @@ export default function CheckoutPage() {
                         <h1 className="font-headline text-5xl text-amber-400">Vote Checkout</h1>
                     </header>
                     <main>
-                      <Suspense fallback={<div className="text-center text-white">Loading...</div>}>
+                      <Suspense fallback={
+                          <div className="flex justify-center items-center h-64">
+                              <Loader2 className="h-12 w-12 text-amber-400 animate-spin" />
+                          </div>
+                      }>
                         <CheckoutView />
                       </Suspense>
                     </main>

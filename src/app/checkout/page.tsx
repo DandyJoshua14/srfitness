@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { Suspense, useTransition, useState } from 'react';
@@ -158,7 +159,7 @@ function CheckoutView() {
                 <Tabs defaultValue="paystack" className="w-full mt-8">
                     <TabsList className="grid w-full grid-cols-2 bg-zinc-800/50">
                         <TabsTrigger value="paystack" className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-300 text-zinc-400">
-                             <Image src="https://files.paystack.co/assets/payment-channel/logo/card.png" width={20} height={20} alt="Paystack" className="mr-2"/> Paystack
+                             <Image src="/paystack.png" width={24} height={24} alt="Paystack" className="mr-2"/> Paystack
                         </TabsTrigger>
                         <TabsTrigger value="remita" className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-300 text-zinc-400" disabled><CreditCard className="mr-2 h-4 w-4"/> Remita (Soon)</TabsTrigger>
                     </TabsList>
@@ -228,3 +229,4 @@ export default function CheckoutPage() {
         </div>
     );
 }
+

@@ -129,6 +129,7 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
  * payment is successfully verified.
  */
 export async function recordVote(voteData: z.infer<typeof voteSchema>) {
+  console.log("`recordVote` function triggered.");
   const validatedFields = voteSchema.safeParse(voteData);
 
   if (!validatedFields.success) {
@@ -151,19 +152,23 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
       error: 'Integration endpoint is not configured. Please contact support.',
     };
   }
+  
+  const payload = {
+    ...validatedFields.data,
+    timestamp: new Date().toISOString(),
+  };
+  
+  console.log("Attempting to send data to Zapier webhook:", payload);
 
   try {
     const response = await fetch(zapierWebhookUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...validatedFields.data,
-        timestamp: new Date().toISOString(),
-      }),
+      body: JSON.stringify(payload),
     });
 
     if (response.ok) {
-        console.log("Successfully sent vote data to Zapier.");
+        console.log("Successfully sent vote data to Zapier. Response status:", response.status);
         return { success: true, message: "Vote successfully recorded." };
     } else {
         const responseBody = await response.text();

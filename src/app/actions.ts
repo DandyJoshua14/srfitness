@@ -1,15 +1,11 @@
-
 'use server';
 
 import { z } from 'zod';
-import { addVote, addNomination } from '@/services/firestore';
+import { addNomination } from '@/services/firestore';
 import { Resend } from 'resend';
 import { redirect } from 'next/navigation';
 
 // Explicitly read environment variables at the top level
-const WEMA_ALAT_SUBSCRIPTION_KEY = process.env.WEMA_ALAT_SUBSCRIPTION_KEY;
-const WEMA_ALAT_SOURCE_ACCOUNT = process.env.WEMA_ALAT_SOURCE_ACCOUNT;
-const WEMA_ALAT_CHANNEL_ID = process.env.WEMA_ALAT_CHANNEL_ID;
 const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
@@ -31,44 +27,19 @@ const voteSchema = z.object({
   numberOfVotes: z.number().int().positive(),
 });
 
-const wemaPaymentStatusSchema = z.object({
-  channelId: z.string(),
-  transactionReference: z.string(),
-});
-
-const wemaPaymentRequestSchema = z.object({
+const remitaPaymentRequestSchema = z.object({
   amount: z.number(),
-  contestantId: z.string(),
-  contestantName: z.string(),
-  contestantCategory: z.string(),
-  numberOfVotes: z.number(),
-});
-
-const wemaPaymentValidationSchema = z.object({
-  channelId: z.string(),
+  charge: z.number(),
   transactionReference: z.string(),
-  platformTransactionReference: z.string(),
-  otp: z.string(),
+  customerEmail: z.string().email(),
+  customerName: z.string(),
+  customerPhoneNumber: z.string(),
+  description: z.string(),
   // Pass along vote data for recording
   contestantId: z.string(),
   contestantName: z.string(),
   contestantCategory: z.string(),
   numberOfVotes: z.number(),
-});
-
-const remitaPaymentRequestSchema = z.object({
-    amount: z.number(),
-    charge: z.number(),
-    transactionReference: z.string(),
-    customerEmail: z.string().email(),
-    customerName: z.string(),
-    customerPhoneNumber: z.string(),
-    description: z.string(),
-    // Pass along vote data for recording
-    contestantId: z.string(),
-    contestantName: z.string(),
-    contestantCategory: z.string(),
-    numberOfVotes: z.number(),
 });
 
 const remitaReceiptSchema = z.object({
@@ -110,22 +81,22 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
         to: ['sampson07@outlook.com', 'srfitness247@gmail.com'],
         subject: 'New Award Nomination Received!',
         html: `
-            <h1>New SR Fitness Award Nomination</h1>
-            <p>A new nomination has been submitted. Here are the details:</p>
-            <h2>Nominee Details:</h2>
-            <ul>
-                <li><strong>Category:</strong> ${category}</li>
-                <li><strong>Name:</strong> ${nomineeName}</li>
-                <li><strong>Phone:</strong> ${nomineePhone}</li>
-            </ul>
-            <h2>Reason for Nomination:</h2>
-            <p>${nominationReason}</p>
-            <hr />
-            <h2>Nominator Details:</h2>
-            <ul>
-                <li><strong>Name:</strong> ${nominatorName}</li>
-                <li><strong>Phone:</strong> ${nominatorPhone}</li>
-            </ul>
+          <h1>New SR Fitness Award Nomination</h1>
+          <p>A new nomination has been submitted. Here are the details:</p>
+          <h2>Nominee Details:</h2>
+          <ul>
+            <li><strong>Category:</strong> ${category}</li>
+            <li><strong>Name:</strong> ${nomineeName}</li>
+            <li><strong>Phone:</strong> ${nomineePhone}</li>
+          </ul>
+          <h2>Reason for Nomination:</h2>
+          <p>${nominationReason}</p>
+          <hr />
+          <h2>Nominator Details:</h2>
+          <ul>
+            <li><strong>Name:</strong> ${nominatorName}</li>
+            <li><strong>Phone:</strong> ${nominatorPhone}</li>
+          </ul>
         `,
       });
 
@@ -209,7 +180,6 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
     };
   }
 }
-
 
 export async function createPaystackPayment(paymentData: z.infer<typeof paystackPaymentRequestSchema>) {
     const validatedFields = paystackPaymentRequestSchema.safeParse(paymentData);
@@ -319,195 +289,34 @@ export async function verifyPaystackPayment(reference: string) {
 }
 
 
-export async function createWemaAlatPayment(paymentData: z.infer<typeof wemaPaymentRequestSchema>) {
-  const validatedFields = wemaPaymentRequestSchema.safeParse(paymentData);
-  if (!validatedFields.success) {
-    return { success: false, error: 'Invalid payment data provided.' };
-  }
-  
-  if (!WEMA_ALAT_SUBSCRIPTION_KEY || !WEMA_ALAT_SOURCE_ACCOUNT || !WEMA_ALAT_CHANNEL_ID) {
-    console.error("Wema Alat environment variables are not set.");
-    return { success: false, error: "Payment gateway is not configured correctly." };
-  }
-
-  const { amount, contestantId, contestantName, contestantCategory, numberOfVotes } = validatedFields.data;
-
-  const transactionReference = `SRF-VOTE-${contestantId}-${Date.now()}`;
-  const narration = `Vote for ${contestantName} in ${contestantCategory}`;
-
-  const body = {
-    amount: amount,
-    sourceAccountNumber: WEMA_ALAT_SOURCE_ACCOUNT,
-    channelId: WEMA_ALAT_CHANNEL_ID,
-    narration: narration,
-    transactionReference: transactionReference
-  };
-
-  try {
-    const response = await fetch('https://wema-alatdev-apimgt.azure-api.net/alat-pay/api/EcommerceTransfer/transfer-fund-request', {
-      method: 'POST',
-      body: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache',
-        'Ocp-Apim-Subscription-Key': WEMA_ALAT_SUBSCRIPTION_KEY,
-      }
-    });
-    
-    const responseText = await response.text();
-    console.log("Wema Alat transfer-fund-request response status:", response.status);
-    console.log("Wema Alat transfer-fund-request response body:", responseText);
-
-    if (response.ok) {
-        try {
-            const data = JSON.parse(responseText);
-            return {
-                success: true,
-                message: "Payment initiated. Please enter OTP.",
-                data: {
-                    platformTransactionReference: data.platformTransactionReference,
-                    transactionReference: transactionReference,
-                    channelId: WEMA_ALAT_CHANNEL_ID,
-                    // Pass vote info through for the next step
-                    contestantId,
-                    contestantName,
-                    contestantCategory,
-                    numberOfVotes,
-                }
-            };
-        } catch (e) {
-            console.error("Failed to parse JSON from Wema Alat response", e);
-             return { success: false, error: `Received an unreadable response from payment gateway: ${responseText}` };
-        }
-    } else {
-       return { success: false, error: `Payment initiation failed: ${responseText}`, status: response.status };
-    }
-
-  } catch (error) {
-    console.error("Error calling Wema Alat API:", error);
-    return { success: false, error: "Could not connect to the payment gateway." };
-  }
-}
-
-export async function validateWemaAlatPayment(validationData: z.infer<typeof wemaPaymentValidationSchema>) {
-    const validatedFields = wemaPaymentValidationSchema.safeParse(validationData);
-    if (!validatedFields.success) {
-        return { success: false, error: 'Invalid validation data provided.' };
-    }
-
-    if (!WEMA_ALAT_SUBSCRIPTION_KEY) {
-        console.error("Wema Alat subscription key is not set.");
-        return { success: false, error: "Payment gateway is not configured correctly." };
-    }
-
-    const { channelId, transactionReference, platformTransactionReference, otp, contestantId, contestantName, contestantCategory, numberOfVotes } = validatedFields.data;
-
-    const body = {
-        channelId,
-        transactionReference,
-        platformTransactionReference,
-        otp,
-    };
-
-    try {
-        const response = await fetch('https://wema-alatdev-apimgt.azure-api.net/alat-pay/api/EcommerceTransfer/transfer-fund-validation', {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: {
-                'Content-Type': 'application/json',
-                'Cache-Control': 'no-cache',
-                'Ocp-Apim-Subscription-Key': WEMA_ALAT_SUBSCRIPTION_KEY,
-            }
-        });
-
-        const responseText = await response.text();
-        console.log("Wema Alat transfer-fund-validation response status:", response.status);
-        console.log("Wema Alat transfer-fund-validation response body:", responseText);
-        
-        if(response.ok) {
-            const voteRecordResult = await recordVote({ contestantId, contestantName, contestantCategory, numberOfVotes });
-            if (!voteRecordResult.success) {
-                // Payment succeeded, but DB failed. Important to notify user/admin.
-                return { success: true, message: `Payment validated, but failed to record vote: ${voteRecordResult.error}` };
-            }
-            return { success: true, message: "Payment validated and vote recorded successfully!" };
-        } else {
-            return { success: false, error: `OTP validation failed: ${responseText}` };
-        }
-
-    } catch(error) {
-        console.error("Error calling Wema Alat validation API:", error);
-        return { success: false, error: "Could not connect to the payment gateway for validation." };
-    }
-}
-
-
-export async function checkWemaAlatTransactionStatus(statusData: z.infer<typeof wemaPaymentStatusSchema>) {
-    const validatedFields = wemaPaymentStatusSchema.safeParse(statusData);
-    if (!validatedFields.success) {
-        return { success: false, error: 'Invalid transaction data' };
-    }
-
-    const { channelId, transactionReference } = validatedFields.data;
-
-    const wemaAlatUrl = `https://wema-alatdev-apimgt.azure-api.net/alat-pay/api/EcommerceTransfer/CheckTransactionStatus/${channelId}/${transactionReference}`;
-
-    if (!WEMA_ALAT_SUBSCRIPTION_KEY) {
-        console.error("Wema Alat subscription key is not set in environment variables.");
-        return { success: false, error: "Payment gateway is not configured." };
-    }
-    
-    try {
-        const response = await fetch(wemaAlatUrl, {
-            method: 'GET',
-            headers: {
-                'Cache-Control': 'no-cache',
-                'Ocp-Apim-Subscription-Key': WEMA_ALAT_SUBSCRIPTION_KEY,
-            }
-        });
-
-        const resultText = await response.text();
-        const resultStatus = response.status;
-        console.log('Wema Alat Status:', resultStatus);
-        console.log('Wema Alat Response:', resultText);
-
-        if (response.ok) {
-            return { success: true, status: resultStatus, data: resultText };
-        } else {
-            return { success: false, error: `Failed to check transaction status: ${resultText}`, status: resultStatus };
-        }
-
-    } catch (error) {
-        console.error("Error calling Wema Alat API:", error);
-        return { success: false, error: "Could not connect to the payment gateway." };
-    }
-}
-
-
 export async function createRemitaPayment(paymentData: z.infer<typeof remitaPaymentRequestSchema>) {
     const validatedFields = remitaPaymentRequestSchema.safeParse(paymentData);
     if (!validatedFields.success) {
         return { success: false, error: "Invalid Remita payment data." };
     }
 
-    if (!WEMA_ALAT_SUBSCRIPTION_KEY) {
-        console.error("Remita subscription key is not set.");
-        return { success: false, error: "Payment gateway is not configured correctly." };
+    // Remita API key is missing. Assuming it's also a subscription key, similar to the Wema one that was removed.
+    const REMITA_SUBSCRIPTION_KEY = process.env.REMITA_SUBSCRIPTION_KEY;
+    if (!REMITA_SUBSCRIPTION_KEY) {
+      console.error("Remita subscription key is not set.");
+      return { success: false, error: "Payment gateway is not configured correctly." };
     }
+
 
     const { amount, charge, transactionReference, customerEmail, customerName, customerPhoneNumber, description, contestantId, contestantName, contestantCategory, numberOfVotes } = validatedFields.data;
 
     const body = {
-        channelId: "string", // Placeholder
-        cif: "string", // Placeholder
-        customerAccount: "string", // Placeholder
+        // ... (Remita API specific body, placeholders for simplicity)
+        channelId: "string", 
+        cif: "string", 
+        customerAccount: "string", 
         amount: amount,
         charge: charge,
         transactionReference: transactionReference,
         customerEmail: customerEmail,
         customerPhoneNumber: customerPhoneNumber,
         customerName: customerName,
-        rrr: "string", // Placeholder
+        rrr: "string", 
         payerEmail: customerEmail,
         payerName: customerName,
         payerNumber: customerPhoneNumber,
@@ -529,7 +338,7 @@ export async function createRemitaPayment(paymentData: z.infer<typeof remitaPaym
             headers: {
                 'Content-Type': 'application/json',
                 'Cache-Control': 'no-cache',
-                'Ocp-Apim-Subscription-Key': WEMA_ALAT_SUBSCRIPTION_KEY,
+                'Ocp-Apim-Subscription-Key': REMITA_SUBSCRIPTION_KEY,
             }
         });
 
@@ -539,8 +348,12 @@ export async function createRemitaPayment(paymentData: z.infer<typeof remitaPaym
         
         if (response.ok) {
             const voteData = { contestantId, contestantName, contestantCategory, numberOfVotes };
-            await recordVote(voteData); // Record vote on success
-            return { success: true, message: "Remita payment processed and vote recorded successfully.", data: JSON.parse(responseText) };
+            const voteRecordResult = await recordVote(voteData);
+            if (voteRecordResult.success) {
+                return { success: true, message: "Remita payment processed and vote recorded successfully.", data: JSON.parse(responseText) };
+            } else {
+                return { success: false, error: `Remita payment succeeded, but vote recording failed: ${voteRecordResult.error}` };
+            }
         } else {
              if (response.status === 500) {
                  return { success: false, error: `Remita payment failed due to an internal server error on the gateway. Please try again later or contact support.` };
@@ -559,6 +372,13 @@ export async function printRemitaReceipt(receiptData: z.infer<typeof remitaRecei
     if (!validatedFields.success) {
         return { success: false, error: "Invalid Remita receipt data." };
     }
+    
+    // Remita API key is missing. Assuming it's also a subscription key.
+    const REMITA_SUBSCRIPTION_KEY = process.env.REMITA_SUBSCRIPTION_KEY;
+    if (!REMITA_SUBSCRIPTION_KEY) {
+      console.error("Remita subscription key is not set.");
+      return { success: false, error: "Payment gateway is not configured correctly." };
+    }
 
     const { rrr } = validatedFields.data;
 
@@ -569,6 +389,7 @@ export async function printRemitaReceipt(receiptData: z.infer<typeof remitaRecei
             method: 'GET',
             headers: {
                 'Cache-Control': 'no-cache',
+                'Ocp-Apim-Subscription-Key': REMITA_SUBSCRIPTION_KEY,
             }
         });
 
@@ -595,6 +416,13 @@ export async function validateRemitaRrr(validationData: z.infer<typeof remitaRrr
         return { success: false, error: "Invalid Remita RRR validation data." };
     }
 
+    // Remita API key is missing. Assuming it's also a subscription key.
+    const REMITA_SUBSCRIPTION_KEY = process.env.REMITA_SUBSCRIPTION_KEY;
+    if (!REMITA_SUBSCRIPTION_KEY) {
+      console.error("Remita subscription key is not set.");
+      return { success: false, error: "Payment gateway is not configured correctly." };
+    }
+    
     const { rrr, channelId } = validatedFields.data;
 
     const remitaUrl = `https://wema-alatdev-apimgt.azure-api.net/remita-payments/api/RemitaPayment/ValidateRrr/${rrr}/${channelId}`;
@@ -604,6 +432,7 @@ export async function validateRemitaRrr(validationData: z.infer<typeof remitaRrr
             method: 'GET',
             headers: {
                 'Cache-Control': 'no-cache',
+                'Ocp-Apim-Subscription-Key': REMITA_SUBSCRIPTION_KEY,
             }
         });
 

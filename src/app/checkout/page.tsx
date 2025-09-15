@@ -10,34 +10,20 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Loader2, CheckCircle, ShieldCheck, CreditCard, Banknote } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { createWemaAlatPayment, validateWemaAlatPayment, createRemitaPayment, createPaystackPayment } from '@/app/actions';
+import { createRemitaPayment, createPaystackPayment } from '@/app/actions';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 
 const VOTE_COST_PER_VOTE = 100;
 
-interface PaymentData {
-    platformTransactionReference: string;
-    transactionReference: string;
-    channelId: string;
-    // Vote data carried over for OTP validation step
-    contestantId: string;
-    contestantName: string;
-    contestantCategory: string;
-    numberOfVotes: number;
-}
-
 function CheckoutView() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
-    const [isConfirmingOtp, startOtpTransition] = useTransition();
 
-    const [view, setView] = useState<'confirm' | 'otp' | 'success'>('confirm');
-    const [otp, setOtp] = useState('');
-    const [paymentData, setPaymentData] = useState<PaymentData | null>(null);
+    const [view, setView] = useState<'confirm' | 'success'>('confirm');
     
     // Form state for Paystack and Remita
     const [customerName, setCustomerName] = useState('');
@@ -89,35 +75,6 @@ function CheckoutView() {
             }
         });
     };
-
-    const handleInitialPayment = () => {
-        if (!contestantId) return;
-
-        startTransition(async () => {
-            const result = await createWemaAlatPayment({
-                amount: totalVoteCost,
-                contestantId,
-                contestantName,
-                contestantCategory,
-                numberOfVotes,
-            });
-
-            if (result.success && result.data) {
-                toast({
-                    title: "Awaiting Confirmation",
-                    description: "Please enter the OTP sent to you to complete the vote.",
-                });
-                setPaymentData(result.data);
-                setView('otp');
-            } else {
-                 toast({
-                    title: "Payment Error",
-                    description: result.error || "Could not process payment. Please try again.",
-                    variant: "destructive",
-                });
-            }
-        });
-    };
     
     const handleRemitaPayment = () => {
         if (!contestantId || !customerName || !customerEmail || !customerPhone) {
@@ -160,31 +117,6 @@ function CheckoutView() {
         });
     };
 
-    const handleOtpValidation = () => {
-        if (!paymentData || !otp || !contestantId) return;
-
-        startOtpTransition(async () => {
-            const validationResult = await validateWemaAlatPayment({
-                ...paymentData,
-                otp,
-            });
-            
-            if (validationResult.success) {
-                toast({
-                    title: "Vote Successful!",
-                    description: validationResult.message || "Your payment has been processed and your vote has been recorded.",
-                });
-                setView('success');
-            } else {
-                toast({
-                    title: "OTP Validation Failed",
-                    description: validationResult.error || "The OTP you entered is incorrect. Please try again.",
-                    variant: "destructive"
-                });
-            }
-        });
-    }
-
     if (!contestantId) {
         return (
             <div className="text-center text-white">
@@ -221,42 +153,6 @@ function CheckoutView() {
       )
     }
 
-     if (view === 'otp') {
-        return (
-            <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
-                <CardHeader>
-                     <div className="mx-auto bg-amber-500 text-black rounded-full h-16 w-16 flex items-center justify-center mb-4">
-                        <ShieldCheck className="h-10 w-10" />
-                    </div>
-                    <CardTitle className="font-headline text-3xl text-amber-400 text-center">Enter Your OTP</CardTitle>
-                    <CardDescription className="text-zinc-400 text-center">A One-Time Password has been sent to you. Please enter it below to complete your transaction.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Input
-                        type="text"
-                        placeholder="Enter OTP"
-                        value={otp}
-                        onChange={(e) => setOtp(e.target.value)}
-                        className="bg-zinc-800 border-zinc-700 focus:ring-amber-400 text-center text-lg h-12"
-                        maxLength={6}
-                    />
-                </CardContent>
-                <CardFooter>
-                    <Button
-                        size="lg"
-                        className="w-full mt-4 bg-amber-500 text-black font-bold text-lg hover:bg-amber-400 disabled:bg-zinc-600"
-                        onClick={handleOtpValidation}
-                        disabled={isConfirmingOtp || otp.length < 4}
-                    >
-                        {isConfirmingOtp ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                        {isConfirmingOtp ? 'Confirming...' : 'Validate & Complete Vote'}
-                    </Button>
-                </CardFooter>
-            </Card>
-        )
-    }
-
-
     return (
         <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
             <CardHeader>
@@ -278,11 +174,10 @@ function CheckoutView() {
                 </div>
                 
                 <Tabs defaultValue="paystack" className="w-full mt-8">
-                    <TabsList className="grid w-full grid-cols-3 bg-zinc-800/50">
+                    <TabsList className="grid w-full grid-cols-2 bg-zinc-800/50">
                         <TabsTrigger value="paystack" className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-300 text-zinc-400">
                              <Image src="https://files.paystack.co/assets/payment-channel/logo/card.png" width={20} height={20} alt="Paystack" className="mr-2"/> Paystack
                         </TabsTrigger>
-                        <TabsTrigger value="alat" className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-300 text-zinc-400"><Banknote className="mr-2 h-4 w-4"/> Wema ALAT</TabsTrigger>
                         <TabsTrigger value="remita" className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-300 text-zinc-400"><CreditCard className="mr-2 h-4 w-4"/> Remita</TabsTrigger>
                     </TabsList>
 
@@ -305,20 +200,6 @@ function CheckoutView() {
                         </Button>
                     </TabsContent>
 
-                    <TabsContent value="alat" className="mt-4">
-                        <p className="text-xs text-zinc-500 mb-4 text-center">
-                            Pay via direct bank transfer. You will be asked to enter an OTP in the next step.
-                        </p>
-                         <Button
-                            size="lg"
-                            className="w-full bg-amber-500 text-black font-bold text-lg hover:bg-amber-400 disabled:bg-zinc-600 disabled:text-zinc-400 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105"
-                            onClick={handleInitialPayment}
-                            disabled={isPending}
-                        >
-                             {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                             {isPending ? 'Processing...' : 'Pay with ALAT'}
-                        </Button>
-                    </TabsContent>
                     <TabsContent value="remita" className="mt-4 space-y-4">
                         <p className="text-xs text-zinc-500 mb-2 text-center">
                             Pay using Remita. Please fill out your details below.

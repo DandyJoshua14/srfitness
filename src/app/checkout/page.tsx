@@ -31,6 +31,8 @@ function CheckoutView() {
     const contestantName = searchParams.get('name') || 'the selected contestant';
     const contestantCategory = searchParams.get('category') || 'their category';
     const numberOfVotes = parseInt(searchParams.get('votes') || '1', 10);
+    const contestantImage = searchParams.get('image') || '/SR.jpg'; // Get image from URL
+    
     const totalVoteCost = VOTE_COST_PER_VOTE * (numberOfVotes - (
         numberOfVotes === 12 ? 2 :
         numberOfVotes === 53 ? 3 :
@@ -39,7 +41,6 @@ function CheckoutView() {
         numberOfVotes === 1020 ? 20 : 0
     ));
 
-    const contestantImage = contestantName ? `https://placehold.co/400x500.png?text=${encodeURIComponent(contestantName.split(' ').map(n => n[0]).join(''))}` : '/SR.jpg';
     
     const handlePaystackPayment = () => {
         if (!contestantId || !customerEmail) {
@@ -142,7 +143,7 @@ function CheckoutView() {
             </CardHeader>
             <CardContent>
                 <div className="flex items-center space-x-4 mb-6">
-                    <Image src={contestantImage} alt={contestantName} width={100} height={125} className="rounded-lg border-2 border-amber-400/50" />
+                    <Image src={contestantImage} alt={contestantName} width={100} height={125} className="rounded-lg border-2 border-amber-400/50 object-cover" />
                     <div>
                         <h3 className="text-2xl font-bold text-white">{contestantName}</h3>
                         <p className="text-amber-300">{contestantCategory}</p>
@@ -188,6 +189,13 @@ function CheckoutView() {
                     </TabsContent>
                 </Tabs>
             </CardContent>
+            <CardFooter>
+                 <Button asChild variant="link" className="text-zinc-400 hover:text-amber-300" onClick={() => router.back()}>
+                    <Link href="/vote">
+                        <ArrowLeft className="mr-2 h-4 w-4" /> Go Back
+                    </Link>
+                </Button>
+            </CardFooter>
         </Card>
     );
 }

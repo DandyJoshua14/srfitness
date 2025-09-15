@@ -180,8 +180,14 @@ export default function VotePage() {
         }
 
         const totalVotes = selectedVoteOption.base + selectedVoteOption.free;
-        const { id, name, category } = selectedContestant;
-        const query = new URLSearchParams({ id, name, category, votes: String(totalVotes) }).toString();
+        const { id, name, category, image } = selectedContestant;
+        const query = new URLSearchParams({ 
+            id, 
+            name, 
+            category, 
+            votes: String(totalVotes),
+            image, // Pass the image URL
+        }).toString();
         router.push(`/checkout?${query}`);
     };
 

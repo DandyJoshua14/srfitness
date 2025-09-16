@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: var(--font-open-sans), sans-serif;
+}
+
+/* Hide global footer and contact section within the admin layout context */
+.admin-layout-wrapper ~ #contact,
+.admin-layout-wrapper ~ footer {
+  display: none;
+}
+
+
+@layer base {
+  :root {
+    --background: 0 0% 10%; /* Dark Gray */
+    --foreground: 0 0% 98%; /* Near White */
+
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 33 100% 55%; /* Orange, slightly lighter for dark bg */
+    --primary-foreground: 0 0% 0%; /* Black for text on orange */
+
+    --secondary: 0 0% 20%; /* Another shade of dark gray */
+    --secondary-foreground: 0 0% 98%;
+    
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+
+    --accent: 33 100% 55%; /* Orange */
+    --accent-foreground: 0 0% 0%; /* Black */
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 33 100% 55%; /* Orange for focus rings */
+
+    --radius: 0.5rem;
+
+    --chart-1: 33 100% 55%;
+    --chart-2: 210 40% 20%;
+    --chart-3: 170 70% 35%;
+    --chart-4: 0 80% 50%;
+    --chart-5: 50 90% 45%;
+
+    /* Sidebar vars, reflecting dark theme */
+    --sidebar-background: 0 0% 12%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 33 100% 55%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 33 100% 55%; 
+    --sidebar-accent-foreground: 0 0% 0%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 33 100% 55%;
+  }
+
+  .dark {
+    --background: 0 0% 10%; /* Dark Gray */
+    --foreground: 0 0% 98%; /* Near White */
+
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 33 100% 55%; /* Orange, slightly lighter for dark bg */
+    --primary-foreground: 0 0% 0%; /* Black for text on orange */
+
+    --secondary: 0 0% 20%; /* Another shade of dark gray */
+    --secondary-foreground: 0 0% 98%;
+    
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+
+    --accent: 33 100% 55%; /* Orange */
+    --accent-foreground: 0 0% 0%; /* Black */
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 33 100% 55%; /* Orange for focus rings */
+
+    --chart-1: 33 100% 55%;
+    --chart-2: 210 40% 20%;
+    --chart-3: 170 70% 35%;
+    --chart-4: 0 80% 50%;
+    --chart-5: 50 90% 45%;
+
+    --sidebar-background: 0 0% 12%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 33 100% 55%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 33 100% 55%;
+    --sidebar-accent-foreground: 0 0% 0%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 33 100% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

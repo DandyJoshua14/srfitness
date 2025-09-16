@@ -1,27 +1,4 @@
 {
-  "node": {
-    "40d4ef3f17cac6671f3ce0fae5b2a708376fff0fbf": {
-      "workers": {
-        "app/_not-found/page": {
-          "moduleId": "[project]/.next-internal/server/app/_not-found/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/generate-voice-response-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/generate-speech-audio-flow.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        }
-      },
-      "layer": {
-        "app/_not-found/page": "action-browser"
-      }
-    },
-    "40f3233a4d6b07c47e7e48dcd2d0a4954be17da116": {
-      "workers": {
-        "app/_not-found/page": {
-          "moduleId": "[project]/.next-internal/server/app/_not-found/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/generate-voice-response-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/generate-speech-audio-flow.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        }
-      },
-      "layer": {
-        "app/_not-found/page": "action-browser"
-      }
-    }
-  },
+  "node": {},
   "edge": {}
 }

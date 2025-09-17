@@ -6,20 +6,59 @@ import Link from 'next/link';
 import { useCart } from '@/contexts/cart-context';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ShoppingCart, Trash2, ArrowRight, Info } from 'lucide-react';
+import { ShoppingCart, Trash2, ArrowRight, Info, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { createPaystackPayment } from '@/app/actions';
+import { useState, useTransition } from 'react';
+import { Label } from '@/components/ui/label';
 
 export default function CartPage() {
   const { cartItems, updateQuantity, removeFromCart, cartCount, cartTotal } = useCart();
   const { toast } = useToast();
+  const [isPending, startTransition] = useTransition();
+  const [customerEmail, setCustomerEmail] = useState('');
 
   const handleCheckout = () => {
-    toast({
-      title: 'Checkout Initiated (Conceptual)',
-      description: 'In a real app, this would take you to the payment page.',
+    if (!customerEmail) {
+      toast({
+        title: 'Email Required',
+        description: 'Please enter your email address to proceed with the checkout.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (cartItems.length === 0) {
+      toast({
+        title: 'Cart is Empty',
+        description: 'You cannot checkout with an empty cart.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    startTransition(async () => {
+      const result = await createPaystackPayment({
+        email: customerEmail,
+        amount: cartTotal + 5.00, // Including estimated shipping
+        metadata: {
+          cartItems: JSON.stringify(cartItems.map(item => ({ id: item.id, name: item.name, quantity: item.quantity }))),
+          type: 'marketplace_purchase'
+        } as any, // Cast to any to allow for flexible metadata
+      });
+
+      if (result.success && result.authorizationUrl) {
+        window.location.href = result.authorizationUrl;
+      } else {
+        toast({
+          title: 'Checkout Error',
+          description: result.error || 'Could not initiate payment. Please try again.',
+          variant: 'destructive',
+        });
+      }
     });
   };
 
@@ -102,7 +141,17 @@ export default function CartPage() {
                 <CardTitle className="font-headline text-2xl">Order Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex justify-between text-muted-foreground">
+                <div className="space-y-2">
+                    <Label htmlFor="customerEmail" className="font-semibold">Email for Receipt</Label>
+                    <Input 
+                        id="customerEmail" 
+                        type="email" 
+                        placeholder="your.email@example.com" 
+                        value={customerEmail}
+                        onChange={(e) => setCustomerEmail(e.target.value)}
+                    />
+                </div>
+                <div className="flex justify-between text-muted-foreground pt-4 border-t">
                   <span>Subtotal</span>
                   <span>${cartTotal.toFixed(2)}</span>
                 </div>
@@ -120,13 +169,19 @@ export default function CartPage() {
                 </div>
               </CardContent>
               <CardFooter className="flex flex-col gap-4">
-                 <Button size="lg" className="w-full font-headline text-xl" onClick={handleCheckout}>
-                  Proceed to Checkout <ArrowRight className="ml-2 h-5 w-5" />
+                 <Button 
+                    size="lg" 
+                    className="w-full font-headline text-xl" 
+                    onClick={handleCheckout}
+                    disabled={isPending}
+                  >
+                  {isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <ArrowRight className="mr-2 h-5 w-5" />}
+                  {isPending ? 'Processing...' : 'Proceed to Checkout'}
                 </Button>
                  <Alert>
                     <Info className="h-4 w-4" />
                     <AlertDescription className="text-xs">
-                        This is a conceptual cart. Checkout functionality is not implemented.
+                        You will be redirected to our secure payment partner, Paystack, to complete your purchase.
                     </AlertDescription>
                  </Alert>
               </CardFooter>
@@ -137,3 +192,5 @@ export default function CartPage() {
     </div>
   );
 }
+
+    

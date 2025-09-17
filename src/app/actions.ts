@@ -74,29 +74,25 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
 
   const { category, nomineeName, nomineePhone, nominationReason, nominatorName, nominatorPhone } = validatedFields.data;
 
-  // 1. Always save to Firestore first.
-  try {
-    await addNomination(validatedFields.data);
-  } catch (dbError) {
-    console.error('Firestore save error:', dbError);
-    return { success: false, error: 'Failed to record your nomination. Please try again.' };
+  // If credentials aren't configured, fail immediately.
+  if (!GMAIL_EMAIL || !GMAIL_APP_PASSWORD) {
+    console.error('Gmail credentials are not configured. Cannot send email.');
+    return { success: false, error: 'The email service is not configured. Please contact support.' };
   }
 
-  // 2. Attempt to send email, but don't block success if it fails.
-  if (GMAIL_EMAIL && GMAIL_APP_PASSWORD) {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: GMAIL_EMAIL,
-        pass: GMAIL_APP_PASSWORD,
-      },
-    });
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: GMAIL_EMAIL,
+      pass: GMAIL_APP_PASSWORD,
+    },
+  });
 
-    const mailOptions = {
-      from: `"SR Fitness Awards" <${GMAIL_EMAIL}>`,
-      to: 'sampson07@outlook.com, srfitness247@gmail.com',
-      subject: 'New Award Nomination Received!',
-      html: `
+  const mailOptions = {
+    from: `"SR Fitness Awards" <${GMAIL_EMAIL}>`,
+    to: 'sampson07@outlook.com, srfitness247@gmail.com',
+    subject: 'New Award Nomination Received!',
+    html: `
         <h1>New SR Fitness Award Nomination</h1>
         <p>A new nomination has been submitted. Here are the details:</p>
         <h2>Nominee Details:</h2>
@@ -114,21 +110,16 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
           <li><strong>Phone:</strong> ${nominatorPhone}</li>
         </ul>
       `,
-    };
+  };
 
-    try {
-      await transporter.sendMail(mailOptions);
-      console.log('Nomination email sent successfully.');
-    } catch (emailError) {
-      console.error('Nodemailer Error:', emailError);
-      // Don't return an error to the user, just log it. The primary action (DB save) succeeded.
-    }
-  } else {
-    console.warn('Gmail credentials are not configured. Skipping email sending.');
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Nomination email sent successfully.');
+    return { success: true, message: 'Nomination submitted successfully!' };
+  } catch (emailError) {
+    console.error('Nodemailer Error:', emailError);
+    return { success: false, error: 'Failed to send the nomination email. Please try again.' };
   }
-
-  // If we've reached here, the DB save was successful.
-  return { success: true, message: 'Nomination submitted successfully!' };
 }
 
 

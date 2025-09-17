@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///home/user/studio/src/app/admin/page.tsx"],"sourcesContent":["\n\"use client\";\n\nimport { useEffect } from 'react';\nimport { useRouter } from 'next/navigation';\nimport LoadingOverlay from '@/components/common/loading-overlay';\n\n// This page acts as a redirect to the primary admin tool.\nexport default function AdminPage() {\n  const router = useRouter();\n\n  useEffect(() => {\n    router.replace('/admin/content-studio');\n  }, [router]);\n\n  // Render a loading state while redirecting\n  return <LoadingOverlay />;\n}\n"],"names":[],"mappings":";;;;AAGA;AACA;AACA;;;AAJA;;;;AAOe,SAAS;;IACtB,MAAM,SAAS,CAAA,GAAA,qIAAA,CAAA,YAAS,AAAD;IAEvB,CAAA,GAAA,6JAAA,CAAA,YAAS,AAAD;+BAAE;YACR,OAAO,OAAO,CAAC;QACjB;8BAAG;QAAC;KAAO;IAEX,2CAA2C;IAC3C,qBAAO,6LAAC,qJAAA,CAAA,UAAc;;;;;AACxB;GATwB;;QACP,qIAAA,CAAA,YAAS;;;KADF","debugId":null}}]
-}

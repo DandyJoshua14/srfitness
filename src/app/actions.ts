@@ -3,12 +3,13 @@
 
 import { z } from 'zod';
 import { addNomination } from '@/services/firestore';
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 import { redirect } from 'next/navigation';
 
 // Explicitly read environment variables at the top level
 const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const GMAIL_EMAIL = process.env.GMAIL_EMAIL;
+const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD;
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
 // We will read the Zapier URL inside the function to ensure it's not missed.
 
@@ -70,59 +71,66 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
   if (!validatedFields.success) {
     return { success: false, error: 'Invalid form data.' };
   }
-  
+
+  const { category, nomineeName, nomineePhone, nominationReason, nominatorName, nominatorPhone } = validatedFields.data;
+
+  // 1. Always save to Firestore first.
   try {
-    const { category, nomineeName, nomineePhone, nominationReason, nominatorName, nominatorPhone } = validatedFields.data;
-
-    // 1. Attempt to send email
-    if (RESEND_API_KEY) {
-      const resend = new Resend(RESEND_API_KEY);
-      const { data, error } = await resend.emails.send({
-        from: 'SR Fitness Awards <noreply@srfitness.com.ng>',
-        to: ['sampson07@outlook.com', 'srfitness247@gmail.com'],
-        subject: 'New Award Nomination Received!',
-        html: `
-          <h1>New SR Fitness Award Nomination</h1>
-          <p>A new nomination has been submitted. Here are the details:</p>
-          <h2>Nominee Details:</h2>
-          <ul>
-            <li><strong>Category:</strong> ${category}</li>
-            <li><strong>Name:</strong> ${nomineeName}</li>
-            <li><strong>Phone:</strong> ${nomineePhone}</li>
-          </ul>
-          <h2>Reason for Nomination:</h2>
-          <p>${nominationReason}</p>
-          <hr />
-          <h2>Nominator Details:</h2>
-          <ul>
-            <li><strong>Name:</strong> ${nominatorName}</li>
-            <li><strong>Phone:</strong> ${nominatorPhone}</li>
-          </ul>
-        `,
-      });
-
-      if (error) {
-        // If email fails, return an error and do not save to DB
-        console.error('Resend API Error:', error);
-        return { success: false, error: 'Failed to send nomination email. Please try again.' };
-      }
-    } else {
-        console.warn('Resend API key is not configured. Skipping email sending.');
-    }
-
-    // 2. If email is sent (or skipped), save to Firestore
     await addNomination(validatedFields.data);
-    
-    return { success: true, message: 'Nomination submitted successfully!' };
-
-  } catch (error) {
-    console.error('An unexpected error occurred in sendNominationEmail:', error);
-    return {
-      success: false,
-      error: 'An unexpected server error occurred. Please try again later.',
-    };
+  } catch (dbError) {
+    console.error('Firestore save error:', dbError);
+    return { success: false, error: 'Failed to record your nomination. Please try again.' };
   }
+
+  // 2. Attempt to send email, but don't block success if it fails.
+  if (GMAIL_EMAIL && GMAIL_APP_PASSWORD) {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: GMAIL_EMAIL,
+        pass: GMAIL_APP_PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: `"SR Fitness Awards" <${GMAIL_EMAIL}>`,
+      to: 'sampson07@outlook.com, srfitness247@gmail.com',
+      subject: 'New Award Nomination Received!',
+      html: `
+        <h1>New SR Fitness Award Nomination</h1>
+        <p>A new nomination has been submitted. Here are the details:</p>
+        <h2>Nominee Details:</h2>
+        <ul>
+          <li><strong>Category:</strong> ${category}</li>
+          <li><strong>Name:</strong> ${nomineeName}</li>
+          <li><strong>Phone:</strong> ${nomineePhone}</li>
+        </ul>
+        <h2>Reason for Nomination:</h2>
+        <p>${nominationReason}</p>
+        <hr />
+        <h2>Nominator Details:</h2>
+        <ul>
+          <li><strong>Name:</strong> ${nominatorName}</li>
+          <li><strong>Phone:</strong> ${nominatorPhone}</li>
+        </ul>
+      `,
+    };
+
+    try {
+      await transporter.sendMail(mailOptions);
+      console.log('Nomination email sent successfully.');
+    } catch (emailError) {
+      console.error('Nodemailer Error:', emailError);
+      // Don't return an error to the user, just log it. The primary action (DB save) succeeded.
+    }
+  } else {
+    console.warn('Gmail credentials are not configured. Skipping email sending.');
+  }
+
+  // If we've reached here, the DB save was successful.
+  return { success: true, message: 'Nomination submitted successfully!' };
 }
+
 
 /**
  * Sends vote data to a Zapier webhook.
@@ -483,8 +491,3 @@ export async function validateRemitaRrr(validationData: z.infer<typeof remitaRrr
         return { success: false, error: "Could not connect to the Remita payment gateway to validate RRR." };
     }
 }
-
-    
-    
-
-    

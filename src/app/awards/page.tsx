@@ -181,11 +181,11 @@ export default function AwardsPage() {
                   </div>
                    <div className="flex flex-col sm:flex-row justify-between items-center p-4 border rounded-lg">
                       <div>
-                          <h4 className="font-bold text-lg text-foreground">Table for 8</h4>
-                          <p className="text-muted-foreground text-sm">Reserve a full table for your group or company.</p>
+                          <h4 className="font-bold text-lg text-foreground">Gold Table for 8</h4>
+                          <p className="text-muted-foreground text-sm">Reserve a premium table for your group or company.</p>
                       </div>
                       <div className="text-right mt-2 sm:mt-0">
-                          <p className="text-2xl font-bold text-primary">₦250,000</p>
+                          <p className="text-2xl font-bold text-primary">₦200,000</p>
                       </div>
                   </div>
                   <Button asChild size="lg" className="w-full mt-4 font-headline text-xl">

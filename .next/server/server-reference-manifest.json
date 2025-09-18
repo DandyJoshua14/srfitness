@@ -5,10 +5,15 @@
         "app/page": {
           "moduleId": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fhome%2Fuser%2Fsrfitness%2Fsrfitness%2Fsrc%2Fai%2Fflows%2Fgenerate-voice-response-flow.ts%22%2C%5B%7B%22id%22%3A%22402cf66412d9a16e3489dbde1265088b9eac3f2277%22%2C%22exportedName%22%3A%22generateVoiceResponse%22%7D%5D%5D%2C%5B%22%2Fhome%2Fuser%2Fsrfitness%2Fsrfitness%2Fsrc%2Fai%2Fflows%2Fgenerate-speech-audio-flow.ts%22%2C%5B%7B%22id%22%3A%22400caf960fbd7902e0e6501f1a3046458f54da2353%22%2C%22exportedName%22%3A%22generateSpeechAudio%22%7D%5D%5D%2C%5B%22%2Fhome%2Fuser%2Fsrfitness%2Fsrfitness%2Fsrc%2Fai%2Fflows%2Fgenerate-fitness-tip-flow.ts%22%2C%5B%7B%22id%22%3A%2240454ddff2d0deb647fce377ff2da2c721e12d91be%22%2C%22exportedName%22%3A%22generateFitnessTip%22%7D%5D%5D%5D&__client_imported__=true!",
           "async": false
+        },
+        "app/awards/page": {
+          "moduleId": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fhome%2Fuser%2Fsrfitness%2Fsrfitness%2Fsrc%2Fai%2Fflows%2Fgenerate-voice-response-flow.ts%22%2C%5B%7B%22id%22%3A%22402cf66412d9a16e3489dbde1265088b9eac3f2277%22%2C%22exportedName%22%3A%22generateVoiceResponse%22%7D%5D%5D%2C%5B%22%2Fhome%2Fuser%2Fsrfitness%2Fsrfitness%2Fsrc%2Fai%2Fflows%2Fgenerate-speech-audio-flow.ts%22%2C%5B%7B%22id%22%3A%22400caf960fbd7902e0e6501f1a3046458f54da2353%22%2C%22exportedName%22%3A%22generateSpeechAudio%22%7D%5D%5D%5D&__client_imported__=true!",
+          "async": false
         }
       },
       "layer": {
-        "app/page": "action-browser"
+        "app/page": "action-browser",
+        "app/awards/page": "action-browser"
       }
     },
     "400caf960fbd7902e0e6501f1a3046458f54da2353": {
@@ -16,10 +21,15 @@
         "app/page": {
           "moduleId": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fhome%2Fuser%2Fsrfitness%2Fsrfitness%2Fsrc%2Fai%2Fflows%2Fgenerate-voice-response-flow.ts%22%2C%5B%7B%22id%22%3A%22402cf66412d9a16e3489dbde1265088b9eac3f2277%22%2C%22exportedName%22%3A%22generateVoiceResponse%22%7D%5D%5D%2C%5B%22%2Fhome%2Fuser%2Fsrfitness%2Fsrfitness%2Fsrc%2Fai%2Fflows%2Fgenerate-speech-audio-flow.ts%22%2C%5B%7B%22id%22%3A%22400caf960fbd7902e0e6501f1a3046458f54da2353%22%2C%22exportedName%22%3A%22generateSpeechAudio%22%7D%5D%5D%2C%5B%22%2Fhome%2Fuser%2Fsrfitness%2Fsrfitness%2Fsrc%2Fai%2Fflows%2Fgenerate-fitness-tip-flow.ts%22%2C%5B%7B%22id%22%3A%2240454ddff2d0deb647fce377ff2da2c721e12d91be%22%2C%22exportedName%22%3A%22generateFitnessTip%22%7D%5D%5D%5D&__client_imported__=true!",
           "async": false
+        },
+        "app/awards/page": {
+          "moduleId": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fhome%2Fuser%2Fsrfitness%2Fsrfitness%2Fsrc%2Fai%2Fflows%2Fgenerate-voice-response-flow.ts%22%2C%5B%7B%22id%22%3A%22402cf66412d9a16e3489dbde1265088b9eac3f2277%22%2C%22exportedName%22%3A%22generateVoiceResponse%22%7D%5D%5D%2C%5B%22%2Fhome%2Fuser%2Fsrfitness%2Fsrfitness%2Fsrc%2Fai%2Fflows%2Fgenerate-speech-audio-flow.ts%22%2C%5B%7B%22id%22%3A%22400caf960fbd7902e0e6501f1a3046458f54da2353%22%2C%22exportedName%22%3A%22generateSpeechAudio%22%7D%5D%5D%5D&__client_imported__=true!",
+          "async": false
         }
       },
       "layer": {
-        "app/page": "action-browser"
+        "app/page": "action-browser",
+        "app/awards/page": "action-browser"
       }
     },
     "40454ddff2d0deb647fce377ff2da2c721e12d91be": {

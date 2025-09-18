@@ -17,7 +17,7 @@ import { Separator } from '@/components/ui/separator';
 const ticketOptions = [
   { name: 'Regular Ticket', price: 10000 },
   { name: 'VIP Ticket', price: 25000 },
-  { name: 'Table for 8', price: 250000 },
+  { name: 'Gold Table for 8', price: 200000 },
 ];
 
 function TicketCheckoutView() {
@@ -30,7 +30,7 @@ function TicketCheckoutView() {
     const [quantities, setQuantities] = useState<Record<string, number>>({
         'Regular Ticket': 0,
         'VIP Ticket': 0,
-        'Table for 8': 0,
+        'Gold Table for 8': 0,
     });
 
     const handleQuantityChange = (ticketName: string, change: number) => {

@@ -3,10 +3,11 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { Award, Ticket, ArrowRight } from 'lucide-react';
+import { VisuallyHidden } from '@/components/ui/visually-hidden';
 
 const SESSION_STORAGE_KEY = 'sr-awards-ad-shown';
 
@@ -34,6 +35,9 @@ export default function EventAdModal() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="max-w-md w-[90vw] p-0 bg-zinc-900 border-amber-400/50 text-white overflow-hidden shadow-2xl shadow-amber-500/20">
+        <VisuallyHidden>
+          <DialogTitle>SR Fitness Awards Invitation</DialogTitle>
+        </VisuallyHidden>
         <div className="relative aspect-video w-full">
           <Image
             src="/gl.jpeg"

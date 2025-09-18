@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import { Award, Ticket, ArrowRight } from 'lucide-react';
+import { Award, Ticket, ArrowRight, Vote } from 'lucide-react';
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
 
 export default function EventAdModal() {
@@ -21,9 +21,14 @@ export default function EventAdModal() {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleCtaClick = () => {
+  const handleTicketClick = () => {
     setIsOpen(false);
     router.push('/awards#tickets');
+  };
+
+  const handleVoteClick = () => {
+    setIsOpen(false);
+    router.push('/vote');
   };
 
   return (
@@ -53,15 +58,25 @@ export default function EventAdModal() {
           <p className="text-zinc-300">
             Join us for a night of glamour, recognition, and celebration at the annual SR Fitness Awards.
           </p>
-          <Button
-            size="lg"
-            className="w-full bg-amber-500 text-black font-bold text-lg hover:bg-amber-400 group mt-2"
-            onClick={handleCtaClick}
-          >
-            <Ticket className="mr-2 h-5 w-5" />
-            Buy Tickets Now
-            <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-          </Button>
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <Button
+              size="lg"
+              className="w-full bg-amber-500 text-black font-bold text-base hover:bg-amber-400 group"
+              onClick={handleTicketClick}
+            >
+              <Ticket className="mr-2 h-5 w-5" />
+              Buy Tickets
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="w-full border-amber-400 text-amber-400 hover:bg-amber-400/10 hover:text-amber-300 font-bold text-base group"
+              onClick={handleVoteClick}
+            >
+              <Vote className="mr-2 h-5 w-5" />
+              Vote Now
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

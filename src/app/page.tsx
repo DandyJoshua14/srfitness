@@ -1,4 +1,6 @@
 
+"use client";
+
 import HeroSection from '@/components/sections/hero-section';
 import AboutSummarySection from '@/components/sections/about-summary-section';
 import KeyFeaturesSection from '@/components/sections/key-features-section';
@@ -8,19 +10,16 @@ import MarketplaceHighlightSection from '@/components/sections/marketplace-highl
 import OurImpactSection from '@/components/sections/our-impact-section';
 import DailyTipSection from '@/components/sections/daily-tip-section';
 import GallerySection from '@/components/sections/gallery-section';
-import type { Metadata } from 'next';
+import EventAdModal from '@/components/features/event-ad-modal';
 
-export const metadata: Metadata = {
-  title: 'SR Fitness - Unleash Your Potential',
-  description: 'SR Fitness is a wellness consultancy brand that helps people achieve good health through personal training, community outreach, education, and advocacy. Its mission focuses on transformation and inclusivity, having positively impacted thousands via training, seminars and corporate Wellness programs.',
-  verification: {
-    google: 'aXKYc51I-jKg23iI2dIdJxJ6XjU984_An5WrJe7Cl0g',
-  },
-};
+// Metadata needs to be defined in a Server Component or a metadata export.
+// For this client component, we'd handle titles/meta via a different mechanism
+// or hoist this component. For now, we assume metadata is handled at a higher level.
 
 export default function HomePage() {
   return (
     <>
+      <EventAdModal />
       <HeroSection />
       <AboutSummarySection />
       <KeyFeaturesSection />

@@ -15,8 +15,8 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 
 const ticketOptions = [
-  { name: 'Silver Table', price: 100000, image: 'https://picsum.photos/seed/ticketSilver/100/100', dataAiHint: 'silver ticket' },
-  { name: 'Gold Table for 8', price: 200000, image: 'https://picsum.photos/seed/ticketGold/100/100', dataAiHint: 'gold ticket' },
+  { name: 'Silver Table', price: 100000, image: '/gold.jpg', dataAiHint: 'silver ticket' },
+  { name: 'Gold Table for 8', price: 200000, image: '/SILVER.jpg', dataAiHint: 'gold ticket' },
 ];
 
 function TicketCheckoutView() {

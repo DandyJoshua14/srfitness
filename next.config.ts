@@ -21,7 +21,13 @@ const nextConfig: NextConfig = {
         hostname: 'files.paystack.co',
         port: '',
         pathname: '/**',
-      }
+      },
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };

@@ -59,7 +59,6 @@ function TicketCheckoutView() {
         startTransition(async () => {
             const callbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002'}/awards/callback`;
             
-            // Create a detailed description for metadata
             const ticketDescription = ticketsToPurchase.map(t => `${t.qty}x ${t.name}`).join(', ');
 
             const result = await createPaystackPayment({
@@ -69,8 +68,8 @@ function TicketCheckoutView() {
                 metadata: {
                     type: 'ticket_purchase',
                     customerName: customerName,
-                    ticketType: ticketDescription, // Use the generated description
-                    quantity: ticketsToPurchase.reduce((acc, t) => acc + t.qty, 0), // Total quantity
+                    ticketType: ticketDescription, 
+                    quantity: ticketsToPurchase.reduce((acc, t) => acc + t.qty, 0),
                 }
             });
 

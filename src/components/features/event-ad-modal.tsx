@@ -35,12 +35,13 @@ export default function EventAdModal() {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="max-w-md w-[90vw] p-0 bg-zinc-900 border-amber-400/50 text-white overflow-hidden shadow-2xl shadow-amber-500/20">
         <div className="relative aspect-video w-full">
-          <Image 
-            src="/gl.jpeg" 
-            alt="Awards Gala Night" 
-            layout="fill" 
-            objectFit="cover" 
-            data-ai-hint="awards ceremony gala" 
+          <Image
+            src="/gl.jpeg"
+            alt="Awards Gala Night"
+            width={400}
+            height={225}
+            className="w-full h-full object-cover"
+            data-ai-hint="awards ceremony gala"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/50 to-transparent" />
         </div>

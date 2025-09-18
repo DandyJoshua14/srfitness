@@ -4,7 +4,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Trophy, Sunrise, Sunset, Award as AwardIcon, Camera } from 'lucide-react';
+import { Trophy, Sunrise, Sunset, Award as AwardIcon, Camera, Ticket } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Autoplay from "embla-carousel-autoplay";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -144,6 +144,57 @@ export default function AwardsPage() {
                   </CardContent>
               </Card>
           </div>
+
+          {/* Ticket Sales Section */}
+          <section id="tickets" className="mb-20 md:mb-28">
+            <div className="text-center mb-12">
+              <h2 className="font-headline text-4xl text-foreground font-semibold flex items-center justify-center gap-3">
+                <Ticket className="h-9 w-9 text-primary" />
+                Get Your Tickets
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto mt-2">
+                Join us for an unforgettable evening celebrating the best in fitness.
+              </p>
+            </div>
+            <Card className="max-w-3xl mx-auto bg-card border-border shadow-xl">
+              <CardHeader>
+                  <CardTitle className="text-center font-headline text-3xl text-primary">Event Tickets</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                  <div className="flex flex-col sm:flex-row justify-between items-center p-4 border rounded-lg">
+                      <div>
+                          <h4 className="font-bold text-lg text-foreground">Regular Ticket</h4>
+                          <p className="text-muted-foreground text-sm">Access to the awards ceremony.</p>
+                      </div>
+                      <div className="text-right mt-2 sm:mt-0">
+                          <p className="text-2xl font-bold text-primary">₦10,000</p>
+                      </div>
+                  </div>
+                  <div className="flex flex-col sm:flex-row justify-between items-center p-4 border rounded-lg">
+                      <div>
+                          <h4 className="font-bold text-lg text-foreground">VIP Ticket</h4>
+                          <p className="text-muted-foreground text-sm">Includes front-row seating and a complimentary drink.</p>
+                      </div>
+                      <div className="text-right mt-2 sm:mt-0">
+                          <p className="text-2xl font-bold text-primary">₦25,000</p>
+                      </div>
+                  </div>
+                   <div className="flex flex-col sm:flex-row justify-between items-center p-4 border rounded-lg">
+                      <div>
+                          <h4 className="font-bold text-lg text-foreground">Table for 8</h4>
+                          <p className="text-muted-foreground text-sm">Reserve a full table for your group or company.</p>
+                      </div>
+                      <div className="text-right mt-2 sm:mt-0">
+                          <p className="text-2xl font-bold text-primary">₦250,000</p>
+                      </div>
+                  </div>
+                  <Button asChild size="lg" className="w-full mt-4 font-headline text-xl">
+                      <Link href="/awards/checkout">Buy Tickets Now</Link>
+                  </Button>
+              </CardContent>
+            </Card>
+          </section>
+
 
           {/* Award Categories Section */}
           <section className="mb-20 md:mb-28">

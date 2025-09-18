@@ -29,39 +29,23 @@ const voteSchema = z.object({
   numberOfVotes: z.number().int().positive(),
 });
 
-const remitaPaymentRequestSchema = z.object({
-  amount: z.number(),
-  charge: z.number(),
-  transactionReference: z.string(),
-  customerEmail: z.string().email(),
+const ticketSaleSchema = z.object({
+  ticketType: z.string(),
+  quantity: z.number().int().positive(),
+  totalAmount: z.number(),
   customerName: z.string(),
-  customerPhoneNumber: z.string(),
-  description: z.string(),
-  // Pass along vote data for recording
-  contestantId: z.string(),
-  contestantName: z.string(),
-  contestantCategory: z.string(),
-  numberOfVotes: z.number(),
+  customerEmail: z.string().email(),
 });
 
-const remitaReceiptSchema = z.object({
-  rrr: z.string(),
-});
-
-const remitaRrrValidationSchema = z.object({
-  rrr: z.string(),
-  channelId: z.string(),
-});
 
 const paystackPaymentRequestSchema = z.object({
   email: z.string().email(),
   amount: z.number(),
+  callback_url: z.string().url(),
   metadata: z.object({
-    contestantId: z.string(),
-    contestantName: z.string(),
-    contestantCategory: z.string(),
-    numberOfVotes: z.number(),
-  }),
+    type: z.enum(['vote', 'marketplace_purchase', 'ticket_purchase']),
+    // Flexible metadata fields
+  }).catchall(z.any()),
 });
 
 
@@ -137,7 +121,6 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
     };
   }
   
-  // Read the environment variable directly inside the function
   const zapierWebhookUrl = process.env.ZAPIER_VOTE_WEBHOOK_URL;
   
   if (!zapierWebhookUrl) {
@@ -149,6 +132,7 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
   }
   
   const payload = {
+    type: 'vote',
     ...validatedFields.data,
     timestamp: new Date().toISOString(),
   };
@@ -182,9 +166,53 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
   }
 }
 
+/**
+ * Sends ticket sale data to a Zapier webhook.
+ */
+export async function recordTicketSale(saleData: z.infer<typeof ticketSaleSchema>) {
+  const validatedFields = ticketSaleSchema.safeParse(saleData);
+
+  if (!validatedFields.success) {
+    console.error("Invalid ticket sale data for Zapier:", validatedFields.error);
+    return { success: false, error: 'Invalid sale data provided.' };
+  }
+
+  const zapierWebhookUrl = process.env.ZAPIER_TICKET_WEBHOOK_URL;
+  
+  if (!zapierWebhookUrl) {
+    console.error("ZAPIER_TICKET_WEBHOOK_URL is not set. Cannot record ticket sale.");
+    return { success: false, error: 'Ticket sale integration endpoint is not configured.' };
+  }
+  
+  const payload = {
+    type: 'ticket_sale',
+    ...validatedFields.data,
+    timestamp: new Date().toISOString(),
+  };
+  
+  try {
+    const response = await fetch(zapierWebhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
+        return { success: true, message: "Ticket sale recorded." };
+    } else {
+        return { success: false, error: `Failed to send ticket sale data. Status: ${response.status}` };
+    }
+  } catch (error) {
+    console.error("Failed to trigger Zapier webhook for tickets:", error);
+    return { success: false, error: 'Could not connect to the ticket sale tracking system.' };
+  }
+}
+
+
 export async function createPaystackPayment(paymentData: z.infer<typeof paystackPaymentRequestSchema>) {
     const validatedFields = paystackPaymentRequestSchema.safeParse(paymentData);
     if (!validatedFields.success) {
+        console.error("Paystack validation error:", validatedFields.error);
         return { success: false, error: 'Invalid payment data provided.' };
     }
 
@@ -193,16 +221,12 @@ export async function createPaystackPayment(paymentData: z.infer<typeof paystack
         return { success: false, error: "Payment gateway is not configured correctly." };
     }
 
-    const { email, amount, metadata } = validatedFields.data;
+    const { email, amount, callback_url, metadata } = validatedFields.data;
     
-    // Ensure the callback URL is correctly formed.
-    const callbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002'}/vote/callback`;
-
-
     const body = {
         email,
         amount: amount * 100, // Paystack expects amount in kobo
-        callback_url: callbackUrl,
+        callback_url,
         metadata,
     };
 
@@ -239,32 +263,6 @@ export async function verifyPaystackPayment(reference: string) {
         return { success: false, error: 'No payment reference provided.', status: 'error' };
     }
     
-    // --- TEMPORARY TEST BLOCK ---
-    if (reference === 'test-zapier') {
-        console.log('--- ZAPIER TEST MODE ACTIVATED ---');
-        const testVoteData = {
-            contestantId: 'test-001',
-            contestantName: 'Test Contestant',
-            contestantCategory: 'Test Category',
-            numberOfVotes: 5,
-        };
-        const voteRecordResult = await recordVote(testVoteData);
-        if (voteRecordResult.success) {
-            return { 
-                success: true, 
-                message: 'TEST: Zapier webhook triggered successfully!',
-                status: 'success',
-            };
-        } else {
-            return { 
-                success: false, 
-                error: `TEST FAILED: ${voteRecordResult.error}`,
-                status: 'error',
-            };
-        }
-    }
-    // --- END TEMPORARY TEST BLOCK ---
-
     if (!PAYSTACK_SECRET_KEY) {
         console.error("Paystack secret key is not configured.");
         return { success: false, error: "Payment gateway is not configured correctly.", status: 'error' };
@@ -281,26 +279,52 @@ export async function verifyPaystackPayment(reference: string) {
         const data = await response.json();
 
         if (data.status && data.data.status === 'success') {
-            const { contestantId, contestantName, contestantCategory, numberOfVotes } = data.data.metadata;
-            
-            // This is the crucial step: record the vote only after successful verification.
-            const voteRecordResult = await recordVote({
-                contestantId,
-                contestantName,
-                contestantCategory,
-                numberOfVotes: Number(numberOfVotes),
-            });
+            const { metadata, amount, customer } = data.data;
+            let recordResult;
 
-            if (voteRecordResult.success) {
+            // Determine which action to take based on metadata
+            switch (metadata.type) {
+                case 'vote':
+                    recordResult = await recordVote({
+                        contestantId: metadata.contestantId,
+                        contestantName: metadata.contestantName,
+                        contestantCategory: metadata.contestantCategory,
+                        numberOfVotes: Number(metadata.numberOfVotes),
+                    });
+                    break;
+                
+                case 'ticket_purchase':
+                    recordResult = await recordTicketSale({
+                        ticketType: metadata.ticketType,
+                        quantity: Number(metadata.quantity),
+                        totalAmount: amount / 100, // Convert from kobo
+                        customerName: metadata.customerName,
+                        customerEmail: customer.email,
+                    });
+                    break;
+                
+                case 'marketplace_purchase':
+                    // In a real app, you would record the marketplace sale here.
+                    // For now, we'll just return success.
+                    recordResult = { success: true };
+                    break;
+                    
+                default:
+                    console.error("Unknown payment type in metadata:", metadata.type);
+                    recordResult = { success: false, error: "Unknown payment type." };
+            }
+
+            if (recordResult.success) {
                 return { 
                     success: true, 
-                    message: 'Payment verified and vote recorded successfully!',
+                    message: 'Payment verified and transaction recorded successfully!',
                     status: 'success',
+                    paymentType: metadata.type,
                 };
             } else {
                  return { 
                     success: false, 
-                    error: `Payment was successful, but vote recording failed. Please contact support. Error: ${voteRecordResult.error}`,
+                    error: `Payment was successful, but recording the transaction failed. Please contact support. Ref: ${reference}. Error: ${recordResult.error}`,
                     status: 'error',
                 };
             }
@@ -316,169 +340,5 @@ export async function verifyPaystackPayment(reference: string) {
     } catch (error) {
         console.error("Error verifying Paystack payment:", error);
         return { success: false, error: "Could not connect to the payment gateway for verification.", status: 'error' };
-    }
-}
-
-
-export async function createRemitaPayment(paymentData: z.infer<typeof remitaPaymentRequestSchema>) {
-    const validatedFields = remitaPaymentRequestSchema.safeParse(paymentData);
-    if (!validatedFields.success) {
-        return { success: false, error: "Invalid Remita payment data." };
-    }
-
-    // Remita API key is missing. Assuming it's also a subscription key, similar to the Wema one that was removed.
-    const REMITA_SUBSCRIPTION_KEY = process.env.REMITA_SUBSCRIPTION_KEY;
-    if (!REMITA_SUBSCRIPTION_KEY) {
-      console.error("Remita subscription key is not set.");
-      return { success: false, error: "Payment gateway is not configured correctly." };
-    }
-
-
-    const { amount, charge, transactionReference, customerEmail, customerName, customerPhoneNumber, description, contestantId, contestantName, contestantCategory, numberOfVotes } = validatedFields.data;
-
-    const body = {
-        // ... (Remita API specific body, placeholders for simplicity)
-        channelId: "string", 
-        cif: "string", 
-        customerAccount: "string", 
-        amount: amount,
-        charge: charge,
-        transactionReference: transactionReference,
-        customerEmail: customerEmail,
-        customerPhoneNumber: customerPhoneNumber,
-        customerName: customerName,
-        rrr: "string", 
-        payerEmail: customerEmail,
-        payerName: customerName,
-        payerNumber: customerPhoneNumber,
-        description: description,
-        billAuthOptions: {
-            pin: "string",
-            otp: "string",
-            biometricPolicy: "string",
-            biometricToken: "string",
-            platformTransactionReference: "string",
-            authenticationType: 0
-        }
-    };
-
-    try {
-        const response = await fetch('https://wema-alatdev-apimgt.azure-api.net/remita-payments/api/RemitaPayment/PayRemitaBill', {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: {
-                'Content-Type': 'application/json',
-                'Cache-Control': 'no-cache',
-                'Ocp-Apim-Subscription-Key': REMITA_SUBSCRIPTION_KEY,
-            }
-        });
-
-        const responseText = await response.text();
-        console.log("Remita PayRemitaBill response status:", response.status);
-        console.log("Remita PayRemitaBill response body:", responseText);
-        
-        if (response.ok) {
-            const voteData = { contestantId, contestantName, contestantCategory, numberOfVotes };
-            const voteRecordResult = await recordVote(voteData);
-            if (voteRecordResult.success) {
-                return { success: true, message: "Remita payment processed and vote recorded successfully.", data: JSON.parse(responseText) };
-            } else {
-                return { success: false, error: `Remita payment succeeded, but vote recording failed: ${voteRecordResult.error}` };
-            }
-        } else {
-             if (response.status === 500) {
-                 return { success: false, error: `Remita payment failed due to an internal server error on the gateway. Please try again later or contact support.` };
-             }
-            return { success: false, error: `Remita payment failed: ${responseText}` };
-        }
-
-    } catch(error) {
-        console.error("Error calling Remita PayRemitaBill API:", error);
-        return { success: false, error: "Could not connect to the Remita payment gateway." };
-    }
-}
-
-export async function printRemitaReceipt(receiptData: z.infer<typeof remitaReceiptSchema>) {
-    const validatedFields = remitaReceiptSchema.safeParse(receiptData);
-    if (!validatedFields.success) {
-        return { success: false, error: "Invalid Remita receipt data." };
-    }
-    
-    // Remita API key is missing. Assuming it's also a subscription key.
-    const REMITA_SUBSCRIPTION_KEY = process.env.REMITA_SUBSCRIPTION_KEY;
-    if (!REMITA_SUBSCRIPTION_KEY) {
-      console.error("Remita subscription key is not set.");
-      return { success: false, error: "Payment gateway is not configured correctly." };
-    }
-
-    const { rrr } = validatedFields.data;
-
-    const remitaUrl = `https://wema-alatdev-apimgt.azure-api.net/remita-payments/api/RemitaPayment/PrintRemitaReceipt/${rrr}`;
-
-    try {
-        const response = await fetch(remitaUrl, {
-            method: 'GET',
-            headers: {
-                'Cache-Control': 'no-cache',
-                'Ocp-Apim-Subscription-Key': REMITA_SUBSCRIPTION_KEY,
-            }
-        });
-
-        const responseText = await response.text();
-        console.log("Remita PrintRemitaReceipt response status:", response.status);
-        console.log("Remita PrintRemitaReceipt response body:", responseText);
-        
-        if (response.ok) {
-            return { success: true, receiptData: responseText };
-        } else {
-            return { success: false, error: `Failed to fetch Remita receipt: ${responseText}` };
-        }
-
-    } catch(error) {
-        console.error("Error calling Remita PrintRemitaReceipt API:", error);
-        return { success: false, error: "Could not connect to the Remita payment gateway to print receipt." };
-    }
-}
-
-
-export async function validateRemitaRrr(validationData: z.infer<typeof remitaRrrValidationSchema>) {
-    const validatedFields = remitaRrrValidationSchema.safeParse(validationData);
-    if (!validatedFields.success) {
-        return { success: false, error: "Invalid Remita RRR validation data." };
-    }
-
-    // Remita API key is missing. Assuming it's also a subscription key.
-    const REMITA_SUBSCRIPTION_KEY = process.env.REMITA_SUBSCRIPTION_KEY;
-    if (!REMITA_SUBSCRIPTION_KEY) {
-      console.error("Remita subscription key is not set.");
-      return { success: false, error: "Payment gateway is not configured correctly." };
-    }
-    
-    const { rrr, channelId } = validatedFields.data;
-
-    const remitaUrl = `https://wema-alatdev-apimgt.azure-api.net/remita-payments/api/RemitaPayment/ValidateRrr/${rrr}/${channelId}`;
-
-    try {
-        const response = await fetch(remitaUrl, {
-            method: 'GET',
-            headers: {
-                'Cache-control': 'no-cache',
-                'Ocp-Apim-Subscription-Key': REMITA_SUBSCRIPTION_KEY,
-            }
-        });
-
-        const responseText = await response.text();
-        console.log("Remita ValidateRrr response status:", response.status);
-        console.log("Remita ValidateRrr response body:", responseText);
-        
-        if (response.ok) {
-            return { success: true, message: "Remita RRR validated successfully.", data: JSON.parse(responseText) };
-        } else {
-            return { success: false, error: `Failed to validate Remita RRR: ${responseText}` };
-        }
-
-    } catch(error) {
-        console.error("Error calling Remita ValidateRrr API:", error);
-        return { success: false, error: "Could not connect to the Remita payment gateway to validate RRR." };
     }
 }

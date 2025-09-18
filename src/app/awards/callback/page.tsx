@@ -15,7 +15,7 @@ function VerificationStatus() {
     const reference = searchParams.get('reference');
     
     const [status, setStatus] = useState<'verifying' | 'success' | 'failed' | 'error'>('verifying');
-    const [message, setMessage] = useState('Verifying your payment...');
+    const [message, setMessage] = useState('Verifying your ticket purchase...');
 
     useEffect(() => {
         if (!reference) {
@@ -31,8 +31,8 @@ function VerificationStatus() {
 
             if (result.status === 'success') {
                 setTimeout(() => {
-                    router.push('/vote');
-                }, 3000); 
+                    router.push('/awards');
+                }, 4000); 
             }
         };
 
@@ -48,14 +48,14 @@ function VerificationStatus() {
 
     const statusTitles = {
         verifying: 'Verifying Payment',
-        success: 'Vote Recorded!',
+        success: 'Purchase Successful!',
         failed: 'Payment Failed',
         error: 'An Error Occurred',
     };
     
     const statusDescriptions = {
-        verifying: 'Please wait while we confirm your payment with Paystack...',
-        success: 'Thank you! Your vote has been recorded. Redirecting you back to the vote page...',
+        verifying: 'Please wait while we confirm your ticket purchase...',
+        success: 'Thank you for your purchase! A confirmation has been sent to your email. Redirecting you shortly...',
         failed: 'There was an issue with your payment. Please try again.',
         error: 'An unexpected error occurred during verification.'
     }
@@ -70,8 +70,8 @@ function VerificationStatus() {
                 <CardDescription className="text-zinc-300 text-lg">{message || statusDescriptions[status]}</CardDescription>
                  {status !== 'verifying' && (
                     <Button asChild size="lg" className="bg-amber-500 text-black hover:bg-amber-400">
-                        <Link href="/vote">
-                            {status === 'success' ? 'Vote Again' : 'Go Back to Vote Page'}
+                        <Link href="/awards">
+                            {status === 'success' ? 'Back to Awards' : 'Try Again'}
                         </Link>
                     </Button>
                  )}
@@ -80,8 +80,7 @@ function VerificationStatus() {
     );
 }
 
-
-export default function VoteCallbackPage() {
+export default function TicketCallbackPage() {
     return (
         <div className="bg-black text-white min-h-screen" style={{
             backgroundImage: `url('/black-bg.jpeg')`,

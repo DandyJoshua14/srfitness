@@ -7,10 +7,10 @@ import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Loader2, CheckCircle, ShieldCheck, CreditCard } from 'lucide-react';
+import { ArrowLeft, Loader2, ShieldCheck, CreditCard } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { createRemitaPayment, createPaystackPayment } from '@/app/actions';
+import { createPaystackPayment } from '@/app/actions';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
@@ -23,16 +23,13 @@ function CheckoutView() {
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
 
-    // Form state for Paystack and Remita
-    const [customerName, setCustomerName] = useState('');
     const [customerEmail, setCustomerEmail] = useState('');
-    const [customerPhone, setCustomerPhone] = useState('');
 
     const contestantId = searchParams.get('id');
     const contestantName = searchParams.get('name') || 'the selected contestant';
     const contestantCategory = searchParams.get('category') || 'their category';
     const numberOfVotes = parseInt(searchParams.get('votes') || '1', 10);
-    const contestantImage = searchParams.get('image') || '/SR.jpg'; // Get image from URL
+    const contestantImage = searchParams.get('image') || '/SR.jpg';
     
     const totalVoteCost = VOTE_COST_PER_VOTE * (numberOfVotes - (
         numberOfVotes === 12 ? 2 :
@@ -50,10 +47,14 @@ function CheckoutView() {
         }
 
         startTransition(async () => {
+            const callbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002'}/vote/callback`;
+
             const result = await createPaystackPayment({
                 email: customerEmail,
                 amount: totalVoteCost,
+                callback_url: callbackUrl,
                 metadata: {
+                    type: 'vote',
                     contestantId,
                     contestantName,
                     contestantCategory,
@@ -62,7 +63,6 @@ function CheckoutView() {
             });
 
             if (result.success && result.authorizationUrl) {
-                // Redirect to Paystack's payment page
                 window.location.href = result.authorizationUrl;
             } else {
                 toast({
@@ -74,47 +74,6 @@ function CheckoutView() {
         });
     };
     
-    const handleRemitaPayment = () => {
-        if (!contestantId || !customerName || !customerEmail || !customerPhone) {
-            toast({ title: "Missing Information", description: "Please fill out all fields for the Remita payment.", variant: "destructive"});
-            return;
-        }
-
-        startTransition(async () => {
-            const transactionReference = `SRF-VOTE-REMITA-${contestantId}-${Date.now()}`;
-            const result = await createRemitaPayment({
-                amount: totalVoteCost,
-                charge: 0, // Assuming no extra charge for now
-                transactionReference,
-                customerEmail: customerEmail,
-                customerName: customerName,
-                customerPhoneNumber: customerPhone,
-                description: `Vote for ${contestantName}`,
-                // Pass vote data through for recording
-                contestantId,
-                contestantName,
-                contestantCategory,
-                numberOfVotes,
-            });
-
-             if (result.success) {
-                toast({
-                    title: "Remita Payment Successful",
-                    description: "Your payment has been processed and your vote recorded.",
-                });
-                // In a real scenario, you might redirect to a Remita page or handle their response.
-                // For now, we'll go to the success view.
-                router.push(`/vote/callback?status=success&ref=${transactionReference}`);
-            } else {
-                toast({
-                    title: "Remita Payment Failed",
-                    description: result.error || "Could not process Remita payment. Please try again.",
-                    variant: "destructive",
-                });
-            }
-        });
-    };
-
     if (!contestantId || !contestantName || !contestantCategory) {
         return (
             <Card className="bg-zinc-900/50 border-destructive/50 text-white shadow-2xl shadow-destructive/10 text-center">
@@ -157,11 +116,10 @@ function CheckoutView() {
                 </div>
                 
                 <Tabs defaultValue="paystack" className="w-full mt-8">
-                    <TabsList className="grid w-full grid-cols-2 bg-zinc-800/50">
+                    <TabsList className="grid w-full grid-cols-1 bg-zinc-800/50">
                         <TabsTrigger value="paystack" className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-300 text-zinc-400">
-                             <Image src="/paystack.png" width={24} height={24} alt="Paystack" className="mr-2"/> Paystack
+                             <Image src="/paystack.png" width={24} height={24} alt="Paystack" className="mr-2"/> Pay with Paystack
                         </TabsTrigger>
-                        <TabsTrigger value="remita" className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-300 text-zinc-400" disabled><CreditCard className="mr-2 h-4 w-4"/> Remita (Soon)</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="paystack" className="mt-4 space-y-4">
@@ -181,12 +139,6 @@ function CheckoutView() {
                              {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                              {isPending ? 'Processing...' : 'Pay with Paystack'}
                         </Button>
-                    </TabsContent>
-
-                    <TabsContent value="remita" className="mt-4 space-y-4">
-                       <div className="text-center text-zinc-500 p-4">
-                        Remita payment option will be available soon.
-                       </div>
                     </TabsContent>
                 </Tabs>
             </CardContent>
@@ -229,4 +181,3 @@ export default function CheckoutPage() {
         </div>
     );
 }
-

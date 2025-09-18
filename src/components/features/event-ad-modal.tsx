@@ -9,22 +9,16 @@ import Image from 'next/image';
 import { Award, Ticket, ArrowRight } from 'lucide-react';
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
 
-const SESSION_STORAGE_KEY = 'sr-awards-ad-shown';
-
 export default function EventAdModal() {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    const adShown = sessionStorage.getItem(SESSION_STORAGE_KEY);
-    if (!adShown) {
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-        sessionStorage.setItem(SESSION_STORAGE_KEY, 'true');
-      }, 2500); // Wait 2.5 seconds before showing the modal
+    const timer = setTimeout(() => {
+      setIsOpen(true);
+    }, 2500); // Wait 2.5 seconds before showing the modal
 
-      return () => clearTimeout(timer);
-    }
+    return () => clearTimeout(timer);
   }, []);
 
   const handleCtaClick = () => {

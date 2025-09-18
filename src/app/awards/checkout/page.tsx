@@ -15,9 +15,8 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 
 const ticketOptions = [
-  { name: 'Regular Ticket', price: 10000 },
-  { name: 'VIP Ticket', price: 25000 },
-  { name: 'Gold Table for 8', price: 200000 },
+  { name: 'Silver Table', price: 100000, image: 'https://picsum.photos/seed/ticketSilver/100/100', dataAiHint: 'silver ticket' },
+  { name: 'Gold Table for 8', price: 200000, image: 'https://picsum.photos/seed/ticketGold/100/100', dataAiHint: 'gold ticket' },
 ];
 
 function TicketCheckoutView() {
@@ -28,8 +27,7 @@ function TicketCheckoutView() {
     const [customerName, setCustomerName] = useState('');
     const [customerEmail, setCustomerEmail] = useState('');
     const [quantities, setQuantities] = useState<Record<string, number>>({
-        'Regular Ticket': 0,
-        'VIP Ticket': 0,
+        'Silver Table': 0,
         'Gold Table for 8': 0,
     });
 
@@ -98,9 +96,12 @@ function TicketCheckoutView() {
                 <div className="space-y-4">
                     {ticketOptions.map(ticket => (
                         <div key={ticket.name} className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg">
-                            <div>
-                                <p className="font-semibold text-foreground">{ticket.name}</p>
-                                <p className="text-sm text-amber-300">₦{ticket.price.toLocaleString()}</p>
+                            <div className="flex items-center gap-4">
+                                <Image src={ticket.image} alt={ticket.name} width={64} height={64} className="rounded-md" data-ai-hint={ticket.dataAiHint} />
+                                <div>
+                                    <p className="font-semibold text-foreground">{ticket.name}</p>
+                                    <p className="text-sm text-amber-300">₦{ticket.price.toLocaleString()}</p>
+                                </div>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Button size="icon" variant="outline" className="h-8 w-8 bg-zinc-700 border-zinc-600" onClick={() => handleQuantityChange(ticket.name, -1)}>

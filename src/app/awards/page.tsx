@@ -163,20 +163,11 @@ export default function AwardsPage() {
               <CardContent className="space-y-6">
                   <div className="flex flex-col sm:flex-row justify-between items-center p-4 border rounded-lg">
                       <div>
-                          <h4 className="font-bold text-lg text-foreground">Regular Ticket</h4>
-                          <p className="text-muted-foreground text-sm">Access to the awards ceremony.</p>
+                          <h4 className="font-bold text-lg text-foreground">Silver Table</h4>
+                          <p className="text-muted-foreground text-sm">Reserve a premium table for your group.</p>
                       </div>
                       <div className="text-right mt-2 sm:mt-0">
-                          <p className="text-2xl font-bold text-primary">₦10,000</p>
-                      </div>
-                  </div>
-                  <div className="flex flex-col sm:flex-row justify-between items-center p-4 border rounded-lg">
-                      <div>
-                          <h4 className="font-bold text-lg text-foreground">VIP Ticket</h4>
-                          <p className="text-muted-foreground text-sm">Includes front-row seating and a complimentary drink.</p>
-                      </div>
-                      <div className="text-right mt-2 sm:mt-0">
-                          <p className="text-2xl font-bold text-primary">₦25,000</p>
+                          <p className="text-2xl font-bold text-primary">₦100,000</p>
                       </div>
                   </div>
                    <div className="flex flex-col sm:flex-row justify-between items-center p-4 border rounded-lg">

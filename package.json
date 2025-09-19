@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 9002",
+    "dev": "next dev",
     "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
     "genkit:watch": "genkit start -- tsx --watch src/ai/dev.ts",
     "build": "next build",
@@ -46,7 +46,7 @@
     "framer-motion": "^11.3.8",
     "genkit": "^1.14.1",
     "lucide-react": "^0.475.0",
-    "next": "15.3.3",
+    "next": "14.2.4",
     "nodemailer": "^6.9.14",
     "patch-package": "^8.0.0",
     "paystack": "^2.0.1",

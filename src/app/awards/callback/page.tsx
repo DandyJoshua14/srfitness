@@ -40,9 +40,9 @@ function VerificationStatus() {
     }, [reference, router]);
 
     const statusIcons = {
-        verifying: <Loader2 className="h-16 w-16 animate-spin text-amber-400" />,
-        success: <CheckCircle className="h-16 w-16 text-green-400" />,
-        failed: <XCircle className="h-16 w-16 text-red-400" />,
+        verifying: <Loader2 className="h-16 w-16 animate-spin text-primary" />,
+        success: <CheckCircle className="h-16 w-16 text-green-500" />,
+        failed: <XCircle className="h-16 w-16 text-red-500" />,
         error: <AlertTriangle className="h-16 w-16 text-destructive" />,
     };
 
@@ -61,15 +61,15 @@ function VerificationStatus() {
     }
 
     return (
-        <Card className="bg-zinc-900/50 border-zinc-700 text-white shadow-2xl shadow-amber-500/10 text-center max-w-lg mx-auto">
+        <Card className="bg-card text-foreground shadow-2xl shadow-primary/10 text-center max-w-lg mx-auto">
             <CardHeader>
                 <div className="mx-auto mb-4">{statusIcons[status]}</div>
-                <CardTitle className="font-headline text-3xl text-amber-400">{statusTitles[status]}</CardTitle>
+                <CardTitle className="font-headline text-3xl text-primary">{statusTitles[status]}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-                <CardDescription className="text-zinc-300 text-lg">{message || statusDescriptions[status]}</CardDescription>
+                <CardDescription className="text-muted-foreground text-lg">{message || statusDescriptions[status]}</CardDescription>
                  {status !== 'verifying' && (
-                    <Button asChild size="lg" className="bg-amber-500 text-black hover:bg-amber-400">
+                    <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
                         <Link href="/awards">
                             {status === 'success' ? 'Back to Awards' : 'Try Again'}
                         </Link>
@@ -82,16 +82,11 @@ function VerificationStatus() {
 
 export default function TicketCallbackPage() {
     return (
-        <div className="bg-black text-white min-h-screen" style={{
-            backgroundImage: `url('/black-bg.jpeg')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundAttachment: 'fixed',
-        }}>
-            <div className="bg-black/80 backdrop-blur-sm min-h-screen flex items-center justify-center">
+        <div className="bg-background text-foreground min-h-screen">
+            <div className="min-h-screen flex items-center justify-center">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
                      <main>
-                      <Suspense fallback={<div className="text-center text-white">Loading payment details...</div>}>
+                      <Suspense fallback={<div className="text-center text-foreground">Loading payment details...</div>}>
                         <VerificationStatus />
                       </Suspense>
                     </main>

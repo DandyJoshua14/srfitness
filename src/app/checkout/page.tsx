@@ -47,7 +47,7 @@ function CheckoutView() {
         }
 
         startTransition(async () => {
-            const callbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002'}/vote/callback`;
+            const callbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/vote/callback`;
 
             const result = await createPaystackPayment({
                 email: customerEmail,
@@ -85,7 +85,7 @@ function CheckoutView() {
                 </CardHeader>
                 <CardContent>
                     <p className="text-zinc-400 mb-6">Please go back to the voting page and select a contestant again.</p>
-                     <Button asChild className="bg-amber-500 text-black hover:bg-amber-400">
+                     <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
                         <Link href="/vote">
                             <ArrowLeft className="mr-2 h-4 w-4" /> Go Back to Vote
                         </Link>
@@ -96,43 +96,43 @@ function CheckoutView() {
     }
     
     return (
-        <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
+        <Card className="bg-card border-border text-foreground shadow-2xl shadow-primary/10">
             <CardHeader>
-                <CardTitle className="font-headline text-3xl text-amber-400">Confirm Your Vote</CardTitle>
-                <CardDescription className="text-zinc-400">Please review the details below and choose a payment method.</CardDescription>
+                <CardTitle className="font-headline text-3xl text-primary">Confirm Your Vote</CardTitle>
+                <CardDescription className="text-muted-foreground">Please review the details below and choose a payment method.</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="flex items-center space-x-4 mb-6">
-                    <Image src={contestantImage} alt={contestantName} width={100} height={125} className="rounded-lg border-2 border-amber-400/50 object-cover" />
+                    <Image src={contestantImage} alt={contestantName} width={100} height={125} className="rounded-lg border-2 border-primary/50 object-cover" />
                     <div>
-                        <h3 className="text-2xl font-bold text-white">{contestantName}</h3>
-                        <p className="text-amber-300">{contestantCategory}</p>
-                        <p className="text-sm text-zinc-300 mt-1">Number of Votes: <span className="font-bold">{numberOfVotes}</span></p>
+                        <h3 className="text-2xl font-bold text-foreground">{contestantName}</h3>
+                        <p className="text-primary">{contestantCategory}</p>
+                        <p className="text-sm text-muted-foreground mt-1">Number of Votes: <span className="font-bold">{numberOfVotes}</span></p>
                     </div>
                 </div>
-                <div className="border-t border-zinc-700 pt-4 flex justify-between items-center text-xl">
-                    <span className="text-zinc-300">Total Cost:</span>
-                    <span className="font-bold text-amber-400">N{totalVoteCost.toFixed(2)}</span>
+                <div className="border-t border-border pt-4 flex justify-between items-center text-xl">
+                    <span className="text-muted-foreground">Total Cost:</span>
+                    <span className="font-bold text-primary">N{totalVoteCost.toFixed(2)}</span>
                 </div>
                 
                 <Tabs defaultValue="paystack" className="w-full mt-8">
-                    <TabsList className="grid w-full grid-cols-1 bg-zinc-800/50">
-                        <TabsTrigger value="paystack" className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-300 text-zinc-400">
+                    <TabsList className="grid w-full grid-cols-1 bg-muted">
+                        <TabsTrigger value="paystack">
                              <Image src="/paystack.png" width={24} height={24} alt="Paystack" className="mr-2"/> Pay with Paystack
                         </TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="paystack" className="mt-4 space-y-4">
-                        <p className="text-xs text-zinc-500 mb-2 text-center">
+                        <p className="text-xs text-muted-foreground mb-2 text-center">
                             Securely pay with Card, Bank, USSD, etc. via Paystack.
                         </p>
                         <div className="space-y-2">
-                             <Label htmlFor="customerEmail" className="text-zinc-400">Email Address</Label>
-                            <Input id="customerEmail" type="email" placeholder="your.email@example.com" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
+                             <Label htmlFor="customerEmail" className="text-muted-foreground">Email Address</Label>
+                            <Input id="customerEmail" type="email" placeholder="your.email@example.com" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)} />
                         </div>
                         <Button
                             size="lg"
-                            className="w-full bg-amber-500 text-black font-bold text-lg hover:bg-amber-400 disabled:bg-zinc-600"
+                            className="w-full bg-primary text-primary-foreground font-bold text-lg hover:bg-primary/90 disabled:bg-muted"
                             onClick={handlePaystackPayment}
                             disabled={isPending || !customerEmail}
                         >
@@ -143,7 +143,7 @@ function CheckoutView() {
                 </Tabs>
             </CardContent>
             <CardFooter>
-                 <Button asChild variant="link" className="text-zinc-400 hover:text-amber-300" onClick={() => router.back()}>
+                 <Button asChild variant="link" className="text-muted-foreground hover:text-primary" onClick={() => router.back()}>
                     <Link href="/vote">
                         <ArrowLeft className="mr-2 h-4 w-4" /> Go Back
                     </Link>
@@ -155,22 +155,17 @@ function CheckoutView() {
 
 export default function CheckoutPage() {
     return (
-        <div className="bg-black text-white min-h-screen" style={{
-            backgroundImage: `url('/black-bg.jpeg')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundAttachment: 'fixed',
-        }}>
-            <div className="bg-black/80 backdrop-blur-sm min-h-screen flex items-center justify-center">
+        <div className="bg-background text-foreground min-h-screen">
+            <div className="min-h-screen flex items-center justify-center">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
                      <header className="text-center mb-12">
                         <Image src="/SR.jpg" alt="SR Fitness Awards Logo" width={96} height={96} className="h-24 w-24 mx-auto mb-4 rounded-full" data-ai-hint="awards logo" />
-                        <h1 className="font-headline text-5xl text-amber-400">Vote Checkout</h1>
+                        <h1 className="font-headline text-5xl text-primary">Vote Checkout</h1>
                     </header>
                     <main>
                       <Suspense fallback={
                           <div className="flex justify-center items-center h-64">
-                              <Loader2 className="h-12 w-12 text-amber-400 animate-spin" />
+                              <Loader2 className="h-12 w-12 text-primary animate-spin" />
                           </div>
                       }>
                         <CheckoutView />

@@ -130,7 +130,7 @@ export default function Header() {
     isScrolled
       ? isActive
         ? "text-primary font-semibold after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-4/5 after:h-[2px] after:bg-primary after:rounded-t-full"
-        : "text-gray-200 hover:text-primary"
+        : "text-foreground/70 hover:text-primary"
       : isActive
         ? "text-primary font-semibold after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-4/5 after:h-[2px] after:bg-primary after:rounded-t-full"
         : "text-white hover:text-primary/80"
@@ -141,7 +141,7 @@ export default function Header() {
     isScrolled
       ? isDropdownActive
         ? "text-primary font-semibold after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-4/5 after:h-[2px] after:bg-primary after:rounded-t-full"
-        : "text-gray-200 hover:text-primary"
+        : "text-foreground/70 hover:text-primary"
       : isDropdownActive
         ? "text-primary font-semibold after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-4/5 after:h-[2px] after:bg-primary after:rounded-t-full"
         : "text-white hover:text-primary/80"
@@ -149,7 +149,7 @@ export default function Header() {
   
   const mobileMenuTriggerButtonClasses = cn(
     "transition-colors rounded-full p-2 text-2xl",
-    isScrolled ? "text-gray-200 hover:bg-gray-700/50" : "text-white hover:bg-white/10",
+    isScrolled ? "text-foreground/80 hover:bg-muted/50" : "text-white hover:bg-white/10",
     "hover:text-primary focus-visible:ring-primary/70"
   );
 
@@ -190,7 +190,7 @@ export default function Header() {
   // Removed authButtonClasses
   const iconButtonClasses = (isActive?: boolean) => cn(
       "relative hidden md:inline-flex ml-2 h-auto p-2 text-2xl rounded-full transition-colors focus-visible:ring-primary/70",
-      isScrolled ? "text-gray-200 hover:bg-gray-700/50 hover:text-primary" : "text-white hover:bg-white/10 hover:text-primary",
+      isScrolled ? "text-foreground/80 hover:bg-muted/50 hover:text-primary" : "text-white hover:bg-white/10 hover:text-primary",
       isActive && (isScrolled ? "text-primary" : "text-primary")
     );
 
@@ -199,7 +199,7 @@ export default function Header() {
     <>
       <header className={cn(
         "sticky top-0 z-50 w-full border-b transition-all duration-300",
-        isScrolled ? "border-white/10 bg-black/80 backdrop-blur-xl shadow-lg" : "border-transparent bg-black/30"
+        isScrolled ? "border-border/10 bg-background/80 backdrop-blur-xl shadow-lg" : "border-transparent bg-black/30"
       )}>
         <div className="container flex h-16 md:h-20 max-w-screen-xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8" style={{'--header-height': '80px'} as React.CSSProperties}>
           <Link href="/" className="flex items-center space-x-3 shrink-0" onClick={() => handleLinkClick('/')}>
@@ -295,9 +295,9 @@ export default function Header() {
           <div className="md:hidden flex items-center">
              <VoiceAgentDialog className={cn(
                 "h-auto p-2 text-2xl",
-                isScrolled ? "text-gray-200 hover:bg-gray-700/50 hover:text-primary" : "text-white hover:bg-white/10 hover:text-primary"
+                isScrolled ? "text-foreground/80 hover:bg-muted/50 hover:text-primary" : "text-white hover:bg-white/10 hover:text-primary"
              )} />
-             <Button asChild variant="ghost" size="icon" className={cn("relative h-auto p-2 text-2xl", isScrolled ? "text-gray-200 hover:bg-gray-700/50 hover:text-primary" : "text-white hover:bg-white/10 hover:text-primary")}>
+             <Button asChild variant="ghost" size="icon" className={cn("relative h-auto p-2 text-2xl", isScrolled ? "text-foreground/80 hover:bg-muted/50 hover:text-primary" : "text-white hover:bg-white/10 hover:text-primary")}>
                 <Link href="/cart" aria-label="Shopping Cart">
                     <ShoppingCart className="h-7 w-7" />
                     {cartCount > 0 && (

@@ -5,6 +5,7 @@ import HeroSection from '@/components/sections/hero-section';
 import AboutSummarySection from '@/components/sections/about-summary-section';
 import KeyFeaturesSection from '@/components/sections/key-features-section';
 import ServicesHighlightSection from '@/components/sections/services-highlight-section';
+import TestimonialSliderSection from '@/components/sections/testimonial-slider-section';
 import BlogHighlightSection from '@/components/sections/blog-highlight-section';
 import MarketplaceHighlightSection from '@/components/sections/marketplace-highlight-section';
 import OurImpactSection from '@/components/sections/our-impact-section';
@@ -25,6 +26,7 @@ export default function HomePage() {
       <KeyFeaturesSection />
       <ServicesHighlightSection />
       <GallerySection />
+      <TestimonialSliderSection />
       <BlogHighlightSection />
       <MarketplaceHighlightSection />
       <OurImpactSection />

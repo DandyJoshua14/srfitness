@@ -57,7 +57,7 @@ function TicketCheckoutView() {
         }
         
         startTransition(async () => {
-            const callbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002'}/awards/callback`;
+            const callbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/awards/callback`;
             
             const ticketDescription = ticketsToPurchase.map(t => `${t.qty}x ${t.name}`).join(', ');
 
@@ -86,28 +86,28 @@ function TicketCheckoutView() {
     };
 
     return (
-        <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
+        <Card className="bg-card border-primary/30 text-foreground shadow-2xl shadow-primary/10">
             <CardHeader>
-                <CardTitle className="font-headline text-3xl text-amber-400">Purchase Your Tickets</CardTitle>
-                <CardDescription className="text-zinc-400">Select your tickets and proceed to our secure payment page.</CardDescription>
+                <CardTitle className="font-headline text-3xl text-primary">Purchase Your Tickets</CardTitle>
+                <CardDescription className="text-muted-foreground">Select your tickets and proceed to our secure payment page.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
                 <div className="space-y-4">
                     {ticketOptions.map(ticket => (
-                        <div key={ticket.name} className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg">
+                        <div key={ticket.name} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                             <div className="flex items-center gap-4">
                                 <Image src={ticket.image} alt={ticket.name} width={64} height={64} className="rounded-md" data-ai-hint={ticket.dataAiHint} />
                                 <div>
                                     <p className="font-semibold text-foreground">{ticket.name}</p>
-                                    <p className="text-sm text-amber-300">₦{ticket.price.toLocaleString()}</p>
+                                    <p className="text-sm text-primary">₦{ticket.price.toLocaleString()}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
-                                <Button size="icon" variant="outline" className="h-8 w-8 bg-zinc-700 border-zinc-600" onClick={() => handleQuantityChange(ticket.name, -1)}>
+                                <Button size="icon" variant="outline" className="h-8 w-8" onClick={() => handleQuantityChange(ticket.name, -1)}>
                                     <Minus className="h-4 w-4"/>
                                 </Button>
                                 <span className="font-bold text-lg w-10 text-center">{quantities[ticket.name] || 0}</span>
-                                <Button size="icon" variant="outline" className="h-8 w-8 bg-zinc-700 border-zinc-600" onClick={() => handleQuantityChange(ticket.name, 1)}>
+                                <Button size="icon" variant="outline" className="h-8 w-8" onClick={() => handleQuantityChange(ticket.name, 1)}>
                                     <Plus className="h-4 w-4"/>
                                 </Button>
                             </div>
@@ -115,29 +115,29 @@ function TicketCheckoutView() {
                     ))}
                 </div>
 
-                <Separator className="bg-amber-400/20" />
+                <Separator className="bg-primary/20" />
                 
                  <div className="grid sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                         <Label htmlFor="customerName" className="text-zinc-300">Full Name</Label>
-                        <Input id="customerName" placeholder="Your full name" value={customerName} onChange={e => setCustomerName(e.target.value)} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
+                         <Label htmlFor="customerName" className="text-muted-foreground">Full Name</Label>
+                        <Input id="customerName" placeholder="Your full name" value={customerName} onChange={e => setCustomerName(e.target.value)} />
                     </div>
                      <div className="space-y-2">
-                         <Label htmlFor="customerEmail" className="text-zinc-300">Email Address</Label>
-                        <Input id="customerEmail" type="email" placeholder="your.email@example.com" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
+                         <Label htmlFor="customerEmail" className="text-muted-foreground">Email Address</Label>
+                        <Input id="customerEmail" type="email" placeholder="your.email@example.com" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)} />
                     </div>
                 </div>
 
-                 <Separator className="bg-amber-400/20" />
+                 <Separator className="bg-primary/20" />
 
                 <div className="pt-4 flex justify-between items-center text-xl">
-                    <span className="text-zinc-300 font-headline">Total Cost:</span>
-                    <span className="font-bold text-amber-400">₦{totalAmount.toLocaleString()}</span>
+                    <span className="text-muted-foreground font-headline">Total Cost:</span>
+                    <span className="font-bold text-primary">₦{totalAmount.toLocaleString()}</span>
                 </div>
 
                 <Button
                     size="lg"
-                    className="w-full bg-amber-500 text-black font-bold text-lg hover:bg-amber-400 disabled:bg-zinc-600"
+                    className="w-full bg-primary text-primary-foreground font-bold text-lg hover:bg-primary/90 disabled:bg-muted"
                     onClick={handlePayment}
                     disabled={isPending || totalAmount === 0}
                 >
@@ -146,7 +146,7 @@ function TicketCheckoutView() {
                 </Button>
             </CardContent>
             <CardFooter>
-                 <Button asChild variant="link" className="text-zinc-400 hover:text-amber-300" onClick={() => router.back()}>
+                 <Button asChild variant="link" className="text-muted-foreground hover:text-primary" onClick={() => router.back()}>
                     <Link href="/awards">
                         <ArrowLeft className="mr-2 h-4 w-4" /> Go Back
                     </Link>
@@ -158,22 +158,17 @@ function TicketCheckoutView() {
 
 export default function TicketCheckoutPage() {
     return (
-        <div className="bg-black text-white min-h-screen" style={{
-            backgroundImage: `url('/black-bg.jpeg')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundAttachment: 'fixed',
-        }}>
-            <div className="bg-black/80 backdrop-blur-sm min-h-screen flex items-center justify-center">
+        <div className="bg-background text-foreground min-h-screen">
+            <div className="min-h-screen flex items-center justify-center">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
                      <header className="text-center mb-12">
                         <Image src="/SR.jpg" alt="SR Fitness Awards Logo" width={96} height={96} className="h-24 w-24 mx-auto mb-4 rounded-full" data-ai-hint="awards logo" />
-                        <h1 className="font-headline text-5xl text-amber-400">Ticket Checkout</h1>
+                        <h1 className="font-headline text-5xl text-primary">Ticket Checkout</h1>
                     </header>
                     <main>
                       <Suspense fallback={
                           <div className="flex justify-center items-center h-64">
-                              <Loader2 className="h-12 w-12 text-amber-400 animate-spin" />
+                              <Loader2 className="h-12 w-12 text-primary animate-spin" />
                           </div>
                       }>
                         <TicketCheckoutView />

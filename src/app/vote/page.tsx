@@ -232,16 +232,16 @@ export default function VotePage() {
                     <Button
                         variant="outline"
                         className={cn(
-                            "border-amber-400/30 text-amber-300 hover:bg-amber-400/10 hover:text-amber-200",
-                            isActive && "bg-amber-400/20 ring-2 ring-amber-400 text-amber-200"
+                            "border-primary/30 text-primary hover:bg-primary/10 hover:text-primary",
+                            isActive && "bg-primary/20 ring-2 ring-primary text-primary"
                         )}
                     >
                         {mainTitle} <ChevronDown className="ml-2 h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-zinc-900 border-amber-400/30 text-amber-300">
+                <DropdownMenuContent className="bg-background border-primary/30 text-primary">
                     {subItems.map(item => (
-                         <DropdownMenuItem key={item.title} onSelect={() => setSelectedCategory(item.title)} className="cursor-pointer hover:!bg-amber-400/20 focus:!bg-amber-400/20">
+                         <DropdownMenuItem key={item.title} onSelect={() => setSelectedCategory(item.title)} className="cursor-pointer hover:!bg-primary/20 focus:!bg-primary/20">
                             {item.title}
                         </DropdownMenuItem>
                     ))}
@@ -251,13 +251,8 @@ export default function VotePage() {
     };
 
     return (
-        <div className="bg-black text-white min-h-screen" style={{
-            backgroundImage: `url('/black-bg.jpeg')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundAttachment: 'fixed',
-        }}>
-            <div className="bg-black/80 backdrop-blur-sm min-h-screen">
+        <div className="bg-background text-foreground min-h-screen">
+            <div className="min-h-screen">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
                     <header className="text-center mb-12 md:mb-16">
                         <Image
@@ -269,7 +264,7 @@ export default function VotePage() {
                             data-ai-hint="awards logo"
                             priority
                         />
-                        <p className="font-headline text-2xl text-amber-400 tracking-wider">
+                        <p className="font-headline text-2xl text-primary tracking-wider">
                             IDENTIFY, RECOGNIZE & CELEBRATE FITNESS INDUSTRY EXCELLENCE
                         </p>
                     </header>
@@ -280,7 +275,7 @@ export default function VotePage() {
                             alt="SR Fitness Awards Voting Guide with pricing"
                             width={800}
                             height={800}
-                            className="rounded-lg shadow-2xl shadow-amber-500/20 max-w-full sm:max-w-lg md:max-w-xl"
+                            className="rounded-lg shadow-2xl shadow-primary/20 max-w-full sm:max-w-lg md:max-w-xl"
                             data-ai-hint="voting guide"
                             priority
                         />
@@ -290,28 +285,28 @@ export default function VotePage() {
                         {/* --- Voting Section --- */}
                         <section id="vote">
                             <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-start">
-                                <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
+                                <Card className="bg-card border-border text-foreground shadow-2xl shadow-primary/10">
                                     <CardHeader>
-                                        <CardTitle className="font-headline text-4xl text-amber-400">Vote for a Contestant</CardTitle>
-                                        <CardDescription className="text-zinc-400">1. Select a category, then choose a contestant below.</CardDescription>
+                                        <CardTitle className="font-headline text-4xl text-primary">Vote for a Contestant</CardTitle>
+                                        <CardDescription className="text-muted-foreground">1. Select a category, then choose a contestant below.</CardDescription>
                                     </CardHeader>
                                     <CardContent>
                                         <div className="mb-6">
-                                            <p className="font-semibold text-zinc-300 mb-3">Filter by Category:</p>
+                                            <p className="font-semibold text-muted-foreground mb-3">Filter by Category:</p>
                                             <div className="flex flex-wrap items-center gap-2">
                                                 <Button
                                                     variant="outline"
                                                     onClick={() => setSelectedCategory("All Categories")}
                                                     className={cn(
-                                                        "border-amber-400/30 text-amber-300 hover:bg-amber-400/10 hover:text-amber-200",
-                                                        selectedCategory === "All Categories" && "bg-amber-400/20 ring-2 ring-amber-400 text-amber-200"
+                                                        "border-primary/30 text-primary hover:bg-primary/10 hover:text-primary",
+                                                        selectedCategory === "All Categories" && "bg-primary/20 ring-2 ring-primary text-primary"
                                                     )}
                                                 >
                                                     All Categories
                                                 </Button>
-                                                <div className="h-6 w-px bg-amber-400/30" />
+                                                <div className="h-6 w-px bg-primary/30" />
                                                 {renderDropdown("General", generalCategories)}
-                                                <div className="h-6 w-px bg-amber-400/30" />
+                                                <div className="h-6 w-px bg-primary/30" />
                                                 {renderDropdown("Organizations", organizationsCategories)}
                                             </div>
                                         </div>
@@ -322,7 +317,7 @@ export default function VotePage() {
 
                                                 return (
                                                     <div key={category}>
-                                                        <h3 className="font-headline text-2xl text-amber-300 mb-4 pb-2 border-b border-amber-400/20">{category}</h3>
+                                                        <h3 className="font-headline text-2xl text-primary mb-4 pb-2 border-b border-primary/20">{category}</h3>
                                                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                                                             {contestantsForCategory.map(c => (
                                                                 <ContestantCard 
@@ -348,49 +343,49 @@ export default function VotePage() {
                                 </Card>
 
                                 <div className="space-y-8 sticky top-24">
-                                    <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
+                                    <Card className="bg-card border-border text-foreground shadow-2xl shadow-primary/10">
                                         <CardHeader>
-                                            <CardTitle className="font-headline text-4xl text-amber-400">2. Complete Your Vote</CardTitle>
-                                            <CardDescription className="text-zinc-400">
+                                            <CardTitle className="font-headline text-4xl text-primary">2. Complete Your Vote</CardTitle>
+                                            <CardDescription className="text-muted-foreground">
                                                 After selecting a contestant, confirm the number of votes and click below.
                                             </CardDescription>
                                         </CardHeader>
                                         <CardContent>
                                             {selectedContestant ? (
-                                                <div className="bg-zinc-800/70 p-4 rounded-lg space-y-4">
+                                                <div className="bg-muted/50 p-4 rounded-lg space-y-4">
                                                     <div className="text-center">
-                                                        <p className="text-zinc-300 mb-1">You have selected:</p>
-                                                        <p className="font-bold text-amber-300 text-xl">{selectedContestant.name}</p>
-                                                        <p className="text-xs text-zinc-400">{selectedContestant.category}</p>
+                                                        <p className="text-muted-foreground mb-1">You have selected:</p>
+                                                        <p className="font-bold text-primary text-xl">{selectedContestant.name}</p>
+                                                        <p className="text-xs text-muted-foreground">{selectedContestant.category}</p>
                                                     </div>
                                                      <div>
-                                                        <Label className="text-zinc-300 font-semibold mb-2 block text-center">Number of Votes:</Label>
+                                                        <Label className="text-muted-foreground font-semibold mb-2 block text-center">Number of Votes:</Label>
                                                         <Select onValueChange={setNumberOfVotes} defaultValue={numberOfVotes}>
-                                                            <SelectTrigger className="bg-zinc-800 border-zinc-700 focus:ring-amber-400 w-full">
+                                                            <SelectTrigger>
                                                                 <SelectValue placeholder="Select number of votes" />
                                                             </SelectTrigger>
-                                                            <SelectContent className="bg-zinc-900 border-amber-400/30 text-amber-300">
+                                                            <SelectContent>
                                                                 {voteOptions.map(v => (
-                                                                    <SelectItem key={v.base} value={String(v.base)} className="cursor-pointer hover:!bg-amber-400/20 focus:!bg-amber-400/20">{v.label}</SelectItem>
+                                                                    <SelectItem key={v.base} value={String(v.base)}>{v.label}</SelectItem>
                                                                 ))}
                                                             </SelectContent>
                                                         </Select>
                                                     </div>
                                                 </div>
                                             ) : (
-                                                <div className="bg-zinc-800/50 p-4 rounded-lg text-center h-24 flex items-center justify-center">
-                                                    <p className="text-zinc-400">Please select a contestant to vote for.</p>
+                                                <div className="bg-muted/50 p-4 rounded-lg text-center h-24 flex items-center justify-center">
+                                                    <p className="text-muted-foreground">Please select a contestant to vote for.</p>
                                                 </div>
                                             )}
                                             <Button
                                                 size="lg"
-                                                className="w-full mt-6 bg-amber-500 text-black font-bold text-lg hover:bg-amber-400 disabled:bg-zinc-600 disabled:text-zinc-400 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105"
+                                                className="w-full mt-6 bg-primary text-primary-foreground font-bold text-lg hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105"
                                                 onClick={handleProceedToVote}
                                                 disabled={!selectedContestant}
                                             >
                                                 Proceed to Vote <ArrowRight className="ml-2 h-5 w-5" />
                                             </Button>
-                                            <p className="text-xs text-zinc-500 mt-4 text-center">
+                                            <p className="text-xs text-muted-foreground mt-4 text-center">
                                                 You will be taken to a final confirmation page with payment details.
                                             </p>
                                         </CardContent>
@@ -401,13 +396,13 @@ export default function VotePage() {
 
                          {/* --- Professional Recognition Section --- */}
                         <section id="recognition">
-                            <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
+                            <Card className="bg-card border-border text-foreground shadow-2xl shadow-primary/10">
                                 <CardHeader>
                                     <div className="flex items-center gap-4">
-                                        <Star className="h-10 w-10 text-amber-400" />
+                                        <Star className="h-10 w-10 text-primary" />
                                         <div>
-                                            <CardTitle className="font-headline text-4xl text-amber-400">Recognition Awards</CardTitle>
-                                            <CardDescription className="text-zinc-400">Honoring excellence in specialized fields. These categories are for recognition only and are not part of the public vote.</CardDescription>
+                                            <CardTitle className="font-headline text-4xl text-primary">Recognition Awards</CardTitle>
+                                            <CardDescription className="text-muted-foreground">Honoring excellence in specialized fields. These categories are for recognition only and are not part of the public vote.</CardDescription>
                                         </div>
                                     </div>
                                 </CardHeader>
@@ -419,7 +414,7 @@ export default function VotePage() {
 
                                             return (
                                                 <div key={category.title}>
-                                                    <h3 className="font-headline text-2xl text-amber-300 mb-4 pb-2 border-b border-amber-400/20">{category.title}</h3>
+                                                    <h3 className="font-headline text-2xl text-primary mb-4 pb-2 border-b border-primary/20">{category.title}</h3>
                                                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                                                         {contestantsForCategory.map(c => (
                                                             <ContestantCard 
@@ -439,13 +434,13 @@ export default function VotePage() {
                         
                         {/* --- Nomination Section --- */}
                         <section id="nominate">
-                             <Card className="bg-zinc-900/50 border-amber-400/30 text-white shadow-2xl shadow-amber-500/10">
+                             <Card className="bg-card border-border text-foreground shadow-2xl shadow-primary/10">
                                 <CardHeader>
                                     <div className="flex items-center gap-4">
-                                        <AwardIcon className="h-10 w-10 text-amber-400" />
+                                        <AwardIcon className="h-10 w-10 text-primary" />
                                         <div>
-                                            <CardTitle className="font-headline text-4xl text-amber-400">Online Nomination Form</CardTitle>
-                                            <CardDescription className="text-zinc-400">Think someone deserves an award? Nominate them here!</CardDescription>
+                                            <CardTitle className="font-headline text-4xl text-primary">Online Nomination Form</CardTitle>
+                                            <CardDescription className="text-muted-foreground">Think someone deserves an award? Nominate them here!</CardDescription>
                                         </div>
                                     </div>
                                 </CardHeader>
@@ -458,16 +453,16 @@ export default function VotePage() {
                                                     name="category"
                                                     render={({ field }) => (
                                                         <FormItem>
-                                                            <FormLabel className="text-zinc-300">Award Category</FormLabel>
+                                                            <FormLabel className="text-muted-foreground">Award Category</FormLabel>
                                                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                                 <FormControl>
-                                                                    <SelectTrigger className="bg-zinc-800 border-zinc-700 focus:ring-amber-400">
+                                                                    <SelectTrigger>
                                                                         <SelectValue placeholder="Select an award to nominate for" />
                                                                     </SelectTrigger>
                                                                 </FormControl>
-                                                                <SelectContent className="bg-zinc-900 border-amber-400/30 text-amber-300">
+                                                                <SelectContent>
                                                                     {allAwardCategories.map(cat => (
-                                                                        <SelectItem key={cat} value={cat} className="cursor-pointer hover:!bg-amber-400/20 focus:!bg-amber-400/20">{cat}</SelectItem>
+                                                                        <SelectItem key={cat} value={cat}>{cat}</SelectItem>
                                                                     ))}
                                                                 </SelectContent>
                                                             </Select>
@@ -480,9 +475,9 @@ export default function VotePage() {
                                                     name="nomineeName"
                                                     render={({ field }) => (
                                                         <FormItem>
-                                                            <FormLabel className="text-zinc-300">Nominee's Full Name</FormLabel>
+                                                            <FormLabel className="text-muted-foreground">Nominee's Full Name</FormLabel>
                                                             <FormControl>
-                                                                <Input placeholder="e.g., John Doe" {...field} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
+                                                                <Input placeholder="e.g., John Doe" {...field} />
                                                             </FormControl>
                                                             <FormMessage />
                                                         </FormItem>
@@ -493,9 +488,9 @@ export default function VotePage() {
                                                     name="nomineePhone"
                                                     render={({ field }) => (
                                                         <FormItem>
-                                                            <FormLabel className="text-zinc-300">Nominee's Phone Number</FormLabel>
+                                                            <FormLabel className="text-muted-foreground">Nominee's Phone Number</FormLabel>
                                                             <FormControl>
-                                                                <Input placeholder="e.g., 08012345678" {...field} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
+                                                                <Input placeholder="e.g., 08012345678" {...field} />
                                                             </FormControl>
                                                             <FormMessage />
                                                         </FormItem>
@@ -506,23 +501,23 @@ export default function VotePage() {
                                                     name="nominationReason"
                                                     render={({ field }) => (
                                                         <FormItem className="md:col-span-2">
-                                                            <FormLabel className="text-zinc-300">Reason for Nomination</FormLabel>
+                                                            <FormLabel className="text-muted-foreground">Reason for Nomination</FormLabel>
                                                             <FormControl>
-                                                                <Textarea placeholder="Briefly explain why they deserve this award..." {...field} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400" rows={4}/>
+                                                                <Textarea placeholder="Briefly explain why they deserve this award..." {...field} rows={4}/>
                                                             </FormControl>
                                                             <FormMessage />
                                                         </FormItem>
                                                     )}
                                                 />
-                                                 <div className="md:col-span-2 border-t border-zinc-700 pt-6 space-y-6">
+                                                 <div className="md:col-span-2 border-t border-border pt-6 space-y-6">
                                                      <FormField
                                                         control={form.control}
                                                         name="nominatorName"
                                                         render={({ field }) => (
                                                             <FormItem>
-                                                                <FormLabel className="text-zinc-300">Your Name (Nominator)</FormLabel>
+                                                                <FormLabel className="text-muted-foreground">Your Name (Nominator)</FormLabel>
                                                                 <FormControl>
-                                                                    <Input placeholder="Your full name" {...field} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
+                                                                    <Input placeholder="Your full name" {...field} />
                                                                 </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
@@ -533,9 +528,9 @@ export default function VotePage() {
                                                         name="nominatorPhone"
                                                         render={({ field }) => (
                                                             <FormItem>
-                                                                <FormLabel className="text-zinc-300">Your Phone Number</FormLabel>
+                                                                <FormLabel className="text-muted-foreground">Your Phone Number</FormLabel>
                                                                 <FormControl>
-                                                                    <Input placeholder="Your contact phone number" {...field} className="bg-zinc-800 border-zinc-700 focus:ring-amber-400"/>
+                                                                    <Input placeholder="Your contact phone number" {...field} />
                                                                 </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
@@ -543,7 +538,7 @@ export default function VotePage() {
                                                     />
                                                  </div>
                                             </div>
-                                            <Button type="submit" size="lg" className="w-full md:w-auto bg-amber-500 text-black font-bold hover:bg-amber-400 disabled:opacity-75" disabled={isPending}>
+                                            <Button type="submit" size="lg" className="w-full md:w-auto bg-primary text-primary-foreground font-bold hover:bg-primary/90 disabled:opacity-75" disabled={isPending}>
                                                 {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                                                 {isPending ? 'Submitting...' : 'Submit Nomination'}
                                             </Button>

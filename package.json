@@ -1,17 +1,18 @@
+
 {
   "name": "sr-fitness-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 9002 --hostname 0.0.0.0",
+    "dev": "rm -rf .next && next dev --port 9002 --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector",
-    "@genkit-ai/firebase": "^1.14.1",
-    "@genkit-ai/googleai": "^1.14.1",
+    "@genkit-ai/firebase": "^1.19.3",
+    "@genkit-ai/googleai": "^1.19.3",
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.1",
@@ -36,7 +37,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "firebase": "^11.5.0",
-    "genkit": "^1.14.1",
+    "genkit": "^1.19.3",
     "lucide-react": "^0.414.0",
     "next": "14.2.4",
     "nodemailer": "^6.9.14",

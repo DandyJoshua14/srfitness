@@ -2,15 +2,15 @@
 
 "use client";
 
-import { Suspense, useTransition, useState } from 'react';
+import { Suspense, useTransition, useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Loader2, ShieldCheck, CreditCard } from 'lucide-react';
+import { ArrowLeft, Loader2, ShieldCheck, CreditCard, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { createPaystackPayment } from '@/app/actions';
+import { createPaystackPayment, verifyPaystackPayment } from '@/app/actions';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
@@ -75,24 +75,9 @@ function CheckoutView() {
     };
     
     if (!contestantId || !contestantName || !contestantCategory) {
-        return (
-            <Card className="bg-zinc-900/50 border-destructive/50 text-white shadow-2xl shadow-destructive/10 text-center">
-                <CardHeader>
-                    <CardTitle className="font-headline text-3xl text-destructive">Invalid Vote Details</CardTitle>
-                    <CardDescription className="text-zinc-300">
-                        The contestant information is missing or incomplete.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-zinc-400 mb-6">Please go back to the voting page and select a contestant again.</p>
-                     <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
-                        <Link href="/vote">
-                            <ArrowLeft className="mr-2 h-4 w-4" /> Go Back to Vote
-                        </Link>
-                    </Button>
-                </CardContent>
-            </Card>
-        );
+        // This part handles the vote checkout. If query params are missing, it shows an error.
+        // But we need a different view for the marketplace callback.
+        return null;
     }
     
     return (
@@ -153,6 +138,101 @@ function CheckoutView() {
     );
 }
 
+function MarketplaceCallbackView() {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const reference = searchParams.get('reference');
+    
+    const [status, setStatus] = useState<'verifying' | 'success' | 'failed' | 'error'>('verifying');
+    const [message, setMessage] = useState('Verifying your marketplace payment...');
+
+    useEffect(() => {
+        if (!reference) {
+            setStatus('error');
+            setMessage('No payment reference found. Your transaction may not have been completed.');
+            return;
+        }
+
+        const verify = async () => {
+            const result = await verifyPaystackPayment(reference);
+            setStatus(result.status as 'success' | 'failed' | 'error');
+            setMessage(result.message || result.error || 'An unknown error occurred.');
+
+            if (result.status === 'success') {
+                // In a real app, you would also clear the cart here.
+                setTimeout(() => {
+                    router.push('/marketplace');
+                }, 4000); 
+            }
+        };
+
+        verify();
+    }, [reference, router]);
+    
+    const statusIcons = {
+        verifying: <Loader2 className="h-16 w-16 animate-spin text-primary" />,
+        success: <CheckCircle className="h-16 w-16 text-green-500" />,
+        failed: <XCircle className="h-16 w-16 text-red-500" />,
+        error: <AlertTriangle className="h-16 w-16 text-destructive" />,
+    };
+
+    const statusTitles = {
+        verifying: 'Verifying Payment',
+        success: 'Purchase Successful!',
+        failed: 'Payment Failed',
+        error: 'An Error Occurred',
+    };
+    
+    return (
+         <Card className="bg-card text-foreground shadow-2xl shadow-primary/10 text-center max-w-lg mx-auto">
+            <CardHeader>
+                <div className="mx-auto mb-4">{statusIcons[status]}</div>
+                <CardTitle className="font-headline text-3xl text-primary">{statusTitles[status]}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                <CardDescription className="text-muted-foreground text-lg">{message}</CardDescription>
+                 {status !== 'verifying' && (
+                    <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                        <Link href="/marketplace">
+                            {status === 'success' ? 'Back to Marketplace' : 'Try Again'}
+                        </Link>
+                    </Button>
+                 )}
+            </CardContent>
+        </Card>
+    )
+}
+
+function PageContent() {
+    const searchParams = useSearchParams();
+    const type = searchParams.get('type');
+    const hasVoteParams = searchParams.has('id') && searchParams.has('name');
+    
+    if (type === 'marketplace' || searchParams.has('reference')) {
+        return <MarketplaceCallbackView />;
+    }
+    
+    if (hasVoteParams) {
+        return <CheckoutView />;
+    }
+
+    // Fallback or default view if no specific params are matched
+    return (
+         <Card className="bg-card text-foreground shadow-2xl shadow-primary/10 text-center max-w-lg mx-auto">
+            <CardHeader>
+                <CardTitle className="font-headline text-3xl text-destructive">Invalid Request</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <p className="text-muted-foreground mb-6">The checkout information is incomplete. Please start the process again.</p>
+                <Button asChild>
+                    <Link href="/">Return Home</Link>
+                </Button>
+            </CardContent>
+        </Card>
+    );
+}
+
+
 export default function CheckoutPage() {
     return (
         <div className="bg-background text-foreground min-h-screen">
@@ -160,7 +240,7 @@ export default function CheckoutPage() {
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
                      <header className="text-center mb-12">
                         <Image src="/SR.jpg" alt="SR Fitness Awards Logo" width={96} height={96} className="h-24 w-24 mx-auto mb-4 rounded-full" data-ai-hint="awards logo" />
-                        <h1 className="font-headline text-5xl text-primary">Vote Checkout</h1>
+                        <h1 className="font-headline text-5xl text-primary">Checkout</h1>
                     </header>
                     <main>
                       <Suspense fallback={
@@ -168,7 +248,7 @@ export default function CheckoutPage() {
                               <Loader2 className="h-12 w-12 text-primary animate-spin" />
                           </div>
                       }>
-                        <CheckoutView />
+                        <PageContent />
                       </Suspense>
                     </main>
                 </div>
@@ -176,3 +256,4 @@ export default function CheckoutPage() {
         </div>
     );
 }
+

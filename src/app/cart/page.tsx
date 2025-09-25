@@ -15,6 +15,8 @@ import { createPaystackPayment } from '@/app/actions';
 import { useState, useTransition } from 'react';
 import { Label } from '@/components/ui/label';
 
+const SHIPPING_COST = 5000; // Shipping cost in Naira
+
 export default function CartPage() {
   const { cartItems, updateQuantity, removeFromCart, cartCount, cartTotal } = useCart();
   const { toast } = useToast();
@@ -41,14 +43,18 @@ export default function CartPage() {
     }
 
     startTransition(async () => {
-      const result = await createPaystackPayment({
-        email: customerEmail,
-        amount: cartTotal + 5.00, // Including estimated shipping
-        metadata: {
-          cartItems: JSON.stringify(cartItems.map(item => ({ id: item.id, name: item.name, quantity: item.quantity }))),
-          type: 'marketplace_purchase'
-        } as any, // Cast to any to allow for flexible metadata
-      });
+        const callbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/checkout/callback?type=marketplace`;
+
+        const result = await createPaystackPayment({
+            email: customerEmail,
+            amount: cartTotal + SHIPPING_COST,
+            callback_url: callbackUrl,
+            metadata: {
+                type: 'marketplace_purchase',
+                cartItems: JSON.stringify(cartItems.map(item => ({ id: item.id, name: item.name, quantity: item.quantity }))),
+                customerEmail: customerEmail,
+            }
+        });
 
       if (result.success && result.authorizationUrl) {
         window.location.href = result.authorizationUrl;
@@ -110,7 +116,7 @@ export default function CartPage() {
                         </TableCell>
                         <TableCell className="font-medium">
                           <p className="text-foreground">{item.name}</p>
-                          <p className="text-sm text-muted-foreground">${item.price.toFixed(2)}</p>
+                          <p className="text-sm text-muted-foreground">₦{item.price.toLocaleString()}</p>
                         </TableCell>
                         <TableCell>
                           <Input
@@ -121,7 +127,7 @@ export default function CartPage() {
                             className="w-16 mx-auto text-center"
                           />
                         </TableCell>
-                        <TableCell className="text-right font-medium text-foreground">${(item.price * item.quantity).toFixed(2)}</TableCell>
+                        <TableCell className="text-right font-medium text-foreground">₦{(item.price * item.quantity).toLocaleString()}</TableCell>
                         <TableCell className="text-center">
                           <Button variant="ghost" size="icon" onClick={() => removeFromCart(item.id)}>
                             <Trash2 className="h-4 w-4 text-destructive" />
@@ -153,19 +159,19 @@ export default function CartPage() {
                 </div>
                 <div className="flex justify-between text-muted-foreground pt-4 border-t">
                   <span>Subtotal</span>
-                  <span>${cartTotal.toFixed(2)}</span>
+                  <span>₦{cartTotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-muted-foreground">
                   <span>Shipping (est.)</span>
-                  <span>$5.00</span>
+                  <span>₦{SHIPPING_COST.toLocaleString()}</span>
                 </div>
                  <div className="flex justify-between text-muted-foreground">
                   <span>Taxes (est.)</span>
-                  <span>$0.00</span>
+                  <span>₦0.00</span>
                 </div>
                 <div className="flex justify-between font-bold text-lg text-foreground pt-2 border-t border-border">
                   <span>Total</span>
-                  <span>${(cartTotal + 5.00).toFixed(2)}</span>
+                  <span>₦{(cartTotal + SHIPPING_COST).toLocaleString()}</span>
                 </div>
               </CardContent>
               <CardFooter className="flex flex-col gap-4">
@@ -192,5 +198,3 @@ export default function CartPage() {
     </div>
   );
 }
-
-    

@@ -189,7 +189,7 @@ export default function MarketplacePage() {
                   </CardContent>
                   <CardFooter className="p-4 pt-0 flex flex-col sm:flex-row justify-between items-start sm:items-center">
                     <div className="mb-2 sm:mb-0">
-                      <p className="text-lg sm:text-xl font-bold text-primary">${product.price.toFixed(2)}</p>
+                      <p className="text-lg sm:text-xl font-bold text-primary">₦{product.price.toLocaleString()}</p>
                       <div className="flex items-center">
                         {[...Array(5)].map((_, i) => (
                           <Star key={i} className={`h-4 w-4 ${i < product.rating ? 'text-amber-400 fill-amber-400' : 'text-muted-foreground/30'}`} />

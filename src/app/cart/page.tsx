@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from 'next/image';
@@ -14,6 +13,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { createPaystackPayment } from '@/app/actions';
 import { useState, useTransition } from 'react';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 const SHIPPING_COST = 5000; // Shipping cost in Naira
 
@@ -22,12 +22,14 @@ export default function CartPage() {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const [customerEmail, setCustomerEmail] = useState('');
+  const [customerPhone, setCustomerPhone] = useState('');
+  const [customerAddress, setCustomerAddress] = useState('');
 
   const handleCheckout = () => {
-    if (!customerEmail) {
+    if (!customerEmail || !customerPhone || !customerAddress) {
       toast({
-        title: 'Email Required',
-        description: 'Please enter your email address to proceed with the checkout.',
+        title: 'Information Required',
+        description: 'Please enter your email, phone, and address to proceed.',
         variant: 'destructive',
       });
       return;
@@ -53,6 +55,8 @@ export default function CartPage() {
                 type: 'marketplace_purchase',
                 cartItems: JSON.stringify(cartItems.map(item => ({ id: item.id, name: item.name, quantity: item.quantity }))),
                 customerEmail: customerEmail,
+                customerPhone: customerPhone,
+                customerAddress: customerAddress,
             }
         });
 
@@ -147,16 +151,39 @@ export default function CartPage() {
                 <CardTitle className="font-headline text-2xl">Order Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
-                    <Label htmlFor="customerEmail" className="font-semibold">Email for Receipt</Label>
-                    <Input 
-                        id="customerEmail" 
-                        type="email" 
-                        placeholder="your.email@example.com" 
-                        value={customerEmail}
-                        onChange={(e) => setCustomerEmail(e.target.value)}
-                    />
+                 <div className="grid grid-cols-1 gap-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="customerEmail" className="font-semibold">Email for Receipt</Label>
+                        <Input 
+                            id="customerEmail" 
+                            type="email" 
+                            placeholder="your.email@example.com" 
+                            value={customerEmail}
+                            onChange={(e) => setCustomerEmail(e.target.value)}
+                        />
+                    </div>
+                     <div className="space-y-2">
+                        <Label htmlFor="customerPhone" className="font-semibold">Phone Number</Label>
+                        <Input 
+                            id="customerPhone" 
+                            type="tel" 
+                            placeholder="Your phone number" 
+                            value={customerPhone}
+                            onChange={(e) => setCustomerPhone(e.target.value)}
+                        />
+                    </div>
+                     <div className="space-y-2">
+                        <Label htmlFor="customerAddress" className="font-semibold">Shipping Address</Label>
+                        <Textarea 
+                            id="customerAddress"
+                            placeholder="Your full shipping address" 
+                            value={customerAddress}
+                            onChange={(e) => setCustomerAddress(e.target.value)}
+                            rows={3}
+                        />
+                    </div>
                 </div>
+
                 <div className="flex justify-between text-muted-foreground pt-4 border-t">
                   <span>Subtotal</span>
                   <span>₦{cartTotal.toLocaleString()}</span>

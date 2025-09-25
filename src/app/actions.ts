@@ -306,6 +306,7 @@ export async function verifyPaystackPayment(reference: string) {
                 case 'marketplace_purchase':
                     // In a real app, you would record the marketplace sale here.
                     // For now, we'll just return success.
+                    console.log("Marketplace purchase successful:", metadata);
                     recordResult = { success: true };
                     break;
                     

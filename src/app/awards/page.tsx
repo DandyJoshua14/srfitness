@@ -32,8 +32,6 @@ export default function AwardsPage() {
     { title: "Foundation Fitness Award", qualifier: "Schools", description: "Recognizing a school that has shown outstanding commitment to promoting physical education and healthy habits among its students." },
     { title: "Mental Health & Wellness Advocate", qualifier: "", description: "Honoring an individual who has championed the importance of mental well-being as an important component of overall fitness.", noVote: true },
     { title: "Art and Wellness Advocate", qualifier: "", description: "Honoring an individual who has championed the importance of art and creativity as an important component of overall fitness.", noVote: true },
-    { title: "Life Champion Award - Overcomers series", qualifier: "", description: "A special recognition for individuals who have overcome significant personal challenges and used fitness as a tool for recovery and empowerment.", noVote: true },
-    { title: "Foundation Fitness Hero Award", qualifier: "Male & Female", description: "Celebrating individual student who consistently embody the spirit and values of our fitness community and by doing so has inspired others to adopt a healthy lifestyle.", noVote: true },
     { title: "Educators Recognition series", qualifier: "", description: "A tribute to our unsung fitness heroes, educators who go above and beyond to promote wellness through positive learning, and motivating the students to stay active and engage in physical activity." },
     { title: "Fitness Event Of The Year (Coaches)", qualifier: "Coaches", description: "Awarded to the coach or team of coaches who organized and executed the most impactful and engaging fitness event of the year." },
     { title: "Fitness Event Of The Year (Clubs)", qualifier: "Clubs", description: "Recognizing the single best fitness event that brought the community together, promoted health, and created a memorable experience for all." },
@@ -41,8 +39,6 @@ export default function AwardsPage() {
 
   const professionalCategories = [
       { title: "Community Fitness Hero of the Year", qualifier: "Male & Female", description: "Recognizing individuals who have inspired and motivated others within the fitness community through their dedication and positive influence." },
-      { title: "Care-Givers Advocate", qualifier: "Nurses", description: "Recognizing nurses who go above and beyond in providing care and promoting wellness." },
-      { title: "Health Care Treatment Advocate", qualifier: "Doctors", description: "Celebrating doctors who are exemplary in patient care and health advocacy." },
       { title: "Pharmaceutical Service Champion", qualifier: "Pharmacist", description: "Honoring an individual pharmacist for their excellent service and patient care." },
       { title: "Pharmaceutical Service Champion", qualifier: "Pharmacy", description: "Awarded to a pharmacy for outstanding service and contribution to community health." },
       { title: "Physiotherapist of the Year", qualifier: "Physiotherapist", description: "Recognizing a physiotherapist for their exceptional contribution to patient rehabilitation and well-being." },

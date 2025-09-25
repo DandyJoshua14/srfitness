@@ -30,10 +30,10 @@ export default function AwardsPage() {
     { title: "Fitness Club Coach of the Year", qualifier: "", description: "Awarded to the coach who has shown outstanding leadership and delivered exceptional results within a fitness club setting." },
     { title: "Inspirational Weight-Loss Journey", qualifier: "Male & Female", description: "Celebrating individuals who have achieved remarkable weight-loss transformations through perseverance, dedication, and a healthy lifestyle.", noVote: true },
     { title: "Foundation Fitness Award", qualifier: "Schools", description: "Recognizing a school that has shown outstanding commitment to promoting physical education and healthy habits among its students." },
-    { title: "Mental Health & Wellness Advocate", qualifier: "", description: "Honoring an individual who has championed the importance of mental well-being as an important component of overall fitness." },
-    { title: "Art and Wellness Advocate", qualifier: "", description: "Honoring an individual who has championed the importance of art and creativity as an important component of overall fitness." },
-    { title: "Life Champion Award - Overcomers series", qualifier: "", description: "A special recognition for individuals who have overcome significant personal challenges and used fitness as a tool for recovery and empowerment." },
-    { title: "Foundation Fitness Hero Award", qualifier: "Male & Female", description: "Celebrating individual student who consistently embody the spirit and values of our fitness community and by doing so has inspired others to adopt a healthy lifestyle." },
+    { title: "Mental Health & Wellness Advocate", qualifier: "", description: "Honoring an individual who has championed the importance of mental well-being as an important component of overall fitness.", noVote: true },
+    { title: "Art and Wellness Advocate", qualifier: "", description: "Honoring an individual who has championed the importance of art and creativity as an important component of overall fitness.", noVote: true },
+    { title: "Life Champion Award - Overcomers series", qualifier: "", description: "A special recognition for individuals who have overcome significant personal challenges and used fitness as a tool for recovery and empowerment.", noVote: true },
+    { title: "Foundation Fitness Hero Award", qualifier: "Male & Female", description: "Celebrating individual student who consistently embody the spirit and values of our fitness community and by doing so has inspired others to adopt a healthy lifestyle.", noVote: true },
     { title: "Educators Recognition series", qualifier: "", description: "A tribute to our unsung fitness heroes, educators who go above and beyond to promote wellness through positive learning, and motivating the students to stay active and engage in physical activity." },
     { title: "Fitness Event Of The Year (Coaches)", qualifier: "Coaches", description: "Awarded to the coach or team of coaches who organized and executed the most impactful and engaging fitness event of the year." },
     { title: "Fitness Event Of The Year (Clubs)", qualifier: "Clubs", description: "Recognizing the single best fitness event that brought the community together, promoted health, and created a memorable experience for all." },
@@ -49,7 +49,7 @@ export default function AwardsPage() {
   ];
 
   const organizationsCategories = [
-    { title: "Corporate Wellness Champion", qualifier: "", description: "Awarded to a company or brand that supports and promotes a culture of health and wellness in the workplace and in the community." },
+    { title: "Corporate Wellness Champion", qualifier: "", description: "Awarded to a company or brand that supports and promotes a culture of health and wellness in the workplace and in the community.", noVote: true },
     { title: "Corporate Social Responsibility Champion", qualifier: "Organizations", description: "Awarded to major brands and organisations that support, promote and inspire through the power of fitness.", noVote: true },
     { title: "Gym of the Year", qualifier: "", description: "Recognizing the gym that has provided outstanding facilities, services, and community support throughout the year." },
   ];

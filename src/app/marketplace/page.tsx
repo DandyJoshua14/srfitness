@@ -11,8 +11,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ShoppingCart, Star, Search, Filter, Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useCart } from '@/contexts/cart-context';
-import { getProducts, Product } from '@/services/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
+import { placeholderProducts } from '@/lib/placeholder-data';
+import type { Product } from '@/lib/types';
+
 
 const categories = ['All', 'Equipment', 'Apparel', 'Accessories', 'Supplements'];
 const sortOptions = [
@@ -31,19 +33,12 @@ export default function MarketplacePage() {
   const { addToCart } = useCart();
 
   React.useEffect(() => {
-    const fetchProducts = async () => {
-      setIsLoading(true);
-      try {
-        const products = await getProducts();
-        setAllProducts(products);
-      } catch (error) {
-        console.error("Failed to fetch products:", error);
-        // Optionally show a toast message here
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchProducts();
+    // Simulate fetching data
+    setIsLoading(true);
+    setTimeout(() => {
+      setAllProducts(placeholderProducts);
+      setIsLoading(false);
+    }, 500);
   }, []);
 
   const filteredAndSortedProducts = React.useMemo(() => {
@@ -86,7 +81,7 @@ export default function MarketplacePage() {
       <section className="relative bg-secondary text-secondary-foreground py-20 md:py-32 overflow-hidden text-center">
          <div className="absolute inset-0 z-0">
           <Image
-            src="https://placehold.co/1920x1080.png"
+            src="https://picsum.photos/seed/m-hero/1920/1080"
             alt="Stylish fitness gear"
             layout="fill"
             objectFit="cover"

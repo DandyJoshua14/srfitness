@@ -97,7 +97,7 @@ const contestants: Contestant[] = [
     { id: '43', name: 'The Exclusive Workout Exibition', category: 'Fitness Event Of The Year (Coaches)', image: '/dbb.png' },
     { id: '44', name: 'Event Coache C', category: 'Fitness Event Of The Year (Coaches)', image: 'https://placehold.co/400x400.png?text=EC-C' },
     { id: '45', name: 'Calabar Walkhathon', category: 'Fitness Event Of The Year (Clubs)', image: '/walk2.png', objectFit: 'contain' },
-    { id: '46', name: 'Pro Fitness', category: 'Fitness Event Of The Year (Clubs)', image: '/profitness.jpg', objectFit: 'contain' },
+    { id: '46', name: 'Pro Fitness', category: 'Fitness Event Of The Year (Clubs)', image: '/pro fitness.jpg', objectFit: 'contain' },
     { id: '47', name: 'Micki Fitness', category: 'Fitness Event Of The Year (Clubs)', image: '/miki.jpeg' },
     
 ];

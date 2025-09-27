@@ -35,8 +35,6 @@ export default function AwardsPage() {
     { title: "Educators Recognition series", qualifier: "", description: "A tribute to our unsung fitness heroes, educators who go above and beyond to promote wellness through positive learning, and motivating the students to stay active and engage in physical activity.", noVote: true },
     { title: "Fitness Event Of The Year (Coaches)", qualifier: "Coaches", description: "Awarded to the coach or team of coaches who organized and executed the most impactful and engaging fitness event of the year." },
     { title: "Fitness Event Of The Year (Clubs)", qualifier: "Clubs", description: "Recognizing the single best fitness event that brought the community together, promoted health, and created a memorable experience for all." },
-    { title: "Life Champion Award - Overcomers series", qualifier: "", description: "Honoring individuals who have overcome significant life challenges through fitness." },
-    { title: "Foundation Fitness Hero Award", qualifier: "", description: "Recognizing individuals who are grassroots champions of fitness in their communities." },
   ];
 
   const professionalCategories = [
@@ -44,8 +42,6 @@ export default function AwardsPage() {
       { title: "Pharmaceutical Service Champion", qualifier: "Pharmacist", description: "Honoring an individual pharmacist for their excellent service and patient care." },
       { title: "Pharmaceutical Service Champion", qualifier: "Pharmacy", description: "Awarded to a pharmacy for outstanding service and contribution to community health." },
       { title: "Physiotherapist of the Year", qualifier: "Physiotherapist", description: "Recognizing a physiotherapist for their exceptional contribution to patient rehabilitation and well-being.", noVote: true },
-      { title: "Care-Givers Advocate", qualifier: "Nurses", description: "Honoring nurses for their dedication to patient care and wellness." },
-      { title: "Health Care Treatment Advocate", qualifier: "Doctors", description: "Recognizing doctors for their commitment to patient health and treatment." },
   ];
 
   const organizationsCategories = [

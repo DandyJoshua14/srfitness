@@ -25,35 +25,18 @@ const GenerateFitnessTipOutputSchema = z.object({
 });
 export type GenerateFitnessTipOutput = z.infer<typeof GenerateFitnessTipOutputSchema>;
 
+const FALLBACK_TIP = {
+    tip: "Stay hydrated! Drinking enough water throughout the day is key to a great workout and overall health.",
+    category: "Hydration",
+};
+
+
 // This is the exported function React components will call.
 export async function generateFitnessTip(input?: GenerateFitnessTipInput): Promise<GenerateFitnessTipOutput> {
   console.log('generateFitnessTip called with input:', input);
   
-  // If AI is not available, return a fallback tip
-  if (!ai) {
-    const fallbackTips = [
-      { tip: "Stay hydrated! Drinking enough water throughout the day is key to a great workout and overall health.", category: "Hydration" },
-      { tip: "Start your day with 10 minutes of stretching to improve flexibility and reduce muscle tension.", category: "Exercise" },
-      { tip: "Get 7-9 hours of quality sleep each night to support muscle recovery and overall health.", category: "Recovery" },
-      { tip: "Eat a balanced meal with protein, carbs, and healthy fats within 2 hours after your workout.", category: "Nutrition" },
-      { tip: "Set small, achievable fitness goals and celebrate each milestone to stay motivated.", category: "Motivation" }
-    ];
-    
-    const randomTip = fallbackTips[Math.floor(Math.random() * fallbackTips.length)];
-    return randomTip;
-  }
-  
-  if (!generateFitnessTipFlow) {
-    const fallbackTips = [
-      { tip: "Stay hydrated! Drinking enough water throughout the day is key to a great workout and overall health.", category: "Hydration" },
-      { tip: "Start your day with 10 minutes of stretching to improve flexibility and reduce muscle tension.", category: "Exercise" },
-      { tip: "Get 7-9 hours of quality sleep each night to support muscle recovery and overall health.", category: "Recovery" },
-      { tip: "Eat a balanced meal with protein, carbs, and healthy fats within 2 hours after your workout.", category: "Nutrition" },
-      { tip: "Set small, achievable fitness goals and celebrate each milestone to stay motivated.", category: "Motivation" }
-    ];
-    
-    const randomTip = fallbackTips[Math.floor(Math.random() * fallbackTips.length)];
-    return randomTip;
+  if (!ai || !generateFitnessTipFlow) {
+    return FALLBACK_TIP;
   }
   
   return generateFitnessTipFlow(input || {});
@@ -95,10 +78,7 @@ const generateFitnessTipFlow = ai ? ai.defineFlow(
     } catch (error) {
         console.error("Error in generateFitnessTipFlow:", error);
         // Return a friendly fallback tip if the AI service fails.
-        return {
-            tip: "Stay hydrated! Drinking enough water throughout the day is key to a great workout and overall health.",
-            category: "Hydration",
-        };
+        return FALLBACK_TIP;
     }
   }
 ) : null;

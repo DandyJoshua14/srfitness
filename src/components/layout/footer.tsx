@@ -139,7 +139,7 @@ export default function Footer() {
           <div className="col-span-2 md:col-span-1">
             <h3 className="font-headline text-xl font-semibold text-primary mb-4">Get In Touch</h3>
             <address className="not-italic text-sm space-y-2 text-secondary-foreground/80 mb-4">
-              <p>Email: <a href="mailto:srfitness@gmail.com" className="hover:text-primary hover:underline">contact@srfitness.com</a></p>
+              <p>Email: <a href="mailto:srfitness247@gmail.com" className="hover:text-primary hover:underline">srfitness247@gmail.com</a></p>
               <p>Phone: <a href="tel:+2347056717597" className="hover:text-primary hover:underline">(234) 7056717597</a></p>
             </address>
              <ul className="space-y-2 text-sm">

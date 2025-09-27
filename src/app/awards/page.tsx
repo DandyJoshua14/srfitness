@@ -29,19 +29,23 @@ export default function AwardsPage() {
     { title: "Fitness Trainer/Coach of the Year", qualifier: "", description: "Honoring the trainer who has demonstrated exceptional skill, knowledge, and commitment to their clients' success and well-being." },
     { title: "Fitness Club Coach of the Year", qualifier: "", description: "Awarded to the coach who has shown outstanding leadership and delivered exceptional results within a fitness club setting." },
     { title: "Inspirational Weight-Loss Journey", qualifier: "Male & Female", description: "Celebrating individuals who have achieved remarkable weight-loss transformations through perseverance, dedication, and a healthy lifestyle.", noVote: true },
-    { title: "Foundation Fitness Award", qualifier: "Schools", description: "Recognizing a school that has shown outstanding commitment to promoting physical education and healthy habits among its students." },
+    { title: "Foundation Fitness Award", qualifier: "Schools", description: "Recognizing a school that has shown outstanding commitment to promoting physical education and healthy habits among its students.", noVote: true },
     { title: "Mental Health & Wellness Advocate", qualifier: "", description: "Honoring an individual who has championed the importance of mental well-being as an important component of overall fitness.", noVote: true },
     { title: "Art and Wellness Advocate", qualifier: "", description: "Honoring an individual who has championed the importance of art and creativity as an important component of overall fitness.", noVote: true },
-    { title: "Educators Recognition series", qualifier: "", description: "A tribute to our unsung fitness heroes, educators who go above and beyond to promote wellness through positive learning, and motivating the students to stay active and engage in physical activity." },
+    { title: "Educators Recognition series", qualifier: "", description: "A tribute to our unsung fitness heroes, educators who go above and beyond to promote wellness through positive learning, and motivating the students to stay active and engage in physical activity.", noVote: true },
     { title: "Fitness Event Of The Year (Coaches)", qualifier: "Coaches", description: "Awarded to the coach or team of coaches who organized and executed the most impactful and engaging fitness event of the year." },
     { title: "Fitness Event Of The Year (Clubs)", qualifier: "Clubs", description: "Recognizing the single best fitness event that brought the community together, promoted health, and created a memorable experience for all." },
+    { title: "Life Champion Award - Overcomers series", qualifier: "", description: "Honoring individuals who have overcome significant life challenges through fitness." },
+    { title: "Foundation Fitness Hero Award", qualifier: "", description: "Recognizing individuals who are grassroots champions of fitness in their communities." },
   ];
 
   const professionalCategories = [
       { title: "Community Fitness Hero of the Year", qualifier: "Male & Female", description: "Recognizing individuals who have inspired and motivated others within the fitness community through their dedication and positive influence." },
       { title: "Pharmaceutical Service Champion", qualifier: "Pharmacist", description: "Honoring an individual pharmacist for their excellent service and patient care." },
       { title: "Pharmaceutical Service Champion", qualifier: "Pharmacy", description: "Awarded to a pharmacy for outstanding service and contribution to community health." },
-      { title: "Physiotherapist of the Year", qualifier: "Physiotherapist", description: "Recognizing a physiotherapist for their exceptional contribution to patient rehabilitation and well-being." },
+      { title: "Physiotherapist of the Year", qualifier: "Physiotherapist", description: "Recognizing a physiotherapist for their exceptional contribution to patient rehabilitation and well-being.", noVote: true },
+      { title: "Care-Givers Advocate", qualifier: "Nurses", description: "Honoring nurses for their dedication to patient care and wellness." },
+      { title: "Health Care Treatment Advocate", qualifier: "Doctors", description: "Recognizing doctors for their commitment to patient health and treatment." },
   ];
 
   const organizationsCategories = [

@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from 'next/image';
@@ -14,11 +15,12 @@ import { createPaystackPayment } from '@/app/actions';
 import { useState, useTransition } from 'react';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const SHIPPING_COST = 5000; // Shipping cost in Naira
 
 export default function CartPage() {
-  const { cartItems, updateQuantity, removeFromCart, cartCount, cartTotal } = useCart();
+  const { cartItems, updateQuantity, removeFromCart, cartCount, cartTotal, updateItemSize } = useCart();
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const [customerEmail, setCustomerEmail] = useState('');
@@ -44,6 +46,19 @@ export default function CartPage() {
       return;
     }
 
+    // Check if all apparel items have a size selected
+    for (const item of cartItems) {
+        if (item.category === 'Apparel' && !item.selectedSize) {
+            toast({
+                title: 'Size Selection Required',
+                description: `Please select a size for ${item.name}.`,
+                variant: 'destructive',
+            });
+            return;
+        }
+    }
+
+
     startTransition(async () => {
         const callbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/checkout/callback?type=marketplace`;
 
@@ -53,7 +68,7 @@ export default function CartPage() {
             callback_url: callbackUrl,
             metadata: {
                 type: 'marketplace_purchase',
-                cartItems: JSON.stringify(cartItems.map(item => ({ id: item.id, name: item.name, quantity: item.quantity }))),
+                cartItems: JSON.stringify(cartItems.map(item => ({ id: item.id, name: item.name, quantity: item.quantity, size: item.selectedSize }))),
                 customerEmail: customerEmail,
                 customerPhone: customerPhone,
                 customerAddress: customerAddress,
@@ -107,7 +122,8 @@ export default function CartPage() {
                     <TableRow>
                       <TableHead className="w-[100px] hidden md:table-cell">Image</TableHead>
                       <TableHead>Product</TableHead>
-                      <TableHead className="text-center">Quantity</TableHead>
+                      <TableHead className="w-[150px]">Size</TableHead>
+                      <TableHead className="text-center w-[120px]">Quantity</TableHead>
                       <TableHead className="text-right">Price</TableHead>
                       <TableHead className="w-[50px]">Remove</TableHead>
                     </TableRow>
@@ -121,6 +137,22 @@ export default function CartPage() {
                         <TableCell className="font-medium">
                           <p className="text-foreground">{item.name}</p>
                           <p className="text-sm text-muted-foreground">₦{item.price.toLocaleString()}</p>
+                        </TableCell>
+                        <TableCell>
+                          {item.category === 'Apparel' ? (
+                             <Select onValueChange={(value) => updateItemSize(item.id, value)} defaultValue={item.selectedSize}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select Size" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {item.sizes?.map(size => (
+                                    <SelectItem key={size} value={size}>{size}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                          ) : (
+                            <span className="text-muted-foreground text-sm">N/A</span>
+                          )}
                         </TableCell>
                         <TableCell>
                           <Input

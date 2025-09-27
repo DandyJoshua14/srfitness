@@ -35,8 +35,8 @@ const testimonials = [
   },
   {
     name: "Corporate Client",
-    role: "HR Manager, TechCorp",
-    avatar: "https://placehold.co/100x100.png",
+    role: "HR Manager, Savanah",
+    avatar: "/savana.jpeg",
     avatarHint: "professional person portrait",
     text: "SR Fitness's corporate wellness program has been a game-changer for our team's morale and productivity. Highly recommended!",
     rating: 5,

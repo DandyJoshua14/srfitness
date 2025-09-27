@@ -68,13 +68,13 @@ const contestants: Contestant[] = [
     { id: '10', name: '', category: 'Physiotherapist of the Year', image: 'https://placehold.co/400x400.png' },
     { id: '32', name: '', category: 'Physiotherapist of the Year', image: 'https://placehold.co/400x400.png' },
     // Organizations
-    { id: '11', name: 'Wellness Inc.', category: 'Corporate Wellness Champion', image: 'https://placehold.co/400x400.png' },
-    { id: '12', name: 'GoodWorks LLC', category: 'Corporate Social Responsibility Champion', image: 'https://placehold.co/400x400.png' },
+    { id: '11', name: '', category: 'Corporate Wellness Champion', image: 'https://placehold.co/400x400.png' },
+    { id: '12', name: '', category: 'Corporate Social Responsibility Champion', image: 'https://placehold.co/400x400.png' },
     // New contestants
     { id: '48', name: 'Coach Ifiok', category: 'Fitness Club Coach of the Year', image: '/ifiok.jpg' },
     { id: '49', name: 'Coach Ofonime', category: 'Fitness Club Coach of the Year', image: '/ofon.JPG' },
     { id: '50', name: 'Coach Bigname', category: 'Fitness Club Coach of the Year', image: '/Bigname.jpg' },
-    { id: '15', name: 'Victor\'s Fitness', category: 'Gym of the Year', image: '/romans.jpeg' },
+    { id: '15', name: 'Victor\'s Fitness', category: 'Gym of the Year', image: '/vic.png' },
     { id: '16', name: 'Romaan Fitness', category: 'Gym of the Year', image: '/romaans.png' },
     { id: '17', name: 'Hogis Fitness', category: 'Gym of the Year', image: '/hogis.png' },
     { id: '18', name: '1480 AZ GYM (NAVY GYM)', category: 'Gym of the Year', image: '/az.jpg', objectPosition: 'center 20%' },
@@ -82,9 +82,8 @@ const contestants: Contestant[] = [
     { id: '20', name: 'Lifeclinicng', category: 'Art and Wellness Advocate', image: '/dr ken.jpg' },
     { id: '42', name: '300 Tawani Fitness Day-Out', category: 'Fitness Event Of The Year (Coaches)', image: '/tawani.JPG' },
     { id: '43', name: 'The Exclusive Workout Exibition', category: 'Fitness Event Of The Year (Coaches)', image: '/dbb.png' },
-    { id: '44', name: 'Event Coache C', category: 'Fitness Event Of The Year (Coaches)', image: 'https://placehold.co/400x400.png' },
+    { id: '44', name: 'Pro Fitness', category: 'Fitness Event Of The Year (Coaches)', image: '/pro fitness.jpg' },
     { id: '45', name: 'Calabar Walkhathon', category: 'Fitness Event Of The Year (Clubs)', image: '/walk2.png', objectFit: 'contain' },
-    { id: '46', name: 'Pro Fitness', category: 'Fitness Event Of The Year (Clubs)', image: '/pro fitness.jpg', objectFit: 'contain' },
     { id: '47', name: 'Micki Fitness', category: 'Fitness Event Of The Year (Clubs)', image: '/miki.jpeg' },
     
 ];

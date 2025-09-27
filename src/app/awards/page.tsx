@@ -38,9 +38,9 @@ export default function AwardsPage() {
   ];
 
   const professionalCategories = [
-      { title: "Community Fitness Hero of the Year", qualifier: "Male & Female", description: "Recognizing individuals who have inspired and motivated others within the fitness community through their dedication and positive influence." },
-      { title: "Pharmaceutical Service Champion", qualifier: "Pharmacist", description: "Honoring an individual pharmacist for their excellent service and patient care." },
-      { title: "Pharmaceutical Service Champion", qualifier: "Pharmacy", description: "Awarded to a pharmacy for outstanding service and contribution to community health." },
+      { title: "Community Fitness Hero of the Year", qualifier: "Male & Female", description: "Recognizing individuals who have inspired and motivated others within the fitness community through their dedication and positive influence.", noVote: true },
+      { title: "Pharmaceutical Service Champion", qualifier: "Pharmacist", description: "Honoring an individual pharmacist for their excellent service and patient care.", noVote: true },
+      { title: "Pharmaceutical Service Champion", qualifier: "Pharmacy", description: "Awarded to a pharmacy for outstanding service and contribution to community health.", noVote: true },
       { title: "Physiotherapist of the Year", qualifier: "Physiotherapist", description: "Recognizing a physiotherapist for their exceptional contribution to patient rehabilitation and well-being.", noVote: true },
   ];
 

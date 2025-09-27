@@ -10,9 +10,14 @@ import ContactLocationSection from '@/components/sections/contact-location-secti
 export default function PageWrapper({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isAdminPage = pathname.startsWith('/admin');
-  const isVoteCheckout = pathname.startsWith('/checkout') || pathname.startsWith('/vote/callback') || pathname.startsWith('/awards/checkout') || pathname.startsWith('/awards/callback');
+  const isCheckoutFlow = 
+    pathname.startsWith('/checkout') || 
+    pathname.startsWith('/vote/callback') || 
+    pathname.startsWith('/awards/checkout') || 
+    pathname.startsWith('/awards/callback') ||
+    pathname.startsWith('/donate');
 
-  if (isVoteCheckout) {
+  if (isCheckoutFlow) {
     return <main className="flex-grow">{children}</main>;
   }
 

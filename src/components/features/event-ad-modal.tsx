@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import { Award, Ticket, ArrowRight, Vote } from 'lucide-react';
+import { Award, Ticket, ArrowRight, Vote, Heart } from 'lucide-react';
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
 
 export default function EventAdModal() {
@@ -29,6 +29,11 @@ export default function EventAdModal() {
   const handleVoteClick = () => {
     setIsOpen(false);
     router.push('/vote');
+  };
+
+  const handleDonateClick = () => {
+    setIsOpen(false);
+    router.push('/donate');
   };
 
   return (
@@ -58,7 +63,7 @@ export default function EventAdModal() {
           <p className="text-zinc-300">
             Join us for a night of glamour, recognition, and celebration at the annual SR Fitness Awards.
           </p>
-          <div className="grid grid-cols-2 gap-3 pt-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
             <Button
               size="lg"
               className="w-full bg-amber-500 text-black font-bold text-base hover:bg-amber-400 group"
@@ -66,6 +71,15 @@ export default function EventAdModal() {
             >
               <Ticket className="mr-2 h-5 w-5" />
               Buy Tickets
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="w-full border-green-400 text-green-400 hover:bg-green-400/10 hover:text-green-300 font-bold text-base group"
+              onClick={handleDonateClick}
+            >
+              <Heart className="mr-2 h-5 w-5" />
+              Donate
             </Button>
             <Button
               size="lg"

@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import * as React from 'react';
@@ -11,8 +12,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ShoppingCart, Star, Search, Filter, Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useCart } from '@/contexts/cart-context';
-import { getProducts, Product } from '@/services/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
+import { placeholderProducts } from '@/lib/placeholder-data';
+import type { Product } from '@/lib/types';
+
 
 const categories = ['All', 'Equipment', 'Apparel', 'Accessories', 'Supplements'];
 const sortOptions = [
@@ -31,19 +34,12 @@ export default function MarketplacePage() {
   const { addToCart } = useCart();
 
   React.useEffect(() => {
-    const fetchProducts = async () => {
-      setIsLoading(true);
-      try {
-        const products = await getProducts();
-        setAllProducts(products);
-      } catch (error) {
-        console.error("Failed to fetch products:", error);
-        // Optionally show a toast message here
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchProducts();
+    // Simulate fetching data
+    setIsLoading(true);
+    setTimeout(() => {
+      setAllProducts(placeholderProducts);
+      setIsLoading(false);
+    }, 500);
   }, []);
 
   const filteredAndSortedProducts = React.useMemo(() => {
@@ -77,6 +73,8 @@ export default function MarketplacePage() {
       price: product.price,
       image: product.image,
       dataAiHint: product.dataAiHint,
+      category: product.category,
+      sizes: product.sizes,
     });
   };
 
@@ -86,7 +84,7 @@ export default function MarketplacePage() {
       <section className="relative bg-secondary text-secondary-foreground py-20 md:py-32 overflow-hidden text-center">
          <div className="absolute inset-0 z-0">
           <Image
-            src="https://placehold.co/1920x1080.png"
+            src="https://picsum.photos/seed/m-hero/1920/1080"
             alt="Stylish fitness gear"
             layout="fill"
             objectFit="cover"
@@ -194,7 +192,7 @@ export default function MarketplacePage() {
                   </CardContent>
                   <CardFooter className="p-4 pt-0 flex flex-col sm:flex-row justify-between items-start sm:items-center">
                     <div className="mb-2 sm:mb-0">
-                      <p className="text-lg sm:text-xl font-bold text-primary">${product.price.toFixed(2)}</p>
+                      <p className="text-lg sm:text-xl font-bold text-primary">₦{product.price.toLocaleString()}</p>
                       <div className="flex items-center">
                         {[...Array(5)].map((_, i) => (
                           <Star key={i} className={`h-4 w-4 ${i < product.rating ? 'text-amber-400 fill-amber-400' : 'text-muted-foreground/30'}`} />

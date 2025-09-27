@@ -14,18 +14,24 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { createPaystackPayment } from '@/app/actions';
 import { useState, useTransition } from 'react';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+const SHIPPING_COST = 5000; // Shipping cost in Naira
 
 export default function CartPage() {
-  const { cartItems, updateQuantity, removeFromCart, cartCount, cartTotal } = useCart();
+  const { cartItems, updateQuantity, removeFromCart, cartCount, cartTotal, updateItemSize } = useCart();
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const [customerEmail, setCustomerEmail] = useState('');
+  const [customerPhone, setCustomerPhone] = useState('');
+  const [customerAddress, setCustomerAddress] = useState('');
 
   const handleCheckout = () => {
-    if (!customerEmail) {
+    if (!customerEmail || !customerPhone || !customerAddress) {
       toast({
-        title: 'Email Required',
-        description: 'Please enter your email address to proceed with the checkout.',
+        title: 'Information Required',
+        description: 'Please enter your email, phone, and address to proceed.',
         variant: 'destructive',
       });
       return;
@@ -40,15 +46,34 @@ export default function CartPage() {
       return;
     }
 
+    // Check if all apparel items have a size selected
+    for (const item of cartItems) {
+        if (item.category === 'Apparel' && !item.selectedSize) {
+            toast({
+                title: 'Size Selection Required',
+                description: `Please select a size for ${item.name}.`,
+                variant: 'destructive',
+            });
+            return;
+        }
+    }
+
+
     startTransition(async () => {
-      const result = await createPaystackPayment({
-        email: customerEmail,
-        amount: cartTotal + 5.00, // Including estimated shipping
-        metadata: {
-          cartItems: JSON.stringify(cartItems.map(item => ({ id: item.id, name: item.name, quantity: item.quantity }))),
-          type: 'marketplace_purchase'
-        } as any, // Cast to any to allow for flexible metadata
-      });
+        const callbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/checkout/callback?type=marketplace`;
+
+        const result = await createPaystackPayment({
+            email: customerEmail,
+            amount: cartTotal + SHIPPING_COST,
+            callback_url: callbackUrl,
+            metadata: {
+                type: 'marketplace_purchase',
+                cartItems: JSON.stringify(cartItems.map(item => ({ id: item.id, name: item.name, quantity: item.quantity, size: item.selectedSize }))),
+                customerEmail: customerEmail,
+                customerPhone: customerPhone,
+                customerAddress: customerAddress,
+            }
+        });
 
       if (result.success && result.authorizationUrl) {
         window.location.href = result.authorizationUrl;
@@ -97,7 +122,8 @@ export default function CartPage() {
                     <TableRow>
                       <TableHead className="w-[100px] hidden md:table-cell">Image</TableHead>
                       <TableHead>Product</TableHead>
-                      <TableHead className="text-center">Quantity</TableHead>
+                      <TableHead className="w-[150px]">Size</TableHead>
+                      <TableHead className="text-center w-[120px]">Quantity</TableHead>
                       <TableHead className="text-right">Price</TableHead>
                       <TableHead className="w-[50px]">Remove</TableHead>
                     </TableRow>
@@ -110,7 +136,23 @@ export default function CartPage() {
                         </TableCell>
                         <TableCell className="font-medium">
                           <p className="text-foreground">{item.name}</p>
-                          <p className="text-sm text-muted-foreground">${item.price.toFixed(2)}</p>
+                          <p className="text-sm text-muted-foreground">₦{item.price.toLocaleString()}</p>
+                        </TableCell>
+                        <TableCell>
+                          {item.category === 'Apparel' ? (
+                             <Select onValueChange={(value) => updateItemSize(item.id, value)} defaultValue={item.selectedSize}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select Size" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {item.sizes?.map(size => (
+                                    <SelectItem key={size} value={size}>{size}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                          ) : (
+                            <span className="text-muted-foreground text-sm">N/A</span>
+                          )}
                         </TableCell>
                         <TableCell>
                           <Input
@@ -121,7 +163,7 @@ export default function CartPage() {
                             className="w-16 mx-auto text-center"
                           />
                         </TableCell>
-                        <TableCell className="text-right font-medium text-foreground">${(item.price * item.quantity).toFixed(2)}</TableCell>
+                        <TableCell className="text-right font-medium text-foreground">₦{(item.price * item.quantity).toLocaleString()}</TableCell>
                         <TableCell className="text-center">
                           <Button variant="ghost" size="icon" onClick={() => removeFromCart(item.id)}>
                             <Trash2 className="h-4 w-4 text-destructive" />
@@ -141,31 +183,54 @@ export default function CartPage() {
                 <CardTitle className="font-headline text-2xl">Order Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
-                    <Label htmlFor="customerEmail" className="font-semibold">Email for Receipt</Label>
-                    <Input 
-                        id="customerEmail" 
-                        type="email" 
-                        placeholder="your.email@example.com" 
-                        value={customerEmail}
-                        onChange={(e) => setCustomerEmail(e.target.value)}
-                    />
+                 <div className="grid grid-cols-1 gap-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="customerEmail" className="font-semibold">Email for Receipt</Label>
+                        <Input 
+                            id="customerEmail" 
+                            type="email" 
+                            placeholder="your.email@example.com" 
+                            value={customerEmail}
+                            onChange={(e) => setCustomerEmail(e.target.value)}
+                        />
+                    </div>
+                     <div className="space-y-2">
+                        <Label htmlFor="customerPhone" className="font-semibold">Phone Number</Label>
+                        <Input 
+                            id="customerPhone" 
+                            type="tel" 
+                            placeholder="Your phone number" 
+                            value={customerPhone}
+                            onChange={(e) => setCustomerPhone(e.target.value)}
+                        />
+                    </div>
+                     <div className="space-y-2">
+                        <Label htmlFor="customerAddress" className="font-semibold">Shipping Address</Label>
+                        <Textarea 
+                            id="customerAddress"
+                            placeholder="Your full shipping address" 
+                            value={customerAddress}
+                            onChange={(e) => setCustomerAddress(e.target.value)}
+                            rows={3}
+                        />
+                    </div>
                 </div>
+
                 <div className="flex justify-between text-muted-foreground pt-4 border-t">
                   <span>Subtotal</span>
-                  <span>${cartTotal.toFixed(2)}</span>
+                  <span>₦{cartTotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-muted-foreground">
                   <span>Shipping (est.)</span>
-                  <span>$5.00</span>
+                  <span>₦{SHIPPING_COST.toLocaleString()}</span>
                 </div>
                  <div className="flex justify-between text-muted-foreground">
                   <span>Taxes (est.)</span>
-                  <span>$0.00</span>
+                  <span>₦0.00</span>
                 </div>
                 <div className="flex justify-between font-bold text-lg text-foreground pt-2 border-t border-border">
                   <span>Total</span>
-                  <span>${(cartTotal + 5.00).toFixed(2)}</span>
+                  <span>₦{(cartTotal + SHIPPING_COST).toLocaleString()}</span>
                 </div>
               </CardContent>
               <CardFooter className="flex flex-col gap-4">
@@ -192,5 +257,3 @@ export default function CartPage() {
     </div>
   );
 }
-
-    

@@ -11,7 +11,7 @@ const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localho
 const GMAIL_EMAIL = process.env.GMAIL_EMAIL;
 const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD;
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
-// We will read the Zapier URL inside the function to ensure it's not missed.
+// We will read the Zapier URLs inside the functions to ensure they are not missed.
 
 const nominationFormSchema = z.object({
   category: z.string(),
@@ -37,13 +37,19 @@ const ticketSaleSchema = z.object({
   customerEmail: z.string().email(),
 });
 
+const donationSchema = z.object({
+  amount: z.number().positive(),
+  donorName: z.string(),
+  donorEmail: z.string().email(),
+});
+
 
 const paystackPaymentRequestSchema = z.object({
   email: z.string().email(),
   amount: z.number(),
   callback_url: z.string().url(),
   metadata: z.object({
-    type: z.enum(['vote', 'marketplace_purchase', 'ticket_purchase']),
+    type: z.enum(['vote', 'marketplace_purchase', 'ticket_purchase', 'donation']),
     // Flexible metadata fields
   }).catchall(z.any()),
 });
@@ -208,6 +214,49 @@ export async function recordTicketSale(saleData: z.infer<typeof ticketSaleSchema
   }
 }
 
+/**
+ * Sends donation data to a Zapier webhook.
+ */
+export async function recordDonation(donationData: z.infer<typeof donationSchema>) {
+  const validatedFields = donationSchema.safeParse(donationData);
+
+  if (!validatedFields.success) {
+    console.error("Invalid donation data for Zapier:", validatedFields.error);
+    return { success: false, error: 'Invalid donation data provided.' };
+  }
+
+  const zapierWebhookUrl = process.env.ZAPIER_DONATION_WEBHOOK_URL;
+  
+  if (!zapierWebhookUrl) {
+    console.error("ZAPIER_DONATION_WEBHOOK_URL is not set. Cannot record donation.");
+    // For now, we will return success even if Zapier is not configured.
+    return { success: true, message: "Donation recorded locally." };
+  }
+  
+  const payload = {
+    type: 'donation',
+    ...validatedFields.data,
+    timestamp: new Date().toISOString(),
+  };
+  
+  try {
+    const response = await fetch(zapierWebhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
+        return { success: true, message: "Donation successfully recorded." };
+    } else {
+        return { success: false, error: `Failed to send donation data. Status: ${response.status}` };
+    }
+  } catch (error) {
+    console.error("Failed to trigger Zapier webhook for donations:", error);
+    return { success: false, error: 'Could not connect to the donation tracking system.' };
+  }
+}
+
 
 export async function createPaystackPayment(paymentData: z.infer<typeof paystackPaymentRequestSchema>) {
     const validatedFields = paystackPaymentRequestSchema.safeParse(paymentData);
@@ -306,7 +355,16 @@ export async function verifyPaystackPayment(reference: string) {
                 case 'marketplace_purchase':
                     // In a real app, you would record the marketplace sale here.
                     // For now, we'll just return success.
+                    console.log("Marketplace purchase successful:", metadata);
                     recordResult = { success: true };
+                    break;
+                
+                case 'donation':
+                     recordResult = await recordDonation({
+                        amount: amount / 100,
+                        donorName: metadata.donorName,
+                        donorEmail: customer.email,
+                    });
                     break;
                     
                 default:

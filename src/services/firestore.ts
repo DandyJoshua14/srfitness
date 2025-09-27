@@ -59,59 +59,6 @@ export const deletePost = async (postId: string) => {
   }
 };
 
-
-// --------- Product Types and Functions ---------
-
-export interface Product {
-    id?: string;
-    name: string;
-    category: string;
-    price: number;
-    image: string;
-    dataAiHint: string;
-    rating: number;
-    isNew: boolean;
-    timestamp: any;
-}
-
-const productsCollectionRef = collection(db, 'products');
-
-export const addProduct = async (productData: Omit<Product, 'id' | 'timestamp'>) => {
-    try {
-        await addDoc(productsCollectionRef, {
-            ...productData,
-            timestamp: serverTimestamp(),
-        });
-    } catch (error) {
-        console.error("Error adding product: ", error);
-        throw new Error("Could not add product to Firestore.");
-    }
-};
-
-export const getProducts = async (): Promise<Product[]> => {
-    try {
-        const q = query(productsCollectionRef, orderBy('timestamp', 'desc'));
-        const querySnapshot = await getDocs(q);
-        return querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-        } as Product));
-    } catch (error) {
-        console.error("Error getting products: ", error);
-        throw new Error("Could not fetch products from Firestore.");
-    }
-};
-
-export const deleteProduct = async (productId: string) => {
-    try {
-        await deleteDoc(doc(db, 'products', productId));
-    } catch (error) {
-        console.error("Error deleting product: ", error);
-        throw new Error("Could not delete product from Firestore.");
-    }
-};
-
-
 // --------- Magazine Article Types and Functions ---------
 
 export interface Article {
@@ -245,7 +192,7 @@ export const getNominations = async (): Promise<Nomination[]> => {
             return {
                 id: doc.id,
                 ...data,
-                timestamp: data.timestamp?.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) || 'N/A',
+                timestamp: data.timestamp?.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) || 'N/A',
             } as Nomination;
         });
     } catch (error) {

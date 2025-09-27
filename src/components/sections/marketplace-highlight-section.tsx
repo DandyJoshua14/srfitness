@@ -8,12 +8,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ShoppingCart, Star, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-
-const featuredProducts = [
-  { id: 'prod3', name: 'Men\'s Performance Tee', category: 'Apparel', price: 45.00, image: 'https://placehold.co/600x600.png', dataAiHint: 'men fitness shirt', rating: 5 },
-  { id: 'prod4', name: 'Women\'s Flex Leggings', category: 'Apparel', price: 65.00, image: 'https://placehold.co/600x600.png', dataAiHint: 'women leggings gym', rating: 5, isNew: true },
-  { id: 'prod6', name: 'SR-21 Pre-Workout Fuel', category: 'Supplements', price: 39.99, image: 'https://placehold.co/600x600.png', dataAiHint: 'supplement powder tub', rating: 4 },
-];
+import { placeholderProducts } from '@/lib/placeholder-data';
+import type { Product } from '@/lib/types';
+import * as React from 'react';
 
 const cardVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -29,6 +26,8 @@ const cardVariants = {
 };
 
 export default function MarketplaceHighlightSection() {
+  const featuredProducts = React.useMemo(() => placeholderProducts.slice(0, 3), []);
+  
   return (
     <section className="py-16 md:py-24 bg-secondary text-secondary-foreground">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -79,7 +78,7 @@ export default function MarketplaceHighlightSection() {
                   </CardTitle>
                 </CardContent>
                 <CardFooter className="p-4 pt-0 flex justify-between items-center">
-                    <p className="text-xl font-bold text-primary">${product.price.toFixed(2)}</p>
+                    <p className="text-xl font-bold text-primary">₦{product.price.toLocaleString()}</p>
                     <div className="flex items-center">
                       {[...Array(5)].map((_, i) => (
                         <Star key={i} className={`h-4 w-4 ${i < product.rating ? 'text-amber-400 fill-amber-400' : 'text-muted-foreground/30'}`} />

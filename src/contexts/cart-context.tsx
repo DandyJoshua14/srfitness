@@ -3,21 +3,19 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import type { Product } from '@/lib/types';
 
-export interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  dataAiHint: string;
+export interface CartItem extends Product {
   quantity: number;
+  selectedSize?: string;
 }
 
 interface CartContextType {
   cartItems: CartItem[];
-  addToCart: (item: Omit<CartItem, 'quantity'>) => void;
+  addToCart: (item: Product) => void;
   updateQuantity: (itemId: string, quantity: number) => void;
   removeFromCart: (itemId: string) => void;
+  updateItemSize: (itemId: string, size: string) => void;
   clearCart: () => void;
   cartCount: number;
   cartTotal: number;
@@ -49,7 +47,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [cartItems]);
 
-  const addToCart = useCallback((item: Omit<CartItem, 'quantity'>) => {
+  const addToCart = useCallback((item: Product) => {
     setCartItems(prevItems => {
       const existingItem = prevItems.find(i => i.id === item.id);
       if (existingItem) {
@@ -62,7 +60,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         return [...prevItems, { ...item, quantity: 1 }];
       }
     });
-  }, []);
+  }, [toast]);
 
   const updateQuantity = useCallback((itemId: string, quantity: number) => {
     setCartItems(prevItems => {
@@ -76,8 +74,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const removeFromCart = useCallback((itemId: string) => {
-    setCartItems(prevItems => prevItems.filter(i => i.id !== itemId));
-    toast({ title: "Item Removed", description: "The item has been removed from your cart.", variant: 'destructive' });
+    const itemToRemove = cartItems.find(i => i.id === itemId);
+    if (itemToRemove) {
+      setCartItems(prevItems => prevItems.filter(i => i.id !== itemId));
+      toast({ title: "Item Removed", description: `${itemToRemove.name} has been removed from your cart.`, variant: 'destructive' });
+    }
+  }, [cartItems, toast]);
+
+  const updateItemSize = useCallback((itemId: string, size: string) => {
+    setCartItems(prevItems =>
+      prevItems.map(item =>
+        item.id === itemId ? { ...item, selectedSize: size } : item
+      )
+    );
   }, []);
 
   const clearCart = useCallback(() => {
@@ -93,6 +102,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     addToCart,
     updateQuantity,
     removeFromCart,
+    updateItemSize,
     clearCart,
     cartCount,
     cartTotal

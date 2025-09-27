@@ -13,7 +13,7 @@ import { createPaystackPayment } from '@/app/actions';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-const donationPresets = [5000, 10000, 25000, 50000];
+const donationPresets = [20000, 50000, 100000, 1000000];
 
 export default function DonatePage() {
     const router = useRouter();

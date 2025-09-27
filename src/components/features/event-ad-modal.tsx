@@ -74,8 +74,7 @@ export default function EventAdModal() {
             </Button>
             <Button
               size="lg"
-              variant="outline"
-              className="w-full border-green-400 text-green-400 hover:bg-green-400/10 hover:text-green-300 font-bold text-base group"
+              className="w-full bg-amber-500 text-black font-bold text-base hover:bg-amber-400 group"
               onClick={handleDonateClick}
             >
               <Heart className="mr-2 h-5 w-5" />

@@ -78,7 +78,7 @@ const contestants: Contestant[] = [
     { id: '16', name: 'Romaan Fitness', category: 'Gym of the Year', image: '/romaans.png' },
     { id: '17', name: 'Hogis Fitness', category: 'Gym of the Year', image: '/hogis.png' },
     { id: '18', name: '1480 AZ GYM (NAVY GYM)', category: 'Gym of the Year', image: '/az.jpg', objectPosition: 'center 20%' },
-    { id: '19', name: '', category: 'Art and Wellness Advocate', image: 'https://placehold.co/400x400.png' },
+    { id: '19', name: 'Oma Dance Vibes', category: 'Art and Wellness Advocate', image: '/oma.jpg' },
     { id: '20', name: 'Lifeclinicng', category: 'Art and Wellness Advocate', image: '/dr ken.jpg' },
     { id: '42', name: '300 Tawani Fitness Day-Out', category: 'Fitness Event Of The Year (Coaches)', image: '/tawani.JPG' },
     { id: '43', name: 'The Exclusive Workout Exibition', category: 'Fitness Event Of The Year (Coaches)', image: '/dbb.png' },

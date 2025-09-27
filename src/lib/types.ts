@@ -18,4 +18,5 @@ export interface Product {
     rating: number;
     isNew: boolean;
     timestamp: any;
+    sizes?: string[];
 }

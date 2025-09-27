@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import * as React from 'react';
@@ -186,6 +187,13 @@ export default function MarketplacePage() {
                   <CardContent className="p-4 flex-grow">
                     <Badge variant="secondary" className="mb-2 text-xs bg-muted text-muted-foreground">{product.category}</Badge>
                     <CardTitle className="text-base sm:text-lg font-semibold text-foreground leading-snug group-hover:text-primary transition-colors">{product.name}</CardTitle>
+                    {product.sizes && (
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {product.sizes.map(size => (
+                          <Badge key={size} variant="outline" className="text-xs">{size}</Badge>
+                        ))}
+                      </div>
+                    )}
                   </CardContent>
                   <CardFooter className="p-4 pt-0 flex flex-col sm:flex-row justify-between items-start sm:items-center">
                     <div className="mb-2 sm:mb-0">

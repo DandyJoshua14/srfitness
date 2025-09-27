@@ -1,4 +1,5 @@
 
+
 import type { Product } from './types';
 
 export const placeholderProducts: Product[] = [
@@ -12,6 +13,7 @@ export const placeholderProducts: Product[] = [
       rating: 5,
       isNew: true,
       timestamp: new Date('2024-07-20T10:00:00Z').getTime(),
+      sizes: ['Large', '2XL', '3XL'],
     },
     {
       id: 'prod9',
@@ -23,6 +25,7 @@ export const placeholderProducts: Product[] = [
       rating: 5,
       isNew: true,
       timestamp: new Date('2024-07-25T10:00:00Z').getTime(),
+      sizes: ['Large', '2XL', '3XL'],
     },
     {
       id: 'prod10',
@@ -34,6 +37,7 @@ export const placeholderProducts: Product[] = [
       rating: 4,
       isNew: true,
       timestamp: new Date('2024-07-25T09:00:00Z').getTime(),
+      sizes: ['Large', '2XL', '3XL'],
     },
     {
       id: 'prod8',

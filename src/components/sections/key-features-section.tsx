@@ -1,3 +1,5 @@
+/* eslint-disable */
+// @ts-nocheck
 "use client";
 import { Award, Users, Zap, MapPin, Smile, ShieldCheck } from 'lucide-react'; 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

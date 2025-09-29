@@ -112,6 +112,58 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
   }
 }
 
+/**
+ * Sends an email notification about a new vote.
+ */
+export async function sendVoteNotificationEmail(voteData: z.infer<typeof voteSchema>) {
+  const validatedFields = voteSchema.safeParse(voteData);
+
+  if (!validatedFields.success) {
+    return { success: false, error: 'Invalid vote data for email.' };
+  }
+
+  const { contestantName, contestantCategory, numberOfVotes } = validatedFields.data;
+  
+  if (!GMAIL_EMAIL || !GMAIL_APP_PASSWORD) {
+    console.error('Gmail credentials are not configured. Cannot send vote notification email.');
+    // We don't want to block the user flow if this email fails.
+    return { success: false, error: 'Email service is not configured.' };
+  }
+  
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: GMAIL_EMAIL,
+      pass: GMAIL_APP_PASSWORD,
+    },
+  });
+
+  const mailOptions = {
+    from: `"SR Fitness Voting" <${GMAIL_EMAIL}>`,
+    to: 'sampson07@outlook.com, srfitness247@gmail.com',
+    subject: `New Vote Cast for ${contestantName}!`,
+    html: `
+        <h1>New Vote Received!</h1>
+        <p>A new vote has just been successfully processed.</p>
+        <h2>Vote Details:</h2>
+        <ul>
+          <li><strong>Contestant:</strong> ${contestantName}</li>
+          <li><strong>Category:</strong> ${contestantCategory}</li>
+          <li><strong>Number of Votes:</strong> ${numberOfVotes}</li>
+        </ul>
+      `,
+  };
+  
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Vote notification email sent successfully.');
+    return { success: true };
+  } catch (emailError) {
+    console.error('Nodemailer Error (Vote Notification):', emailError);
+    return { success: false, error: 'Failed to send vote notification email.' };
+  }
+}
+
 
 /**
  * Sends vote data to a Zapier webhook.
@@ -341,6 +393,7 @@ export async function verifyPaystackPayment(reference: string) {
                         numberOfVotes: Number(metadata.numberOfVotes),
                     };
                     await addVote(votePayload); // Save to Firestore
+                    await sendVoteNotificationEmail(votePayload); // Send email
                     recordResult = await recordVote(votePayload); // Send to Zapier
                     break;
                 
@@ -402,5 +455,3 @@ export async function verifyPaystackPayment(reference: string) {
         return { success: false, error: "Could not connect to the payment gateway for verification.", status: 'error' };
     }
 }
-
-    

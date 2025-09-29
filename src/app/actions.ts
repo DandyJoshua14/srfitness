@@ -2,7 +2,7 @@
 'use server';
 
 import { z } from 'zod';
-import { addNomination } from '@/services/firestore';
+import { addNomination, addVote } from '@/services/firestore';
 import nodemailer from 'nodemailer';
 import { redirect } from 'next/navigation';
 
@@ -334,12 +334,14 @@ export async function verifyPaystackPayment(reference: string) {
             // Determine which action to take based on metadata
             switch (metadata.type) {
                 case 'vote':
-                    recordResult = await recordVote({
+                    const votePayload = {
                         contestantId: metadata.contestantId,
                         contestantName: metadata.contestantName,
                         contestantCategory: metadata.contestantCategory,
                         numberOfVotes: Number(metadata.numberOfVotes),
-                    });
+                    };
+                    await addVote(votePayload); // Save to Firestore
+                    recordResult = await recordVote(votePayload); // Send to Zapier
                     break;
                 
                 case 'ticket_purchase':
@@ -400,3 +402,5 @@ export async function verifyPaystackPayment(reference: string) {
         return { success: false, error: "Could not connect to the payment gateway for verification.", status: 'error' };
     }
 }
+
+    

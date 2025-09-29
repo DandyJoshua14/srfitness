@@ -455,5 +455,3 @@ export async function verifyPaystackPayment(reference: string) {
         return { success: false, error: "Could not connect to the payment gateway for verification.", status: 'error' };
     }
 }
-
-    

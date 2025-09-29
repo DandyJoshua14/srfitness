@@ -392,8 +392,8 @@ export async function verifyPaystackPayment(reference: string) {
                         contestantCategory: metadata.contestantCategory,
                         numberOfVotes: Number(metadata.numberOfVotes),
                     };
-                    await addVote(votePayload); // Save to Firestore
                     await sendVoteNotificationEmail(votePayload); // Send email
+                    await addVote(votePayload); // Save to Firestore
                     recordResult = await recordVote(votePayload); // Send to Zapier
                     break;
                 
@@ -455,3 +455,5 @@ export async function verifyPaystackPayment(reference: string) {
         return { success: false, error: "Could not connect to the payment gateway for verification.", status: 'error' };
     }
 }
+
+    

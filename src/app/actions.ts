@@ -166,60 +166,49 @@ export async function sendVoteNotificationEmail(voteData: z.infer<typeof voteSch
 
 
 /**
- * Sends vote data to a Zapier webhook.
+ * Sends vote data to the internal vote API.
  */
 export async function recordVote(voteData: z.infer<typeof voteSchema>) {
   const validatedFields = voteSchema.safeParse(voteData);
 
   if (!validatedFields.success) {
-    console.error("Invalid vote data for Zapier:", validatedFields.error);
+    console.error("Invalid vote data for API:", validatedFields.error);
     return {
       success: false,
       error: 'Invalid vote data provided.',
     };
   }
   
-  const zapierWebhookUrl = process.env.ZAPIER_VOTE_WEBHOOK_URL;
+  const voteApiUrl = `${NEXT_PUBLIC_BASE_URL}/api/vote`;
   
-  if (!zapierWebhookUrl) {
-    console.error("ZAPIER_VOTE_WEBHOOK_URL is not set. Cannot send vote data.");
-    return {
-      success: false,
-      error: 'Integration endpoint is not configured. Please contact support.',
-    };
-  }
+  const payload = validatedFields.data;
   
-  const payload = {
-    type: 'vote',
-    ...validatedFields.data,
-    timestamp: new Date().toISOString(),
-  };
-  
-  console.log("`recordVote` triggered. Attempting to send data to Zapier webhook:", payload);
+  console.log("`recordVote` triggered. Attempting to send data to internal vote API:", payload);
 
   try {
-    const response = await fetch(zapierWebhookUrl, {
+    const response = await fetch(voteApiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
+    
+    const responseData = await response.json();
 
     if (response.ok) {
-        console.log("Successfully sent vote data to Zapier. Response status:", response.status);
-        return { success: true, message: "Vote successfully recorded." };
+        console.log("Successfully sent vote data to API. Response:", responseData);
+        return { success: true, message: responseData.message || "Vote successfully recorded." };
     } else {
-        const responseBody = await response.text();
-        console.error(`Zapier webhook call failed with status ${response.status}: ${responseBody}`);
+        console.error(`API call failed with status ${response.status}: ${responseData.error}`);
         return {
           success: false,
-          error: `Failed to send vote data to the tracking system. Status: ${response.status}`,
+          error: responseData.error || `Failed to record vote. Status: ${response.status}`,
         };
     }
   } catch (error) {
-    console.error("Failed to trigger Zapier webhook due to a network or fetch error:", error);
+    console.error("Failed to call internal vote API due to a network or fetch error:", error);
     return {
       success: false,
-      error: 'Could not connect to the vote tracking system.',
+      error: 'Could not connect to the vote recording service.',
     };
   }
 }
@@ -393,8 +382,7 @@ export async function verifyPaystackPayment(reference: string) {
                         numberOfVotes: Number(metadata.numberOfVotes),
                     };
                     await sendVoteNotificationEmail(votePayload); // Send email
-                    await addVote(votePayload); // Save to Firestore
-                    recordResult = await recordVote(votePayload); // Send to Zapier
+                    recordResult = await recordVote(votePayload); // Send to internal API
                     break;
                 
                 case 'ticket_purchase':
@@ -455,3 +443,5 @@ export async function verifyPaystackPayment(reference: string) {
         return { success: false, error: "Could not connect to the payment gateway for verification.", status: 'error' };
     }
 }
+
+    

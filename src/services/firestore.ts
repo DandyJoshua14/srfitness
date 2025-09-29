@@ -2,6 +2,7 @@
 import { db } from '@/lib/firebase/config';
 import { collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, serverTimestamp, getDoc } from 'firebase/firestore';
 
+
 // --------- Blog Post Types and Functions ---------
 
 interface Post {
@@ -112,49 +113,6 @@ export const deleteArticle = async (articleId: string) => {
   }
 };
 
-
-// --------- Vote Types and Functions ---------
-
-export interface Vote {
-    id?: string;
-    contestantId: string;
-    contestantName: string;
-    contestantCategory: string;
-    numberOfVotes: number;
-    timestamp: any;
-}
-
-const votesCollectionRef = collection(db, 'votes');
-
-export const addVote = async (voteData: Omit<Vote, 'id' | 'timestamp'>) => {
-    try {
-        await addDoc(votesCollectionRef, {
-            ...voteData,
-            timestamp: serverTimestamp(),
-        });
-    } catch (error) {
-        console.error("Error adding vote: ", error);
-        throw new Error("Could not add vote to Firestore.");
-    }
-};
-
-export const getVotes = async (): Promise<Vote[]> => {
-    try {
-        const q = query(votesCollectionRef, orderBy('timestamp', 'desc'));
-        const querySnapshot = await getDocs(q);
-        return querySnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            ...data,
-            timestamp: data.timestamp?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) || 'N/A',
-          } as Vote
-        });
-    } catch (error) {
-        console.error("Error getting votes: ", error);
-        throw new Error("Could not fetch votes from Firestore.");
-    }
-};
 
 // --------- Nomination Types and Functions ---------
 

@@ -1,7 +1,8 @@
 
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { addVote } from '@/services/firestore';
+import fs from 'fs/promises';
+import path from 'path';
 
 const voteSchema = z.object({
   contestantId: z.string(),
@@ -9,6 +10,26 @@ const voteSchema = z.object({
   contestantCategory: z.string(),
   numberOfVotes: z.number().int().positive(),
 });
+
+// Path to the JSON file
+const votesFilePath = path.join(process.cwd(), 'src', 'data', 'votes.json');
+
+async function readVotes() {
+  try {
+    const data = await fs.readFile(votesFilePath, 'utf-8');
+    return JSON.parse(data);
+  } catch (error) {
+    // If the file doesn't exist, return an empty array
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return [];
+    }
+    throw error;
+  }
+}
+
+async function writeVotes(votes: any) {
+  await fs.writeFile(votesFilePath, JSON.stringify(votes, null, 2), 'utf-8');
+}
 
 export async function POST(request: Request) {
   try {
@@ -19,25 +40,28 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid vote data provided.', details: validatedVote.error.flatten() }, { status: 400 });
     }
 
-    // You can add more logic here, e.g., sending data to another service,
-    // before or after saving it to Firestore.
+    const allVotes = await readVotes();
+    
+    const newVote = {
+      ...validatedVote.data,
+      id: new Date().toISOString() + Math.random(), // Simple unique ID
+      timestamp: new Date().toISOString(),
+    };
 
-    await addVote(validatedVote.data);
+    allVotes.push(newVote);
+    await writeVotes(allVotes);
 
-    // This console.log will appear in your Next.js server logs
-    console.log('Vote successfully processed by API route:', validatedVote.data);
+    console.log('Vote successfully written to JSON file:', newVote);
 
-    return NextResponse.json({ message: 'Vote recorded successfully by the API.' }, { status: 200 });
+    return NextResponse.json({ message: 'Vote recorded successfully in JSON file.' }, { status: 200 });
 
   } catch (error) {
-    console.error('Error in vote API route:', error);
+    console.error('Error in vote API route (JSON):', error);
     
     if (error instanceof z.ZodError) {
         return NextResponse.json({ error: 'Validation failed', details: error.errors }, { status: 400 });
     }
 
-    return NextResponse.json({ error: 'An internal server error occurred.' }, { status: 500 });
+    return NextResponse.json({ error: 'An internal server error occurred while writing to file.' }, { status: 500 });
   }
 }
-
-    

@@ -4,7 +4,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Vote, getVotes } from '@/services/firestore';
+import { Vote, getVotes } from '@/services/vote-service';
 import { useToast } from '@/hooks/use-toast';
 import { Vote as VoteIcon, TrendingUp, Users, Award } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';

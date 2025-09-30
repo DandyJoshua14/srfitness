@@ -210,7 +210,7 @@ export default function CommunityFeedClient() {
                 <p className="text-sm text-muted-foreground whitespace-pre-line mb-4">{post.content}</p>
                   {post.image && (
                     <div className="aspect-video relative overflow-hidden rounded-lg border border-border mt-4">
-                    <Image src={post.image} alt={post.title || "Blog post image"} fill style={{objectFit:"cover"}} data-ai-hint={post.dataAiHint || 'blog image'} />
+                    <Image src={post.image} alt={post.title || "Blog post image"} fill objectFit="cover" data-ai-hint={post.dataAiHint || 'blog image'} />
                     </div>
                 )}
               </CardContent>

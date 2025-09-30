@@ -35,8 +35,8 @@ export default function BurnOffBootcampPage() {
           <Image
             src="/burn.png"
             alt="Energetic bootcamp session"
-            fill
-            style={{objectFit:"cover"}}
+            layout="fill"
+            objectFit="cover"
             className="opacity-20"
             data-ai-hint="bootcamp energetic session"
             priority
@@ -139,10 +139,11 @@ export default function BurnOffBootcampPage() {
                              <Image
                                 src={photo.src}
                                 alt={photo.alt}
-                                fill
-                                style={{objectFit:"cover", objectPosition: photo.objectPosition || 'center' }}
+                                layout="fill"
+                                objectFit="cover"
                                 className="transform transition-transform duration-500 group-hover:scale-110"
                                 data-ai-hint={photo.dataAiHint}
+                                style={{ objectPosition: (photo as any).objectPosition || 'center' }}
                             />
                             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
                           </CardContent>

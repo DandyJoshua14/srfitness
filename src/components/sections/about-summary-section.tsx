@@ -42,8 +42,8 @@ export default function AboutSummarySection() {
               <Image
                 src="/Frame 1.png"
                 alt="SR Fitness facility interior"
-                fill
-                style={{objectFit:"cover"}}
+                layout="fill"
+                objectFit="cover"
                 className="transform transition-transform duration-500 group-hover:scale-110"
                 data-ai-hint="modern gym equipment"
               />

@@ -33,8 +33,9 @@ export default function HeroSection() {
         <Image
           src="/use.png"
           alt="Fitness enthusiast"
-          fill
-          style={{objectFit:"cover", objectPosition:"center top"}}
+          layout="fill"
+          objectFit="cover"
+          objectPosition="center top"
           priority
           data-ai-hint="fitness athlete portrait"
         />

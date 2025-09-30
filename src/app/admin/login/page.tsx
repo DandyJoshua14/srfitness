@@ -61,7 +61,7 @@ export default function AdminLoginPage() {
           <CardTitle className="font-headline text-3xl text-primary">Admin Access</CardTitle>
           <CardDescription>Please enter your credentials to manage the site.</CardDescription>
         </CardHeader>
-        <form onSubmit={handleLogin} method="POST">
+        <form onSubmit={handleLogin}>
             <CardContent className="space-y-4">
             <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>

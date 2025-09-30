@@ -63,8 +63,8 @@ export default function ServicesHighlightSection() {
                   <Image
                     src={service.image}
                     alt={service.title}
-                    fill
-                    style={{objectFit:"cover"}}
+                    layout="fill"
+                    objectFit="cover"
                     className="transform transition-transform duration-500 group-hover:scale-110"
                     data-ai-hint={service.dataAiHint}
                   />

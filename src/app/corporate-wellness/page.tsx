@@ -57,8 +57,8 @@ export default function CorporateWellnessPage() {
              <Image
                 src="/cop.jpeg"
                 alt="A modern office with people collaborating"
-                fill
-                style={{objectFit:"cover"}}
+                layout="fill"
+                objectFit="cover"
                 className="opacity-30"
                 data-ai-hint="corporate office team"
                 priority
@@ -138,8 +138,8 @@ export default function CorporateWellnessPage() {
                                         <Image
                                             src={image.src}
                                             alt={image.alt}
-                                            fill
-                                            style={{objectFit:"cover"}}
+                                            layout="fill"
+                                            objectFit="cover"
                                             className="transform transition-transform duration-500 group-hover:scale-110"
                                             data-ai-hint={image.dataAiHint}
                                         />

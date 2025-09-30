@@ -41,9 +41,10 @@ export default function ContestantCard({ contestant, isVotable, isSelected, onSe
                 <Image
                     src={contestant.image}
                     alt={contestant.name}
-                    fill
+                    layout="fill"
+                    objectFit={contestant.objectFit || 'cover'}
                     className={cn("transition-transform duration-300", isVotable && "group-hover:scale-110")}
-                    style={{ objectFit: contestant.objectFit || 'cover', objectPosition: contestant.objectPosition || 'center' }}
+                    style={{ objectPosition: contestant.objectPosition || 'center' }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                 {isSelected && (

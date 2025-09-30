@@ -70,8 +70,8 @@ export default function PersonalTrainingPage() {
             <Image
               src="/personal.jpeg"
               alt="Personal Training Session"
-              fill
-              style={{objectFit:"contain"}}
+              layout="fill"
+              objectFit="contain"
               className="transform transition-transform duration-500 group-hover:scale-110"
               data-ai-hint="trainer client workout"
             />
@@ -129,13 +129,13 @@ export default function PersonalTrainingPage() {
                                     <CardHeader className="p-0">
                                         <div className="grid grid-cols-2">
                                             <div className="relative aspect-[3/4]">
-                                                <Image src={item.beforeImg} alt={`Before photo of ${item.name}`} fill style={{objectFit:"cover", objectPosition: item.beforeObjectPosition || 'center' }} data-ai-hint={item.beforeHint} />
+                                                <Image src={item.beforeImg} alt={`Before photo of ${item.name}`} layout="fill" objectFit="cover" data-ai-hint={item.beforeHint} style={{ objectPosition: (item as any).beforeObjectPosition || 'center' }} />
                                                 <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
                                                     <span className="font-headline text-white text-2xl tracking-widest opacity-80" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.8)'}}>BEFORE</span>
                                                 </div>
                                             </div>
                                             <div className="relative aspect-[3/4]">
-                                                <Image src={item.afterImg} alt={`After photo of ${item.name}`} fill style={{objectFit:"cover", objectPosition: item.afterObjectPosition || 'center' }} data-ai-hint={item.afterHint} />
+                                                <Image src={item.afterImg} alt={`After photo of ${item.name}`} layout="fill" objectFit="cover" data-ai-hint={item.afterHint} style={{ objectPosition: (item as any).afterObjectPosition || 'center' }} />
                                                 <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
                                                      <span className="font-headline text-white text-2xl tracking-widest" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.8)'}}>AFTER</span>
                                                 </div>

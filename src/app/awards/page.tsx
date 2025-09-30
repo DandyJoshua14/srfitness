@@ -83,8 +83,8 @@ export default function AwardsPage() {
           <Image
             src="/srward.jpeg"
             alt="Elegant awards ceremony background"
-            fill
-            style={{objectFit:"cover"}}
+            layout="fill"
+            objectFit="cover"
             className="opacity-10"
             data-ai-hint="awards ceremony background"
             priority
@@ -234,8 +234,8 @@ export default function AwardsPage() {
                             <Image
                                 src={photo.src}
                                 alt={photo.alt}
-                                fill
-                                style={{objectFit:"cover"}}
+                                layout="fill"
+                                objectFit="cover"
                                 className="transform transition-transform duration-500 group-hover:scale-110"
                                 data-ai-hint={photo.dataAiHint}
                             />
@@ -279,8 +279,8 @@ export default function AwardsPage() {
                                 <Image
                                     src={photo.src}
                                     alt={photo.alt}
-                                    fill
-                                    style={{objectFit:"cover"}}
+                                    layout="fill"
+                                    objectFit="cover"
                                     className="transform transition-transform duration-500 group-hover:scale-110"
                                     data-ai-hint={photo.dataAiHint}
                                 />

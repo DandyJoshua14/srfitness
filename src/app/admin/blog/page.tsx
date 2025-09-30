@@ -192,7 +192,7 @@
                           />
                           {imageUrl && (
                           <div className="mt-4 relative aspect-video rounded-lg overflow-hidden border">
-                              <Image src={imageUrl} alt="Selected preview" fill style={{objectFit:"cover"}} />
+                              <Image src={imageUrl} alt="Selected preview" fill objectFit="cover" />
                           </div>
                           )}
                       </div>

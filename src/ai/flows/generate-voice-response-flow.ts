@@ -3,27 +3,14 @@
  * @fileOverview A voice agent flow that responds to user queries and can navigate the site.
  */
 
-import { ai } from '@/ai/genkit'; // Ensure this exists in your project
+import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
-
-// ====================
-// SCHEMAS
-// ====================
-
-export const VoiceAgentInputSchema = z.object({
-  query: z.string().describe("The user's spoken query, transcribed to text."),
-});
-export type VoiceAgentInput = z.infer<typeof VoiceAgentInputSchema>;
-
-export const VoiceAgentOutputSchema = z.object({
-  response: z.string().describe("The AI's text response to be spoken back to the user."),
-  navigationPath: z
-    .string()
-    .nullable()
-    .optional()
-    .describe("Optional path to navigate on the website. Null if no navigation required."),
-});
-export type VoiceAgentOutput = z.infer<typeof VoiceAgentOutputSchema>;
+import {
+  VoiceAgentInputSchema,
+  VoiceAgentOutputSchema,
+  type VoiceAgentInput,
+  type VoiceAgentOutput,
+} from '@/ai/schemas/voice-agent-schemas';
 
 // ====================
 // VALID PATHS & TOOLS

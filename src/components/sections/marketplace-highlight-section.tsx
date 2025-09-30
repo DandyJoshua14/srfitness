@@ -65,8 +65,8 @@ export default function MarketplaceHighlightSection() {
                         <Image 
                         src={product.image}
                         alt={product.name}
-                        layout="fill"
-                        objectFit="cover"
+                        fill
+                        style={{objectFit:"cover"}}
                         className="transition-transform duration-500 group-hover:scale-110"
                         data-ai-hint={product.dataAiHint}
                         />

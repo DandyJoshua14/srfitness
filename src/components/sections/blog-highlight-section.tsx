@@ -106,7 +106,7 @@ export default function BlogHighlightSection() {
                                     src={SINGLE_IMAGE_PLACEHOLDER}
                                     alt={post.title}
                                     fill
-                                    objectFit="cover"
+                                    style={{objectFit:"cover"}}
                                     className="transition-transform duration-500 group-hover:scale-110"
                                     data-ai-hint="fitness blog"
                                     />

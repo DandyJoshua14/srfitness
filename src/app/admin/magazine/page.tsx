@@ -156,7 +156,7 @@ export default function AdminMagazineManagerPage() {
                       <Input id="article-image" type="file" accept="image/*" onChange={handleImageUpload} className="mt-1 file:text-primary" />
                       {imageUrl && (
                         <div className="mt-4 relative aspect-video rounded-lg overflow-hidden border">
-                          <Image src={imageUrl} alt="Selected preview" layout="fill" objectFit="cover" />
+                          <Image src={imageUrl} alt="Selected preview" fill style={{objectFit:"cover"}} />
                         </div>
                       )}
                   </div>

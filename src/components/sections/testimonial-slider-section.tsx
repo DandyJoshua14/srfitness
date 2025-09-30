@@ -96,6 +96,7 @@ export default function TestimonialSliderSection() {
                                         width={80} 
                                         height={80} 
                                         className="rounded-full mb-4 border-4 border-primary/50 shadow-lg"
+                                        style={{objectFit:"cover"}}
                                         data-ai-hint={testimonial.avatarHint}
                                     />
                                     <p className="text-muted-foreground italic flex-grow">"{testimonial.text}"</p>

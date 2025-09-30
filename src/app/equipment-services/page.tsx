@@ -77,8 +77,8 @@ export default function EquipmentServicesPage() {
                         <Image
                           src={photo.src}
                           alt={photo.alt}
-                          layout="fill"
-                          objectFit="cover"
+                          fill
+                          style={{objectFit:"cover"}}
                           className="transform transition-transform duration-500 group-hover:scale-110"
                           data-ai-hint={photo.dataAiHint}
                         />

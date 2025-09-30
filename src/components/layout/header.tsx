@@ -20,9 +20,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { useLoading } from '@/contexts/loading-context';
 import { useCart } from '@/contexts/cart-context';
 import VoiceAgentDialog from '@/components/features/voice-agent/voice-agent-dialog';
-// Removed useAuth, AuthForm, logoutUser, UserCircle2, LogOut, LogIn, Dialog-related imports
 
-const MOCK_IS_ADMIN = true; 
 
 const topLevelNavItems = [
   { label: 'Home', href: '/' },
@@ -60,7 +58,6 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [expandedMobileCategories, setExpandedMobileCategories] = useState<Record<string, boolean>>({});
-  // Removed isLoginModalOpen, setIsLoginModalOpen, isSignupModalOpen, setIsSignupModalOpen states
 
 
   useEffect(() => {
@@ -99,7 +96,6 @@ export default function Header() {
     }
   };
 
-  // Removed handleLogout function
 
   const toggleMobileCategory = (categoryLabel: string, event?: React.MouseEvent) => {
     event?.stopPropagation(); 
@@ -189,7 +185,6 @@ export default function Header() {
     isAdminLink && "font-semibold text-primary/90"
   );
 
-  // Removed authButtonClasses
   const iconButtonClasses = (isActive?: boolean) => cn(
       "relative hidden md:inline-flex ml-2 h-auto p-2 text-2xl rounded-full transition-colors focus-visible:ring-primary/70",
       isScrolled ? "text-foreground/80 hover:bg-muted/50 hover:text-primary" : "text-white hover:bg-white/10 hover:text-primary",
@@ -369,13 +364,11 @@ export default function Header() {
                     </div>
                   ))}
                 </nav>
-                 {/* Mobile Auth Section REMOVED */}
               </SheetContent>
             </Sheet>
           </div>
         </div>
       </header>
-      {/* Dialogs for Login/Signup REMOVED */}
     </>
   );
 }

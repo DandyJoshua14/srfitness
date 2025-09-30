@@ -82,8 +82,8 @@ export default function PublicSpeakingPage() {
                   <Image
                     src={slide.src}
                     alt={slide.alt}
-                    layout="fill"
-                    objectFit="cover"
+                    fill
+                    style={{objectFit:"cover"}}
                     className="opacity-30"
                     data-ai-hint={slide.dataAiHint}
                     priority={index === 0}
@@ -115,8 +115,8 @@ export default function PublicSpeakingPage() {
                      <Image
                         src="/Sampson.jpeg" // Using SR.jpg as placeholder for Samson
                         alt="Samson, Corporate Wellness Speaker"
-                        layout="fill"
-                        objectFit="contain"
+                        fill
+                        style={{objectFit:"contain"}}
                         className="transform transition-transform duration-500 group-hover:scale-110"
                         data-ai-hint="professional speaker portrait"
                       />
@@ -185,8 +185,8 @@ export default function PublicSpeakingPage() {
                      <Image
                         src="/aud.jpeg"
                         alt="Engaged audience at a corporate event"
-                        layout="fill"
-                        objectFit="cover"
+                        fill
+                        style={{objectFit:"cover"}}
                         className="transform transition-transform duration-500 group-hover:scale-110"
                         data-ai-hint="corporate audience event"
                       />

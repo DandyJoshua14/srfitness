@@ -58,8 +58,8 @@ export default function LifestyleMagazinePage() {
                <Image
                   src="/magazine.jpg"
                   alt="SR Fitness Magazine Cover"
-                  layout="fill"
-                  objectFit="cover"
+                  fill
+                  style={{objectFit:"cover"}}
                   className="transition-transform duration-500 group-hover:scale-105"
                   data-ai-hint="fitness magazine cover"
                   priority
@@ -109,8 +109,8 @@ export default function LifestyleMagazinePage() {
                   <Image
                     src={article.image}
                     alt={article.title}
-                    layout="fill"
-                    objectFit="cover"
+                    fill
+                    style={{objectFit:"cover"}}
                     className="transform transition-transform duration-500 group-hover:scale-110"
                     data-ai-hint={article.dataAiHint}
                   />

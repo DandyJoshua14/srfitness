@@ -2,7 +2,7 @@
 'use server';
 
 import { z } from 'zod';
-import { addNomination, addVote } from '@/services/firestore';
+import { addNomination } from '@/services/firestore';
 import nodemailer from 'nodemailer';
 import { redirect } from 'next/navigation';
 

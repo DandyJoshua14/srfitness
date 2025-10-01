@@ -84,7 +84,7 @@ const contestants: Contestant[] = [
     { id: '43', name: 'The Exclusive Workout Exibition', category: 'Fitness Event Of The Year (Coaches)', image: '/dbb.png' },
     { id: '44', name: 'Pro Fitness', category: 'Fitness Event Of The Year (Coaches)', image: '/pro fitness.jpg' },
     { id: '45', name: 'Calabar Walkhathon', category: 'Fitness Event Of The Year (Clubs)', image: '/walk2.png', objectFit: 'contain' },
-    { id: '47', name: 'Micki Fitness', category: 'Fitness Event Of The Year (Clubs)', image: '/miki.jpeg' },
+    { id: '47', name: 'Miki Fitness', category: 'Fitness Event Of The Year (Clubs)', image: '/miki.jpeg' },
     
 ];
 

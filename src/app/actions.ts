@@ -179,7 +179,7 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
     };
   }
   
-  const voteApiUrl = `${NEXT_PUBLIC_BASE_URL}/api/vote`;
+  const voteApiUrl = `${NEXT_PUBLIC_BASE_URL}/api/vote/`;
   
   const payload = validatedFields.data;
   

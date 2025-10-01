@@ -33,7 +33,20 @@ async function writeVotes(votes: any) {
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    // Get raw text first to debug
+    const rawText = await request.text();
+    console.log('Raw request body:', rawText);
+    
+    // Parse JSON with better error handling
+    let body;
+    try {
+      body = JSON.parse(rawText);
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
+      console.error('Raw text that failed to parse:', rawText);
+      return NextResponse.json({ error: 'Invalid JSON format in request body.' }, { status: 400 });
+    }
+    
     const validatedVote = voteSchema.safeParse(body);
 
     if (!validatedVote.success) {

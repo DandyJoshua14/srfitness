@@ -1,7 +1,7 @@
 
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { addVote, initializeVotesTable } from '@/services/database-vote-service';
+import { addVote, initializeVotesTable, initializeNominationsTable } from '@/services/database-service';
 
 const voteSchema = z.object({
   contestantId: z.string(),

@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { getNominations, Nomination } from '@/services/firestore';
+import { getNominations, Nomination } from '@/services/nomination-service';
 import { useToast } from '@/hooks/use-toast';
 import { Handshake } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -21,7 +21,7 @@ export default function AdminNominationsPage() {
             const fetchedNominations = await getNominations();
             setNominations(fetchedNominations);
         } catch (error) {
-            console.error("Could not load nominations from Firestore", error);
+            console.error("Could not load nominations from database", error);
             toast({
                 title: "Error Loading Nominations",
                 description: "Could not retrieve nomination data from the database.",

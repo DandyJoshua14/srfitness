@@ -1,7 +1,7 @@
 
 "use server";
 
-import { getVotes as getVotesFromDB, Vote as DBVote, getVoteStatistics } from '@/services/database-vote-service';
+import { getVotes as getVotesFromDB, Vote as DBVote, getVoteStatistics } from '@/services/database-service';
 
 // --------- Vote Types and Functions ---------
 

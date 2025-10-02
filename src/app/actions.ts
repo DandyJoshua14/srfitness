@@ -64,10 +64,27 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
 
   const { category, nomineeName, nomineePhone, nominationReason, nominatorName, nominatorPhone } = validatedFields.data;
 
-  // If credentials aren't configured, fail immediately.
+  // Save nomination to database first
+  try {
+    const { submitNomination } = await import('@/services/nomination-service');
+    await submitNomination({
+      category,
+      nomineeName,
+      nomineePhone,
+      nominationReason,
+      nominatorName,
+      nominatorPhone
+    });
+    console.log('Nomination saved to database successfully');
+  } catch (dbError) {
+    console.error('Failed to save nomination to database:', dbError);
+    return { success: false, error: 'Failed to save nomination. Please try again.' };
+  }
+
+  // If credentials aren't configured, skip email but nomination is still saved.
   if (!GMAIL_EMAIL || !GMAIL_APP_PASSWORD) {
-    console.error('Gmail credentials are not configured. Cannot send email.');
-    return { success: false, error: 'The email service is not configured. Please contact support.' };
+    console.warn('Gmail credentials are not configured. Nomination saved to database but email not sent.');
+    return { success: true, warning: 'Nomination received! Email notification could not be sent.' };
   }
 
   const transporter = nodemailer.createTransport({

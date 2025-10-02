@@ -1,13 +1,12 @@
 
 "use server";
 
-import fs from 'fs/promises';
-import path from 'path';
+import { getVotes as getVotesFromDB, Vote as DBVote, getVoteStatistics } from '@/services/database-vote-service';
 
 // --------- Vote Types and Functions ---------
 
 export interface Vote {
-    id?: string;
+    id?: number;
     contestantId: string;
     contestantName: string;
     contestantCategory: string;
@@ -15,19 +14,37 @@ export interface Vote {
     timestamp: any;
 }
 
-const votesFilePath = path.join(process.cwd(), 'src', 'data', 'votes.json');
+// Convert database format to frontend format
+const convertDBVoteToVote = (dbVote: DBVote): Vote => ({
+    id: dbVote.id,
+    contestantId: dbVote.contestant_id,
+    contestantName: dbVote.contestant_name,
+    contestantCategory: dbVote.contestant_category,
+    numberOfVotes: dbVote.number_of_votes,
+    timestamp: dbVote.created_at,
+});
 
 export const getVotes = async (): Promise<Vote[]> => {
     try {
-        const data = await fs.readFile(votesFilePath, 'utf-8');
-        const votes = JSON.parse(data) as Vote[];
-        // Sort by timestamp descending
-        return votes.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+        const dbVotes = await getVotesFromDB();
+        return dbVotes.map(convertDBVoteToVote);
     } catch (error) {
-        if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-          return []; // If file doesn't exist, return empty array
-        }
-        console.error("Error getting votes from JSON file: ", error);
-        throw new Error("Could not fetch votes from JSON file.");
+        console.error("Error getting votes from PostgreSQL: ", error);
+        throw new Error("Could not fetch votes from PostgreSQL database.");
+    }
+};
+
+export const getVoteTotals = async () => {
+    try {
+        const statistics = await getVoteStatistics();
+        return statistics.map(stat => ({
+            contestantId: stat.contestant_id,
+            contestantName: stat.contestant_name,
+            contestantCategory: stat.contestant_category,
+            totalVotes: stat.total_votes,
+        }));
+    } catch (error) {
+        console.error("Error getting vote statistics from PostgreSQL: ", error);
+        throw new Error("Could not fetch vote statistics from PostgreSQL database.");
     }
 };

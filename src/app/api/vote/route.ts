@@ -28,7 +28,13 @@ async function readVotes() {
 }
 
 async function writeVotes(votes: any) {
-  await fs.writeFile(votesFilePath, JSON.stringify(votes, null, 2), 'utf-8');
+  try {
+    await fs.writeFile(votesFilePath, JSON.stringify(votes, null, 2), 'utf-8');
+    console.log('Votes successfully written to file');
+  } catch (error) {
+    console.error('Error writing votes to file:', error);
+    throw new Error('Failed to write votes to file');
+  }
 }
 
 export async function POST(request: Request) {

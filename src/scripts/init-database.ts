@@ -1,8 +1,8 @@
 // Database initialization script
 // Run this once to set up your database tables
 
-import { initializeVotesTable, testConnection } from '@/services/database-vote-service';
-import { getPool, closePool } from '@/lib/database/config';
+import { initializeVotesTable } from '@/services/database-vote-service';
+import { testConnection, closePool } from '@/lib/database/config';
 
 async function initializeDatabase() {
   console.log('🚀 Starting database initialization...');

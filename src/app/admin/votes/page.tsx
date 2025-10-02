@@ -4,11 +4,22 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Vote, getVotes } from '@/services/vote-service';
 import { useToast } from '@/hooks/use-toast';
-import { Vote as VoteIcon, TrendingUp, Users, Award } from 'lucide-react';
+import { Vote as VoteIcon, TrendingUp, Users, Plus, Edit, Trash2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import dynamic from 'next/dynamic';
+
+// Lazy load the chart component to reduce initial bundle size
+const VoteChart = dynamic(() => import('@/components/features/admin/vote-chart'), {
+  loading: () => <Skeleton className="w-full h-[300px]" />,
+  ssr: false
+});
 
 interface AggregatedVote {
     contestantName: string;
@@ -16,10 +27,35 @@ interface AggregatedVote {
     totalVotes: number;
 }
 
+// Contestant data for manual vote addition
+const contestants = [
+    { id: '1', name: 'Coach NTB', category: 'Fitness Trainer/Coach of the Year' },
+    { id: '2', name: 'Coach Tawani', category: 'Fitness Trainer/Coach of the Year' },
+    { id: '3', name: 'Body Quest', category: 'Fitness Trainer/Coach of the Year' },
+    { id: '22', name: 'Coach George', category: 'Fitness Trainer/Coach of the Year' },
+    { id: '23', name: 'Coach Collins', category: 'Fitness Trainer/Coach of the Year' },
+    { id: '4', name: 'Pharm. Mrs. Onwudiwe Blessing', category: 'Inspirational Weight-Loss Journey' },
+    { id: '5', name: 'Mrs Virtue Michael Okoi', category: 'Inspirational Weight-Loss Journey' },
+    { id: '48', name: 'Coach Ifiok', category: 'Fitness Club Coach of the Year' },
+    { id: '49', name: 'Coach Ofonime', category: 'Fitness Club Coach of the Year' },
+    { id: '50', name: 'Coach Bigname', category: 'Fitness Club Coach of the Year' },
+    { id: '15', name: 'Victors Fitness', category: 'Gym of the Year' },
+    { id: '16', name: 'Romaan Fitness', category: 'Gym of the Year' },
+    { id: '17', name: 'Hogis Fitness', category: 'Gym of the Year' },
+    { id: '18', name: '1480 AZ GYM (NAVY GYM)', category: 'Gym of the Year' },
+    { id: '19', name: 'Oma Dance Vibes', category: 'Art and Wellness Advocate' },
+    { id: '20', name: 'Lifeclinicng', category: 'Art and Wellness Advocate' },
+];
+
 export default function AdminVoteTrackerPage() {
     const { toast } = useToast();
     const [votes, setVotes] = useState<Vote[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [showAddDialog, setShowAddDialog] = useState(false);
+    const [manualVoteForm, setManualVoteForm] = useState({
+        contestantId: '',
+        numberOfVotes: ''
+    });
 
     const loadVotes = useCallback(async () => {
         setIsLoading(true);
@@ -37,6 +73,55 @@ export default function AdminVoteTrackerPage() {
             setIsLoading(false);
         }
     }, [toast]);
+
+    const handleManualVote = useCallback(async () => {
+        if (!manualVoteForm.contestantId || !manualVoteForm.numberOfVotes) {
+            toast({
+                title: "Invalid Input",
+                description: "Please select a contestant and enter the number of votes.",
+                variant: "destructive"
+            });
+            return;
+        }
+
+        const contestant = contestants.find(c => c.id === manualVoteForm.contestantId);
+        if (!contestant) return;
+
+        try {
+            // Add vote directly to database via API
+            const response = await fetch('/api/vote/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contestantId: contestant.id,
+                    contestantName: contestant.name,
+                    contestantCategory: contestant.category,
+                    numberOfVotes: parseInt(manualVoteForm.numberOfVotes)
+                })
+            });
+
+            if (response.ok) {
+                toast({
+                    title: "Votes Added Successfully",
+                    description: `Added ${manualVoteForm.numberOfVotes} votes for ${contestant.name}`,
+                });
+                
+                // Reset form and reload votes
+                setManualVoteForm({ contestantId: '', numberOfVotes: '' });
+                setShowAddDialog(false);
+                loadVotes();
+            } else {
+                throw new Error('Failed to add votes');
+            }
+        } catch (error) {
+            console.error('Error adding manual votes:', error);
+            toast({
+                title: "Error Adding Votes",
+                description: "Could not add votes to the database.",
+                variant: "destructive"
+            });
+        }
+    }, [manualVoteForm, toast, loadVotes]);
 
     useEffect(() => {
         loadVotes();
@@ -67,13 +152,77 @@ export default function AdminVoteTrackerPage() {
         <div className="space-y-8">
             <Card className="shadow-lg border-primary/20">
                 <CardHeader>
-                    <CardTitle className="font-headline text-3xl text-primary flex items-center">
-                        <VoteIcon className="mr-3 h-8 w-8" />
-                        Vote Tracker
-                    </CardTitle>
-                    <CardDescription>
-                        Monitor real-time voting results for the SR Fitness Awards.
-                    </CardDescription>
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <CardTitle className="font-headline text-3xl text-primary flex items-center">
+                                <VoteIcon className="mr-3 h-8 w-8" />
+                                Vote Tracker
+                            </CardTitle>
+                            <CardDescription>
+                                Monitor real-time voting results and manage votes for the SR Fitness Awards.
+                            </CardDescription>
+                        </div>
+                        <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+                            <DialogTrigger asChild>
+                                <Button className="bg-primary hover:bg-primary/90">
+                                    <Plus className="mr-2 h-4 w-4" />
+                                    Add Votes
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-[425px]">
+                                <DialogHeader>
+                                    <DialogTitle>Add Manual Votes</DialogTitle>
+                                    <DialogDescription>
+                                        Add votes manually for any contestant.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div className="grid gap-4 py-4">
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="contestant" className="text-right">
+                                            Contestant
+                                        </Label>
+                                        <Select 
+                                            value={manualVoteForm.contestantId} 
+                                            onValueChange={(value) => setManualVoteForm(prev => ({ ...prev, contestantId: value }))}
+                                        >
+                                            <SelectTrigger className="col-span-3">
+                                                <SelectValue placeholder="Select contestant" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {contestants.map(contestant => (
+                                                    <SelectItem key={contestant.id} value={contestant.id}>
+                                                        {contestant.name} ({contestant.category})
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="votes" className="text-right">
+                                            Votes
+                                        </Label>
+                                        <Input
+                                            id="votes"
+                                            type="number"
+                                            min="1"
+                                            placeholder="Enter number of votes"
+                                            className="col-span-3"
+                                            value={manualVoteForm.numberOfVotes}
+                                            onChange={(e) => setManualVoteForm(prev => ({ ...prev, numberOfVotes: e.target.value }))}
+                                        />
+                                    </div>
+                                </div>
+                                <DialogFooter>
+                                    <Button 
+                                        onClick={handleManualVote}
+                                        disabled={!manualVoteForm.contestantId || !manualVoteForm.numberOfVotes}
+                                    >
+                                        Add Votes
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+                    </div>
                 </CardHeader>
             </Card>
 
@@ -115,24 +264,7 @@ export default function AdminVoteTrackerPage() {
                      <CardDescription>A visual overview of the leading contestants.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                     {isLoading ? (
-                         <Skeleton className="w-full h-[300px]" />
-                     ) : (
-                        <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={aggregatedVotes.slice(0, 10)}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="contestantName" angle={-45} textAnchor="end" height={80} interval={0} tick={{ fontSize: 12 }} />
-                                <YAxis />
-                                <Tooltip
-                                    contentStyle={{
-                                        background: "hsl(var(--background))",
-                                        borderColor: "hsl(var(--border))"
-                                    }}
-                                />
-                                <Bar dataKey="totalVotes" fill="hsl(var(--primary))" name="Total Votes" />
-                            </BarChart>
-                        </ResponsiveContainer>
-                     )}
+                     <VoteChart data={aggregatedVotes.slice(0, 10)} isLoading={isLoading} />
                 </CardContent>
             </Card>
 

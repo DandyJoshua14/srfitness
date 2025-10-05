@@ -83,7 +83,7 @@ export default function AdminNominationsPage() {
                                 <Accordion type="single" collapsible className="w-full" asChild>
                                     <>
                                         {nominations.map((nom) => (
-                                            <AccordionItem value={nom.id!} key={nom.id} asChild>
+                                            <AccordionItem value={nom.id!.toString()} key={nom.id} asChild>
                                                 <TableRow>
                                                     <TableCell className="font-medium text-sm w-[180px]">{nom.timestamp}</TableCell>
                                                     <TableCell className="text-muted-foreground">{nom.category}</TableCell>

@@ -57,7 +57,7 @@ function VerificationStatus() {
         verifying: 'Please wait while we confirm your payment with Paystack...',
         success: 'Thank you! Your vote has been recorded. Redirecting you back to the vote page...',
         failed: 'There was an issue with your payment. Please try again.',
-        error: 'An unexpected error occurred during verification.'
+        error: 'Payment was successful, but recording the transaction failed. Please contact support.'
     }
 
     return (
@@ -68,6 +68,16 @@ function VerificationStatus() {
             </CardHeader>
             <CardContent className="space-y-6">
                 <CardDescription className="text-muted-foreground text-lg">{message || statusDescriptions[status]}</CardDescription>
+                {status === 'error' && reference && (
+                    <div className="bg-muted p-4 rounded-lg">
+                        <p className="text-sm text-muted-foreground">
+                            <strong>Reference:</strong> {reference}
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-2">
+                            Please save this reference number and contact support if the issue persists.
+                        </p>
+                    </div>
+                )}
                  {status !== 'verifying' && (
                     <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
                         <Link href="/vote">

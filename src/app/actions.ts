@@ -2,12 +2,12 @@
 'use server';
 
 import { z } from 'zod';
-import { addNomination, addVote } from '@/services/firestore';
+import { addNomination } from '@/services/firestore';
 import nodemailer from 'nodemailer';
 import { redirect } from 'next/navigation';
 
 // Explicitly read environment variables at the top level
-const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
+const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 const GMAIL_EMAIL = process.env.GMAIL_EMAIL;
 const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD;
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
@@ -64,10 +64,27 @@ export async function sendNominationEmail(formData: z.infer<typeof nominationFor
 
   const { category, nomineeName, nomineePhone, nominationReason, nominatorName, nominatorPhone } = validatedFields.data;
 
-  // If credentials aren't configured, fail immediately.
+  // Save nomination to database first
+  try {
+    const { submitNomination } = await import('@/services/nomination-service');
+    await submitNomination({
+      category,
+      nomineeName,
+      nomineePhone,
+      nominationReason,
+      nominatorName,
+      nominatorPhone
+    });
+    console.log('Nomination saved to database successfully');
+  } catch (dbError) {
+    console.error('Failed to save nomination to database:', dbError);
+    return { success: false, error: 'Failed to save nomination. Please try again.' };
+  }
+
+  // If credentials aren't configured, skip email but nomination is still saved.
   if (!GMAIL_EMAIL || !GMAIL_APP_PASSWORD) {
-    console.error('Gmail credentials are not configured. Cannot send email.');
-    return { success: false, error: 'The email service is not configured. Please contact support.' };
+    console.warn('Gmail credentials are not configured. Nomination saved to database but email not sent.');
+    return { success: true, warning: 'Nomination received! Email notification could not be sent.' };
   }
 
   const transporter = nodemailer.createTransport({
@@ -179,11 +196,12 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
     };
   }
   
-  const voteApiUrl = `${NEXT_PUBLIC_BASE_URL}/api/vote`;
+  const voteApiUrl = `${NEXT_PUBLIC_BASE_URL}/api/vote/`;
   
   const payload = validatedFields.data;
   
   console.log("`recordVote` triggered. Attempting to send data to internal vote API:", payload);
+  console.log("Vote API URL:", voteApiUrl);
 
   try {
     const response = await fetch(voteApiUrl, {
@@ -192,7 +210,10 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
       body: JSON.stringify(payload),
     });
     
+    console.log("Vote API response status:", response.status);
+    
     const responseData = await response.json();
+    console.log("Vote API response data:", responseData);
 
     if (response.ok) {
         console.log("Successfully sent vote data to API. Response:", responseData);
@@ -206,9 +227,10 @@ export async function recordVote(voteData: z.infer<typeof voteSchema>) {
     }
   } catch (error) {
     console.error("Failed to call internal vote API due to a network or fetch error:", error);
+    console.error("Error details:", error);
     return {
       success: false,
-      error: 'Could not connect to the vote recording service.',
+      error: 'Could not connect to the vote recording service. Check network and API endpoint.',
     };
   }
 }

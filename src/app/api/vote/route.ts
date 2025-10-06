@@ -1,7 +1,7 @@
 
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { addVote, initializeVotesTable, initializeNominationsTable } from '@/services/database-service';
+import { getRedisClient } from '@/lib/redis';
 
 const voteSchema = z.object({
   contestantId: z.string(),
@@ -10,17 +10,8 @@ const voteSchema = z.object({
   numberOfVotes: z.number().int().positive(),
 });
 
-// Initialize database table on first use
-let tableInitialized = false;
-
 export async function POST(request: Request) {
   try {
-    // Initialize database table if not already done
-    if (!tableInitialized) {
-      await initializeVotesTable();
-      tableInitialized = true;
-    }
-
     // Get raw text first to debug
     const rawText = await request.text();
     console.log('Raw request body:', rawText);
@@ -41,27 +32,75 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid vote data provided.', details: validatedVote.error.flatten() }, { status: 400 });
     }
 
-    // Convert to database format
+    // Get Redis client
+    const redis = await getRedisClient();
+    
+    // Create vote key
+    const voteKey = `vote:${validatedVote.data.contestantId}`;
     const voteData = {
-      contestant_id: validatedVote.data.contestantId,
-      contestant_name: validatedVote.data.contestantName,
-      contestant_category: validatedVote.data.contestantCategory,
-      number_of_votes: validatedVote.data.numberOfVotes,
+      contestantId: validatedVote.data.contestantId,
+      contestantName: validatedVote.data.contestantName,
+      contestantCategory: validatedVote.data.contestantCategory,
+      numberOfVotes: validatedVote.data.numberOfVotes,
+      timestamp: new Date().toISOString()
     };
 
-    const savedVote = await addVote(voteData);
+    // Store vote in Redis
+    await redis.set(voteKey, JSON.stringify(voteData));
+    
+    // Also increment total votes counter
+    const totalVotesKey = `total_votes:${validatedVote.data.contestantId}`;
+    await redis.incrBy(totalVotesKey, validatedVote.data.numberOfVotes);
 
-    console.log('Vote successfully written to PostgreSQL:', savedVote);
+    console.log('Vote successfully written to Redis:', voteData);
 
-    return NextResponse.json({ message: 'Vote recorded successfully in PostgreSQL database.' }, { status: 200 });
+    return NextResponse.json({ message: 'Vote recorded successfully in Redis database.' }, { status: 200 });
 
   } catch (error) {
-    console.error('Error in vote API route (PostgreSQL):', error);
+    console.error('Error in vote API route (Redis):', error);
     
     if (error instanceof z.ZodError) {
         return NextResponse.json({ error: 'Validation failed', details: error.errors }, { status: 400 });
     }
 
-    return NextResponse.json({ error: 'An internal server error occurred while writing to PostgreSQL database.' }, { status: 500 });
+    return NextResponse.json({ error: 'An internal server error occurred while writing to Redis database.' }, { status: 500 });
+  }
+}
+
+export async function GET() {
+  try {
+    const redis = await getRedisClient();
+    
+    // Get all vote keys
+    const voteKeys = await redis.keys('vote:*');
+    const totalVoteKeys = await redis.keys('total_votes:*');
+    
+    const votes = [];
+    const voteTotals = {};
+    
+    // Get individual vote records
+    for (const key of voteKeys) {
+      const voteData = await redis.get(key);
+      if (voteData) {
+        votes.push(JSON.parse(voteData));
+      }
+    }
+    
+    // Get total vote counts
+    for (const key of totalVoteKeys) {
+      const contestantId = key.replace('total_votes:', '');
+      const totalVotes = await redis.get(key);
+      voteTotals[contestantId] = parseInt(totalVotes || '0');
+    }
+    
+    return NextResponse.json({ 
+      votes, 
+      voteTotals,
+      totalVotes: Object.values(voteTotals).reduce((sum, count) => sum + count, 0)
+    });
+    
+  } catch (error) {
+    console.error('Error retrieving votes from Redis:', error);
+    return NextResponse.json({ error: 'Failed to retrieve votes from Redis.' }, { status: 500 });
   }
 }

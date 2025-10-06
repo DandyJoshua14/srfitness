@@ -1,50 +1,80 @@
 
 "use server";
 
-import { getVotes as getVotesFromDB, Vote as DBVote, getVoteStatistics } from '@/services/database-service';
+import { getRedisClient } from '@/lib/redis';
 
 // --------- Vote Types and Functions ---------
 
 export interface Vote {
-    id?: number;
+    id?: string;
     contestantId: string;
     contestantName: string;
     contestantCategory: string;
     numberOfVotes: number;
-    timestamp: any;
+    timestamp: string;
 }
 
-// Convert database format to frontend format
-const convertDBVoteToVote = (dbVote: DBVote): Vote => ({
-    id: dbVote.id,
-    contestantId: dbVote.contestant_id,
-    contestantName: dbVote.contestant_name,
-    contestantCategory: dbVote.contestant_category,
-    numberOfVotes: dbVote.number_of_votes,
-    timestamp: dbVote.created_at,
-});
+export interface VoteTotal {
+    contestantId: string;
+    contestantName: string;
+    contestantCategory: string;
+    totalVotes: number;
+}
 
 export const getVotes = async (): Promise<Vote[]> => {
     try {
-        const dbVotes = await getVotesFromDB();
-        return dbVotes.map(convertDBVoteToVote);
+        const redis = await getRedisClient();
+        
+        // Get all vote keys
+        const voteKeys = await redis.keys('vote:*');
+        const votes: Vote[] = [];
+        
+        // Get individual vote records
+        for (const key of voteKeys) {
+            const voteData = await redis.get(key);
+            if (voteData) {
+                votes.push(JSON.parse(voteData));
+            }
+        }
+        
+        return votes;
     } catch (error) {
-        console.error("Error getting votes from PostgreSQL: ", error);
-        throw new Error("Could not fetch votes from PostgreSQL database.");
+        console.error("Error getting votes from Redis: ", error);
+        throw new Error("Could not fetch votes from Redis database.");
     }
 };
 
-export const getVoteTotals = async () => {
+export const getVoteTotals = async (): Promise<VoteTotal[]> => {
     try {
-        const statistics = await getVoteStatistics();
-        return statistics.map(stat => ({
-            contestantId: stat.contestant_id,
-            contestantName: stat.contestant_name,
-            contestantCategory: stat.contestant_category,
-            totalVotes: stat.total_votes,
-        }));
+        const redis = await getRedisClient();
+        
+        // Get all total vote keys
+        const totalVoteKeys = await redis.keys('total_votes:*');
+        const voteTotals: VoteTotal[] = [];
+        
+        // Get total vote counts and match with vote data
+        for (const key of totalVoteKeys) {
+            const contestantId = key.replace('total_votes:', '');
+            const totalVotes = await redis.get(key);
+            
+            // Get the latest vote data for this contestant to get name and category
+            const voteKey = `vote:${contestantId}`;
+            const voteData = await redis.get(voteKey);
+            
+            if (voteData) {
+                const vote = JSON.parse(voteData);
+                voteTotals.push({
+                    contestantId,
+                    contestantName: vote.contestantName,
+                    contestantCategory: vote.contestantCategory,
+                    totalVotes: parseInt(totalVotes || '0'),
+                });
+            }
+        }
+        
+        return voteTotals;
     } catch (error) {
-        console.error("Error getting vote statistics from PostgreSQL: ", error);
-        throw new Error("Could not fetch vote statistics from PostgreSQL database.");
+        console.error("Error getting vote statistics from Redis: ", error);
+        throw new Error("Could not fetch vote statistics from Redis database.");
     }
 };

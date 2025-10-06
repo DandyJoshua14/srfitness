@@ -77,7 +77,7 @@ export default function DonatePage() {
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
                      <header className="text-center mb-12">
                         <Image src="/SR.jpg" alt="SR Fitness Foundation Logo" width={96} height={96} className="h-24 w-24 mx-auto mb-4 rounded-full" data-ai-hint="charity logo" />
-                        <h1 className="font-headline text-5xl text-primary">Support Our Cause</h1>
+                        <h1 className="font-headline text-5xl text-primary">Support Our Course</h1>
                         <p className="text-lg text-muted-foreground max-w-2xl mx-auto mt-2">
                           Your generous donation helps us continue our community outreach and foundation activities.
                         </p>

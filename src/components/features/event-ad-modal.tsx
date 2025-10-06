@@ -8,12 +8,14 @@ import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import { Award, Ticket, ArrowRight, Vote, Heart } from 'lucide-react';
+import { Award, Ticket, ArrowRight, Vote, Heart, Calendar } from 'lucide-react';
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
+import ModalCountdown from '@/components/features/countdown/modal-countdown';
 
 export default function EventAdModal() {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+  const eventDate = new Date('2025-11-01T18:00:00'); // Saturday, November 1st, 2025 at 6 PM
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -55,17 +57,22 @@ export default function EventAdModal() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/50 to-transparent" />
         </div>
-        <div className="p-6 text-center space-y-4 -mt-12 relative z-10">
-          <div className="inline-block p-3 bg-amber-400 rounded-full mb-2">
-            <Award className="h-8 w-8 text-black" />
+        <div className="p-4 text-center space-y-3 -mt-12 relative z-10">
+          <div className="inline-block p-2 bg-amber-400 rounded-full mb-1">
+            <Award className="h-6 w-6 text-black" />
           </div>
-          <h2 className="font-headline text-4xl text-amber-400">
+          <h2 className="font-headline text-3xl text-amber-400">
             You're Invited!
           </h2>
-          <p className="text-zinc-300">
+          <p className="text-zinc-300 text-sm">
             Join us for a night of glamour, recognition, and celebration at the annual SR Fitness Awards.
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+          
+          {/* Countdown Section */}
+          <div className="bg-gradient-to-r from-zinc-800/60 to-zinc-700/60 rounded-lg p-3 border border-amber-400/30 shadow-lg shadow-amber-500/10">
+            <ModalCountdown targetDate={eventDate} />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
             <Button
               size="lg"
               className="w-full bg-amber-500 text-black font-bold text-base hover:bg-amber-400 group"

@@ -24,6 +24,7 @@ import { sendNominationEmail } from '@/app/actions';
 
 const generalCategories = [
     { title: "Fitness Trainer/Coach of the Year" },
+    { title: "Fitness Trainer/Coach of the Year (Owerri)" },
     { title: "Fitness Club Coach of the Year" },
     { title: "Foundation Fitness Award" },
     { title: "Mental Health & Wellness Advocate" },
@@ -72,6 +73,7 @@ const contestants: Contestant[] = [
     { id: '12', name: '', category: 'Corporate Social Responsibility Champion', image: 'https://placehold.co/400x400.png' },
     // New contestants
     { id: '48', name: 'Coach Ifiok', category: 'Fitness Club Coach of the Year', image: '/ifiok.jpg' },
+    { id: '56', name: 'Coach Miki', category: 'Fitness Club Coach of the Year', image: '/mik.jpeg' },
     { id: '49', name: 'Coach Ofonime', category: 'Fitness Club Coach of the Year', image: '/ofon.JPG' },
     { id: '50', name: 'Coach Bigname', category: 'Fitness Club Coach of the Year', image: '/Bigname.jpg' },
     { id: '15', name: 'Victor\'s Fitness', category: 'Gym of the Year', image: '/vic.png' },
@@ -80,11 +82,17 @@ const contestants: Contestant[] = [
     { id: '18', name: '1480 AZ GYM (NAVY GYM)', category: 'Gym of the Year', image: '/az.jpg', objectPosition: 'center 20%' },
     { id: '19', name: 'Oma Dance Vibes', category: 'Art and Wellness Advocate', image: '/oma.jpg' },
     { id: '20', name: 'Lifeclinicng', category: 'Art and Wellness Advocate', image: '/dr ken.jpg' },
+    { id: '51', name: 'Esta Richard', category: 'Art and Wellness Advocate', image: '/esta richards.jpg' },
+    { id: '52', name: 'Hannah Bassey-Duke', category: 'Art and Wellness Advocate', image: '/han.jpg' },
     { id: '42', name: '300 Tawani Fitness Day-Out', category: 'Fitness Event Of The Year (Coaches)', image: '/tawani.JPG' },
     { id: '43', name: 'The Exclusive Workout Exibition', category: 'Fitness Event Of The Year (Coaches)', image: '/dbb.png' },
     { id: '44', name: 'Pro Fitness', category: 'Fitness Event Of The Year (Coaches)', image: '/pro fitness.jpg' },
     { id: '45', name: 'Calabar Walkhathon', category: 'Fitness Event Of The Year (Clubs)', image: '/walk2.png', objectFit: 'contain' },
     { id: '47', name: 'Miki Fitness', category: 'Fitness Event Of The Year (Clubs)', image: '/miki.jpeg' },
+    // Fitness Trainer/Coach of the Year (Owerri)
+    { id: '53', name: 'COACH Emzy', category: 'Fitness Trainer/Coach of the Year (Owerri)', image: '/Emzy.jpeg' },
+    { id: '54', name: 'COACH UB', category: 'Fitness Trainer/Coach of the Year (Owerri)', image: '/UB.jpeg' },
+    { id: '55', name: 'COACH Bright', category: 'Fitness Trainer/Coach of the Year (Owerri)', image: '/bright.jpg' },
     
 ];
 

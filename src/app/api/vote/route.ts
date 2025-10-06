@@ -76,7 +76,7 @@ export async function GET() {
     const totalVoteKeys = await redis.keys('total_votes:*');
     
     const votes = [];
-    const voteTotals = {};
+    const voteTotals: Record<string, number> = {};
     
     // Get individual vote records
     for (const key of voteKeys) {
@@ -96,7 +96,7 @@ export async function GET() {
     return NextResponse.json({ 
       votes, 
       voteTotals,
-      totalVotes: Object.values(voteTotals).reduce((sum, count) => sum + count, 0)
+      totalVotes: Object.values(voteTotals).reduce((sum: number, count: number) => sum + count, 0)
     });
     
   } catch (error) {

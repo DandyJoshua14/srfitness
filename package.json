@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "rimraf .next && next dev --port 9002 --hostname 0.0.0.0",
+    "dev": "node -e \"require('fs').rmSync('.next', {recursive: true, force: true})\" && next dev --port 9002 --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start --port 9002 --hostname 0.0.0.0",
     "lint": "next lint",
-    "clean": "rimraf .next && rimraf node_modules",
+    "clean": "node -e \"require('fs').rmSync('.next', {recursive: true, force: true}); require('fs').rmSync('node_modules', {recursive: true, force: true})\"",
     "install-deps": "npm install",
     "prebuild": "echo 'Building application...'",
     "init-db": "npx tsx src/scripts/init-database.ts",
@@ -64,6 +64,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@next/swc-win32-x64-msvc": "^15.5.4",
     "@types/node": "^20",
     "@types/nodemailer": "^7.0.2",
     "@types/react": "^18",
@@ -72,7 +73,6 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "postcss": "^8",
-    "rimraf": "^6.0.1",
     "sharp": "^0.34.4",
     "tailwindcss": "^3.4.1",
     "tsx": "^4.20.6",

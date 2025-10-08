@@ -64,7 +64,6 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@next/swc-win32-x64-msvc": "^15.5.4",
     "@types/node": "^20",
     "@types/nodemailer": "^7.0.2",
     "@types/react": "^18",

@@ -11,6 +11,8 @@ const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localho
 const GMAIL_EMAIL = process.env.GMAIL_EMAIL;
 const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD;
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
+// Control whether vote notification emails are sent. Set to 'true' to enable.
+const SEND_VOTE_NOTIFICATIONS = process.env.SEND_VOTE_NOTIFICATIONS === 'true';
 // We will read the Zapier URLs inside the functions to ensure they are not missed.
 
 const nominationFormSchema = z.object({
@@ -403,7 +405,12 @@ export async function verifyPaystackPayment(reference: string) {
                         contestantCategory: metadata.contestantCategory,
                         numberOfVotes: Number(metadata.numberOfVotes),
                     };
-                    await sendVoteNotificationEmail(votePayload); // Send email
+                    // Only send vote notification emails if explicitly enabled via env var.
+                    if (SEND_VOTE_NOTIFICATIONS) {
+                      await sendVoteNotificationEmail(votePayload); // Send email
+                    } else {
+                      console.log('Vote notification email suppressed (SEND_VOTE_NOTIFICATIONS not enabled).');
+                    }
                     recordResult = await recordVote(votePayload); // Send to internal API
                     break;
                 

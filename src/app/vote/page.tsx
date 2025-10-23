@@ -116,6 +116,8 @@ const voteOptions = [
 
 export default function VotePage() {
     const { toast } = useToast();
+    // When NEXT_PUBLIC_DISABLE_VOTE_TOASTS is set to 'true' at build time, suppress vote-related UI toasts.
+    const DISABLE_VOTE_TOASTS = process.env.NEXT_PUBLIC_DISABLE_VOTE_TOASTS === 'true';
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
     const [selectedContestant, setSelectedContestant] = useState<Contestant | null>(null);
@@ -138,17 +140,21 @@ export default function VotePage() {
         startTransition(async () => {
             const result = await sendNominationEmail(values);
             if (result.success) {
-                toast({
-                    title: "Nomination Submitted!",
-                    description: "Thank you for nominating. We will review your submission.",
-                });
+                if (!DISABLE_VOTE_TOASTS) {
+                  toast({
+                      title: "Nomination Submitted!",
+                      description: "Thank you for nominating. We will review your submission.",
+                  });
+                }
                 form.reset();
             } else {
-                toast({
-                    title: "Submission Failed",
-                    description: result.error,
-                    variant: "destructive"
-                });
+                if (!DISABLE_VOTE_TOASTS) {
+                  toast({
+                      title: "Submission Failed",
+                      description: result.error,
+                      variant: "destructive"
+                  });
+                }
             }
         });
     };

@@ -27,6 +27,9 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+        {/* Google AdSense script - async load */}
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8362821240895573"
+          crossOrigin="anonymous"></script>
       </head>
       <body className="font-body antialiased flex flex-col min-h-screen bg-background">
         <LoadingProvider>

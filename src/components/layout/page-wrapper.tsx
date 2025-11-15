@@ -14,7 +14,6 @@ export default function PageWrapper({ children }: { children: ReactNode }) {
   const isAdminPage = pathname.startsWith('/admin');
   const isCheckoutFlow = 
     pathname.startsWith('/checkout') || 
-    pathname.startsWith('/vote/callback') || 
     pathname.startsWith('/awards/checkout') || 
     pathname.startsWith('/awards/callback') ||
     pathname.startsWith('/donate');

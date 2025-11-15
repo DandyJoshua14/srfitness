@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import { Award, Ticket, ArrowRight, Vote, Heart, Calendar } from 'lucide-react';
+import { Award, Ticket, ArrowRight, Heart, Calendar } from 'lucide-react';
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
 import ModalCountdown from '@/components/features/countdown/modal-countdown';
 
@@ -30,10 +30,6 @@ export default function EventAdModal() {
     router.push('/awards#tickets');
   };
 
-  const handleVoteClick = () => {
-    setIsOpen(false);
-    router.push('/vote');
-  };
 
   const handleDonateClick = () => {
     setIsOpen(false);
@@ -72,7 +68,7 @@ export default function EventAdModal() {
           <div className="bg-gradient-to-r from-zinc-800/60 to-zinc-700/60 rounded-lg p-3 border border-amber-400/30 shadow-lg shadow-amber-500/10">
             <ModalCountdown targetDate={eventDate} />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
             <Button
               size="lg"
               className="w-full bg-amber-500 text-black font-bold text-base hover:bg-amber-400 group"
@@ -88,15 +84,6 @@ export default function EventAdModal() {
             >
               <Heart className="mr-2 h-5 w-5" />
               Donate
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="w-full border-amber-400 text-amber-400 hover:bg-amber-400/10 hover:text-amber-300 font-bold text-base group"
-              onClick={handleVoteClick}
-            >
-              <Vote className="mr-2 h-5 w-5" />
-              Vote Now
             </Button>
           </div>
         </div>

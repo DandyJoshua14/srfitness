@@ -398,22 +398,6 @@ export async function verifyPaystackPayment(reference: string) {
 
             // Determine which action to take based on metadata
             switch (metadata.type) {
-                case 'vote':
-                    const votePayload = {
-                        contestantId: metadata.contestantId,
-                        contestantName: metadata.contestantName,
-                        contestantCategory: metadata.contestantCategory,
-                        numberOfVotes: Number(metadata.numberOfVotes),
-                    };
-                    // Only send vote notification emails if explicitly enabled via env var.
-                    if (SEND_VOTE_NOTIFICATIONS) {
-                      await sendVoteNotificationEmail(votePayload); // Send email
-                    } else {
-                      console.log('Vote notification email suppressed (SEND_VOTE_NOTIFICATIONS not enabled).');
-                    }
-                    recordResult = await recordVote(votePayload); // Send to internal API
-                    break;
-                
                 case 'ticket_purchase':
                     recordResult = await recordTicketSale({
                         ticketType: metadata.ticketType,

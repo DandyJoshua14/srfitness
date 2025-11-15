@@ -47,7 +47,7 @@ function CheckoutView() {
         }
 
         startTransition(async () => {
-            const callbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/vote/callback`;
+            const callbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/checkout?type=marketplace`;
 
             const result = await createPaystackPayment({
                 email: customerEmail,
@@ -129,7 +129,7 @@ function CheckoutView() {
             </CardContent>
             <CardFooter>
                  <Button asChild variant="link" className="text-muted-foreground hover:text-primary" onClick={() => router.back()}>
-                    <Link href="/vote">
+                    <Link href="/">
                         <ArrowLeft className="mr-2 h-4 w-4" /> Go Back
                     </Link>
                 </Button>

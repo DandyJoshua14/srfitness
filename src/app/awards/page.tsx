@@ -20,9 +20,16 @@ export default function AwardsPage() {
   ];
   
   const ceremonyPhotos = [
-    { src: '/gl.jpeg', alt: 'Awards ceremony highlight 1', dataAiHint: 'award ceremony winner' },
-    { src: '/gl2.jpeg', alt: 'Awards ceremony highlight 2', dataAiHint: 'award winner portrait' },
-    { src: '/gl3.jpeg', alt: 'Audience applause conference', dataAiHint: 'audience applause conference' },
+    { src: '/e1.jpg', alt: 'Awards ceremony highlight 1', dataAiHint: 'award ceremony winner' },
+    { src: '/e2.jpg', alt: 'Awards ceremony highlight 2', dataAiHint: 'award ceremony celebration' },
+    { src: '/e3.jpg', alt: 'Awards ceremony highlight 3', dataAiHint: 'award winner portrait' },
+    { src: '/e4.jpg', alt: 'Awards ceremony highlight 4', dataAiHint: 'award ceremony event' },
+    { src: '/e5.jpg', alt: 'Awards ceremony highlight 5', dataAiHint: 'award ceremony gala' },
+    { src: '/e6.jpg', alt: 'Awards ceremony highlight 6', dataAiHint: 'award ceremony highlights' },
+    { src: '/e7.jpg', alt: 'Awards ceremony highlight 7', dataAiHint: 'award ceremony moment' },
+    { src: '/e8.jpg', alt: 'Awards ceremony highlight 8', dataAiHint: 'award ceremony celebration' },
+    { src: '/e9.jpg', alt: 'Awards ceremony highlight 9', dataAiHint: 'award ceremony evening' },
+    { src: '/e10.jpg', alt: 'Awards ceremony highlight 10', dataAiHint: 'award ceremony finale' },
   ];
 
   const generalCategories = [
@@ -63,11 +70,6 @@ export default function AwardsPage() {
           <AccordionContent className="text-muted-foreground pl-2 pr-2 pb-4">
             <div className="space-y-4">
                 <p>{category.description}</p>
-                {!category.noVote && (
-                    <Button asChild>
-                        <Link href="/vote">Vote Now</Link>
-                    </Button>
-                )}
             </div>
           </AccordionContent>
         </AccordionItem>

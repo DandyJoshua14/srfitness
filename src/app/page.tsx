@@ -11,7 +11,6 @@ import MarketplaceHighlightSection from '@/components/sections/marketplace-highl
 import OurImpactSection from '@/components/sections/our-impact-section';
 import DailyTipSection from '@/components/sections/daily-tip-section';
 import GallerySection from '@/components/sections/gallery-section';
-import EventAdModal from '@/components/features/event-ad-modal';
 
 // Metadata needs to be defined in a Server Component or a metadata export.
 // For this client component, we'd handle titles/meta via a different mechanism
@@ -20,7 +19,6 @@ import EventAdModal from '@/components/features/event-ad-modal';
 export default function HomePage() {
   return (
     <>
-      <EventAdModal />
       <HeroSection />
       <AboutSummarySection />
       <KeyFeaturesSection />

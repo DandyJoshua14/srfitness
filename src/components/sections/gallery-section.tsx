@@ -17,11 +17,11 @@ const galleryImages: GalleryImage[] = [
     { src: "/gal1.jpeg", alt: "Weight rack with various dumbbells", dataAiHint: "gym weight rack" },
     { src: "/b1.jpeg", alt: "Bootcamp participants doing pushups", dataAiHint: "group fitness pushups" },
     { src: "/b2.jpeg", alt: "Fitness trainer motivating the class", dataAiHint: "fitness trainer motivation" },
-    { src: "/gal32.jpg", alt: "Personal training session in progress", dataAiHint: "trainer client workout" },
+    { src: "/m8.jpg", alt: "training session in progress", dataAiHint: "trainer client workout" },
     { src: "/gal34.jpg", alt: "Fitness class in session", dataAiHint: "fitness class" },
-    { src: "/stad.jpg", alt: "Fitness class in session", dataAiHint: "fitness class" },
+    { src: "/m3.jpg", alt: "Fitness class in session", dataAiHint: "fitness class" },
     { src: "/wak.jpg", alt: "Fitness class in session", dataAiHint: "fitness class" },
-    { src: "/wak2.jpg", alt: "Fitness class in session", dataAiHint: "fitness class", objectPosition: "center 20%" },
+    { src: "/m1.jpg", alt: "Fitness class in session", dataAiHint: "fitness class", objectPosition: "center 20%" },
 ];
 
 export default function GallerySection() {

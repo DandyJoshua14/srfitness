@@ -92,7 +92,7 @@ export default function AdminIntegrationsPage() {
                 <Zap className="h-4 w-4" />
                 <AlertTitle>Environment Variables</AlertTitle>
                 <AlertDescription>
-                    These URLs must be configured in your project's environment variables (`.env` file) to function correctly.
+                    These URLs must be configured in your project&apos;s environment variables (`.env` file) to function correctly.
                 </AlertDescription>
             </Alert>
           </CardContent>

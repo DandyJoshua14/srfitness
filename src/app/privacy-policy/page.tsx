@@ -71,7 +71,7 @@ export default function PrivacyPolicyPage() {
 
         <h2 className="font-headline text-2xl text-primary mt-8 mb-3">6. Updates to This Policy (Placeholder)</h2>
         <p>
-            We may update this privacy policy from time to time. The updated version will be indicated by an updated "Last Updated" date.
+            We may update this privacy policy from time to time. The updated version will be indicated by an updated &ldquo;Last Updated&rdquo; date.
         </p>
 
         <h2 className="font-headline text-2xl text-primary mt-8 mb-3">7. Contact Us (Placeholder)</h2>

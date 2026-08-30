@@ -170,7 +170,7 @@ export default function PublicSpeakingPage() {
                         What to Expect for Your Audience
                     </h2>
                     <p className="text-lg text-muted-foreground leading-relaxed">
-                        Every session is more than just a talk; it's an interactive experience designed to provide tangible value and inspire immediate action.
+                        Every session is more than just a talk; it&apos;s an interactive experience designed to provide tangible value and inspire immediate action.
                     </p>
                     <ul className="space-y-3">
                         {audienceBenefits.map((benefit, index) => (
@@ -203,7 +203,7 @@ export default function PublicSpeakingPage() {
                     Ready to Energize Your Event?
                 </h2>
                 <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-                    Let's discuss how we can tailor a speaking engagement for your organization. Contact us Today.
+                    Let&apos;s discuss how we can tailor a speaking engagement for your organization. Contact us Today.
                 </p>
                 <Button asChild size="lg" className="group font-headline text-xl px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transform hover:scale-105 transition-transform">
                     <Link href="#contact">

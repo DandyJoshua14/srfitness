@@ -169,7 +169,7 @@ export default function MembershipPricingSection() {
 
                   {/* Features */}
                   <div className="flex-1 px-6 pb-4 relative z-10">
-                    <p className="text-xs font-bold text-foreground uppercase tracking-wider mb-3">What's included:</p>
+                    <p className="text-xs font-bold text-foreground uppercase tracking-wider mb-3">What&apos;s included:</p>
                     <div className="space-y-2.5">
                       {tier.features.map((feat, fIdx) => (
                         <div key={fIdx} className="flex items-start gap-2.5 text-xs text-foreground/90">

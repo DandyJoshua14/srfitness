@@ -23,7 +23,7 @@ export default function TermsOfServicePage() {
 
       <div className="prose prose-lg max-w-4xl mx-auto text-foreground">
         <p>
-          Welcome to SR Fitness! These terms and conditions outline the rules and regulations for the use of SR Fitness's Website, located at [Your Website URL].
+          Welcome to SR Fitness! These terms and conditions outline the rules and regulations for the use of SR Fitness&apos;s Website, located at [Your Website URL].
         </p>
         <p>
           By accessing this website we assume you accept these terms and conditions. Do not continue to use SR Fitness if you do not agree to take all of the terms and conditions stated on this page.
@@ -31,7 +31,7 @@ export default function TermsOfServicePage() {
 
         <h2 className="font-headline text-2xl text-primary mt-8 mb-3">1. Definitions (Placeholder)</h2>
         <p>
-          The following terminology applies to these Terms and Conditions, Privacy Statement and Disclaimer Notice and all Agreements: "Client", "You" and "Your" refers to you, the person log on this website and compliant to the Company’s terms and conditions. "The Company", "Ourselves", "We", "Our" and "Us", refers to our Company. "Party", "Parties", or "Us", refers to both the Client and ourselves.
+          The following terminology applies to these Terms and Conditions, Privacy Statement and Disclaimer Notice and all Agreements: &ldquo;Client&rdquo;, &ldquo;You&rdquo; and &ldquo;Your&rdquo; refers to you, the person log on this website and compliant to the Company’s terms and conditions. &ldquo;The Company&rdquo;, &ldquo;Ourselves&rdquo;, &ldquo;We&rdquo;, &ldquo;Our&rdquo; and &ldquo;Us&rdquo;, refers to our Company. &ldquo;Party&rdquo;, &ldquo;Parties&rdquo;, or &ldquo;Us&rdquo;, refers to both the Client and ourselves.
         </p>
 
         <h2 className="font-headline text-2xl text-primary mt-8 mb-3">2. Use of the Website (Placeholder)</h2>

@@ -122,7 +122,7 @@ export default function EquipmentServicesPage() {
             Partner with SR Fitness for Your Gym Project
           </h2>
           <p className="text-lg text-secondary-foreground/80 max-w-2xl mx-auto mb-8">
-            Whether you're setting up a new gym, upgrading an existing one, or need expert management advice, our team is ready to assist.
+            Whether you&apos;re setting up a new gym, upgrading an existing one, or need expert management advice, our team is ready to assist.
           </p>
         </div>
       </section>

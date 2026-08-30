@@ -57,7 +57,7 @@ export default function LeadMagnetSection() {
               </Badge>
 
               <h2 className="font-headline text-3xl sm:text-4xl md:text-5xl font-extrabold text-foreground leading-tight">
-                The Lagos Busy Professional's <br />
+                The Lagos Busy Professional&apos;s <br />
                 <span className="text-primary">15-Min Workout & Nigerian Meal Blueprint</span>
               </h2>
 
@@ -110,7 +110,7 @@ export default function LeadMagnetSection() {
                       </Button>
                       
                       <p className="text-[10px] text-muted-foreground">
-                        Check your spam/promotions folder if email doesn't appear in 5 mins.
+                        Check your spam/promotions folder if email doesn&apos;t appear in 5 mins.
                       </p>
                     </div>
                   ) : (

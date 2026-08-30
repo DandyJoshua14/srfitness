@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { Bebas_Neue, Open_Sans } from 'next/font/google';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { LoadingProvider } from '@/contexts/loading-context';
@@ -12,6 +13,19 @@ import NavigationLoadingManager from '@/components/common/navigation-loading-man
 import PageWrapper from '@/components/layout/page-wrapper';
 import BookingModal from '@/components/features/booking/booking-modal';
 import MobileQuickActionBar from '@/components/layout/mobile-quick-action-bar';
+
+const bebasNeue = Bebas_Neue({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-bebas-neue',
+  display: 'swap',
+});
+
+const openSans = Open_Sans({
+  subsets: ['latin'],
+  variable: '--font-open-sans',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: {
@@ -142,10 +156,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="dark">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
         {/* Google AdSense script - async load */}
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8362821240895573"
           crossOrigin="anonymous"></script>
@@ -155,7 +165,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="font-body antialiased flex flex-col min-h-screen bg-background pb-16 md:pb-0">
+      <body className={`${openSans.variable} ${bebasNeue.variable} font-body antialiased flex flex-col min-h-screen bg-background pb-16 md:pb-0`}>
         <LoadingProvider>
           <AuthProvider>
             <CartProvider>

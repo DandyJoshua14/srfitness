@@ -80,7 +80,7 @@ export default function PersonalTrainingPage() {
           <div className="space-y-6">
             <h2 className="font-headline text-3xl text-foreground font-semibold">Why Choose Personal Training at SR Fitness?</h2>
             <p className="text-muted-foreground">
-              Our certified personal trainers are more than just instructors; they are your partners in wellness. They provide dedicated guidance, unwavering motivation, and the technical expertise needed for you to succeed. Whether you're taking your first step into fitness or are a seasoned athlete aiming for new heights, we customize every session to your unique abilities and aspirations.
+              Our certified personal trainers are more than just instructors; they are your partners in wellness. They provide dedicated guidance, unwavering motivation, and the technical expertise needed for you to succeed. Whether you&apos;re taking your first step into fitness or are a seasoned athlete aiming for new heights, we customize every session to your unique abilities and aspirations.
             </p>
             <ul className="space-y-3">
               <li className="flex items-start">
@@ -144,7 +144,7 @@ export default function PersonalTrainingPage() {
                                     </CardHeader>
                                     <CardContent className="p-6">
                                         <CardTitle className="font-headline text-2xl text-primary mb-2">{item.name}</CardTitle>
-                                        <p className="text-muted-foreground text-sm italic">"{item.story}"</p>
+                                        <p className="text-muted-foreground text-sm italic">&ldquo;{item.story}&rdquo;</p>
                                     </CardContent>
                                 </Card>
                             </div>

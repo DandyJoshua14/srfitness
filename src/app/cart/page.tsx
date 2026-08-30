@@ -103,7 +103,7 @@ export default function CartPage() {
         <Card className="text-center py-16 max-w-lg mx-auto shadow-xl">
             <CardContent className="space-y-4">
                  <h2 className="text-2xl font-semibold text-muted-foreground">Your cart is empty</h2>
-                 <p className="text-muted-foreground">Looks like you haven't added any items yet.</p>
+                 <p className="text-muted-foreground">Looks like you haven&apos;t added any items yet.</p>
                  <Button asChild className="mt-4 font-headline text-lg">
                     <Link href="/marketplace">Start Shopping</Link>
                  </Button>

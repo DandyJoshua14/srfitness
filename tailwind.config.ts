@@ -10,8 +10,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Open Sans', 'sans-serif'],
-        headline: ['Bebas Neue', 'cursive'], 
+        body: ['var(--font-open-sans)', 'Open Sans', 'sans-serif'],
+        headline: ['var(--font-bebas-neue)', 'Bebas Neue', 'cursive'], 
         code: ['monospace'],
       },
       colors: {

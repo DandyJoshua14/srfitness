@@ -112,7 +112,7 @@ export default function CorporateWellnessPage() {
                         A Direct Impact on Your Bottom Line
                     </h2>
                     <p className="text-lg text-secondary-foreground/80 leading-relaxed">
-                        Our programs are not just a perk; they're a strategic investment in your company's success. Healthy employees are more engaged, resilient, and innovative.
+                        Our programs are not just a perk; they&apos;re a strategic investment in your company&apos;s success. Healthy employees are more engaged, resilient, and innovative.
                     </p>
                     <ul className="space-y-3">
                         {benefits.map((benefit, index) => (
@@ -166,7 +166,7 @@ export default function CorporateWellnessPage() {
                     Ready to Transform Your Workplace?
                 </h2>
                 <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-                    Let's discuss how we can build a wellness program that aligns with your company's culture and goals. Contact us for a complimentary consultation.
+                    Let&apos;s discuss how we can build a wellness program that aligns with your company&apos;s culture and goals. Contact us for a complimentary consultation.
                 </p>
             </div>
         </div>

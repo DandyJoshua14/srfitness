@@ -1,6 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  experimental: {
+    serverComponentsExternalPackages: [
+      '@genkit-ai/core',
+      '@genkit-ai/ai',
+      '@genkit-ai/googleai',
+      'genkit',
+      'require-in-the-middle',
+      '@opentelemetry/instrumentation',
+      '@opentelemetry/sdk-node',
+    ],
+  },
   images: {
     remotePatterns: [
       {
@@ -22,6 +32,13 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
+  },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals = config.externals || [];
+      config.externals.push('require-in-the-middle');
+    }
+    return config;
   },
 };
 

@@ -9,11 +9,18 @@ import Image from 'next/image';
 import { Facebook, Instagram, Youtube, MessageCircle as WhatsAppIcon } from 'lucide-react';
 import Link from 'next/link';
 
+import { useSiteContent } from '@/contexts/site-content-context';
+
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   const router = useRouter();
   const [logoClickCount, setLogoClickCount] = useState(0);
   const clickTimer = useRef<NodeJS.Timeout | null>(null);
+  const { content } = useSiteContent();
+  const info = content?.companyInfo || {};
+  const phone = info.phone || "+2347056717597";
+  const email = info.email || "srfitness247@gmail.com";
+  const whatsapp = info.whatsapp || "2347056717597";
 
   useEffect(() => {
     // Clean up the timer when the component unmounts
@@ -141,8 +148,8 @@ export default function Footer() {
           <div className="col-span-2 md:col-span-1">
             <h3 className="font-headline text-xl font-semibold text-primary mb-4">Get In Touch</h3>
             <address className="not-italic text-sm space-y-2 text-secondary-foreground/80 mb-4">
-              <p>Email: <a href="mailto:srfitness247@gmail.com" className="hover:text-primary hover:underline">srfitness247@gmail.com</a></p>
-              <p>Phone: <a href="tel:+2347056717597" className="hover:text-primary hover:underline">(234) 7056717597</a></p>
+              <p>Email: <a href={`mailto:${email}`} className="hover:text-primary hover:underline">{email}</a></p>
+              <p>Phone: <a href={`tel:${phone}`} className="hover:text-primary hover:underline">{phone}</a></p>
             </address>
              <ul className="space-y-2 text-sm">
               {contactLinks.map(item => ( 
@@ -154,7 +161,7 @@ export default function Footer() {
 
         <div className="mt-8 border-t border-border/20 pt-8 text-center">
           <p className="text-sm text-secondary-foreground/70">
-            &copy; {currentYear} SR Fitness. All rights reserved. Designed with passion.
+            &copy; {currentYear} {info.name || "SR Fitness"}. All rights reserved. Designed with passion.
           </p>
         </div>
       </div>

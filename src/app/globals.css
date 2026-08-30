@@ -4,6 +4,7 @@
 
 body {
   font-family: var(--font-open-sans), sans-serif;
+  overflow-x: hidden;
 }
 
 /* Hide global footer and contact section within the admin layout context */
@@ -11,7 +12,6 @@ body {
 .admin-layout-wrapper footer {
   display: none;
 }
-
 
 @layer base {
   :root {
@@ -43,7 +43,7 @@ body {
     --input: 0 0% 89.8%;
     --ring: 33 100% 50%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --chart-1: 33 100% 50%;
     --chart-2: 210 40% 40%;
@@ -66,29 +66,29 @@ body {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
 
-    --card: 0 0% 3.9%;
+    --card: 0 0% 6%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 3.9%;
+    --popover: 0 0% 6%;
     --popover-foreground: 0 0% 98%;
 
     --primary: 33 100% 55%; /* Lighter Orange for dark bg */
     --primary-foreground: 0 0% 0%; /* Black */
 
-    --secondary: 0 0% 14.9%;
+    --secondary: 0 0% 12%;
     --secondary-foreground: 0 0% 98%;
     
-    --muted: 0 0% 14.9%;
+    --muted: 0 0% 12%;
     --muted-foreground: 0 0% 63.9%;
 
-    --accent: 0 0% 14.9%;
+    --accent: 0 0% 12%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
     --ring: 33 100% 55%;
 
     --chart-1: 33 100% 55%;
@@ -115,4 +115,130 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* =========================================================
+   LIQUID GLASS & SPATIAL UI DESIGN SYSTEM
+   ========================================================= */
+
+@layer utilities {
+  /* Liquid Glass Surface with multi-layer specular lighting */
+  .liquid-glass {
+    background: rgba(18, 18, 22, 0.65);
+    backdrop-filter: blur(24px) saturate(190%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 
+      0 20px 50px -12px rgba(0, 0, 0, 0.5),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4);
+  }
+
+  .liquid-glass-light {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(24px) saturate(190%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 
+      0 20px 40px -10px rgba(0, 0, 0, 0.08),
+      inset 0 1px 2px 0 rgba(255, 255, 255, 0.9),
+      inset 0 -1px 1px 0 rgba(0, 0, 0, 0.04);
+  }
+
+  /* Liquid Glass Pill */
+  .liquid-pill {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 
+      0 4px 20px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.25);
+    border-radius: 9999px;
+  }
+
+  /* Spatial Floating Card with Specular Sheen */
+  .spatial-card {
+    position: relative;
+    background: radial-gradient(120% 120% at 50% 0%, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(12, 12, 16, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+      0 10px 30px -10px rgba(0, 0, 0, 0.6),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .spatial-card:hover {
+    transform: translateY(-4px) scale(1.01);
+    border-color: rgba(255, 140, 0, 0.4);
+    box-shadow: 
+      0 20px 45px -12px rgba(0, 0, 0, 0.75),
+      0 0 30px -5px rgba(255, 140, 0, 0.2),
+      inset 0 1px 2px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  /* Spatial Ambient Glows */
+  .spatial-glow-primary {
+    box-shadow: 
+      0 0 40px -10px rgba(255, 140, 0, 0.35),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .spatial-glow-emerald {
+    box-shadow: 
+      0 0 40px -10px rgba(16, 185, 129, 0.35),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .spatial-glow-amber {
+    box-shadow: 
+      0 0 40px -10px rgba(245, 158, 11, 0.35),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  /* Iridescent Liquid Sheen Text */
+  .liquid-text-gradient {
+    background: linear-gradient(135deg, #FFF 0%, #FFB040 45%, #FF7A00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .spatial-mesh-bg {
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(255, 140, 0, 0.12) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(255, 75, 0, 0.08) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(16, 185, 129, 0.06) 0px, transparent 50%);
+  }
+}
+
+/* Fluid Ambient Animation for Spatial Depth */
+@keyframes floatSpatial {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.02);
+  }
+}
+
+@keyframes liquidPulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.08);
+  }
+}
+
+.animate-spatial-float {
+  animation: floatSpatial 6s ease-in-out infinite;
+}
+
+.animate-liquid-pulse {
+  animation: liquidPulse 8s ease-in-out infinite;
 }

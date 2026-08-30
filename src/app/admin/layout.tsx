@@ -55,9 +55,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen bg-muted/40">
       <AdminSidebar />
-      <div className="flex-grow p-4 sm:p-6 lg:p-8 ml-14 md:ml-64">
+      <main className="flex-grow p-4 sm:p-6 lg:p-8 pt-16 md:pt-6 md:ml-64 w-full overflow-x-hidden">
         {children}
-      </div>
+      </main>
     </div>
   );
 }

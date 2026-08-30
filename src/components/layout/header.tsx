@@ -19,7 +19,9 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useLoading } from '@/contexts/loading-context';
 import { useCart } from '@/contexts/cart-context';
+import { useBooking } from '@/contexts/booking-context';
 import VoiceAgentDialog from '@/components/features/voice-agent/voice-agent-dialog';
+import { Calendar } from 'lucide-react';
 // Removed useAuth, AuthForm, logoutUser, UserCircle2, LogOut, LogIn, Dialog-related imports
 
 const MOCK_IS_ADMIN = true; 
@@ -54,6 +56,7 @@ export default function Header() {
   const pathname = usePathname();
   const { showLoading } = useLoading();
   const { cartCount } = useCart();
+  const { openBooking } = useBooking();
 
   const [activeLink, setActiveLink] = useState(pathname);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -198,28 +201,35 @@ export default function Header() {
   return (
     <>
       <header className={cn(
-        "sticky top-0 z-50 w-full border-b transition-all duration-300",
-        isScrolled ? "border-border/10 bg-background/80 backdrop-blur-xl shadow-lg" : "border-transparent bg-black/30"
+        "sticky top-0 z-50 w-full transition-all duration-500",
+        isScrolled 
+          ? "py-2 bg-zinc-950/75 backdrop-blur-2xl border-b border-white/10 shadow-[0_10px_35px_-10px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.15)]" 
+          : "py-3 border-b border-white/5 bg-black/40 backdrop-blur-md"
       )}>
-        <div className="container flex h-16 md:h-20 max-w-screen-xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8" style={{'--header-height': '80px'} as React.CSSProperties}>
-          <Link href="/" className="flex items-center space-x-3 shrink-0" onClick={() => handleLinkClick('/')}>
-            <Image
-              src="/SR.jpg" 
-              alt="SR Fitness Logo"
-              width={40}
-              height={40}
-              className="h-8 w-8 md:h-10 md:w-10 rounded-full object-cover"
-              data-ai-hint="logo brand"
-              priority
-            />
+        {/* Subtle Specular Top Sheen */}
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+
+        <div className="container flex h-14 md:h-16 max-w-screen-xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+          <Link href="/" className="flex items-center space-x-3 shrink-0 group" onClick={() => handleLinkClick('/')}>
+            <div className="relative p-0.5 rounded-full bg-gradient-to-tr from-primary via-amber-400 to-transparent shadow-md group-hover:scale-105 transition-transform duration-300">
+              <Image
+                src="/SR.jpg" 
+                alt="SR Fitness Logo"
+                width={40}
+                height={40}
+                className="h-8 w-8 md:h-9 md:w-9 rounded-full object-cover"
+                data-ai-hint="logo brand"
+                priority
+              />
+            </div>
             <span className={cn(
-              "font-headline text-2xl sm:text-3xl font-bold transition-colors duration-200 ease-in-out",
-              isScrolled ? "text-primary" : "text-white"
+              "font-headline text-xl sm:text-2xl font-bold tracking-tight transition-colors duration-200 ease-in-out",
+              isScrolled ? "text-primary" : "text-white group-hover:text-primary"
             )}>SR Fitness</span>
           </Link>
 
           <div className="flex items-center space-x-1 lg:space-x-2"> 
-            <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
+            <nav className="hidden md:flex items-center space-x-1 lg:space-x-1.5 bg-white/[0.04] p-1.5 rounded-full border border-white/10 backdrop-blur-md">
               {/* Regular Nav Items */}
               {topLevelNavItems.map((item) => (
                 <Link key={item.label} href={item.href} onClick={() => handleLinkClick(item.href)} className={navLinkClasses(isLinkActive(item.href))}>
@@ -228,11 +238,11 @@ export default function Header() {
               ))}
               <DropdownMenu>
                 <DropdownMenuTrigger className={dropdownTriggerClasses(isServicesActive)}>
-                  Services <ChevronDown className="h-4 w-4 opacity-70" />
+                  Services <ChevronDown className="h-3.5 w-3.5 opacity-70" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-max rounded-lg">
+                <DropdownMenuContent align="start" className="bg-zinc-950/90 border border-white/15 backdrop-blur-2xl shadow-2xl mt-3 w-max rounded-xl p-1.5">
                   {servicesDropdownItems.map((item) => (
-                    <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground")}>
+                    <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-xs py-2 px-3 rounded-lg transition-colors", isLinkActive(item.href) ? "bg-primary/20 text-primary font-semibold" : "hover:bg-white/10 text-zinc-200")}>
                       <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">
                         {item.icon} {item.label}
                       </Link>
@@ -242,11 +252,11 @@ export default function Header() {
               </DropdownMenu>
               <DropdownMenu>
                 <DropdownMenuTrigger className={dropdownTriggerClasses(isEventsActive)}>
-                  Events <ChevronDown className="h-4 w-4 opacity-70" />
+                  Events <ChevronDown className="h-3.5 w-3.5 opacity-70" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-max rounded-lg">
+                <DropdownMenuContent align="start" className="bg-zinc-950/90 border border-white/15 backdrop-blur-2xl shadow-2xl mt-3 w-max rounded-xl p-1.5">
                   {eventsDropdownItems.map((item) => (
-                    <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground")}>
+                    <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-xs py-2 px-3 rounded-lg transition-colors", isLinkActive(item.href) ? "bg-primary/20 text-primary font-semibold" : "hover:bg-white/10 text-zinc-200")}>
                       <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">
                         {item.icon} {item.label}
                       </Link>
@@ -256,11 +266,11 @@ export default function Header() {
               </DropdownMenu>
                <DropdownMenu>
                 <DropdownMenuTrigger className={dropdownTriggerClasses(isProductsActive)}>
-                  Products <ChevronDown className="h-4 w-4 opacity-70" />
+                  Products <ChevronDown className="h-3.5 w-3.5 opacity-70" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="bg-popover border-border shadow-xl mt-3 w-max rounded-lg">
+                <DropdownMenuContent align="start" className="bg-zinc-950/90 border border-white/15 backdrop-blur-2xl shadow-2xl mt-3 w-max rounded-xl p-1.5">
                   {productsDropdownItems.map((item) => (
-                      <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-sm py-2.5 px-3", isLinkActive(item.href) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted focus:bg-muted text-popover-foreground")}>
+                      <DropdownMenuItem key={item.label} asChild className={cn("cursor-pointer text-xs py-2 px-3 rounded-lg transition-colors", isLinkActive(item.href) ? "bg-primary/20 text-primary font-semibold" : "hover:bg-white/10 text-zinc-200")}>
                         <Link href={item.href} onClick={() => handleLinkClick(item.href)} className="flex items-center w-full">
                           {item.icon} {item.label}
                         </Link>
@@ -280,16 +290,22 @@ export default function Header() {
                 <Link href="/cart" aria-label="Shopping Cart">
                     <ShoppingCart className="h-5 w-5" />
                     {cartCount > 0 && (
-                      <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
+                      <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold shadow-md shadow-primary/30">
                         {cartCount}
                       </span>
                     )}
                 </Link>
             </Button>
+            <Button
+              onClick={() => openBooking()}
+              className="hidden lg:inline-flex bg-gradient-to-r from-primary via-amber-500 to-primary hover:opacity-95 text-primary-foreground font-bold px-5 py-2.5 text-xs shadow-[0_0_20px_rgba(255,140,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.3)] transition-all rounded-full border border-primary/40 active:scale-95"
+            >
+              <Calendar className="mr-1.5 h-3.5 w-3.5" /> Book a Session
+            </Button>
           </div>
 
           {/* Mobile Menu Area */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex items-center gap-1">
              <VoiceAgentDialog className={cn(
                 "h-auto p-2 text-2xl",
                 isScrolled ? "text-foreground/80 hover:bg-muted/50 hover:text-primary" : "text-white hover:bg-white/10 hover:text-primary"
@@ -364,7 +380,17 @@ export default function Header() {
                     </div>
                   ))}
                 </nav>
-                 {/* Mobile Auth Section REMOVED */}
+                <div className="p-4 border-t border-border bg-muted/20">
+                  <Button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      openBooking();
+                    }}
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 rounded-xl shadow-lg"
+                  >
+                    <Calendar className="mr-2 h-4 w-4" /> Book a Session Now
+                  </Button>
+                </div>
               </SheetContent>
             </Sheet>
           </div>
